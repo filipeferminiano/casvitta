@@ -142,7 +142,12 @@ export function InterestForm({
             setErrors({ form: result.message || t('genericError'), ...result.fields });
             return;
           }
-          track({ name: 'form_submit', form: kind });
+          track({
+            name: 'generate_lead',
+            lead_type: kind,
+            page_path: window.location.pathname,
+            marketing_consent: marketing,
+          });
           setDone(true);
           onSuccess?.();
         }}

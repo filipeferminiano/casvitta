@@ -1,24 +1,30 @@
-import { afterEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it } from 'vitest';
 
-import { setAnalyticsAdapter, setAnalyticsConsent, track } from './analytics';
+import { toValue, track } from './analytics';
 
-afterEach(() => window.localStorage.clear());
+type W = Window & { dataLayer?: Record<string, unknown>[] };
+
+afterEach(() => {
+  delete (window as W).dataLayer;
+});
 
 describe('track()', () => {
-  it('sends nothing without analytics consent', () => {
-    const send = vi.fn();
-    setAnalyticsAdapter({ send });
-    expect(track({ name: 'page_view', path: '/' })).toBe(false);
-    setAnalyticsConsent(false);
-    expect(track({ name: 'form_submit', form: 'auction' })).toBe(false);
-    expect(send).not.toHaveBeenCalled();
+  it('pushes { event, ...params } to the GTM dataLayer', () => {
+    expect(track({ name: 'signup_step', step: 'creci' })).toBe(true);
+    expect((window as W).dataLayer).toEqual([{ event: 'signup_step', step: 'creci' }]);
   });
 
-  it('forwards events once consent is granted', () => {
-    const send = vi.fn();
-    setAnalyticsAdapter({ send });
-    setAnalyticsConsent(true);
-    expect(track({ name: 'signup_step', step: 'creci' })).toBe(true);
-    expect(send).toHaveBeenCalledWith({ name: 'signup_step', step: 'creci' });
+  it('sends money as reais with BRL', () => {
+    track({
+      name: 'view_item',
+      item_id: 'apto-vila-mariana',
+      item_category: 'apartment',
+      transaction: 'sale',
+      neighborhood: 'Vila Mariana',
+      is_demo: true,
+      value: toValue(69_000_000),
+      currency: 'BRL',
+    });
+    expect((window as W).dataLayer?.[0]).toMatchObject({ value: 690_000, currency: 'BRL' });
   });
 });

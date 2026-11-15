@@ -4,6 +4,8 @@ import Link from 'next/link';
 import { getTranslations } from 'next-intl/server';
 
 import { CreciBadge, DemoBadge, SimulationBadge, SponsoredBadge } from '@/components/badges';
+import { TrackOnMount } from '@/components/TrackOnMount';
+import { toValue } from '@/lib/analytics';
 import type { PublicListing } from '@/lib/data/marketplace';
 import { simulateSac } from '@/lib/finance';
 import { formatBRL } from '@/lib/format';
@@ -37,6 +39,18 @@ export async function PropertyDetail({ listing }: { listing: PublicListing }) {
 
   return (
     <>
+      <TrackOnMount
+        event={{
+          name: 'view_item',
+          item_id: p.slug,
+          item_category: p.kind,
+          transaction: p.transaction,
+          neighborhood: p.neighborhood,
+          is_demo: p.isDemo,
+          value: toValue(p.priceCents),
+          currency: 'BRL',
+        }}
+      />
       {/* Phone (mockup 24) */}
       <div className="pb-28 md:hidden">
         <div className="flex items-center justify-between border-b border-line bg-panel px-4 py-2">
@@ -101,16 +115,20 @@ export async function PropertyDetail({ listing }: { listing: PublicListing }) {
           </div>
           {p.transaction === 'sale' ? (
             <div id="simulador" className="mt-2">
-              <FinancingSimulator priceCents={p.priceCents} />
+              <FinancingSimulator priceCents={p.priceCents} itemId={p.slug} />
             </div>
           ) : null}
         </div>
         <div className="fixed inset-x-0 bottom-0 z-40 grid grid-cols-[auto_1fr] gap-3 border-t border-line bg-panel px-4 pt-3 pb-[max(12px,env(safe-area-inset-bottom))]">
           <Button asChild variant="secondary">
-            <Link href={chatHref}>{t('chat')}</Link>
+            <Link href={chatHref} data-track="open_assistant_chat" data-track-item-id={p.slug}>
+              {t('chat')}
+            </Link>
           </Button>
           <Button asChild>
-            <Link href={chatHref}>{t('schedule')}</Link>
+            <Link href={chatHref} data-track="begin_visit_booking" data-track-item-id={p.slug}>
+              {t('schedule')}
+            </Link>
           </Button>
         </div>
       </div>
@@ -173,7 +191,9 @@ export async function PropertyDetail({ listing }: { listing: PublicListing }) {
                 </div>
               ))}
             </dl>
-            {p.transaction === 'sale' ? <FinancingSimulator priceCents={p.priceCents} /> : null}
+            {p.transaction === 'sale' ? (
+              <FinancingSimulator priceCents={p.priceCents} itemId={p.slug} />
+            ) : null}
           </div>
           <aside className="flex flex-col gap-5">
             <section className="rounded-card border border-line bg-panel p-5">
@@ -187,7 +207,13 @@ export async function PropertyDetail({ listing }: { listing: PublicListing }) {
               <p className="font-mono text-[30px] leading-9 font-semibold tabular">{priceText}</p>
               <div className="mt-4 flex flex-col gap-3">
                 <Button asChild>
-                  <Link href={chatHref}>{t('schedule')}</Link>
+                  <Link
+                    href={chatHref}
+                    data-track="begin_visit_booking"
+                    data-track-item-id={p.slug}
+                  >
+                    {t('schedule')}
+                  </Link>
                 </Button>
                 <Button asChild variant="secondary">
                   <a href={whatsapp} rel="noopener noreferrer" target="_blank">

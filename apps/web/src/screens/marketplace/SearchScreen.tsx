@@ -19,13 +19,19 @@ import { ChevronDown, SearchX, TrendingUp } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { CreciBadge, DemoBadge, SponsoredBadge } from '@/components/badges';
 import { track } from '@/lib/analytics';
 import type { SearchResult } from '@/lib/data/marketplace';
 import { formatBRL, formatBRLShort, formatPercent } from '@/lib/format';
-import { searchPath, withFilters, type SearchFilters, type SortKey } from '@/lib/search-params';
+import {
+  filtersToQuery,
+  searchPath,
+  withFilters,
+  type SearchFilters,
+  type SortKey,
+} from '@/lib/search-params';
 
 import { ListingJsonLd } from './ListingJsonLd';
 
@@ -49,6 +55,19 @@ export function SearchScreen({
   const toast = useToast();
   const [hovered, setHovered] = useState<string | null>(null);
   const place = filters.where?.split(',')[0]?.trim();
+  const query = filtersToQuery(filters);
+  const { where, transaction, invest } = filters;
+  const count = results.length;
+  useEffect(() => {
+    track({
+      name: 'view_search_results',
+      search_term: where ?? '',
+      transaction,
+      results_count: count,
+      invest_mode: invest,
+      filters: query,
+    });
+  }, [query, where, transaction, invest, count]);
 
   const applied = compact<AppliedChip>([
     filters.where
@@ -195,7 +214,7 @@ export function SearchScreen({
             size="sm"
             className="border-line"
             onClick={() => {
-              track({ name: 'form_submit', form: 'save_search' });
+              track({ name: 'save_search', transaction: filters.transaction });
               toast({ title: t('savedTitle'), description: t('savedDescription') });
             }}
           >

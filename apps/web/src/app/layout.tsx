@@ -4,6 +4,8 @@ import { NextIntlClientProvider } from 'next-intl';
 import { getLocale, getTranslations } from 'next-intl/server';
 import type { ReactNode } from 'react';
 
+import { AnalyticsListener } from '@/components/AnalyticsListener';
+import { GoogleTagManager, GoogleTagManagerNoScript } from '@/components/GoogleTagManager';
 import { Providers } from '@/components/Providers';
 import { SITE_URL } from '@/config/site';
 import { OG_IMAGE } from '@/lib/metadata';
@@ -31,6 +33,9 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
       className={`${familjenGrotesk.variable} ${ibmPlexSans.variable} ${ibmPlexMono.variable}`}
     >
       <body className="min-h-dvh bg-canvas text-fg">
+        <GoogleTagManagerNoScript />
+        <GoogleTagManager />
+        <AnalyticsListener />
         <NextIntlClientProvider>
           <Providers>{children}</Providers>
         </NextIntlClientProvider>

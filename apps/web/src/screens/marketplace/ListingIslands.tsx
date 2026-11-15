@@ -2,10 +2,11 @@
 
 import { Badge, CurrencyInput, Panel } from '@casvitta/ui';
 import { useTranslations } from 'next-intl';
-import { useState } from 'react';
+import { useId, useRef, useState } from 'react';
 
 import { SimulationBadge } from '@/components/badges';
 import type { Property } from '@/domain/types';
+import { track } from '@/lib/analytics';
 import { answerFromRecord } from '@/lib/data/marketplace';
 import { DEFAULT_TERM_MONTHS, simulateSac } from '@/lib/finance';
 import { formatBRL } from '@/lib/format';
@@ -19,12 +20,17 @@ export function FinancingSimulator({
   priceCents: initialPrice,
   editablePrice = false,
   title,
+  itemId = 'home',
 }: {
   priceCents: number;
   editablePrice?: boolean;
   title?: string;
+  /** Listing slug for analytics (`home` for the home teaser). */
+  itemId?: string;
 }) {
   const t = useTranslations('listing.simulator');
+  // Two simulators can share a page (phone + desktop layouts): ids must be unique.
+  const termId = useId();
   const [price, setPrice] = useState<number | null>(initialPrice);
   const priceCents = Math.max(price ?? 0, 1);
   const [down, setDown] = useState<number | null>(Math.round(initialPrice * 0.2));
@@ -38,10 +44,22 @@ export function FinancingSimulator({
     termMonths: term,
   });
   const pct = Math.round((downCents / priceCents) * 100);
+  // One `simulate_financing` per simulator, on the first change someone makes.
+  const tracked = useRef(false);
+  const onInteract = () => {
+    if (tracked.current) return;
+    tracked.current = true;
+    track({
+      name: 'simulate_financing',
+      item_id: itemId,
+      term_months: term,
+      down_payment_pct: pct,
+    });
+  };
 
   return (
     <Panel title={title ?? t('title')} aside={<SimulationBadge />}>
-      <div className="grid gap-3 sm:grid-cols-3">
+      <div className="grid gap-3 sm:grid-cols-3" onChangeCapture={onInteract}>
         {editablePrice ? (
           <CurrencyInput label={t('price')} value={price} onValueChange={setPrice} />
         ) : null}
@@ -62,11 +80,11 @@ export function FinancingSimulator({
           />
         )}
         <div className="flex flex-col gap-1.5">
-          <label htmlFor="sim-term" className="type-body-s font-medium">
+          <label htmlFor={termId} className="type-body-s font-medium">
             {t('term')}
           </label>
           <input
-            id="sim-term"
+            id={termId}
             type="number"
             inputMode="numeric"
             min={12}
@@ -76,10 +94,10 @@ export function FinancingSimulator({
             onChange={(e) =>
               setTerm(Math.min(420, Math.max(12, Number(e.target.value) || DEFAULT_TERM_MONTHS)))
             }
-            aria-describedby="sim-term-help"
+            aria-describedby={`${termId}-help`}
             className="h-11 rounded-control border border-line bg-panel px-3 font-mono type-body focus-visible:outline-2 focus-visible:outline-focus"
           />
-          <p id="sim-term-help" className="type-caption">
+          <p id={`${termId}-help`} className="type-caption">
             {t('months')}
           </p>
         </div>
@@ -160,6 +178,11 @@ export function AskBox({
           e.preventDefault();
           const q = question.trim();
           if (!q) return;
+          track({
+            name: 'ask_question',
+            item_id: property.slug,
+            answered_from_record: answerFromRecord(property, q).kind !== 'handoff',
+          });
           setItems((list) => [...list, { id: list.length + 1, question: q, answer: toText(q) }]);
           setQuestion('');
         }}

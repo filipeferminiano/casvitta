@@ -86,3 +86,30 @@ test('broker signup → Anúncios, publishing blocked until the CRECI is verifie
   // The opaque handoff id is consumed and removed from the URL; no PII in it.
   await expect(page).not.toHaveURL(/92740|Bruno/);
 });
+
+test('buyer journey pushes analytics events without personal data', async ({ page }) => {
+  await page.goto(market('/'));
+  await page.waitForLoadState('networkidle');
+  await page.getByLabel('Onde').fill('Vila Mariana');
+  await page.getByRole('button', { name: 'Buscar imóveis' }).click();
+  await expect(page).toHaveURL(/\/comprar/);
+  await page.getByRole('link', { name: 'Rua Domingos de Morais · Vila Mariana' }).first().click();
+  await expect(page).toHaveURL(/\/imovel\/apto-vila-mariana/);
+  await page.waitForLoadState('networkidle');
+  await page.getByLabel('Prazo').filter({ visible: true }).fill('300');
+
+  const layer = await page.evaluate(
+    () => (window as unknown as { dataLayer: Record<string, unknown>[] }).dataLayer,
+  );
+  const events = layer.map((e) => e.event);
+  expect(events).toEqual(
+    expect.arrayContaining(['page_view', 'search', 'view_search_results', 'view_item']),
+  );
+  expect(events).toContain('simulate_financing');
+  expect(layer.find((e) => e.event === 'view_item')).toMatchObject({
+    item_id: 'apto-vila-mariana',
+    value: 690_000,
+    currency: 'BRL',
+  });
+  expect(JSON.stringify(layer)).not.toMatch(/92740|@/);
+});

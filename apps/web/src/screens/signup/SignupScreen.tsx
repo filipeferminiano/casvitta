@@ -8,7 +8,7 @@ import { useEffect, useMemo, useState, useSyncExternalStore } from 'react';
 
 import { PLANS, type PlanKey } from '@/config/site';
 import type { SignupDraft, SignupStep } from '@/domain/types';
-import { track } from '@/lib/analytics';
+import { track, trackBeforeNavigation } from '@/lib/analytics';
 import {
   CRECI_NUMBER,
   SIGNUP_STEPS,
@@ -336,6 +336,7 @@ function PlanStep({
       onSubmit={(e) => {
         e.preventDefault();
         updateSignup({ plan });
+        track({ name: 'select_plan', plan, location: 'signup' });
         onDone();
       }}
     >
@@ -393,7 +394,9 @@ function FirstPropertyStep({ draft, onBack }: { draft: SignupDraft; onBack: () =
         setBusy(true);
         setFailed(false);
         try {
-          window.location.assign(await handoffToApp(appOrigin()));
+          const url = await handoffToApp(appOrigin());
+          await trackBeforeNavigation({ name: 'sign_up', method: 'phone', plan: draft.plan });
+          window.location.assign(url);
         } catch {
           setFailed(true);
           setBusy(false);

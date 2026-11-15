@@ -46,6 +46,7 @@ import {
   useDraftCreative,
   usePickerProperties,
 } from '@/lib/data/hooks';
+import { toValue, track } from '@/lib/analytics';
 import { claimHandoff } from '@/lib/data/signup';
 import { simulateSac } from '@/lib/finance';
 import { formatBRL, formatBRLShort, formatDayMonth } from '@/lib/format';
@@ -647,11 +648,22 @@ function usePublish() {
   const router = useRouter();
   const toast = useToast();
   const publish = useAction(actions.publishDraft);
+  const draft = useAdDraft().data;
+  const property = usePickerProperties().data?.find((p) => p.id === draft?.propertyId);
   return {
     publish,
     run: () =>
       publish.mutate([], {
         onSuccess: (campaignId) => {
+          if (draft) {
+            track({
+              name: 'publish_ad',
+              item_id: property?.slug ?? '',
+              channels: draft.channels.join(','),
+              value: toValue(draft.dailyBudgetCents),
+              currency: 'BRL',
+            });
+          }
           toast({ title: t('step3.publishedToast') });
           router.push(`/anuncios/${campaignId}`);
         },

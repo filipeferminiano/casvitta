@@ -17,9 +17,11 @@ import { useMemo, useState } from 'react';
 
 import { CreciBadge, DemoBadge } from '@/components/badges';
 import type { AvailabilitySlot, BrokerProfile, Property } from '@/domain/types';
+import { track } from '@/lib/analytics';
 import { useAction } from '@/lib/data/hooks';
 import { answerFromRecord, bookBuyerVisit } from '@/lib/data/marketplace';
 import { formatDayMonth, formatDayMonthShort, formatLongDay, formatTime } from '@/lib/format';
+import { now } from '@/mocks/clock';
 
 type Line = { from: 'buyer' | 'ai'; text: string };
 
@@ -68,10 +70,19 @@ export function BuyerChat({
         { financingPct: 80, fgtsCents: 6_000_000, householdIncomeCents: 2_200_000 },
       ],
       {
-        onSuccess: (startsAt) =>
+        onSuccess: (startsAt) => {
+          track({
+            name: 'book_visit',
+            item_id: property.slug,
+            days_ahead: Math.max(
+              0,
+              Math.round((Date.parse(startsAt) - now().getTime()) / 86_400_000),
+            ),
+          });
           router.push(
             `/imovel/${property.slug}/visita-confirmada?horario=${encodeURIComponent(startsAt)}`,
-          ),
+          );
+        },
       },
     );
   };

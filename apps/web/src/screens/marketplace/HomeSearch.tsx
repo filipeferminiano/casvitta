@@ -42,7 +42,13 @@ export function HomeSearch() {
       className="flex flex-col gap-4 rounded-card border border-line bg-panel p-4 md:p-5"
       onSubmit={(e) => {
         e.preventDefault();
-        track({ name: 'search', filters: { transaction, kind, hasWhere: String(Boolean(where)) } });
+        track({
+          name: 'search',
+          search_term: where.trim(),
+          transaction,
+          property_kind: kind,
+          has_max_price: max !== null,
+        });
         router.push(path);
       }}
     >

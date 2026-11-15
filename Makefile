@@ -38,7 +38,7 @@ test:
 check: lint typecheck test ## ruff, mypy, pytest, prettier, eslint, tsc, vitest
 
 e2e: ## Build the web app and run Playwright (needs `pnpm --filter @casvitta/web exec playwright install chromium` once)
-	NEXT_TELEMETRY_DISABLED=1 pnpm --filter @casvitta/web build
+	NEXT_TELEMETRY_DISABLED=1 NEXT_PUBLIC_GTM_ID= pnpm --filter @casvitta/web build
 	pnpm --filter @casvitta/web e2e
 
 storybook: ## Component library on :6006

@@ -1,4 +1,5 @@
 import type { ModuleItem } from '@/domain/types';
+import { track } from '@/lib/analytics';
 import { now } from '@/mocks/clock';
 
 import { withScreenState } from './screen-state';
@@ -28,6 +29,7 @@ export async function registerInterest(key: string): Promise<void> {
       data.moduleInterest.push({ key, at: now().toISOString() });
     }
   });
+  track({ name: 'module_interest', module: key });
 }
 
 /** Available modules can be activated (billing happens on the API in Milestone 1). */

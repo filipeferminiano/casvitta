@@ -48,7 +48,12 @@ export async function ForBrokersScreen() {
           </h1>
           <p className="max-w-[60ch] type-body text-fg-strong">{t('subtitle')}</p>
           <div className="flex flex-wrap gap-3">
-            <Link href="/cadastro/conta" className={linkButton('primary')}>
+            <Link
+              href="/cadastro/conta"
+              data-track="begin_signup"
+              data-track-location="for_brokers_hero"
+              className={linkButton('primary')}
+            >
               {t('ctaStart')}
             </Link>
             <a
@@ -144,6 +149,9 @@ export async function ForBrokersScreen() {
                 action={
                   <Link
                     href={`/cadastro/conta?plano=${key}`}
+                    data-track="select_plan"
+                    data-track-plan={key}
+                    data-track-location="for_brokers"
                     className={cn(
                       linkButton(key === 'profissional' ? 'primary' : 'secondary'),
                       'w-full',
