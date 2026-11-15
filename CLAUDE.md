@@ -20,7 +20,7 @@ Later modules (do NOT build unless a task says so; show them as "Em breve" in th
 | Essencial | R$ 197/month | up to 3 active properties; broker landing page + one per property; CRM, inbox, calendar, proposals; WhatsApp AI assistant |
 | Profissional | R$ 397/month | up to 15 active properties; everything in Essencial; Facebook & Instagram page management; weekly report by channel |
 
-Media spend is paid by the customer, minimum R$ 20/day per property (config: `MIN_DAILY_BUDGET_CENTS=2000`); the customer chooses any amount at or above it. Charged only on what is spent, up to a cap the customer sets.
+Media runs in the broker's own Meta and Google Ads accounts: the broker connects them, keeps the card on file at Meta/Google and is billed directly by them; Casvitta never charges, holds or resells media and only creates and manages the campaigns. Minimum budget R$ 20/day per property (config: `MIN_DAILY_BUDGET_CENTS=2000`); the customer chooses any amount at or above it. Charged only on what is spent, up to a cap the customer sets.
 
 ## 2. Language rules (strict)
 
@@ -86,14 +86,15 @@ These come from Brazilian regulation and from the brand's trust promise. Treat t
 3. **AI is always identified.** Every AI-generated text in the UI carries the "Feito por IA" badge; the WhatsApp assistant introduces itself as the broker's virtual assistant in its first message.
 4. **AI never negotiates price or conditions, never promises credit approval, never invents property facts.** Ad copy may only use facts from the property record; the generator returns the source field of each claim and the UI shows it. Price negotiation or anger → hand off to the human with a reason.
 5. **Financing is always a simulation.** Any mortgage number is labeled "Simulação · não é aprovação". Implement SAC and Price tables in `core/finance.py` with tests. Default illustrative rate is configurable; display rate, term, down payment and that insurance/fees are excluded.
-6. **Money is integer cents** (`amount_cents: int`, currency `BRL`). Never floats for money. Ad spend, plan prices and commissions go through one small ledger (`ledger_entries`) with `kind` and `status` (`contracted`, `forecast`, `realized`, `received`, `paid_out`).
+6. **Money is integer cents** (`amount_cents: int`, currency `BRL`). Never floats for money. Plan prices and commissions go through one small ledger (ad spend read from Meta/Google is stored as reported spend for reports, never as a Casvitta charge) (`ledger_entries`) with `kind` and `status` (`contracted`, `forecast`, `realized`, `received`, `paid_out`).
 7. **Demo data is flagged.** Seed/demo records have `is_demo=true`; UI shows the yellow "Demonstrativo" badge on them.
 8. **LGPD.** Store consent per purpose (`contact_about_properties`, `marketing`) with timestamp and source; respect it in every outbound message. Audit log for reads/writes of personal data by staff. Data export and deletion endpoints per person.
 9. **Future modules are not fake.** "Em breve" items have no working purchase/activation; their button only records interest (`module_interest` table) for the discovery log.
-10. **Media spend has a hard cap.** A campaign never exceeds `daily_budget_cents × days` nor the explicit `max_spend_cents`; enforce on our side, not only on the ad platform.
+10. **Media spend has a hard cap.** A campaign never exceeds `daily_budget_cents × days` nor the explicit `max_spend_cents`; enforce on our side, not only on the ad platform. On the broker's accounts this means setting campaign daily budgets and end dates and pausing the campaign when reported spend reaches the cap.
 11. **Capture pages promise nothing we don't have.** Waitlist/interest pages (developers, investors' institutional section, auctions, rental administration) only store an `interest_signups` record and send a WhatsApp double opt-in; they never show inventory, dates, discounts or features as available.
 12. **Estimates are labeled.** Rental income and yield estimates show "Estimativa · não é garantia" and the comparables count; hide them when there are fewer than 5 comparables.
 13. **Regulated activities.** Casvitta is not an auctioneer and does not offer fund quotas, CRIs or other securities; those pages carry the disclaimers in the mockups. Owner requests are assigned to a CRECI-registered broker (manually by staff at first).
+14. **Ad accounts belong to the broker.** Meta via Facebook Login for Business (ad account, Facebook Page, Instagram professional account) and Google Ads via OAuth on the broker's own customer account, each broker connecting directly (no shared Casvitta ad account, no proxy). Casvitta never stores card data; when an account has no payment method or is restricted, show the reason and the platform's own billing link. The marketplace and the property landing page work without any ad account. Disconnecting keeps campaign and report history.
 
 ## 5. Core data model (starting point — refine with migrations, keep names)
 
@@ -103,7 +104,8 @@ These come from Brazilian regulation and from the brand's trust promise. Treat t
 - `property_media` (property_id, kind: photo/floorplan/video, url, position, is_cover)
 - `owner_authorizations` (property_id, kind, exclusive, signed_at, expires_at, document_url)
 - `listings` (property_id, channel: marketplace/landing/meta/google, status, external_id, published_at) and `ad_creatives` (listing_id, title, body, highlights[], source_map JSON, generated_by_ai, prompt_version, approved_by, approved_at)
-- `campaigns` (property_id, daily_budget_cents, max_spend_cents, starts_at, ends_at, status, region JSON)
+- `ad_accounts` (workspace_id, platform: meta/google, external_account_id, page_id, instagram_account_id, status: connected/needs_payment_method/restricted/disconnected, token_ref in a secrets store, connected_at)
+- `campaigns` (property_id, ad_account_id, daily_budget_cents, max_spend_cents, starts_at, ends_at, status, region JSON)
 - `leads` (workspace_id, property_id, person_id, source, campaign_id, acquisition_cost_cents, stage: new/qualifying/qualified/visit_booked/visit_done/proposal/won/lost, qualification JSON: financing_pct, uses_fgts, fgts_cents, down_payment_cents, household_income_cents, timeframe)
 - `people` (name, phone_e164, email) + `consents`
 - `conversations` (lead_id, channel: whatsapp/instagram/facebook/marketplace, ai_mode: active/paused/handed_off, handoff_reason) and `messages` (sender: lead/ai/human/system, body, external_id, sent_at, status)
