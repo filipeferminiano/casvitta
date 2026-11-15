@@ -47,6 +47,11 @@ attributes (`data-track-item-id="x"` becomes param `item_id`).
 
 ## GTM container setup (one time, in tagmanager.google.com)
 
+Shortcut: `infra/gtm/casvitta-app-events.json` has steps 2–3 (all Data Layer Variables, the
+"App events" trigger and the "GA4 - App events" tag). Import it with Admin → Import Container →
+Merge → "Rename conflicting tags, triggers and variables", then set the constant variable
+"GA4 Measurement ID" to your `G-…` ID. Regenerate it if events or params change.
+
 1. **Google tag** with your GA4 measurement ID (`G-…`). Turn off "Send a page view event when
    this configuration loads" (the app sends `page_view` itself, including on client-side route
    changes). Trigger: Initialization – All Pages.
