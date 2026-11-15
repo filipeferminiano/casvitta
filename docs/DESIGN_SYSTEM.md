@@ -128,7 +128,7 @@ Exact and calm. Examples:
 
 ## 8. Reference screens
 
-The approved mockups live in the Casvitta design canvas (Claude artifact). Screen inventory to reproduce:
+The approved mockups are exported in `docs/mockups/` (PNG + HTML per screen, indexed in its README; deviations in `DEVIATIONS.md`). Screen inventory to reproduce:
 - Ads Studio: 1 Selecionar imóvel, 2 Anúncio gerado por IA, 3 Publicar, 5 Painel do anúncio com lead novo, 8 Relatório semanal; mobile M1–M4.
 - Marketplace: 4 Detalhe do imóvel (galeria, specs, simulação, contato, pergunte à IA); mobile M5–M7.
 - Broker OS: Dashboard, CRM Kanban, Detalhe do lead, Inbox com IA, Agenda, Propostas; mobile Conversas e Agenda.

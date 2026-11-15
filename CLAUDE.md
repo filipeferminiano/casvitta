@@ -1,6 +1,6 @@
 # CLAUDE.md — Casvitta
 
-This file is the standing context for every Claude Code session in this repository. Read it fully before doing anything. Then read `docs/DESIGN_SYSTEM.md` before writing any UI.
+This file is the standing context for every Claude Code session in this repository. Read it fully before doing anything. Then read `docs/DESIGN_SYSTEM.md` before writing any UI, and open the matching screens in `docs/mockups/` (PNG to see it, HTML for exact copy and structure) before building any screen.
 
 ## 1. What we are building
 
@@ -119,6 +119,7 @@ Demo persona for seeds (all fictitious, `is_demo=true`): broker Ana Ribeiro, CRE
 
 ## 7. How to work in this repo
 
+- Before building a screen, open its mockup in `docs/mockups/` (see the README there) and match it; list in your plan which mockups the task covers. Where a mockup conflicts with these docs, the docs win (see `docs/mockups/DEVIATIONS.md`).
 - Plan before large changes: for any task touching more than ~3 files, write a short plan (files, migrations, tests) and wait for approval.
 - Small, reviewable commits with Conventional Commit messages in English.
 - Every feature: migration + service + router + tests (backend) and screen + component stories + test (frontend). Keep routers thin; logic in services.

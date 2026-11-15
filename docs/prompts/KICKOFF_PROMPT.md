@@ -1,13 +1,13 @@
 # Kickoff prompt for Claude Code
 
-Put `CLAUDE.md` at the repo root, `docs/DESIGN_SYSTEM.md` under `docs/` and the `design/` folder (tokens.json, logo-mark.svg) at the root, then paste the prompt below as your first message. The milestone prompts after it are for the following sessions, one at a time.
+Put `CLAUDE.md` at the repo root, the `docs/` folder (DESIGN_SYSTEM.md and mockups/) and the `design/` folder (tokens.json, logo-mark.svg) at the root, then paste the prompt below as your first message. The milestone prompts after it are for the following sessions, one at a time.
 
 ---
 
 ## Prompt 1 — Foundation (paste this first)
 
 ```
-You are the founding engineer of Casvitta. Read CLAUDE.md and docs/DESIGN_SYSTEM.md completely before anything else; they are binding.
+You are the founding engineer of Casvitta. Read CLAUDE.md and docs/DESIGN_SYSTEM.md completely before anything else; they are binding. Look at docs/mockups/README.md and at least the design-system, dashboard and Ads Studio PNGs so you understand the visual target.
 
 Goal of this session: Milestone 0 — a running monorepo foundation with the design system, ready for feature work. Do not build product features yet.
 
@@ -36,7 +36,7 @@ Backend: models, migrations, services, routers and tests for accounts/workspaces
 
 Frontend (apps/web (app)): Dashboard ("Precisa de você", Hoje, Funil agora), Imóveis list + property form with authorization step, Leads Kanban (drag + keyboard move), Lead detail (timeline, qualification panel, simulation), Conversas inbox (list with tabs Precisa de você / IA / Todas, thread, AI draft composer, take over / hand back), Agenda week view with free-for-AI slots, Propostas side-by-side with "Gerar contrato · em breve" disabled, Loja de módulos with Ativo / Disponível / Em breve. Mobile: Conversas and Agenda.
 
-Playwright: anchor flow 2 from CLAUDE.md §6. Plan first, then build.
+Mockups: docs/mockups/3*.png and 04-*.png. Playwright: anchor flow 2 from CLAUDE.md §6. Plan first, then build.
 ```
 
 ## Prompt 3 — Ads Studio, marketplace and landing pages
@@ -48,7 +48,7 @@ Ads Studio 3-step flow (Imóvel → Anúncio → Publicar): property picker bloc
 
 Marketplace (pt-BR, mobile-first, SSR): search with filters, results list + map, property detail (gallery, specs, financing simulation, "Pergunte sobre este imóvel" AI box answering only from the record, visit request), sponsored badge. Broker landing page and property landing page on subdomains, with OpenGraph images and schema.org markup.
 
-Plan first, then build. Playwright: anchor flow 1 up to "listing live".
+Mockups: docs/mockups/1*.png, 2*.png, 40-*.png, 41-*.png. Plan first, then build. Playwright: anchor flow 1 up to "listing live".
 ```
 
 ## Prompt 4 — WhatsApp AI agent, scheduling and weekly report
@@ -68,5 +68,5 @@ Complete Playwright anchor flow 1 end to end. Plan first.
 ```
 Milestone 4: real adapters behind feature flags.
 
-Meta Marketing API (campaign/ad set/ad creation, budget, region targeting, status sync, spend ingestion into the ledger, rejection reasons surfaced as the ErrorState copy in DESIGN_SYSTEM §7), Google Ads (Performance Max or Search for a single property, same contract), Facebook Page + Instagram professional account connection, weekly AI-suggested posts (carrossel, reels, story) that require approval, scheduling and publishing, comments and DMs ingested into Conversas. Document the Meta app review permissions we need in docs/META_APP_REVIEW.md. Plan first.
+Meta Marketing API (campaign/ad set/ad creation, budget, region targeting, status sync, spend ingestion into the ledger, rejection reasons surfaced as the ErrorState copy in DESIGN_SYSTEM §7), Google Ads (Performance Max or Search for a single property, same contract), Facebook Page + Instagram professional account connection, weekly AI-suggested posts (carrossel, reels, story) that require approval, scheduling and publishing, comments and DMs ingested into Conversas (mockup: docs/mockups/42-social-media-calendar.png). Document the Meta app review permissions we need in docs/META_APP_REVIEW.md. Plan first.
 ```
