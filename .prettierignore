@@ -1,0 +1,4 @@
+pnpm-lock.yaml
+packages/api-client/src/schema.ts
+apps/api/
+*.md
