@@ -63,3 +63,22 @@ How to use them:
 | `40-landing-property-page` | Apresentação · slide 5 | desktop 1280px |
 | `41-landing-broker-page` | Apresentação · slide 6 | desktop 1280px |
 | `42-social-media-calendar` | Apresentação · slide 4 | desktop 1280px |
+
+## Public site journeys (casvitta.com.br)
+
+`50-journey-map` shows the 8 entry paths and where each one lands in the product. Links between these HTML files work, so you can click through the journeys locally.
+
+| File | Screen | Viewport |
+|---|---|---|
+| `50-journey-map` | Jornada casvitta.com.br | desktop 1840px |
+| `51-home-desktop` | J1 · Home casvitta.com.br | desktop 1440px |
+| `52-home-mobile` | J2 · Home mobile | mobile 390px |
+| `53-search-results` | J3 · Resultados da busca | desktop 1440px |
+| `54-for-brokers-and-agencies` | J4 · Para corretores e imobiliárias | desktop 1440px |
+| `55-broker-signup-creci` | J5 · Cadastro do corretor | desktop 1440px |
+| `56-owner-listing-request` | J6 · Anunciar meu imóvel (proprietário) | desktop 1440px |
+| `57-developers-waitlist` | J7 · Para incorporadoras (em breve) | desktop 1440px |
+| `58-investors` | J8 · Investidores | desktop 1440px |
+| `59-auction-landing-desktop` | J9 · Leilão (captura) | desktop 1440px |
+| `60-auction-landing-mobile` | J10 · Leilão mobile | mobile 390px |
+| `61-auction-confirmation-mobile` | J11 · Leilão confirmação | mobile 390px |

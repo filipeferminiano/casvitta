@@ -69,7 +69,7 @@ casvitta/
 ### Frontend — `apps/web`
 - **Next.js (App Router) + TypeScript (strict) + React Server Components.** SSR/SSG matters for SEO on marketplace and landing pages.
 - Route groups:
-  - `(marketplace)` — public consumer site: search, results (list + map), property detail, visit booking, financing simulator.
+  - `(marketplace)` — public site at `casvitta.com.br`: home, search/results (list + map, with a "Para investir" mode), property detail, visit booking, financing simulator, and the audience pages: `/para-corretores` (+ agencies section), `/cadastro` (broker signup), `/anunciar-imovel` (owners), `/incorporadoras` (waitlist), `/investidores`, `/leilao` (capture only). See `docs/mockups/50-journey-map.png` for how each path lands in the product.
   - `(landing)` — broker pages `/{brokerSlug}` and property pages `/{brokerSlug}/{propertySlug}`, served on `{brokerSlug}.casvitta.com.br` via middleware rewrite.
   - `(app)` — authenticated Broker OS at `app.casvitta.com.br`: Início, Imóveis, Leads, Conversas, Agenda, Propostas, Anúncios, Loja de módulos, Configurações. "Ads Studio" is the internal/backoffice name only (code, backend, docs); every user-facing label says **Anúncios**.
 - Styling: **Tailwind CSS 4** with a CSS-first theme (`@theme`) generated from the design tokens (`packages/config/tokens.ts` → `packages/config/tailwind-preset.css`). Primitives on **Radix UI**, composed in `packages/ui` (shadcn-style, but our own tokens and components — no default shadcn theme).
@@ -91,6 +91,9 @@ These come from Brazilian regulation and from the brand's trust promise. Treat t
 8. **LGPD.** Store consent per purpose (`contact_about_properties`, `marketing`) with timestamp and source; respect it in every outbound message. Audit log for reads/writes of personal data by staff. Data export and deletion endpoints per person.
 9. **Future modules are not fake.** "Em breve" items have no working purchase/activation; their button only records interest (`module_interest` table) for the discovery log.
 10. **Media spend has a hard cap.** A campaign never exceeds `daily_budget_cents × days` nor the explicit `max_spend_cents`; enforce on our side, not only on the ad platform.
+11. **Capture pages promise nothing we don't have.** Waitlist/interest pages (developers, investors' institutional section, auctions, rental administration) only store an `interest_signups` record and send a WhatsApp double opt-in; they never show inventory, dates, discounts or features as available.
+12. **Estimates are labeled.** Rental income and yield estimates show "Estimativa · não é garantia" and the comparables count; hide them when there are fewer than 5 comparables.
+13. **Regulated activities.** Casvitta is not an auctioneer and does not offer fund quotas, CRIs or other securities; those pages carry the disclaimers in the mockups. Owner requests are assigned to a CRECI-registered broker (manually by staff at first).
 
 ## 5. Core data model (starting point — refine with migrations, keep names)
 
@@ -109,6 +112,7 @@ These come from Brazilian regulation and from the brand's trust promise. Treat t
 - `landing_pages` (owner: broker or property, slug, published) — generated from existing records, not edited as free HTML
 - `social_accounts`, `social_posts` (scheduled_at, status: suggested/awaiting_approval/scheduled/published, channels[])
 - `ledger_entries`, `module_interest`, `audit_log`, `events` (property lifecycle timeline: entity, type, payload, occurred_at)
+- `interest_signups` (platform-level, not per workspace: kind: agency/owner_listing/developer/investor_institutional/rental_admin/auction, name, phone_e164, email, criteria JSON validated per kind, utm_source/medium/campaign, source_page, status: pending_opt_in/confirmed/unsubscribed, opt_in_requested_at, opt_in_confirmed_at, assigned_broker_id for owner requests) + `interest_signup_consents` (purpose, granted, granted_at, source)
 
 ## 6. Anchor flows (each must work end to end, with Playwright tests, against fake adapters)
 

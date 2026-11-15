@@ -1,6 +1,6 @@
 # Kickoff prompt for Claude Code
 
-Put `CLAUDE.md` at the repo root, the `docs/` folder (DESIGN_SYSTEM.md and mockups/) and the `design/` folder (tokens.json, logo-mark.svg) at the root, then paste the prompt below as your first message. The milestone prompts after it are for the following sessions, one at a time.
+Put `CLAUDE.md` at the repo root, the `docs/` folder (DESIGN_SYSTEM.md and mockups/) and the `design/` folder (tokens.json, logo-mark.svg) at the root, then paste Prompt 1 as your first message. The prompts after it are for the following sessions, one at a time, in order (1 → 1b → 1c → 2 → 3 → 4 → 5). See Status for where we are.
 
 ---
 
@@ -25,18 +25,67 @@ Process:
 - Keep all code and comments in English; all UI copy in pt-BR through the catalog.
 ```
 
+## Status (updated 15/11/2026)
+
+- Done: Prompt 1 (Milestone 0: monorepo, API skeleton, fake adapters, design system, shell, CI) and Prompt 1b (Milestone 0.5: every mocked screen 04, 10–17, 20–26, 30–37, 40–42 built with mock data, /dev/screens, screens:capture, docs/mockups/DEVIATIONS.md).
+- Still placeholders: the marketplace home (a plain listing grid), /comprar, /alugar, /entrar, /favoritos, /minhas-visitas, /app/imoveis, /app/configuracoes.
+- Backend: only health and the accounts models. No domain endpoints yet.
+- Next: Prompt 1c (public site, screens 50–61), then Prompt 2.
+
 ---
 
-## Prompt 2 — Core domain + Broker OS (next session)
+## Prompt 1c — Public site journeys (casvitta.com.br)
 
 ```
-Milestone 1: core domain and Broker OS (Door 2), against fake integrations.
+Milestone 0.6: the public site at casvitta.com.br. Milestones 0 and 0.5 are done; build on what exists, don't redo it.
 
-Backend: models, migrations, services, routers and tests for accounts/workspaces/memberships, broker_profiles (CRECI required to publish), properties + media + owner_authorizations (publication gate per CLAUDE.md §4.2), people + consents, leads (stages, qualification JSON, acquisition cost), conversations + messages (ai_mode, handoff_reason), availability_slots + appointments, proposals, events timeline, audit_log, module_interest. Seed script with the demo persona from CLAUDE.md §6, all is_demo=true.
+Read first: CLAUDE.md (rules 11–13 are new), docs/mockups/README.md section "Public site journeys", docs/mockups/50-journey-map.png (each audience, its steps, where it lands in the product) and docs/mockups/DEVIATIONS.md. The decisions in DEVIATIONS.md win over screens 50–61 too: "Anúncios" instead of "Ads Studio" in every label and URL, budget suggestions R$ 20 / 30 / 50 with a free amount and R$ 20/day minimum, times as 14h03, app routes /inicio and /modulos on the app host, landing pages on {slug} subdomains. Where a new mockup contradicts one of these, follow DEVIATIONS.md and add a row for the new screen.
 
-Frontend (apps/web (app)): Dashboard ("Precisa de você", Hoje, Funil agora), Imóveis list + property form with authorization step, Leads Kanban (drag + keyboard move), Lead detail (timeline, qualification panel, simulation), Conversas inbox (list with tabs Precisa de você / IA / Todas, thread, AI draft composer, take over / hand back), Agenda week view with free-for-AI slots, Propostas side-by-side with "Gerar contrato · em breve" disabled, Loja de módulos with Ativo / Disponível / Em breve. Mobile: Conversas and Agenda.
+Reuse before you build: packages/ui already has PropertyCard, PropertyRow, FinancingSimulation, BudgetPicker, Stepper, SegmentedControl, Field, Input, Select, Checkbox, Chip, Badge, Panel, States, Logo, PhotoPlaceholder, Toast; apps/web has screens/marketplace (MarketplaceNav, ListingGrid, ListingIslands, PropertyDetail, BuyerScreens) and lib/data/marketplace.ts. Extend these instead of creating parallel versions. New components go in packages/ui with stories.
 
-Mockups: docs/mockups/3*.png and 04-*.png. Playwright: anchor flow 2 from CLAUDE.md §6. Plan first, then build.
+Replace the placeholders:
+- 51 / 52 → (marketplace)/page.tsx: today it is a plain listing grid. Build the home: search with Comprar/Alugar, shortcuts (Aceita FGTS, Perto do metrô, 2+ quartos, Aceita pet), featured listings, how it works, financing teaser, the dark "Você é…" block (Proprietário, Corretor, Imobiliária, Incorporadora "Em breve"), trust strip.
+- 53 → /comprar and /alugar: results list + map, filter chips kept in the URL, sponsored listing first and labeled, sort, "Salvar busca" (mock), per-card simulated installment. ?modo=investir adds estimated rent and gross yield per card under CLAUDE.md rule 12 (hidden below 5 comparables).
+- Header and footer: update MarketplaceNav to the mockup header (Comprar, Alugar, Anunciar imóvel, Para corretores, Entrar, "Começar como corretor") and add the shared footer (Para você incl. "Imóveis de leilão", Para profissionais incl. "Investidores", Casvitta, WhatsApp +55 11 92740-8912, CRECI-J from config, still the [NÚMERO] placeholder). Apply both to every (marketplace) page, including the existing 13, 25 and 26.
+- /entrar: phone OTP sign-in that reuses the "Conta" step component of /cadastro (mock verification for now).
+
+New routes, all in (marketplace), SSR, mobile-first:
+- 54 → /para-corretores (how it works, what's included, plans from config, the R$ 1.497 vs R$ 397 comparison block with its footnote, #imobiliarias section with "Quero ser avisado do Agency OS" → module_interest/interest signup kind=agency)
+- 55 → /cadastro/[step] with conta → creci → whatsapp → plano → primeiro-imovel. UI through the mock data layer in this milestone (real auth is Milestone 1). CRECI step creates a pending verification; last step hands off to /anuncios/novo on the app host. Publishing stays blocked until the CRECI is verified (rule 1). Mind the cross-host sessionStorage note in DEVIATIONS.md: pass the handoff explicitly instead of relying on shared storage.
+- 56 → /anunciar-imovel (owner form + "O que acontece depois"; kind=owner_listing and a staff task to assign a broker)
+- 57 → /incorporadoras ("Em breve" + waitlist; kind=developer)
+- 58 → /investidores (#pf links to /comprar?modo=investir and a rental_admin waitlist; #gestores: five "Em breve" fronts, pilot steps, CVM disclaimer, "Agendar conversa"; kind=investor_institutional)
+- 59 / 60 → /leilao (capture only: criteria form, two separate consents, risk box, "A Casvitta não é leiloeira"; kind=auction); 61 → /leilao/confirmado
+- 50 is documentation only.
+
+Backend (real, small; this lets the capture pages go live before the rest):
+- New domain apps/api/app/domains/interest/ following the accounts domain conventions; interest_signups model as in CLAUDE.md §5 with a Pydantic criteria schema per kind; Alembic migration in apps/api/migrations/versions.
+- POST /v1/public/interest: no auth, rate-limited, honeypot field, consents stored per purpose with timestamp and source, UTM/source stored.
+- WhatsApp double opt-in through the existing fake adapter in app/integrations/whatsapp: send the confirmation, set opt_in_confirmed_at when the reply is "SIM"; nothing else is sent before opt-in.
+- GET /v1/admin/interest (filter by kind, CSV export) protected by an admin token setting until auth exists.
+- Regenerate packages/api-client. Add lib/data/interest.ts that calls the API when NEXT_PUBLIC_USE_MOCKS=false and the in-memory store otherwise, like the other data modules.
+
+Site basics: per-page metadata and OpenGraph images, sitemap.xml and robots.txt (capture pages indexable, /cadastro and /entrar noindex), schema.org RealEstateListing on listing cards, one track() helper (page_view, search, form_submit, signup_step) with a no-op adapter that respects consent.
+
+Out of scope here (Prompt 2): /app/imoveis, /app/configuracoes, /favoritos, /minhas-visitas, real authentication.
+
+Tests: pytest for the criteria schemas, rate limit, honeypot and opt-in flow; Playwright added to apps/web/e2e/flows.spec.ts for (a) home → /comprar → property detail, (b) /leilao → /leilao/confirmado with the signup stored, (c) /cadastro through to /anuncios/novo with publishing blocked until the CRECI is verified.
+
+Process: reply first with a plan (route table with what is replaced vs new, components reused vs added, migration, endpoints, tests) and wait for my "go". Then one commit per journey, make check after each, add 51–61 to /dev/screens and screens:capture, compare docs/mockups/_impl/ with the mockups, record any intentional difference in DEVIATIONS.md, and finish with the list of what you could not match and why.
+```
+
+---
+
+## Prompt 2 — Core domain, auth and the API behind Broker OS (next session)
+
+```
+Milestone 1: real backend for Door 2 and swapping the existing screens from mocks to the API. The screens already exist (Milestone 0.5); don't redesign them.
+
+Backend: models, migrations, services, routers and tests for accounts/workspaces/memberships, real auth (phone OTP + email magic link, httpOnly cookies, shared across casvitta.com.br and app.casvitta.com.br), broker_profiles (CRECI verification status; publishing blocked until verified), properties + media + owner_authorizations (publication gate, CLAUDE.md rule 2), people + consents, leads, conversations + messages, availability_slots + appointments, proposals, events timeline, audit_log, module_interest. Seed script with the demo persona and the counts documented in DEVIATIONS.md, all is_demo=true.
+
+Frontend: switch lib/data/{dashboard,leads,conversations,calendar,proposals,modules,broker}.ts to the generated API client (keep the mock path behind NEXT_PUBLIC_USE_MOCKS); wire /entrar and /cadastro to real auth; build the remaining placeholders with the same components and patterns: /imoveis (list with PropertyRow, property form with the authorization step and media upload to the storage port), /configuracoes (perfil e CRECI, WhatsApp, plano e faturas, consentimentos LGPD), /favoritos and /minhas-visitas for buyers. The cross-host sessionStorage limitation in DEVIATIONS.md must disappear.
+
+Playwright: anchor flow 2 from CLAUDE.md §6 against the API. Plan first, then build.
 ```
 
 ## Prompt 3 — Ads Studio, marketplace and landing pages
@@ -48,7 +97,7 @@ Ads Studio 3-step flow (Imóvel → Anúncio → Publicar): property picker bloc
 
 Marketplace (pt-BR, mobile-first, SSR): search with filters, results list + map, property detail (gallery, specs, financing simulation, "Pergunte sobre este imóvel" AI box answering only from the record, visit request), sponsored badge. Broker landing page and property landing page on subdomains, with OpenGraph images and schema.org markup.
 
-Mockups: docs/mockups/1*.png, 2*.png, 40-*.png, 41-*.png. Plan first, then build. Playwright: anchor flow 1 up to "listing live".
+The Anúncios screens, the property page and the landing pages already exist (Milestone 0.5), and search/results came in Milestone 0.6: build the backend and jobs, then switch their data modules to the API without redesigning. Mockups: docs/mockups/1*.png, 2*.png, 40-*.png, 41-*.png, 53-*.png. Plan first, then build. Playwright: anchor flow 1 up to "listing live".
 ```
 
 ## Prompt 4 — WhatsApp AI agent, scheduling and weekly report
