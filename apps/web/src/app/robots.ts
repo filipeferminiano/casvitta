@@ -15,7 +15,9 @@ export default async function robots(): Promise<MetadataRoute.Robots> {
     process.env.ROOT_DOMAIN ?? 'localhost:3000',
     process.env.APP_SUBDOMAIN ?? 'app',
   );
-  if (site.kind === 'app' || site.kind === 'reserved') {
+  // Only the real domain is indexed; demo deploys (run.app, previews) stay out of search.
+  const isProductionDomain = new URL(SITE_URL).hostname.endsWith('casvitta.com.br');
+  if (!isProductionDomain || site.kind === 'app' || site.kind === 'reserved') {
     return { rules: { userAgent: '*', disallow: '/' } };
   }
   return {

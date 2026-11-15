@@ -1,0 +1,16 @@
+# Cloud Build upload (gcloud builds submit). Keep it small: no deps, builds, API or mockups.
+.git/
+.gcloudignore
+node_modules/
+**/node_modules/
+**/.next/
+**/.turbo/
+storybook-static/
+playwright-report/
+test-results/
+apps/api/
+docs/
+infra/postgres/
+.env
+.env.*
+!.env.example
