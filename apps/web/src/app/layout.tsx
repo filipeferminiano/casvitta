@@ -5,6 +5,8 @@ import { getLocale, getTranslations } from 'next-intl/server';
 import type { ReactNode } from 'react';
 
 import { Providers } from '@/components/Providers';
+import { SITE_URL } from '@/config/site';
+import { OG_IMAGE } from '@/lib/metadata';
 
 import { familjenGrotesk, ibmPlexMono, ibmPlexSans } from './fonts';
 import './globals.css';
@@ -12,6 +14,8 @@ import './globals.css';
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations('meta');
   return {
+    metadataBase: new URL(SITE_URL),
+    openGraph: { siteName: 'Casvitta', locale: 'pt_BR', type: 'website', images: [OG_IMAGE] },
     title: { default: t('title'), template: t('titleTemplate', { page: '%s' }) },
     description: t('description'),
   };

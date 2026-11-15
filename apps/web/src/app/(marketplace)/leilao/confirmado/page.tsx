@@ -1,16 +1,17 @@
 import type { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
 
+import { publicMetadata } from '@/lib/metadata';
 import { AuctionConfirmation } from '@/screens/marketplace/AuctionConfirmation';
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations('auction.done.meta');
-  return {
+  return publicMetadata({
     title: t('title'),
     description: t('description'),
-    alternates: { canonical: '/leilao/confirmado' },
-    robots: { index: false },
-  };
+    path: '/leilao/confirmado',
+    noindex: true,
+  });
 }
 
 /** Mockup 61. */
