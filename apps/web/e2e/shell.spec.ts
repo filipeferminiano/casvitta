@@ -42,7 +42,7 @@ test.describe('Public hosts', () => {
   test('marketplace home', async ({ page }) => {
     await page.goto('/');
     await expect(
-      page.getByRole('heading', { level: 1, name: 'Imóveis à venda e para alugar' }),
+      page.getByRole('heading', { level: 1, name: 'Encontre seu imóvel e marque a visita hoje.' }),
     ).toBeVisible();
     await expect(page.locator('html')).toHaveAttribute('lang', 'pt-BR');
   });

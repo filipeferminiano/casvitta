@@ -1,15 +1,11 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { NextIntlClientProvider } from 'next-intl';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it } from 'vitest';
 
 import { db, resetDb } from '@/lib/data/store';
 
 import messages from '../../../messages/pt-BR.json';
 import { AgencyInterest } from './AgencyInterest';
-
-vi.mock('next/navigation', () => ({
-  useSearchParams: () => new URLSearchParams('utm_source=instagram'),
-}));
 
 // Radix Checkbox measures itself; jsdom has no ResizeObserver.
 globalThis.ResizeObserver ??= class {
@@ -29,7 +25,10 @@ const type = (label: string, value: string) =>
   fireEvent.change(screen.getByLabelText(label), { target: { value } });
 
 describe('Agency OS waitlist (capture only, rule 11)', () => {
-  beforeEach(() => resetDb());
+  beforeEach(() => {
+    resetDb();
+    window.history.replaceState(null, '', '/para-corretores?utm_source=instagram');
+  });
 
   it('requires the contact consent before storing anything', async () => {
     renderIt();

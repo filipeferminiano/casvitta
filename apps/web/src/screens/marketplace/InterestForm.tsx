@@ -2,7 +2,6 @@
 
 import { Button, Checkbox, Input, Panel } from '@casvitta/ui';
 import { CircleCheck } from 'lucide-react';
-import { useSearchParams } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { useState, type ReactNode } from 'react';
 
@@ -61,7 +60,6 @@ export function InterestForm({
   className?: string;
 }) {
   const t = useTranslations('interest');
-  const params = useSearchParams();
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
   const [website, setWebsite] = useState('');
@@ -123,6 +121,8 @@ export function InterestForm({
           setErrors(next);
           if (Object.keys(next).length || !criteria.ok) return;
           setBusy(true);
+          // Read at submit time so pages stay statically rendered (no useSearchParams).
+          const params = new URLSearchParams(window.location.search);
           const result = await submitInterest({
             kind,
             name: name.trim(),
@@ -134,7 +134,7 @@ export function InterestForm({
               medium: params.get('utm_medium') ?? undefined,
               campaign: params.get('utm_campaign') ?? undefined,
             },
-            source_page: typeof window === 'undefined' ? undefined : window.location.pathname,
+            source_page: window.location.pathname,
             criteria: criteria.criteria,
           } as unknown as InterestPayload);
           setBusy(false);

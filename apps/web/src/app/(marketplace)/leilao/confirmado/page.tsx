@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { Suspense } from 'react';
 import { getTranslations } from 'next-intl/server';
 
 import { publicMetadata } from '@/lib/metadata';
@@ -16,5 +17,9 @@ export async function generateMetadata(): Promise<Metadata> {
 
 /** Mockup 61. */
 export default function Page() {
-  return <AuctionConfirmation />;
+  return (
+    <Suspense>
+      <AuctionConfirmation />
+    </Suspense>
+  );
 }

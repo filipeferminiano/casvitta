@@ -15,7 +15,6 @@ import { OwnerListingForm, maskCep } from './OwnerListingForm';
 
 const push = vi.hoisted(() => vi.fn());
 vi.mock('next/navigation', () => ({
-  useSearchParams: () => new URLSearchParams(),
   useRouter: () => ({ push }),
 }));
 
