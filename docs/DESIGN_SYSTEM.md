@@ -29,6 +29,8 @@ Implement these tokens once in `packages/config/tokens.ts`, export CSS variables
 | `red-600` | `#B42318` | errors, destructive |
 | `red-50` | `#FCE9E7` | error panel background |
 | `chat-bg` | `#E9EEF5` | WhatsApp thread background |
+| `disabled-bg` | `#E7EAF0` | disabled control background |
+| `disabled-text` | `#6B7486` | disabled control text |
 
 Single theme (light) for now. Keep tokens semantic (`--color-text`, `--color-action`, …) mapped onto the palette so a dark theme can be added later.
 
@@ -59,7 +61,7 @@ Headings use `text-wrap: balance`. Body copy max ~65 characters per line. Number
 - Spacing scale (px): 4, 8, 12, 16, 24, 32, 48, 64.
 - Radius: 4 (chips, badges), 6 (buttons, inputs), 10 (cards, panels), 999 (pills).
 - Desktop: 1440 reference, 12 columns, 24 gutter, 32 margin; side navigation 264px. Content is fluid; side nav collapses under 1024px; everything stacks at phone width.
-- Mobile: 390 reference, 4 columns, 16 gutter, 16 margin; bottom tab bar (Início, Leads, Conversas, Agenda, Anúncios).
+- Mobile: 390 reference, 4 columns, 16 gutter, 16 margin; bottom tab bar (Início, Leads, Conversas, Agenda, Anúncios). The UI always says "Anúncios"; "Ads Studio" is an internal name only.
 - Consumer surfaces (marketplace, landing pages, buyer chat) are **mobile-first**. Operations surfaces (Broker OS, later Agency OS/FII) are **desktop-first, data-dense**.
 - Shadows: almost none. Separate with 1px `ink-200` borders and fills. One elevation level for menus/dialogs.
 - Icons: 24px grid, 1.6px stroke, round caps/joins, `currentColor`. Use Lucide icons, adjusted to stroke 1.6. No emoji in UI.
@@ -79,7 +81,7 @@ Approved: option A, "Casa aberta". The roof and floor draw a C with the right wa
 - Lockup: mark + "CASVITTA" in Familjen Grotesk 700, tracking +0.02em, gap ≈ 0.3× cap height, mark ≈ 1.15× text size.
 - On dark (`ink-900`): mark and text white, dot stays `yellow-400`.
 - App icon / favicon: white mark on `ink-900` rounded square (radius 22% of side).
-- Ship `packages/ui/assets/logo-mark.svg`, `logo-lockup.svg`, `logo-lockup-white.svg`, favicons (16, 32, 180, 512). Convert the wordmark to outlines for the static assets.
+- Ship `packages/ui/assets/logo-mark.svg`, `logo-lockup.svg`, `logo-lockup-white.svg`, favicons (16, 32, 180, 512). Convert the wordmark to outlines for the static assets. Raster lockups (`logo-lockup.png`, `logo-lockup-white.png`) are cropped from the approved board `design/logo-board-option-a.png`.
 
 ## 5. Mandatory badges
 
@@ -94,14 +96,14 @@ Approved: option A, "Casa aberta". The roof and floor draw a C with the right wa
 
 ## 6. Components (build in `packages/ui`, each with Storybook stories and all states)
 
-**Foundations:** Button (primary blue / secondary outlined ink / ghost / danger; sizes 44 and 36; loading with spinner + label "Publicando…"; disabled `#E7EAF0` bg `#6B7486` text), IconButton (aria-label required), Link, Input with label always visible, help text, error text (red border + message saying how to fix), CurrencyInput (prefix `R$`, cents internally), Select, Checkbox, Radio, Switch, SegmentedControl, Tabs, Badge, Chip, StatusPill, Avatar, Tooltip, Dialog, Sheet (mobile), Toast, Skeleton.
+**Foundations:** Button (primary blue / secondary outlined ink / ghost / danger; sizes 44 and 36; loading with spinner + label "Publicando…"; disabled `disabled-bg` (`#E7EAF0`) bg, `disabled-text` (`#6B7486`) text), IconButton (aria-label required), Link, Input with label always visible, help text, error text (red border + message saying how to fix), CurrencyInput (prefix `R$`, cents internally), Select, Checkbox, Radio, Switch, SegmentedControl, Tabs, Badge, Chip, StatusPill, Avatar, Tooltip, Dialog, Sheet (mobile), Toast, Skeleton.
 
 **Domain:**
 - `PropertyCard` (marketplace): photo with cover, optional "Destaque pago" and "Demonstrativo", type · neighborhood, price in mono, specs line, broker name + CRECI footer.
 - `PropertyRow` (operations list): thumbnail, address, neighborhood · area · price, status pill (No ar / Pausado / Rascunho / Sem autorização), leads · visits counts.
 - `LeadCard` (Kanban): name, origin · age, qualification chips, note line, media cost in mono at top right; 4px left stripe `yellow-400` when it needs a human, `ink-200` otherwise.
 - `KanbanBoard`: columns Novo, Em qualificação, Qualificado, Visita marcada, Visita feita, Proposta (+ history for Ganho/Perdido); column header with count; drag and keyboard "Mover para…" menu.
-- `ChatThread`: `chat-bg` background; lead bubbles white with radius 4/10/10/10; outgoing bubbles `ink-900` white text radius 10/4/10/10; meta line in mono 10.5px ("IA · 14:03"); system events as centered pills ("Qualificação salva no lead"); header shows mode ("IA atendendo" / "Você está no controle"); composer "Escreva para assumir a conversa"; AI draft composer with blue border and "Rascunho da IA · revise antes de enviar".
+- `ChatThread`: `chat-bg` background; lead bubbles white with radius 4/10/10/10; outgoing bubbles `ink-900` white text radius 10/4/10/10; meta line in mono 10.5px ("IA · 14h03"); system events as centered pills ("Qualificação salva no lead"); header shows mode ("IA atendendo" / "Você está no controle"); composer "Escreva para assumir a conversa"; AI draft composer with blue border and "Rascunho da IA · revise antes de enviar".
 - `QualificationPanel`: rows Financiamento, FGTS, Entrada, Renda informada, Prazo; footnote "Respostas do lead, não verificadas".
 - `FinancingSimulation`: inputs (entrada, FGTS, prazo), result first installment, % of income, rate shown as "taxa ilustrativa", always the simulation badge.
 - `Timeline` (lead history): icon circle + mono timestamp + title + detail, vertical rule.
@@ -111,7 +113,7 @@ Approved: option A, "Casa aberta". The roof and floor draw a C with the right wa
 - `FunnelBars`: label, track `ink-100`, fill blue (green for the final stage), mono value; log scale option with caption.
 - `Stepper` (Ads Studio: Imóvel → Anúncio → Publicar): numbered circles, done = green check.
 - `ChannelToggle`: switch + name + description + cost note ("incluso" / "do orçamento").
-- `BudgetPicker`: three presets (R$ 15 / 25 / 40) with "recomendado", explanation box with the range and "não é uma promessa", duration, region, max spend.
+- `BudgetPicker`: free daily amount, minimum R$ 20 (from config), with suggestions R$ 20 / 30 / 50 and one marked "recomendado", explanation box with the range and "não é uma promessa", duration, region, max spend.
 - `ModuleCard` (store): states Ativo (green pill, "Gerenciar"), Disponível (2px blue border, primary "Ativar"), Em breve (dashed border, "Quero ser avisado").
 - `EmptyState`, `LoadingState` (skeleton + what is happening and how long), `ErrorState` (red-50 panel: what failed, what still works, how to fix, two actions). Every list/screen must implement all three.
 - `BrowserFrame` for landing page previews; `PhoneFrame` for mobile previews in Ads Studio.

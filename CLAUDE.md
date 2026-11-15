@@ -20,14 +20,14 @@ Later modules (do NOT build unless a task says so; show them as "Em breve" in th
 | Essencial | R$ 197/month | up to 3 active properties; broker landing page + one per property; CRM, inbox, calendar, proposals; WhatsApp AI assistant |
 | Profissional | R$ 397/month | up to 15 active properties; everything in Essencial; Facebook & Instagram page management; weekly report by channel |
 
-Media spend is paid by the customer, from R$ 20/day per property, charged only on what is spent, up to a cap the customer sets.
+Media spend is paid by the customer, minimum R$ 20/day per property (config: `MIN_DAILY_BUDGET_CENTS=2000`); the customer chooses any amount at or above it. Charged only on what is spent, up to a cap the customer sets.
 
 ## 2. Language rules (strict)
 
 - **Code, identifiers, comments, commit messages, docs, tests, API field names, DB names: English.**
 - **Every user-facing string: Brazilian Portuguese (pt-BR)**, both consumer marketplace and broker app. Never hard-code UI copy in components; put it in the message catalog (`apps/web/messages/pt-BR.json`) and read it through the i18n helper. Only pt-BR exists for now, but keep the mechanism.
 - Write copy from the user's side: short, active, specific. "Publicar anúncio", not "Submeter". Errors say what went wrong and how to fix it. No marketing jargon in the broker UI (say "pessoas que viram", "pedidos de visita"; never CPM, CTR, CPC on primary screens).
-- Formatting: BRL as `R$ 690.000` / `R$ 6.563,40` (`Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' })`), dates `dd/MM/yyyy`, times `14h`, `11h30`. Timezone `America/Sao_Paulo`. Phones stored in E.164, displayed `(11) 92740-8912`.
+- Formatting: BRL as `R$ 690.000` / `R$ 6.563,40` (`Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' })`), dates `dd/MM/yyyy`, times `HHhMM` everywhere including chat (`14h03`, `11h30`), and `14h` when minutes are zero. Timezone `America/Sao_Paulo`. Phones stored in E.164, displayed `(11) 92740-8912`.
 
 ## 3. Stack (decided — do not swap without asking)
 
@@ -50,7 +50,7 @@ casvitta/
 - Python 3.12, **FastAPI**, Pydantic v2, **SQLAlchemy 2.0** (async, typed `Mapped[]` models), **Alembic** migrations.
 - **PostgreSQL 16** (+ PostGIS later for maps). **Redis** for cache and the job queue.
 - Background jobs: **arq** (async, Redis-based) — AI generation, WhatsApp sends, ad sync, weekly reports.
-- Auth: email magic link + phone OTP; sessions via httpOnly secure cookies (JWT access + rotating refresh). Multi-tenant by `workspace_id` on every tenant table; enforce in a repository/service layer and test it.
+- Auth: email magic link + phone OTP; sessions via httpOnly secure cookies (JWT access + rotating refresh). Multi-tenant by `workspace_id` on every tenant table — including child tables (listings, campaigns, appointments, proposals, messages, …) and `people` (a person belongs to one workspace); enforce in a repository/service layer and test it.
 - Tooling: `uv`, `ruff` (lint + format), `mypy --strict` on `app/`, `pytest` + `pytest-asyncio` + `httpx.AsyncClient`, factory-based fixtures, a real Postgres in tests (testcontainers or docker-compose service).
 - Structure by domain, not by layer:
   ```
@@ -71,8 +71,8 @@ casvitta/
 - Route groups:
   - `(marketplace)` — public consumer site: search, results (list + map), property detail, visit booking, financing simulator.
   - `(landing)` — broker pages `/{brokerSlug}` and property pages `/{brokerSlug}/{propertySlug}`, served on `{brokerSlug}.casvitta.com.br` via middleware rewrite.
-  - `(app)` — authenticated Broker OS at `app.casvitta.com.br`: Início, Imóveis, Leads, Conversas, Agenda, Propostas, Ads Studio, Loja de módulos, Configurações.
-- Styling: **Tailwind CSS** with a preset generated from the design tokens (`packages/config/tailwind-preset.ts`). Primitives on **Radix UI**, composed in `packages/ui` (shadcn-style, but our own tokens and components — no default shadcn theme).
+  - `(app)` — authenticated Broker OS at `app.casvitta.com.br`: Início, Imóveis, Leads, Conversas, Agenda, Propostas, Anúncios, Loja de módulos, Configurações. "Ads Studio" is the internal/backoffice name only (code, backend, docs); every user-facing label says **Anúncios**.
+- Styling: **Tailwind CSS 4** with a CSS-first theme (`@theme`) generated from the design tokens (`packages/config/tokens.ts` → `packages/config/tailwind-preset.css`). Primitives on **Radix UI**, composed in `packages/ui` (shadcn-style, but our own tokens and components — no default shadcn theme).
 - Data: TanStack Query for client data, typed client from `packages/api-client` (generated with `openapi-typescript` + `openapi-fetch`). Forms: React Hook Form + Zod. i18n: `next-intl` with `pt-BR`.
 - Tests: Vitest + Testing Library for components, Playwright for the two anchor flows (§6). Storybook for `packages/ui`.
 - Accessibility is required: real `<button>`/`<a>`/`<label>`, visible focus, 4.5:1 text contrast, touch targets ≥ 44px, keyboard-operable Kanban (moves via menu as well as drag).
@@ -81,7 +81,7 @@ casvitta/
 
 These come from Brazilian regulation and from the brand's trust promise. Treat them as invariants with tests.
 
-1. **CRECI everywhere.** Every published listing, ad creative, landing page and broker card shows the responsible broker's CRECI. A broker cannot publish without a validated CRECI number on their profile.
+1. **CRECI everywhere.** Every published listing, ad creative, landing page and broker card shows the responsible broker's CRECI. A broker cannot publish without a validated CRECI number on their profile. Validation is manual for now: format check on input, then staff set `creci_verified_at`; an automated lookup comes later.
 2. **Sale/rental authorization gate.** A property cannot be published (marketplace, landing page or ads) without an owner authorization record (type: sale/rental, exclusivity yes/no, signed date, expiry). Expired authorization unpublishes the listing.
 3. **AI is always identified.** Every AI-generated text in the UI carries the "Feito por IA" badge; the WhatsApp assistant introduces itself as the broker's virtual assistant in its first message.
 4. **AI never negotiates price or conditions, never promises credit approval, never invents property facts.** Ad copy may only use facts from the property record; the generator returns the source field of each claim and the UI shows it. Price negotiation or anger → hand off to the human with a reason.
@@ -112,7 +112,7 @@ These come from Brazilian regulation and from the brand's trust promise. Treat t
 
 ## 6. Anchor flows (each must work end to end, with Playwright tests, against fake adapters)
 
-1. **Door 1:** select property (blocked if no authorization) → AI generates ad (title, description, highlights, with source per claim) → broker edits/approves → choose channels + daily budget (R$15/25/40 presets, recommended value shown as a range, not a promise) → publish → property landing page + marketplace listing live → simulated lead arrives via WhatsApp → AI asks financing / FGTS / down payment → qualification saved on the lead → AI offers two free slots → appointment confirmed → weekly report shows spend, leads, cost per lead, cost per booked visit, by channel.
+1. **Door 1:** select property (blocked if no authorization) → AI generates ad (title, description, highlights, with source per claim) → broker edits/approves → choose channels + daily budget (free amount ≥ R$ 20/day, with suggestions R$ 20/30/50; recommended value shown as a range, not a promise) → publish → property landing page + marketplace listing live → simulated lead arrives via WhatsApp → AI asks financing / FGTS / down payment → qualification saved on the lead → AI offers two free slots → appointment confirmed → weekly report shows spend, leads, cost per lead, cost per booked visit, by channel.
 2. **Door 2:** dashboard "Precisa de você" (items needing a human) → Kanban → lead detail timeline → inbox with AI handoff (draft reply marked "Rascunho da IA · revise antes de enviar") → calendar → proposals side by side (proposal → "Gerar contrato · em breve" disabled).
 
 Demo persona for seeds (all fictitious, `is_demo=true`): broker Ana Ribeiro, CRECI-SP 000.000-F; property "Apartamento · Rua Domingos de Morais, Vila Mariana", R$ 690.000, 68 m², 2 quartos, 1 vaga, condomínio R$ 820; leads Marcos T., Júlia P., Rafael M., Bianca S., Pedro A.
