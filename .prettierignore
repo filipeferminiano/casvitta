@@ -2,3 +2,7 @@ pnpm-lock.yaml
 packages/api-client/src/schema.ts
 apps/api/
 *.md
+packages/config/tailwind-preset.css
+packages/ui/src/components/logo-paths.generated.ts
+packages/api-client/openapi.json
+design/

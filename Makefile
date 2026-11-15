@@ -3,7 +3,7 @@ SHELL := /bin/bash
 API := apps/api
 UV := uv --directory $(API)
 
-.PHONY: setup infra-up infra-down dev check test lint typecheck format api\:gen db\:migrate db\:seed
+.PHONY: setup infra-up infra-down dev check test e2e lint typecheck format storybook api\:gen db\:migrate db\:seed
 
 setup: ## Install JS and Python dependencies
 	pnpm install
@@ -24,6 +24,7 @@ dev: ## Run API (8000) and web (3000)
 lint:
 	$(UV) run ruff check .
 	$(UV) run ruff format --check .
+	pnpm exec prettier --check .
 	pnpm lint
 
 typecheck:
@@ -34,7 +35,14 @@ test:
 	$(UV) run pytest
 	pnpm test
 
-check: lint typecheck test ## ruff, mypy, pytest, eslint, tsc, vitest
+check: lint typecheck test ## ruff, mypy, pytest, prettier, eslint, tsc, vitest
+
+e2e: ## Build the web app and run Playwright (needs `pnpm --filter @casvitta/web exec playwright install chromium` once)
+	NEXT_TELEMETRY_DISABLED=1 pnpm --filter @casvitta/web build
+	pnpm --filter @casvitta/web e2e
+
+storybook: ## Component library on :6006
+	pnpm storybook
 
 format:
 	$(UV) run ruff format .

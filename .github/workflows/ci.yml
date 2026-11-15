@@ -1,0 +1,103 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  api:
+    name: API (ruff, mypy, pytest)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/api
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: casvitta
+          POSTGRES_PASSWORD: casvitta
+          POSTGRES_DB: casvitta
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U casvitta"
+          --health-interval 5s --health-timeout 3s --health-retries 10
+    env:
+      DATABASE_URL: postgresql+asyncpg://casvitta:casvitta@localhost:5432/casvitta
+      TEST_DATABASE_URL: postgresql+asyncpg://casvitta:casvitta@localhost:5432/casvitta_test
+      FAKE_INTEGRATIONS: 'true'
+    steps:
+      - uses: actions/checkout@v7
+      - uses: astral-sh/setup-uv@v10
+        with:
+          enable-cache: true
+      - run: uv sync --locked
+      - name: Create test database
+        run: psql postgresql://casvitta:casvitta@localhost:5432/casvitta -c 'CREATE DATABASE casvitta_test'
+      - run: uv run ruff check .
+      - run: uv run ruff format --check .
+      - run: uv run mypy app
+      - name: Migrations apply and match the models
+        run: uv run alembic upgrade head && uv run alembic check
+      - run: uv run pytest
+      - name: OpenAPI schema is committed and up to date
+        run: |
+          uv run python -m app.scripts.export_openapi ../../packages/api-client/openapi.json
+          git diff --exit-code -- ../../packages/api-client/openapi.json
+
+  web:
+    name: Web and packages (eslint, tsc, vitest, build, storybook)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Generated files are up to date
+        run: |
+          pnpm --filter @casvitta/config build:css
+          pnpm --filter @casvitta/api-client generate
+          git diff --exit-code
+      - run: pnpm exec prettier --check .
+      - run: pnpm lint
+      - run: pnpm typecheck
+      - run: pnpm test
+      - run: pnpm --filter @casvitta/web build
+        env:
+          NEXT_TELEMETRY_DISABLED: '1'
+      - run: pnpm build-storybook
+
+  e2e:
+    name: E2E smoke (Playwright)
+    runs-on: ubuntu-latest
+    needs: web
+    steps:
+      - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm --filter @casvitta/web exec playwright install --with-deps chromium
+      - run: pnpm --filter @casvitta/web build
+        env:
+          NEXT_TELEMETRY_DISABLED: '1'
+      - run: pnpm --filter @casvitta/web e2e
+      - if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: playwright-report
+          path: apps/web/playwright-report
+          retention-days: 7
