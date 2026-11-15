@@ -10,7 +10,7 @@ export {
 export { Badge, badgeVariants, type BadgeProps, type BadgeVariant } from './components/Badge.tsx';
 export { Button, buttonVariants, type ButtonProps } from './components/Button.tsx';
 export { Checkbox, type CheckboxProps } from './components/Checkbox.tsx';
-export { Chip, type ChipProps } from './components/Chip.tsx';
+export { Chip, filterChipClass, type ChipProps } from './components/Chip.tsx';
 export {
   CurrencyInput,
   parseCentsInput,
@@ -92,3 +92,10 @@ export { PhotoPlaceholder } from './components/PhotoPlaceholder.tsx';
 export { PropertyCard, type PropertyCardProps } from './components/PropertyCard.tsx';
 export { PropertyRow, type PropertyRowProps } from './components/PropertyRow.tsx';
 export { Stepper, type StepperProps } from './components/Stepper.tsx';
+export { AudienceCard, type AudienceCardProps } from './components/AudienceCard.tsx';
+export { Callout, type CalloutProps } from './components/Callout.tsx';
+export { ChoiceChips, type ChoiceChipsProps } from './components/ChoiceChips.tsx';
+export { EstimateBox, type EstimateBoxProps } from './components/EstimateBox.tsx';
+export { MapPins, type MapPin, type MapPinsProps } from './components/MapPins.tsx';
+export { NumberedSteps, type NumberedStepsProps } from './components/NumberedSteps.tsx';
+export { PlanCard, type PlanCardProps } from './components/PlanCard.tsx';
