@@ -1,0 +1,25 @@
+{
+  "name": "@casvitta/api-client",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "generate": "openapi-typescript openapi.json -o src/schema.ts",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "openapi-fetch": "0.17.0"
+  },
+  "devDependencies": {
+    "@casvitta/config": "workspace:*",
+    "eslint": "9.39.5",
+    "openapi-typescript": "7.13.0",
+    "typescript": "6.0.3",
+    "vitest": "5.1.0"
+  }
+}
