@@ -73,8 +73,14 @@ export type Property = {
   /** Facts the owner/broker confirmed, e.g. pets allowed. */
   facts: Record<string, string>;
   authorization: OwnerAuthorization | null;
+  /** Map position (WGS84). */
+  geo: { lat: number; lng: number } | null;
+  createdAt: ISODateTime;
   isDemo: boolean;
 };
+
+/** Estimated rent from comparable rentals nearby (CLAUDE.md rule 12). */
+export type RentEstimate = { monthlyCents: Cents; comparables: number };
 
 // ------------------------------------------------------------------ people
 
@@ -355,4 +361,25 @@ export type ModuleItem = {
   /** Price or plan line in mono, e.g. "Incluído no plano". */
   priceLine: string;
   icon: 'users' | 'sparkles' | 'megaphone' | 'file' | 'building' | 'calendar' | 'shield' | 'home';
+};
+
+// ------------------------------------------------------------------ broker signup
+
+export type SignupStep = 'conta' | 'creci' | 'whatsapp' | 'plano' | 'primeiro-imovel';
+
+/** /cadastro draft (mock mode). Real auth and profiles arrive in Milestone 1. */
+export type SignupDraft = {
+  id: ID;
+  name: string;
+  phoneE164: string;
+  phoneVerified: boolean;
+  creciName: string | null;
+  creciNumber: string | null;
+  creciState: string | null;
+  creciKind: 'F' | 'J' | null;
+  /** Pending until staff verify it (CLAUDE.md rule 1); publishing stays blocked. */
+  creciStatus: 'missing' | 'pending' | 'verified';
+  whatsappE164: string | null;
+  plan: 'essencial' | 'profissional';
+  createdAt: ISODateTime;
 };

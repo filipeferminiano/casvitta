@@ -9,7 +9,10 @@ import type {
   Campaign,
   Property,
 } from '@/domain/types';
+import { simulateSac } from '@/lib/finance';
+import type { SearchFilters } from '@/lib/search-params';
 import { now } from '@/mocks/clock';
+import { marketBrokers, marketProperties, rentEstimates } from '@/mocks/fixtures';
 
 import { isPublishable } from './ads';
 import { db, mutate, newId } from './store';
@@ -24,9 +27,20 @@ export type PublicListing = {
   creative: AdCreative | null;
 };
 
+/** Every property that could be public: the broker's own plus other brokers' inventory. */
+function allProperties(): Property[] {
+  return [...db().properties, ...marketProperties];
+}
+
+function brokerFor(property: Property): BrokerProfile {
+  const data = db();
+  if (property.workspaceId === data.broker.workspaceId) return data.broker;
+  return marketBrokers.find((b) => b.workspaceId === property.workspaceId) ?? data.broker;
+}
+
 export function getListingBySlug(slug: string): PublicListing | null {
   const data = db();
-  const property = data.properties.find((p) => p.slug === slug);
+  const property = allProperties().find((p) => p.slug === slug);
   // Unauthorized properties are never public (CLAUDE.md §4.2).
   if (!property || !isPublishable(property)) return null;
   const campaign =
@@ -34,13 +48,19 @@ export function getListingBySlug(slug: string): PublicListing | null {
   const creative = campaign
     ? (data.creatives.find((c) => c.id === campaign.creativeId) ?? null)
     : null;
-  return { property, broker: data.broker, sponsored: Boolean(campaign), campaign, creative };
+  return {
+    property,
+    broker: brokerFor(property),
+    sponsored: Boolean(campaign),
+    campaign,
+    creative,
+  };
 }
 
 /** Every publishable listing (marketplace home, broker page). */
 export function listPublicListings(): PublicListing[] {
-  return db()
-    .properties.filter(isPublishable)
+  return allProperties()
+    .filter(isPublishable)
     .map((p) => getListingBySlug(p.slug))
     .filter((l): l is PublicListing => l !== null);
 }
@@ -193,4 +213,74 @@ export async function bookBuyerVisit(
 
 export function getBuyerVisit(propertySlug: string): string | null {
   return db().buyerVisits[propertySlug] ?? null;
+}
+
+// ---------------------------------------------------------------- search (mockup 53)
+
+export const MIN_COMPARABLES = 5;
+
+export type InvestmentEstimate = {
+  monthlyRentCents: number;
+  comparables: number;
+  grossYield: number;
+};
+
+export type SearchResult = PublicListing & {
+  /** First SAC installment with 20% down, 360 months, illustrative rate (sales only). */
+  installmentCents: number | null;
+  /** Only in "Para investir" mode, and only with ≥ 5 comparables (CLAUDE.md rule 12). */
+  estimate: InvestmentEstimate | null;
+};
+
+const fold = (text: string) =>
+  text
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase();
+
+export function investmentEstimate(property: Property): InvestmentEstimate | null {
+  const rent = rentEstimates[property.id];
+  if (!rent || property.transaction !== 'sale' || rent.comparables < MIN_COMPARABLES) return null;
+  return {
+    monthlyRentCents: rent.monthlyCents,
+    comparables: rent.comparables,
+    grossYield: (rent.monthlyCents * 12) / property.priceCents,
+  };
+}
+
+export function searchListings(filters: SearchFilters): SearchResult[] {
+  const place = filters.where ? fold(filters.where.split(',')[0] ?? '') : null;
+  const listings = listPublicListings().filter(({ property: p }) => {
+    if (p.transaction !== filters.transaction) return false;
+    if (place && !fold(`${p.neighborhood} ${p.street} ${p.city}`).includes(place)) return false;
+    if (filters.kind && p.kind !== filters.kind) return false;
+    if (filters.maxPriceCents && p.priceCents > filters.maxPriceCents) return false;
+    if (filters.minBedrooms && p.bedrooms < filters.minBedrooms) return false;
+    if (filters.fgts && !p.features.includes('Aceita FGTS')) return false;
+    if (filters.metro && !(p.nearby && /metr/i.test(p.nearby.label) && p.nearby.distanceM <= 1000))
+      return false;
+    if (filters.pet && !p.facts.pets) return false;
+    return true;
+  });
+  const order: Record<SearchFilters['sort'], (a: PublicListing, b: PublicListing) => number> = {
+    relevance: (a, b) => b.property.createdAt.localeCompare(a.property.createdAt),
+    newest: (a, b) => b.property.createdAt.localeCompare(a.property.createdAt),
+    price_asc: (a, b) => a.property.priceCents - b.property.priceCents,
+    price_desc: (a, b) => b.property.priceCents - a.property.priceCents,
+  };
+  // Sponsored listings always come first and are labeled; the rest follow the chosen order.
+  const sorted = [...listings].sort(
+    (a, b) => Number(b.sponsored) - Number(a.sponsored) || order[filters.sort](a, b),
+  );
+  return sorted.map((listing) => ({
+    ...listing,
+    installmentCents:
+      listing.property.transaction === 'sale'
+        ? simulateSac({
+            priceCents: listing.property.priceCents,
+            downPaymentCents: Math.round(listing.property.priceCents * 0.2),
+          }).firstInstallmentCents
+        : null,
+    estimate: filters.invest ? investmentEstimate(listing.property) : null,
+  }));
 }

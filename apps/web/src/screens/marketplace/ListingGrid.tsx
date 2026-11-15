@@ -7,17 +7,21 @@ import { CreciBadge, DemoBadge, SponsoredBadge } from '@/components/badges';
 import type { PublicListing } from '@/lib/data/marketplace';
 import { formatBRL } from '@/lib/format';
 
+import { ListingJsonLd } from './ListingJsonLd';
+
 /** Grid of public listings; every card shows the responsible broker's CRECI. */
 export async function ListingGrid({
   listings,
   emptyTitle,
   emptyDescription,
   hrefFor = (l) => `/imovel/${l.property.slug}`,
+  columns = 3,
 }: {
   listings: PublicListing[];
   emptyTitle: string;
   emptyDescription: string;
   hrefFor?: (listing: PublicListing) => string;
+  columns?: 3 | 4;
 }) {
   const t = await getTranslations('listing');
   if (listings.length === 0) {
@@ -30,11 +34,18 @@ export async function ListingGrid({
     );
   }
   return (
-    <ul className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+    <ul
+      className={
+        columns === 4
+          ? 'grid gap-4 sm:grid-cols-2 lg:grid-cols-4'
+          : 'grid gap-5 sm:grid-cols-2 lg:grid-cols-3'
+      }
+    >
       {listings.map((listing) => {
         const p = listing.property;
         return (
           <li key={p.id}>
+            <ListingJsonLd listing={listing} url={hrefFor(listing)} />
             <PropertyCard
               photoCaption={t('mainPhoto')}
               badges={

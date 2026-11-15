@@ -118,3 +118,9 @@ export function relativeAge(iso: string, now: Date): RelativeUnit {
   );
   return days === 1 ? { key: 'yesterday', n: 1 } : { key: 'days', n: days };
 }
+
+/** "+5511927408912" -> "+55 11 92740-8912" (as printed in the site header and footer). */
+export function formatPhoneIntl(e164: string): string {
+  const m = /^\+55(\d{2})(\d{4,5})(\d{4})$/.exec(e164);
+  return m ? `+55 ${m[1]} ${m[2]}-${m[3]}` : e164;
+}

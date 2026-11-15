@@ -11,10 +11,23 @@ import { DEFAULT_TERM_MONTHS, simulateSac } from '@/lib/finance';
 import { formatBRL } from '@/lib/format';
 import { USE_MOCKS } from '@/mocks/clock';
 
-/** "Simule o financiamento": entrada (includes FGTS), FGTS, prazo -> first SAC installment. */
-export function FinancingSimulator({ priceCents }: { priceCents: number }) {
+/**
+ * "Simule o financiamento": entrada (includes FGTS), FGTS, prazo -> first SAC installment.
+ * `editablePrice` (home teaser, mockup 51) swaps the FGTS field for the property value.
+ */
+export function FinancingSimulator({
+  priceCents: initialPrice,
+  editablePrice = false,
+  title,
+}: {
+  priceCents: number;
+  editablePrice?: boolean;
+  title?: string;
+}) {
   const t = useTranslations('listing.simulator');
-  const [down, setDown] = useState<number | null>(Math.round(priceCents * 0.2));
+  const [price, setPrice] = useState<number | null>(initialPrice);
+  const priceCents = Math.max(price ?? 0, 1);
+  const [down, setDown] = useState<number | null>(Math.round(initialPrice * 0.2));
   const [fgts, setFgts] = useState<number | null>(6_000_000);
   const [term, setTerm] = useState(DEFAULT_TERM_MONTHS);
   const downCents = down ?? 0;
@@ -27,22 +40,27 @@ export function FinancingSimulator({ priceCents }: { priceCents: number }) {
   const pct = Math.round((downCents / priceCents) * 100);
 
   return (
-    <Panel title={t('title')} aside={<SimulationBadge />}>
+    <Panel title={title ?? t('title')} aside={<SimulationBadge />}>
       <div className="grid gap-3 sm:grid-cols-3">
+        {editablePrice ? (
+          <CurrencyInput label={t('price')} value={price} onValueChange={setPrice} />
+        ) : null}
         <CurrencyInput
-          label={t('down')}
+          label={editablePrice ? t('downWithFgts') : t('down')}
           value={down}
           onValueChange={setDown}
           help={t('downHelp', { pct })}
           error={tooHigh ? t('downTooHigh') : undefined}
         />
-        <CurrencyInput
-          label={t('fgts')}
-          value={fgts}
-          onValueChange={setFgts}
-          help={t('fgtsHelp')}
-          error={(fgts ?? 0) > downCents ? t('fgtsTooHigh') : undefined}
-        />
+        {editablePrice ? null : (
+          <CurrencyInput
+            label={t('fgts')}
+            value={fgts}
+            onValueChange={setFgts}
+            help={t('fgtsHelp')}
+            error={(fgts ?? 0) > downCents ? t('fgtsTooHigh') : undefined}
+          />
+        )}
         <div className="flex flex-col gap-1.5">
           <label htmlFor="sim-term" className="type-body-s font-medium">
             {t('term')}

@@ -5,7 +5,7 @@
  * tab. On the server every request reads the pristine fixtures (never mutated). Data modules in
  * this folder are the only code that touches it; screens use the hooks in ./hooks.ts.
  */
-import type { AdDraft } from '@/domain/types';
+import type { AdDraft, SignupDraft } from '@/domain/types';
 import * as fx from '@/mocks/fixtures';
 
 export type Db = {
@@ -33,9 +33,13 @@ export type Db = {
   buyerVisits: Record<string, string>;
   /** When the proposal comparison was sent to the owner, by property id. */
   comparisonsSent: Record<string, string>;
+  /** Capture-page signups in mock mode (the API stores them otherwise). */
+  interestSignups: (Record<string, unknown> & { createdAt: string; status: string })[];
+  /** Broker signup drafts from /cadastro, by opaque id. */
+  signups: Record<string, SignupDraft>;
 };
 
-const STORAGE_KEY = 'casvitta.mockdb.v3';
+const STORAGE_KEY = 'casvitta.mockdb.v4';
 
 export const DEFAULT_AD_DRAFT: AdDraft = {
   propertyId: null,
@@ -72,6 +76,8 @@ function seed(): Db {
     adDraft: DEFAULT_AD_DRAFT,
     buyerVisits: {},
     comparisonsSent: {},
+    interestSignups: [],
+    signups: {},
   });
 }
 

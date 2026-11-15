@@ -20,6 +20,7 @@ import type {
   Property,
   Proposal,
   Qualification,
+  RentEstimate,
   SocialPost,
   Stage,
   TimelineEvent,
@@ -57,6 +58,8 @@ const base: Pick<
   | 'nearby'
   | 'facts'
   | 'features'
+  | 'geo'
+  | 'createdAt'
   | 'isDemo'
 > = {
   workspaceId: WS,
@@ -69,6 +72,8 @@ const base: Pick<
   nearby: null,
   facts: {},
   features: [],
+  geo: null,
+  createdAt: t('11-02', '10:00'),
   isDemo: true,
 };
 
@@ -77,6 +82,7 @@ export const properties: Property[] = [
     ...base,
     id: 'prop-vm',
     slug: 'apto-vila-mariana',
+    geo: { lat: -23.5893, lng: -46.6345 },
     kind: 'apartment',
     transaction: 'sale',
     street: 'Rua Domingos de Morais',
@@ -111,6 +117,7 @@ export const properties: Property[] = [
     ...base,
     id: 'prop-saude',
     slug: 'casa-saude',
+    geo: { lat: -23.617, lng: -46.639 },
     kind: 'house',
     transaction: 'sale',
     street: 'Rua Carneiro da Cunha',
@@ -137,6 +144,7 @@ export const properties: Property[] = [
     ...base,
     id: 'prop-pinheiros',
     slug: 'studio-pinheiros',
+    geo: { lat: -23.566, lng: -46.687 },
     kind: 'studio',
     transaction: 'rent',
     street: 'Rua dos Pinheiros',
@@ -162,6 +170,7 @@ export const properties: Property[] = [
     ...base,
     id: 'prop-perdizes',
     slug: 'apto-perdizes',
+    geo: { lat: -23.537, lng: -46.676 },
     kind: 'apartment',
     transaction: 'sale',
     street: 'Rua Cardoso de Almeida',
@@ -1240,3 +1249,224 @@ export const buyerChatScript: { from: 'buyer' | 'ai'; text: string }[] = [
   { from: 'ai', text: 'E a renda familiar mensal, mais ou menos?' },
   { from: 'buyer', text: 'Uns 22 mil' },
 ];
+
+// ----------------------------------------------------------------- public marketplace inventory
+// Other fictitious brokers' published listings, so search (mockup 53) has results without
+// changing Ana's Broker OS (her workspace keeps the four properties above).
+
+export const marketBrokers: BrokerProfile[] = [
+  {
+    ...broker,
+    id: 'broker-bruno',
+    workspaceId: 'ws-bruno',
+    displayName: 'Bruno Lima',
+    firstName: 'Bruno',
+    creciNumber: '111.111-F',
+    slug: 'brunolima',
+    regions: ['Vila Mariana', 'Moema'],
+    phoneE164: '+5511900000101',
+  },
+  {
+    ...broker,
+    id: 'broker-camila',
+    workspaceId: 'ws-camila',
+    displayName: 'Camila Prado',
+    firstName: 'Camila',
+    creciNumber: '222.222-F',
+    slug: 'camilaprado',
+    regions: ['Pinheiros', 'Saúde'],
+    phoneE164: '+5511900000102',
+  },
+];
+
+type MarketSeed = Pick<
+  Property,
+  | 'id'
+  | 'slug'
+  | 'kind'
+  | 'transaction'
+  | 'street'
+  | 'neighborhood'
+  | 'areaM2'
+  | 'bedrooms'
+  | 'parking'
+  | 'priceCents'
+> &
+  Partial<Property>;
+
+const marketProperty = (seed: MarketSeed): Property => ({
+  ...base,
+  workspaceId: 'ws-bruno',
+  shortName: `${seed.kind === 'house' ? 'Casa' : seed.kind === 'studio' ? 'Studio' : 'Apto'} ${seed.neighborhood}`,
+  condoFeeCents: null,
+  iptuYearCents: null,
+  status: 'live',
+  photoCount: 8,
+  authorization: {
+    kind: seed.transaction === 'rent' ? 'rental' : 'sale',
+    exclusive: false,
+    signedAt: t('10-15', '10:00'),
+    expiresAt: '2027-04-15T10:00:00-03:00',
+    ownerName: 'Proprietário (demonstrativo)',
+  },
+  ...seed,
+});
+
+export const marketProperties: Property[] = [
+  marketProperty({
+    id: 'mk-1',
+    slug: 'apto-joaquim-tavora',
+    kind: 'apartment',
+    transaction: 'sale',
+    street: 'Rua Joaquim Távora',
+    neighborhood: 'Vila Mariana',
+    areaM2: 72,
+    bedrooms: 2,
+    parking: 1,
+    priceCents: 71_000_000,
+    condoFeeCents: 79_000,
+    features: ['Aceita FGTS'],
+    nearby: { label: 'metrô Ana Rosa', distanceM: 450 },
+    geo: { lat: -23.5842, lng: -46.6371 },
+    createdAt: t('11-12', '10:00'),
+  }),
+  marketProperty({
+    id: 'mk-2',
+    slug: 'apto-franca-pinto',
+    kind: 'apartment',
+    transaction: 'sale',
+    street: 'Rua França Pinto',
+    neighborhood: 'Vila Mariana',
+    areaM2: 61,
+    bedrooms: 2,
+    parking: 1,
+    priceCents: 65_500_000,
+    features: ['Aceita FGTS'],
+    facts: { pets: 'O condomínio aceita pets.' },
+    geo: { lat: -23.5905, lng: -46.6402 },
+    createdAt: t('11-10', '10:00'),
+  }),
+  marketProperty({
+    id: 'mk-3',
+    slug: 'apto-humberto-i',
+    kind: 'apartment',
+    transaction: 'sale',
+    street: 'Rua Humberto I',
+    neighborhood: 'Vila Mariana',
+    areaM2: 70,
+    bedrooms: 2,
+    parking: 1,
+    priceCents: 73_500_000,
+    nearby: { label: 'metrô Vila Mariana', distanceM: 700 },
+    geo: { lat: -23.5871, lng: -46.6302 },
+    createdAt: t('11-08', '10:00'),
+  }),
+  marketProperty({
+    id: 'mk-4',
+    slug: 'apto-vergueiro',
+    kind: 'apartment',
+    transaction: 'sale',
+    street: 'Rua Vergueiro',
+    neighborhood: 'Vila Mariana',
+    areaM2: 95,
+    bedrooms: 3,
+    parking: 2,
+    priceCents: 89_000_000,
+    features: ['Aceita FGTS'],
+    nearby: { label: 'metrô Vila Mariana', distanceM: 300 },
+    geo: { lat: -23.5878, lng: -46.6345 },
+    createdAt: t('11-05', '10:00'),
+  }),
+  marketProperty({
+    id: 'mk-5',
+    slug: 'apto-moema-ibijau',
+    kind: 'apartment',
+    transaction: 'sale',
+    street: 'Avenida Ibijaú',
+    neighborhood: 'Moema',
+    areaM2: 110,
+    bedrooms: 3,
+    parking: 2,
+    priceCents: 120_000_000,
+    facts: { pets: 'O condomínio aceita pets.' },
+    geo: { lat: -23.601, lng: -46.664 },
+    createdAt: t('11-04', '10:00'),
+  }),
+  marketProperty({
+    id: 'mk-6',
+    slug: 'apto-saude-loefgren',
+    kind: 'apartment',
+    transaction: 'sale',
+    workspaceId: 'ws-camila',
+    street: 'Rua Loefgren',
+    neighborhood: 'Saúde',
+    areaM2: 55,
+    bedrooms: 2,
+    parking: 1,
+    priceCents: 54_000_000,
+    features: ['Aceita FGTS'],
+    nearby: { label: 'metrô Saúde', distanceM: 500 },
+    geo: { lat: -23.6185, lng: -46.6362 },
+    createdAt: t('11-11', '10:00'),
+  }),
+  marketProperty({
+    id: 'mk-7',
+    slug: 'apto-vila-mariana-aluguel',
+    kind: 'apartment',
+    transaction: 'rent',
+    street: 'Rua Domingos de Morais',
+    neighborhood: 'Vila Mariana',
+    areaM2: 65,
+    bedrooms: 2,
+    parking: 1,
+    priceCents: 380_000,
+    nearby: { label: 'metrô Santa Cruz', distanceM: 400 },
+    facts: { pets: 'O condomínio aceita pets de pequeno porte.' },
+    geo: { lat: -23.5935, lng: -46.636 },
+    createdAt: t('11-13', '10:00'),
+  }),
+  marketProperty({
+    id: 'mk-8',
+    slug: 'apto-pinheiros-aluguel',
+    kind: 'apartment',
+    transaction: 'rent',
+    workspaceId: 'ws-camila',
+    street: 'Rua Teodoro Sampaio',
+    neighborhood: 'Pinheiros',
+    areaM2: 60,
+    bedrooms: 2,
+    parking: 1,
+    priceCents: 450_000,
+    nearby: { label: 'metrô Fradique Coutinho', distanceM: 350 },
+    geo: { lat: -23.564, lng: -46.684 },
+    createdAt: t('11-09', '10:00'),
+  }),
+  marketProperty({
+    id: 'mk-9',
+    slug: 'casa-saude-bosque',
+    kind: 'house',
+    transaction: 'sale',
+    workspaceId: 'ws-camila',
+    street: 'Rua do Bosque',
+    neighborhood: 'Saúde',
+    areaM2: 160,
+    bedrooms: 3,
+    parking: 2,
+    priceCents: 98_000_000,
+    geo: { lat: -23.615, lng: -46.642 },
+    createdAt: t('11-03', '10:00'),
+  }),
+];
+
+/** "Para investir" estimates from comparable rentals (CLAUDE.md rule 12; hidden below 5). */
+export const rentEstimates: Record<string, RentEstimate> = {
+  'prop-vm': { monthlyCents: 390_000, comparables: 9 },
+  'prop-saude': { monthlyCents: 620_000, comparables: 6 },
+  'mk-1': { monthlyCents: 400_000, comparables: 9 },
+  'mk-2': { monthlyCents: 370_000, comparables: 8 },
+  'mk-3': { monthlyCents: 410_000, comparables: 7 },
+  'mk-4': { monthlyCents: 480_000, comparables: 5 },
+  'mk-5': { monthlyCents: 620_000, comparables: 3 },
+  'mk-6': { monthlyCents: 300_000, comparables: 6 },
+  'mk-9': { monthlyCents: 520_000, comparables: 4 },
+};

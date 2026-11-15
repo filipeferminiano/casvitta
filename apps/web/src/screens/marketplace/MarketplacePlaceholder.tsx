@@ -2,7 +2,7 @@ import { Button, EmptyState } from '@casvitta/ui';
 import Link from 'next/link';
 import { getTranslations } from 'next-intl/server';
 
-export type MarketplaceSection = 'buy' | 'rent' | 'favorites' | 'visits' | 'signIn';
+export type MarketplaceSection = 'favorites' | 'visits' | 'about' | 'privacy' | 'terms';
 
 /** Marketplace pages linked from the header that have no approved design yet. */
 export async function MarketplacePlaceholder({ section }: { section: MarketplaceSection }) {
