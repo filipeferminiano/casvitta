@@ -59,10 +59,10 @@ db\:migrate:
 db\:seed:
 	$(UV) run python -m app.scripts.seed
 
-# Demo web on Cloud Run (project roas-164016, São Paulo, mock data, run.app URL).
+# Web on Cloud Run behind the casvitta.com.br load balancer (project roas-164016, São Paulo, mock data).
 GCP_PROJECT ?= roas-164016
 GCP_REGION ?= southamerica-east1
-WEB_URL ?= https://casvitta-web-625004236871.southamerica-east1.run.app
+WEB_URL ?= https://casvitta.com.br
 deploy-web: ## Build apps/web on Cloud Build and deploy it to Cloud Run (casvitta-web)
 	$(eval TAG := $(shell git rev-parse --short HEAD))
 	gcloud builds submit --project $(GCP_PROJECT) --region $(GCP_REGION) --config infra/cloudbuild/web.yaml --substitutions=_SITE_URL=$(WEB_URL),_TAG=$(TAG) .
