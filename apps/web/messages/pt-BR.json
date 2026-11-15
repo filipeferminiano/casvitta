@@ -1,0 +1,100 @@
+{
+  "meta": {
+    "title": "Casvitta",
+    "titleTemplate": "{page} · Casvitta",
+    "description": "Imóveis à venda e para alugar, com corretores identificados pelo CRECI."
+  },
+  "common": {
+    "skipToContent": "Pular para o conteúdo",
+    "homeLink": "Casvitta, página inicial"
+  },
+  "badges": {
+    "demo": "Demonstrativo",
+    "ai": "Feito por IA",
+    "simulation": "Simulação · não é aprovação",
+    "soon": "Em breve",
+    "sponsored": "Destaque pago",
+    "creci": "CRECI-{state} {number}"
+  },
+  "nav": {
+    "label": "Navegação principal",
+    "mobileLabel": "Navegação",
+    "home": "Início",
+    "properties": "Imóveis",
+    "leads": "Leads",
+    "conversations": "Conversas",
+    "calendar": "Agenda",
+    "proposals": "Propostas",
+    "modulesGroup": "Módulos",
+    "ads": "Anúncios",
+    "moduleStore": "Loja de módulos",
+    "settings": "Configurações"
+  },
+  "app": {
+    "home": {
+      "title": "Início",
+      "emptyTitle": "Nada precisa de você agora",
+      "emptyDescription": "Quando um lead pedir visita, mandar proposta ou a IA passar uma conversa para você, aparece aqui.",
+      "emptyAction": "Ver anúncios"
+    },
+    "properties": {
+      "title": "Imóveis",
+      "emptyTitle": "Nenhum imóvel cadastrado",
+      "emptyDescription": "Cadastre um imóvel com a autorização do proprietário para anunciar no marketplace, na página do imóvel e nas redes."
+    },
+    "leads": {
+      "title": "Leads",
+      "emptyTitle": "Nenhum lead ainda",
+      "emptyDescription": "Leads aparecem aqui quando alguém responde a um anúncio seu. Publique o primeiro imóvel para começar.",
+      "emptyAction": "Ir para Anúncios"
+    },
+    "conversations": {
+      "title": "Conversas",
+      "emptyTitle": "Nenhuma conversa ainda",
+      "emptyDescription": "As mensagens do WhatsApp, do Instagram e do Facebook chegam aqui. A assistente virtual atende primeiro e chama você quando precisar."
+    },
+    "calendar": {
+      "title": "Agenda",
+      "emptyTitle": "Nenhuma visita marcada",
+      "emptyDescription": "Defina seus horários livres para a assistente virtual oferecer visitas aos leads."
+    },
+    "proposals": {
+      "title": "Propostas",
+      "emptyTitle": "Nenhuma proposta ainda",
+      "emptyDescription": "Quando um lead fizer uma proposta, você compara as condições lado a lado aqui."
+    },
+    "ads": {
+      "title": "Anúncios",
+      "emptyTitle": "Nenhum anúncio ainda",
+      "emptyDescription": "Escolha um imóvel, a IA escreve o anúncio com os dados dele e você aprova antes de publicar. O orçamento começa em R$ 20 por dia."
+    },
+    "moduleStore": {
+      "title": "Loja de módulos",
+      "emptyTitle": "Seus módulos aparecem aqui",
+      "emptyDescription": "Você vai ver o que já está ativo no seu plano, o que pode ativar e o que vem em breve."
+    },
+    "settings": {
+      "title": "Configurações",
+      "emptyTitle": "Configurações em preparação",
+      "emptyDescription": "Aqui você vai editar seu perfil, seu CRECI e seu plano."
+    }
+  },
+  "marketplace": {
+    "title": "Imóveis à venda e para alugar",
+    "emptyTitle": "Os primeiros imóveis chegam em breve",
+    "emptyDescription": "Estamos preparando os anúncios. Todo imóvel aqui tem autorização do proprietário e um corretor com CRECI.",
+    "footer": "Todo anúncio mostra o CRECI do corretor responsável."
+  },
+  "landing": {
+    "brokerEmptyTitle": "Página em preparação",
+    "brokerEmptyDescription": "A página deste corretor ainda está sendo montada. Volte em alguns dias.",
+    "propertyEmptyTitle": "Imóvel em preparação",
+    "propertyEmptyDescription": "A página deste imóvel ainda não foi publicada. Fale com o corretor para saber mais.",
+    "poweredBy": "Página criada com a Casvitta"
+  },
+  "notFound": {
+    "title": "Página não encontrada",
+    "description": "Confira o endereço ou volte para o início.",
+    "action": "Voltar para o início"
+  }
+}

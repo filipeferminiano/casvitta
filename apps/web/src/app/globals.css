@@ -1,0 +1,5 @@
+@import 'tailwindcss';
+@import '@casvitta/ui/styles/tokens.css';
+
+/* Scan the shared component library for class names. */
+@source '../../../../packages/ui/src';
