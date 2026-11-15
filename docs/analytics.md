@@ -1,6 +1,6 @@
 # Analytics (Google Tag Manager → GA4)
 
-The web app loads the GTM container `NEXT_PUBLIC_GTM_ID` (default `GTM-PNMZRJDN`) on every host:
+The web app loads the GTM container `NEXT_PUBLIC_GTM_ID` (default `GTM-KT3NQN2G`) on every host:
 marketplace, Broker OS (`app.`) and landing pages (`{slug}.`). The code only pushes events to
 `window.dataLayer` as `{ event: '<name>', ...params }`. GA4 itself is configured inside GTM.
 
@@ -47,10 +47,12 @@ attributes (`data-track-item-id="x"` becomes param `item_id`).
 
 ## GTM container setup (one time, in tagmanager.google.com)
 
-Shortcut: `infra/gtm/casvitta-app-events.json` has steps 2–3 (all Data Layer Variables, the
-"App events" trigger and the "GA4 - App events" tag). Import it with Admin → Import Container →
-Merge → "Rename conflicting tags, triggers and variables", then set the constant variable
-"GA4 Measurement ID" to your `G-…` ID. Regenerate it if events or params change.
+Shortcut: `infra/gtm/casvitta-app-events.json` (GA4 `G-XW8GHEDHEL`) has everything in steps 1–3:
+the "Google tag - GA4" base tag (`send_page_view=false`, Initialization - All Pages), all Data
+Layer Variables, the "App events" trigger and the "GA4 - App events" tag. Import it with
+Admin → Import Container → Existing workspace → **Merge** → "Overwrite conflicting tags,
+triggers and variables". Never choose Overwrite: it deletes everything not in the file.
+Regenerate the file if events or params change.
 
 1. **Google tag** with your GA4 measurement ID (`G-…`). Turn off "Send a page view event when
    this configuration loads" (the app sends `page_view` itself, including on client-side route

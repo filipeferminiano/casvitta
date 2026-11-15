@@ -9,7 +9,7 @@ const int = (key: string, fallback: number) => Number(process.env[key] ?? fallba
 export const SITE_URL = env('NEXT_PUBLIC_SITE_URL', 'http://localhost:3000').replace(/\/$/, '');
 
 /** Google Tag Manager container; empty string disables tracking (tests). */
-export const GTM_ID = env('NEXT_PUBLIC_GTM_ID', 'GTM-PNMZRJDN');
+export const GTM_ID = env('NEXT_PUBLIC_GTM_ID', 'GTM-KT3NQN2G');
 
 export const COMPANY = {
   whatsappE164: env('NEXT_PUBLIC_COMPANY_WHATSAPP', '+5511927408912'),

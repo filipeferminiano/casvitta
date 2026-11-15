@@ -7,7 +7,7 @@
       "accountId": "6405375868",
       "containerId": "287070416",
       "name": "www.casvitta.com.br",
-      "publicId": "GTM-PNMZRJDN",
+      "publicId": "GTM-KT3NQN2G",
       "usageContext": ["WEB"]
     },
     "tag": [
@@ -477,6 +477,43 @@
         ],
         "firingTriggerId": ["9500"],
         "tagFiringOption": "ONCE_PER_EVENT"
+      },
+      {
+        "accountId": "6405375868",
+        "containerId": "287070416",
+        "tagId": "9601",
+        "name": "Google tag - GA4",
+        "type": "googtag",
+        "parameter": [
+          {
+            "type": "TEMPLATE",
+            "key": "tagId",
+            "value": "{{GA4 Measurement ID}}"
+          },
+          {
+            "type": "LIST",
+            "key": "configSettingsTable",
+            "list": [
+              {
+                "type": "MAP",
+                "map": [
+                  {
+                    "type": "TEMPLATE",
+                    "key": "parameter",
+                    "value": "send_page_view"
+                  },
+                  {
+                    "type": "TEMPLATE",
+                    "key": "parameterValue",
+                    "value": "false"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "firingTriggerId": ["2147479573"],
+        "tagFiringOption": "ONCE_PER_EVENT"
       }
     ],
     "trigger": [
@@ -516,7 +553,7 @@
           {
             "type": "TEMPLATE",
             "key": "value",
-            "value": "G-XXXXXXXXXX"
+            "value": "G-XW8GHEDHEL"
           }
         ]
       },
