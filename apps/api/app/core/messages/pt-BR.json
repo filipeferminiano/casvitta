@@ -1,0 +1,17 @@
+{
+  "internal_error": "Algo deu errado do nosso lado. Tente de novo em alguns minutos; se continuar, fale com o suporte.",
+  "not_found": "Não encontramos o que você procurou. Confira o endereço ou volte para a página anterior.",
+  "method_not_allowed": "Esta ação não está disponível aqui.",
+  "validation_error": "Alguns campos precisam de ajuste. Confira as mensagens em cada campo.",
+  "unauthorized": "Sua sessão expirou. Entre de novo para continuar.",
+  "forbidden": "Você não tem acesso a isso. Peça acesso ao responsável pela conta.",
+  "tenant_context_missing": "Não conseguimos identificar sua conta nesta ação. Entre de novo e tente outra vez.",
+  "cross_tenant_write": "Este registro pertence a outra conta e não pode ser alterado por aqui.",
+  "integration_unavailable": "O serviço {integration} está indisponível agora. O resto da plataforma segue funcionando; tente de novo em alguns minutos.",
+  "field.missing": "Preencha este campo.",
+  "field.too_short": "Use pelo menos {min_length} caracteres.",
+  "field.too_long": "Use no máximo {max_length} caracteres.",
+  "field.invalid_number": "Digite um número válido.",
+  "field.invalid_email": "Digite um e-mail válido, como nome@exemplo.com.br.",
+  "field.invalid": "Confira o valor deste campo."
+}

@@ -1,0 +1,74 @@
+"""Application settings, read from environment variables (see .env.example at the repo root)."""
+
+from __future__ import annotations
+
+from functools import lru_cache
+from pathlib import Path
+from typing import Annotated, Literal
+
+from pydantic import Field, SecretStr, field_validator
+from pydantic_settings import BaseSettings, NoDecode, SettingsConfigDict
+
+REPO_ROOT = Path(__file__).resolve().parents[4]
+
+
+class Settings(BaseSettings):
+    model_config = SettingsConfigDict(
+        env_file=(REPO_ROOT / ".env", ".env"),
+        env_file_encoding="utf-8",
+        extra="ignore",
+    )
+
+    app_env: Literal["development", "test", "production"] = "development"
+    log_level: str = "INFO"
+    log_json: bool = False
+
+    database_url: str = "postgresql+asyncpg://casvitta:casvitta@localhost:5432/casvitta"
+    test_database_url: str = "postgresql+asyncpg://casvitta:casvitta@localhost:5432/casvitta_test"
+    redis_url: str = "redis://localhost:6379/0"
+    cors_origins: Annotated[list[str], NoDecode] = Field(
+        default_factory=lambda: ["http://localhost:3000", "http://app.localhost:3000"]
+    )
+    jwt_secret: SecretStr = SecretStr("change-me-in-production")
+
+    # Integrations: fake adapters unless explicitly disabled AND credentials exist.
+    fake_integrations: bool = True
+    anthropic_api_key: SecretStr | None = None
+    llm_model: str = "claude-sonnet-5-5"
+    whatsapp_access_token: SecretStr | None = None
+    whatsapp_phone_number_id: str | None = None
+    whatsapp_verify_token: SecretStr | None = None
+    meta_app_id: str | None = None
+    meta_app_secret: SecretStr | None = None
+    meta_access_token: SecretStr | None = None
+    google_ads_developer_token: SecretStr | None = None
+    google_ads_client_id: str | None = None
+    google_ads_client_secret: SecretStr | None = None
+    google_ads_refresh_token: SecretStr | None = None
+    storage_bucket: str | None = None
+    storage_endpoint_url: str | None = None
+    storage_access_key_id: str | None = None
+    storage_secret_access_key: SecretStr | None = None
+    email_from: str = "Casvitta <nao-responda@casvitta.com.br>"
+    email_api_key: SecretStr | None = None
+    sms_api_key: SecretStr | None = None
+
+    # Business configuration. Money in integer cents, rates in basis points.
+    plan_essencial_price_cents: int = 19_700
+    plan_essencial_max_active_properties: int = 3
+    plan_profissional_price_cents: int = 39_700
+    plan_profissional_max_active_properties: int = 15
+    min_daily_budget_cents: int = 2_000
+    financing_illustrative_annual_rate_bps: int = 1_150
+
+    @field_validator("cors_origins", mode="before")
+    @classmethod
+    def _split_csv(cls, value: object) -> object:
+        if isinstance(value, str):
+            return [item.strip() for item in value.split(",") if item.strip()]
+        return value
+
+
+@lru_cache
+def get_settings() -> Settings:
+    return Settings()
