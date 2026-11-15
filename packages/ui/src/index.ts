@@ -37,3 +37,32 @@ export {
 export { StatusPill, type StatusPillProps } from './components/StatusPill.tsx';
 export { Switch, type SwitchProps } from './components/Switch.tsx';
 export { Tabs, TabsContent, TabsList, TabsTrigger } from './components/Tabs.tsx';
+export { FunnelBars, type FunnelBarsProps, type FunnelItem } from './components/FunnelBars.tsx';
+export { Panel, PanelList, type PanelProps } from './components/Panel.tsx';
+export { ToastProvider, useToast } from './components/Toast.tsx';
+export { Avatar, type AvatarProps } from './components/Avatar.tsx';
+export {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuTrigger,
+} from './components/DropdownMenu.tsx';
+export {
+  FinancingSimulation,
+  type FinancingSimulationProps,
+} from './components/FinancingSimulation.tsx';
+export {
+  KanbanBoard,
+  type KanbanBoardProps,
+  type KanbanColumn,
+} from './components/KanbanBoard.tsx';
+export { cardLinkClass, LeadCard, type LeadCardProps } from './components/LeadCard.tsx';
+export {
+  KeyValueList,
+  QualificationPanel,
+  type KeyValueRow,
+  type QualificationPanelProps,
+} from './components/QualificationPanel.tsx';
+export { StageProgress, type StageProgressProps } from './components/StageProgress.tsx';
+export { Timeline, type TimelineItem } from './components/Timeline.tsx';
