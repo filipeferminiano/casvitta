@@ -132,7 +132,8 @@
       "startAsBroker": "Começar como corretor",
       "openMenu": "Abrir menu",
       "closeMenu": "Fechar menu",
-      "questions": "Dúvidas? WhatsApp {phone}"
+      "questions": "Dúvidas? WhatsApp {phone}",
+      "questionsShort": "Dúvidas? WhatsApp"
     },
     "placeholders": {
       "seeListings": "Ver imóveis no ar",
@@ -1578,6 +1579,207 @@
       "submit": "Entrar na lista",
       "successTitle": "Você está na lista de espera",
       "successDescription": "Mandamos uma mensagem no seu WhatsApp. Responda SIM para confirmar. Chamamos você quando o piloto abrir."
+    }
+  },
+  "investors": {
+    "meta": {
+      "title": "Para investidores · Casvitta",
+      "description": "Compre imóveis para alugar com aluguel e rentabilidade estimados a partir de aluguéis parecidos. Gestoras e family offices: piloto em breve."
+    },
+    "eyebrow": "Para investidores",
+    "title": "Imóveis como investimento, com dados e operação num lugar só.",
+    "subtitle": "Para quem compra imóveis para alugar e para quem administra portfólios. Comece pelo que já existe; o resto entra em piloto com os primeiros parceiros.",
+    "ctaPf": "Invisto em imóveis",
+    "ctaManagers": "Sou gestor ou family office",
+    "pf": {
+      "eyebrow": "Pessoa física",
+      "title": "Compre para alugar sabendo quanto o imóvel pode render",
+      "bullets": {
+        "filter": "Filtro <b>Para investir</b> na busca, com aluguel e rentabilidade estimados a partir de aluguéis parecidos",
+        "simulation": "Simulação de financiamento ao lado da renda estimada",
+        "broker": "Corretor credenciado para visita e proposta",
+        "admin": "Administração do aluguel depois da compra: <b>em breve</b>"
+      },
+      "search": "Buscar imóveis para investir",
+      "example": {
+        "specs": "{bedrooms} quartos · {area} m²",
+        "perMonth": "{amount}/mês"
+      }
+    },
+    "rentalAdmin": {
+      "open": "Avise-me da administração de aluguel",
+      "title": "Administração de aluguel · em breve",
+      "description": "Avisamos pelo WhatsApp quando a administração de aluguel estiver pronta. Nada é cobrado.",
+      "city": "Cidade (opcional)",
+      "count": "Quantos imóveis (opcional)",
+      "consent": "Autorizo a Casvitta a falar comigo pelo WhatsApp sobre a administração de aluguel.",
+      "submit": "Quero ser avisado",
+      "successTitle": "Pronto, avisamos você",
+      "successDescription": "Mandamos uma mensagem no seu WhatsApp. Responda SIM para confirmar o aviso."
+    },
+    "institutional": {
+      "eyebrow": "Gestoras de FII, family offices e securitizadoras",
+      "title": "Seu portfólio operado na mesma base de dados do mercado",
+      "subtitle": "Estamos montando o piloto com os primeiros parceiros. Nenhuma destas frentes está disponível ainda; conte o que é prioridade para você.",
+      "fronts": {
+        "operations": {
+          "title": "Operação do portfólio",
+          "short": "Operação do portfólio",
+          "description": "Contratos, reajustes, cobrança e vacância por ativo: lajes, galpões, varejo e renda residencial."
+        },
+        "leasing": {
+          "title": "Leasing de áreas vagas",
+          "short": "Leasing",
+          "description": "Marketplace e campanhas para preencher vacância, com análise do locatário."
+        },
+        "tenant_risk": {
+          "title": "Risco de inquilino",
+          "short": "Risco de inquilino",
+          "description": "Score de crédito dos locatários e alerta de concentração e inadimplência."
+        },
+        "origination": {
+          "title": "Originação de ativos",
+          "short": "Originação",
+          "description": "Imóveis e portfólios captados na plataforma, com preço, ocupação e histórico."
+        },
+        "data": {
+          "title": "Dados de mercado",
+          "short": "Dados",
+          "description": "Preço e aluguel por m², vacância e inadimplência regionais, via relatório ou API."
+        }
+      },
+      "pilot": {
+        "title": "Como funciona o piloto",
+        "steps": {
+          "0": "Conversa de 30 minutos sobre o portfólio e as prioridades",
+          "1": "Importação de uma amostra de contratos e ativos",
+          "2": "Painel de vacância, vencimentos e inadimplência com seus dados",
+          "3": "Decisão conjunta sobre continuar, com critérios combinados antes"
+        }
+      },
+      "disclaimer": "A Casvitta não oferta nem distribui cotas de fundos, CRIs ou outros valores mobiliários. Produtos regulados pela CVM só por gestoras, securitizadoras e distribuidores habilitados.",
+      "form": {
+        "title": "Agendar uma conversa",
+        "company": "Empresa",
+        "companyError": "Escreva o nome da empresa.",
+        "type": "Tipo",
+        "types": {
+          "fii_manager": "Gestora de FII",
+          "family_office": "Family office",
+          "securitizer": "Securitizadora",
+          "own_portfolio": "Investidor com carteira própria",
+          "other": "Outro"
+        },
+        "size": "Porte",
+        "sizes": {
+          "up_to_10": "Até 10 imóveis",
+          "11_to_50": "11 a 50 imóveis",
+          "51_to_200": "51 a 200 imóveis",
+          "over_200": "Mais de 200 imóveis"
+        },
+        "cities": "Cidades dos ativos",
+        "citiesPlaceholder": "São Paulo, Rio de Janeiro",
+        "citiesError": "Escreva pelo menos uma cidade.",
+        "interests": "O que mais interessa",
+        "interestsError": "Escolha pelo menos uma frente.",
+        "consent": "Aceito receber contato da Casvitta sobre o piloto.",
+        "submit": "Agendar conversa",
+        "successTitle": "Recebemos seu pedido de conversa",
+        "successDescription": "Mandamos uma mensagem no seu WhatsApp. Responda SIM para confirmar e combinamos o horário por lá."
+      }
+    }
+  },
+  "auction": {
+    "meta": {
+      "title": "Imóveis de leilão · receba oportunidades da sua região · Casvitta",
+      "description": "Diga o que procura e avisamos pelo WhatsApp quando aparecer um imóvel de leilão que combina com você, com o edital explicado e um corretor credenciado."
+    },
+    "eyebrow": "Leilões de imóveis · lista de interesse",
+    "title": "Imóveis de leilão: receba as oportunidades da sua região.",
+    "subtitle": "Diga o que procura. Quando aparecer um imóvel de leilão que combina com você, avisamos pelo WhatsApp.",
+    "subtitleMobile": "Diga o que procura. Avisamos pelo WhatsApp quando aparecer algo que combina com você, com o edital explicado e um corretor credenciado para tirar dúvidas.",
+    "gets": {
+      "title": "O que você recebe",
+      "match": {
+        "title": "Só o que combina com você",
+        "description": "Oportunidades filtradas pela região, tipo, valor e forma de pagamento que você escolher."
+      },
+      "notice": {
+        "title": "O edital em linguagem simples",
+        "description": "Um resumo dos pontos que pesam: ocupação, dívidas, prazos e condições de pagamento."
+      },
+      "broker": {
+        "title": "Um corretor credenciado para tirar dúvidas",
+        "description": "Explica o processo e acompanha a visita quando o leilão permite."
+      }
+    },
+    "risk": {
+      "title": "Antes de dar um lance",
+      "items": {
+        "0": "O imóvel pode estar ocupado, e a desocupação pode levar tempo",
+        "1": "Dívidas de condomínio e IPTU podem ficar com o comprador, conforme o edital",
+        "2": "Os prazos de pagamento costumam ser curtos",
+        "3": "Nem todo leilão aceita financiamento ou FGTS"
+      },
+      "lawyer": "Leia sempre o edital e, se puder, consulte um advogado."
+    },
+    "notAuctioneer": "A Casvitta não é leiloeira. Os leilões são conduzidos por leiloeiros oficiais; nós informamos e conectamos você a corretores credenciados.",
+    "form": {
+      "title": "Quero receber oportunidades",
+      "regions": "Cidades ou bairros",
+      "regionsPlaceholder": "São Paulo · Zona Sul",
+      "regionsError": "Escreva pelo menos uma cidade ou bairro.",
+      "kinds": "Tipo de imóvel",
+      "kindsError": "Escolha pelo menos um tipo de imóvel.",
+      "kind": {
+        "apartment": "Apartamento",
+        "house": "Casa",
+        "land": "Terreno",
+        "commercial": "Comercial"
+      },
+      "price": "Faixa de valor",
+      "prices": {
+        "up_to_300k": "Até R$ 300 mil",
+        "300k_to_600k": "R$ 300 a 600 mil",
+        "600k_to_1m": "R$ 600 mil a 1 milhão",
+        "over_1m": "Acima de R$ 1 milhão"
+      },
+      "payment": "Como pretende pagar",
+      "payments": {
+        "cash": "À vista",
+        "financing": "Financiamento",
+        "unsure": "Ainda não sei"
+      },
+      "purpose": "Para quê",
+      "purposes": {
+        "live": "Morar",
+        "invest": "Investir"
+      },
+      "participated": "Já participou de leilão?",
+      "participatedNo": "Ainda não",
+      "participatedYes": "Sim",
+      "consent": "Aceito receber oportunidades de leilão pelo WhatsApp. Posso sair a qualquer momento.",
+      "marketing": "Também quero receber novidades da Casvitta (opcional).",
+      "submit": "Quero receber oportunidades"
+    },
+    "done": {
+      "meta": {
+        "title": "Pronto, você está na lista · Casvitta",
+        "description": "Confirme pelo WhatsApp para receber oportunidades de leilão."
+      },
+      "title": "Pronto, você está na lista.",
+      "reply": "Mandamos uma mensagem no seu WhatsApp. <b>Responda “SIM”</b> para confirmar e começar a receber as oportunidades.",
+      "criteria": "Seus critérios",
+      "rows": {
+        "region": "Região",
+        "kinds": "Tipo",
+        "price": "Valor",
+        "payment": "Pagamento",
+        "purpose": "Para quê"
+      },
+      "noDate": "Ainda não há uma data para as primeiras oportunidades. Você só recebe o que combinar com estes critérios.",
+      "how": "Entender como funciona um leilão",
+      "adjust": "Ajustar meus critérios"
     }
   }
 }

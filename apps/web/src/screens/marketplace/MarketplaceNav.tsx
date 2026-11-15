@@ -38,8 +38,12 @@ export function MarketplaceHeader() {
           <Logo height={20} title={null} />
         </Link>
         {minimal ? (
-          <a href={whatsappLink()} className="ml-auto type-body-s text-fg-strong hover:underline">
-            {t('questions', { phone })}
+          <a
+            href={whatsappLink()}
+            className="ml-auto flex min-h-11 items-center type-body-s text-fg-strong hover:underline"
+          >
+            <span className="md:hidden">{t('questionsShort')}</span>
+            <span className="hidden md:inline">{t('questions', { phone })}</span>
           </a>
         ) : (
           <>

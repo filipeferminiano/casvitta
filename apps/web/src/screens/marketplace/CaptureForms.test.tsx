@@ -6,10 +6,18 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { db, resetDb } from '@/lib/data/store';
 
 import messages from '../../../messages/pt-BR.json';
+import { readAuctionCriteria } from '@/lib/data/auction';
+
+import { AuctionForm } from './AuctionForm';
 import { DeveloperWaitlistForm } from './DeveloperWaitlistForm';
+import { InstitutionalForm } from './InvestorForms';
 import { OwnerListingForm, maskCep } from './OwnerListingForm';
 
-vi.mock('next/navigation', () => ({ useSearchParams: () => new URLSearchParams() }));
+const push = vi.hoisted(() => vi.fn());
+vi.mock('next/navigation', () => ({
+  useSearchParams: () => new URLSearchParams(),
+  useRouter: () => ({ push }),
+}));
 
 globalThis.ResizeObserver ??= class {
   observe() {}
@@ -83,6 +91,50 @@ describe('capture forms store interest only (rule 11)', () => {
     expect(db().interestSignups[0]).toMatchObject({
       kind: 'developer',
       criteria: { company: 'Construtora Exemplo', cities: ['São Paulo', 'Campinas'] },
+    });
+  });
+
+  it('auction keeps contact and marketing consents separate and shows criteria next', async () => {
+    window.sessionStorage.clear();
+    renderIt(<AuctionForm />);
+    type('Seu nome', 'Júlia Prado');
+    type('WhatsApp', '(11) 92740-8912');
+    type('Cidades ou bairros', 'São Paulo · Zona Sul');
+    fireEvent.click(screen.getByRole('checkbox', { name: 'Casa' }));
+    fireEvent.click(
+      screen.getByRole('checkbox', {
+        name: 'Aceito receber oportunidades de leilão pelo WhatsApp. Posso sair a qualquer momento.',
+      }),
+    );
+    fireEvent.click(screen.getByRole('button', { name: 'Quero receber oportunidades' }));
+    await waitFor(() => expect(push).toHaveBeenCalledWith('/leilao/confirmado'));
+    expect(db().interestSignups[0]).toMatchObject({
+      kind: 'auction',
+      consents: { contact_about_properties: true, marketing: false },
+      criteria: { regions: 'São Paulo · Zona Sul', property_kinds: ['house'], purpose: 'live' },
+    });
+    // Only criteria are kept for the confirmation page: no name or phone.
+    expect(readAuctionCriteria()).not.toHaveProperty('name');
+    expect(readAuctionCriteria()?.property_kinds).toEqual(['house']);
+  });
+
+  it('institutional pilot form requires at least one front', async () => {
+    renderIt(<InstitutionalForm />);
+    type('Seu nome', 'Rita Souza');
+    type('Empresa', 'Gestora Exemplo');
+    type('Cidades dos ativos', 'São Paulo');
+    type('WhatsApp', '(11) 92740-8912');
+    fireEvent.click(
+      screen.getByRole('checkbox', { name: 'Aceito receber contato da Casvitta sobre o piloto.' }),
+    );
+    fireEvent.click(screen.getByRole('button', { name: 'Agendar conversa' }));
+    expect(await screen.findByText('Escolha pelo menos uma frente.')).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('checkbox', { name: 'Leasing' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Agendar conversa' }));
+    await waitFor(() => expect(screen.getByRole('status')).toBeInTheDocument());
+    expect(db().interestSignups[0]).toMatchObject({
+      kind: 'investor_institutional',
+      criteria: { org_type: 'fii_manager', portfolio_size: 'up_to_10', interests: ['leasing'] },
     });
   });
 });
