@@ -120,7 +120,7 @@ export const SCREENS: ScreenEntry[] = [
     mockup: '26-mobile-buyer-visit-confirmed',
     title: 'Mobile · Visita confirmada',
     host: 'marketplace',
-    path: '/imovel/apto-vila-mariana/visita-confirmada',
+    path: '/imovel/apto-vila-mariana/visita-confirmada?horario=2026-11-21T10:00:00-03:00',
     viewport: 'mobile',
   },
   {

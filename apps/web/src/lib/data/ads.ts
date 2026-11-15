@@ -198,7 +198,7 @@ export function getCampaignPanel(campaignId: string): Promise<CampaignPanel | nu
 }
 
 export function listCampaigns(): Promise<Campaign[]> {
-  return Promise.resolve(db().campaigns);
+  return withScreenState<Campaign[]>([], () => db().campaigns);
 }
 
 export type ReportView = WeeklyReport & {

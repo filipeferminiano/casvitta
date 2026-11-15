@@ -1,19 +1,32 @@
-import { EmptyState } from '@casvitta/ui';
-import { Building2 } from 'lucide-react';
 import type { Metadata } from 'next';
+import { notFound } from 'next/navigation';
 import { getTranslations } from 'next-intl/server';
 
-export const metadata: Metadata = { robots: { index: false, follow: false } };
+import { getListingBySlug } from '@/lib/data/marketplace';
+import { PropertyLanding } from '@/screens/landing/LandingPages';
 
-export default async function PropertyLandingPage() {
-  const t = await getTranslations('landing');
-  return (
-    <div className="mx-auto max-w-4xl px-4 py-12">
-      <EmptyState
-        icon={<Building2 strokeWidth={1.6} />}
-        title={t('propertyEmptyTitle')}
-        description={t('propertyEmptyDescription')}
-      />
-    </div>
-  );
+type Props = { params: Promise<{ brokerSlug: string; propertySlug: string }> };
+
+function load(brokerSlug: string, propertySlug: string) {
+  const listing = getListingBySlug(propertySlug);
+  return listing && listing.broker.slug === brokerSlug ? listing : null;
+}
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { brokerSlug, propertySlug } = await params;
+  const listing = load(brokerSlug, propertySlug);
+  if (!listing) return {};
+  const t = await getTranslations('listing');
+  return {
+    title: `${t(`kinds.${listing.property.kind}`)} · ${listing.property.neighborhood}`,
+    robots: listing.property.isDemo ? { index: false, follow: false } : undefined,
+  };
+}
+
+/** Mockup 40: the property page on {brokerSlug}.casvitta.com.br/{propertySlug}. */
+export default async function PropertyLandingPage({ params }: Props) {
+  const { brokerSlug, propertySlug } = await params;
+  const listing = load(brokerSlug, propertySlug);
+  if (!listing) notFound();
+  return <PropertyLanding listing={listing} />;
 }

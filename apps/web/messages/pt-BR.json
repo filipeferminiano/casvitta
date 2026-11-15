@@ -89,14 +89,70 @@
     "title": "Imóveis à venda e para alugar",
     "emptyTitle": "Os primeiros imóveis chegam em breve",
     "emptyDescription": "Estamos preparando os anúncios. Todo imóvel aqui tem autorização do proprietário e um corretor com CRECI.",
-    "footer": "Todo anúncio mostra o CRECI do corretor responsável."
+    "footer": "Todo anúncio mostra o CRECI do corretor responsável.",
+    "search": {
+      "label": "Buscar imóveis",
+      "example": "Vila Mariana, 2 quartos, até R$ 750 mil"
+    },
+    "nav": {
+      "label": "Navegação do marketplace",
+      "buy": "Comprar",
+      "rent": "Alugar",
+      "favorites": "Favoritos",
+      "visits": "Minhas visitas",
+      "signIn": "Entrar"
+    },
+    "placeholders": {
+      "seeListings": "Ver imóveis no ar",
+      "buy": {
+        "title": "Comprar",
+        "emptyTitle": "Busca em preparação",
+        "emptyDescription": "Em breve você filtra por bairro, quartos e preço, com lista e mapa. Por enquanto, veja os imóveis no ar."
+      },
+      "rent": {
+        "title": "Alugar",
+        "emptyTitle": "Busca de aluguel em preparação",
+        "emptyDescription": "Em breve você encontra imóveis para alugar por bairro e valor."
+      },
+      "favorites": {
+        "title": "Favoritos",
+        "emptyTitle": "Nenhum favorito ainda",
+        "emptyDescription": "Os imóveis que você salvar aparecem aqui."
+      },
+      "visits": {
+        "title": "Minhas visitas",
+        "emptyTitle": "Nenhuma visita marcada",
+        "emptyDescription": "As visitas que você agendar aparecem aqui, com endereço e lembretes."
+      },
+      "signIn": {
+        "title": "Entrar",
+        "emptyTitle": "Acesso em preparação",
+        "emptyDescription": "Em breve você entra com seu e-mail ou celular para salvar favoritos e acompanhar visitas."
+      }
+    }
   },
   "landing": {
     "brokerEmptyTitle": "Página em preparação",
     "brokerEmptyDescription": "A página deste corretor ainda está sendo montada. Volte em alguns dias.",
     "propertyEmptyTitle": "Imóvel em preparação",
     "propertyEmptyDescription": "A página deste imóvel ainda não foi publicada. Fale com o corretor para saber mais.",
-    "poweredBy": "Página criada com a Casvitta"
+    "poweredBy": "Página criada com a Casvitta",
+    "brokerMetaTitle": "{name} · corretora",
+    "brokerRole": "Corretora · {regions}",
+    "whatsapp": "Falar no WhatsApp",
+    "schedule": "Agendar visita",
+    "available": "Imóveis disponíveis",
+    "noListingsTitle": "Nenhum imóvel no ar agora",
+    "noListingsDescription": "Fale com a corretora pelo WhatsApp para saber das próximas oportunidades.",
+    "property": {
+      "kicker": "{kind} {transaction, select, rent {para alugar} other {à venda}} · {neighborhood}, {city}",
+      "price": "Preço",
+      "highlights": "Destaques",
+      "simulation": "Simulação",
+      "simulationDetails": "1ª parcela SAC, entrada 20% com FGTS, {term} meses, taxa ilustrativa 11,5% a.a., sem seguros e tarifas.",
+      "schedule": "Agende sua visita",
+      "whatsappText": "Olá! Quero agendar uma visita ao {property}."
+    }
   },
   "notFound": {
     "title": "Página não encontrada",
@@ -875,6 +931,126 @@
       "title": "Simulação",
       "perMonth": "{amount}/mês",
       "details": "1ª parcela SAC, entrada 20% com FGTS, {term} meses, taxa ilustrativa 11,5% a.a., sem seguros e tarifas. Não é aprovação."
+    },
+    "kinds": {
+      "apartment": "Apartamento",
+      "house": "Casa",
+      "studio": "Studio"
+    },
+    "perMonth": "{amount}/mês",
+    "perYear": "{amount}/ano",
+    "back": "Voltar",
+    "bedrooms": "{count, plural, one {1 quarto} other {# quartos}}",
+    "parking": "{count, plural, one {1 vaga} other {# vagas}}",
+    "nearbyShort": "{distance} m do metrô",
+    "nearbyPart": ", a {distance} m do {place}",
+    "headline": "{kind} de {bedrooms, plural, one {1 quarto} other {# quartos}}{features, select, true { com varanda} other {}}{nearby}",
+    "address": "{street} · {neighborhood}, {city} · número exato após agendar a visita",
+    "breadcrumb": {
+      "buy": "Comprar"
+    },
+    "buyerView": "Visão do comprador",
+    "mainPhoto": "Foto principal",
+    "photoN": "Foto {n}",
+    "floorplan": "Planta",
+    "video": "Vídeo · {seconds}",
+    "photoOf": "Foto {n} de {total}",
+    "specs": {
+      "area": "Área",
+      "bedrooms": "Quartos",
+      "parking": "Vagas",
+      "condo": "Condomínio",
+      "iptu": "IPTU"
+    },
+    "forSale": "{kind} {transaction, select, rent {para alugar} other {à venda}} · {neighborhood}",
+    "schedule": "Agendar visita",
+    "whatsapp": "Tirar dúvida no WhatsApp",
+    "chat": "Conversar",
+    "responsible": "Corretora responsável pelo anúncio",
+    "mobile": {
+      "installment": "Parcela simulada",
+      "installmentDetails": "Entrada de 20% com FGTS, {term} meses, taxa ilustrativa 11,5% a.a., sem seguros e tarifas.",
+      "simulate": "Simular com meus números"
+    },
+    "simulator": {
+      "title": "Simule o financiamento",
+      "down": "Entrada",
+      "downHelp": "{pct}% do valor",
+      "downTooHigh": "A entrada cobre o valor todo. Diminua a entrada para simular.",
+      "fgts": "FGTS na entrada",
+      "fgtsHelp": "Incluído na entrada",
+      "fgtsTooHigh": "O FGTS faz parte da entrada. Use um valor menor que a entrada.",
+      "term": "Prazo",
+      "months": "meses",
+      "result": "Primeira parcela estimada (SAC)",
+      "disclaimer": "Taxa ilustrativa de {rate} a.a., sem seguros obrigatórios e tarifas. Taxa, valor e aprovação dependem do banco."
+    },
+    "ask": {
+      "title": "Pergunte sobre este imóvel",
+      "badge": "Feito por IA",
+      "label": "Sua pergunta",
+      "placeholder": "Escreva sua pergunta",
+      "send": "Enviar",
+      "exampleQuestion": "Aceita pet?",
+      "note": "Responde com base na ficha do imóvel. Dúvidas sem resposta vão para a {name}.",
+      "handoff": "Essa informação não está na ficha. Passei sua pergunta para a {name}, que responde pelo WhatsApp.",
+      "confirmOnVisit": "Quer que a {name} confirme na visita?",
+      "answers": {
+        "condo": "O condomínio é {amount} por mês.",
+        "iptu": "O IPTU é {amount} por ano.",
+        "nearby": "Fica a {distance} m do {place}.",
+        "bedrooms": "{count, plural, one {Tem 1 quarto.} other {Tem # quartos.}}",
+        "area": "São {area} m² de área.",
+        "parking": "{count, plural, =0 {Não tem vaga.} one {Tem 1 vaga.} other {Tem # vagas.}}"
+      }
     }
+  },
+  "buyer": {
+    "chat": {
+      "metaTitle": "Conversa com a assistente",
+      "title": "Assistente da {name}",
+      "subtitle": "Atendimento com IA · CRECI-{state} {number}",
+      "label": "Conversa com o assistente da {name}",
+      "back": "Voltar",
+      "virtualNotice": "Você está falando com um assistente virtual",
+      "you": "Você",
+      "assistant": "Assistente",
+      "offer": "Obrigado! Numa simulação, a 1ª parcela fica perto de R$ {amount} mil. Quem aprova é o banco. Qual horário fica melhor no {weekday}, {date}?",
+      "offerNoSlots": "Obrigado! A {name} vai te mandar os horários livres pelo WhatsApp.",
+      "slotsLabel": "Horários livres",
+      "noSlots": "Sem horários livres agora. A {name} te chama pelo WhatsApp.",
+      "message": "Mensagem",
+      "placeholder": "Escreva aqui",
+      "send": "Enviar",
+      "handoff": "Essa eu passo para a {name}, que responde pelo WhatsApp."
+    },
+    "confirmed": {
+      "title": "Visita confirmada",
+      "when": "{weekday}, {date} · {time}",
+      "nearby": "{distance} m do {place}",
+      "host": "{name} vai te receber",
+      "reminders": "Lembrete em {day} e 2 h antes, pelo WhatsApp",
+      "bringId": "Leve um documento com foto",
+      "reschedule": "Remarcar ou cancelar: responda no WhatsApp",
+      "addToCalendar": "Adicionar à agenda do celular",
+      "directions": "Ver como chegar",
+      "calendarTitle": "Visita · {property}",
+      "emptyTitle": "Nenhum horário escolhido",
+      "emptyDescription": "Escolha um horário na conversa com o assistente para confirmar a visita.",
+      "pickTime": "Escolher horário"
+    }
+  },
+  "devScreens": {
+    "title": "Telas implementadas",
+    "description": "Cada rota com o mockup que ela reproduz (docs/mockups). Use pnpm screens:capture para gerar as capturas em docs/mockups/_impl.",
+    "mockup": "Mockup",
+    "screen": "Tela",
+    "viewport": "Viewport",
+    "url": "Endereço",
+    "viewports": {
+      "desktop": "desktop 1440",
+      "mobile": "celular 390 × 844"
+    },
+    "states": "Em modo demonstrativo, acrescente ?state=loading, ?state=empty ou ?state=error a qualquer tela do app para ver os outros estados."
   }
 }

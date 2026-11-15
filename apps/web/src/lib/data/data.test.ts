@@ -9,6 +9,7 @@ import * as calendar from './calendar';
 import * as conversations from './conversations';
 import { getDashboard } from './dashboard';
 import * as leads from './leads';
+import * as marketplace from './marketplace';
 import * as modules from './modules';
 import { resetDb } from './store';
 
@@ -114,5 +115,36 @@ describe('modules (CLAUDE.md §4.9)', () => {
       interested: true,
     });
     await expect(modules.activateModule('contracts')).rejects.toThrow();
+  });
+});
+
+describe('marketplace (CLAUDE.md §4.2, §4.4)', () => {
+  it('never exposes a property without authorization', () => {
+    expect(marketplace.getListingBySlug('apto-perdizes')).toBeNull();
+    expect(marketplace.getListingBySlug('apto-vila-mariana')?.sponsored).toBe(true);
+  });
+
+  it('answers only from the record and hands off the rest', () => {
+    const p = marketplace.getListingBySlug('apto-vila-mariana')!.property;
+    expect(marketplace.answerFromRecord(p, 'Aceita pet?')).toMatchObject({
+      kind: 'fact',
+      source: 'facts.pets',
+    });
+    expect(marketplace.answerFromRecord(p, 'Qual o valor do condomínio?')).toMatchObject({
+      source: 'condo_fee_cents',
+    });
+    expect(marketplace.answerFromRecord(p, 'Dá para baixar o preço?')).toEqual({ kind: 'handoff' });
+  });
+
+  it('a buyer booking creates a lead in "Visita marcada" and takes the slot', async () => {
+    const [slot] = marketplace.offeredSlots();
+    await marketplace.bookBuyerVisit('apto-vila-mariana', slot!.id, {
+      financingPct: 80,
+      fgtsCents: 6_000_000,
+      householdIncomeCents: 2_200_000,
+    });
+    const columns = await leads.listKanban();
+    expect(columns.find((c) => c.stage === 'visit_booked')?.leads.length).toBe(5);
+    expect(marketplace.offeredSlots().some((s) => s.id === slot!.id)).toBe(false);
   });
 });

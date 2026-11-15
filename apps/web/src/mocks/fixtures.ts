@@ -1226,3 +1226,17 @@ export const modules: ModuleItem[] = [
     icon: 'home',
   },
 ];
+
+/** Buyer-side demo transcript on the marketplace chat (mockup 25), up to the slot offer. */
+export const buyerChatScript: { from: 'buyer' | 'ai'; text: string }[] = [
+  { from: 'buyer', text: 'Oi! Vi o apê da Vila Mariana. Ainda está disponível?' },
+  {
+    from: 'ai',
+    text: 'Está sim! Sou o assistente virtual da Ana Ribeiro. Posso fazer 3 perguntas rápidas para a Ana te atender melhor?',
+  },
+  { from: 'buyer', text: 'Pode' },
+  { from: 'ai', text: 'Você pretende financiar? Vai usar FGTS?' },
+  { from: 'buyer', text: 'Sim, uns 80%. Tenho uns 60 mil de FGTS.' },
+  { from: 'ai', text: 'E a renda familiar mensal, mais ou menos?' },
+  { from: 'buyer', text: 'Uns 22 mil' },
+];

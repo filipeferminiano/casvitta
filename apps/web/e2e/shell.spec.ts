@@ -7,7 +7,9 @@ test.describe('Broker OS shell (app host)', () => {
   test('opens Início from the root and navigates between sections', async ({ page, isMobile }) => {
     await page.goto(appUrl('/'));
     await expect(page).toHaveURL(appUrl('/inicio'));
-    await expect(page.getByRole('heading', { level: 1, name: 'Início' })).toBeVisible();
+    await expect(
+      page.getByRole('heading', { level: 1, name: /Bom dia, Ana|Início/ }),
+    ).toBeVisible();
 
     const nav = page.getByRole('navigation', {
       name: isMobile ? 'Navegação' : 'Navegação principal',
@@ -16,9 +18,7 @@ test.describe('Broker OS shell (app host)', () => {
     await expect(page).toHaveURL(appUrl('/leads'));
     await expect(page.getByRole('heading', { level: 1, name: 'Leads' })).toBeVisible();
     await expect(nav.getByRole('link', { name: 'Leads' })).toHaveAttribute('aria-current', 'page');
-    await expect(
-      page.getByText('Leads aparecem aqui quando alguém responde a um anúncio seu.'),
-    ).toBeVisible();
+    await expect(page.getByRole('heading', { level: 2, name: 'Em qualificação' })).toBeVisible();
   });
 
   test('says Anúncios, never Ads Studio', async ({ page }) => {
@@ -54,6 +54,7 @@ test.describe('Public hosts', () => {
 
   test('broker subdomain serves the landing group', async ({ page }) => {
     await page.goto(`http://anaribeiro.localhost:${port}/apto-vila-mariana`);
-    await expect(page.getByRole('heading', { name: 'Imóvel em preparação' })).toBeVisible();
+    await expect(page.getByRole('heading', { level: 1, name: /600 m do metrô/ })).toBeVisible();
+    await expect(page.getByText('CRECI-SP 000.000-F').first()).toBeVisible();
   });
 });

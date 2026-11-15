@@ -1,20 +1,27 @@
-import { EmptyState } from '@casvitta/ui';
-import { UserRound } from 'lucide-react';
 import type { Metadata } from 'next';
+import { notFound } from 'next/navigation';
 import { getTranslations } from 'next-intl/server';
 
-// Not published yet: keep placeholder pages out of search results.
-export const metadata: Metadata = { robots: { index: false, follow: false } };
+import { getBrokerPage } from '@/lib/data/marketplace';
+import { BrokerLanding } from '@/screens/landing/LandingPages';
 
-export default async function BrokerLandingPage() {
+type Props = { params: Promise<{ brokerSlug: string }> };
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { brokerSlug } = await params;
+  const page = getBrokerPage(brokerSlug);
+  if (!page) return {};
   const t = await getTranslations('landing');
-  return (
-    <div className="mx-auto max-w-4xl px-4 py-12">
-      <EmptyState
-        icon={<UserRound strokeWidth={1.6} />}
-        title={t('brokerEmptyTitle')}
-        description={t('brokerEmptyDescription')}
-      />
-    </div>
-  );
+  return {
+    title: t('brokerMetaTitle', { name: page.broker.displayName }),
+    robots: page.broker.isDemo ? { index: false, follow: false } : undefined,
+  };
+}
+
+/** Mockup 41: generated from the broker profile and published properties, never free HTML. */
+export default async function BrokerLandingPage({ params }: Props) {
+  const { brokerSlug } = await params;
+  const page = getBrokerPage(brokerSlug);
+  if (!page) notFound();
+  return <BrokerLanding broker={page.broker} />;
 }
