@@ -1262,6 +1262,11 @@
       "features": {
         "0": "Sua landing page + uma por imóvel",
         "1": "CRM, conversas, agenda, propostas e assistente de IA no WhatsApp"
+      },
+      "full": {
+        "0": "Sua landing page + uma por imóvel",
+        "1": "CRM, conversas, agenda, propostas",
+        "2": "Assistente de IA no WhatsApp"
       }
     },
     "profissional": {
@@ -1269,6 +1274,11 @@
       "features": {
         "0": "Tudo do Essencial",
         "1": "Gestão de Facebook e Instagram e relatório semanal por canal"
+      },
+      "full": {
+        "0": "Tudo do Essencial",
+        "1": "Gestão de Facebook e Instagram",
+        "2": "Relatório semanal por canal"
       }
     }
   },
@@ -1368,5 +1378,112 @@
     "openApp": "Abrir o app",
     "noAccount": "Ainda não tem conta?",
     "signUp": "Cadastre-se como corretor"
+  },
+  "interest": {
+    "name": "Seu nome",
+    "whatsapp": "WhatsApp",
+    "whatsappPlaceholder": "(11) 90000-0000",
+    "nameError": "Escreva seu nome.",
+    "phoneError": "Confira o WhatsApp com DDD, por exemplo (11) 92740-8912.",
+    "consentError": "Marque a autorização para podermos falar com você.",
+    "genericError": "Não conseguimos enviar agora. Tente de novo em alguns minutos.",
+    "honeypot": "Não preencha este campo",
+    "sending": "Enviando…",
+    "successTitle": "Recebemos seu pedido",
+    "successDescription": "Mandamos uma mensagem no seu WhatsApp. Responda SIM para confirmar."
+  },
+  "forBrokers": {
+    "meta": {
+      "title": "Para corretores e imobiliárias · Casvitta",
+      "description": "A IA monta o anúncio, publica no marketplace, Instagram, Facebook e Google, atende no WhatsApp e marca a visita na sua agenda. Planos a partir de R$ 197/mês."
+    },
+    "eyebrow": "Para corretores e imobiliárias",
+    "title": "Mais visitas, sem precisar entender de anúncio.",
+    "subtitle": "A IA monta o anúncio, publica no marketplace, no Instagram, no Facebook e no Google, atende no WhatsApp e marca a visita na sua agenda. Você aprova e vê o custo de cada visita em reais.",
+    "ctaStart": "Começar com um imóvel",
+    "ctaWhatsApp": "Falar no WhatsApp",
+    "whatsappText": "Olá! Sou corretor e quero saber mais sobre a Casvitta.",
+    "week": {
+      "title": "Esta semana",
+      "contacts": "Pedidos de contato",
+      "visits": "Visitas agendadas",
+      "perVisit": "Por visita",
+      "assistant": "Assistente com IA",
+      "q": "Você pretende usar FGTS?",
+      "a": "Sim, uns 60 mil.",
+      "offer": "A Ana tem sábado às 10h. Confirmo?"
+    },
+    "how": {
+      "title": "Como funciona",
+      "property": {
+        "title": "Escolha o imóvel",
+        "description": "Com a autorização do proprietário."
+      },
+      "approve": {
+        "title": "Aprove o anúncio",
+        "description": "Escrito pela IA a partir da ficha."
+      },
+      "budget": {
+        "title": "Defina quanto por dia",
+        "description": "A partir de R$ 20, com teto."
+      },
+      "visits": {
+        "title": "Receba visitas",
+        "description": "A IA qualifica e agenda; você atende."
+      }
+    },
+    "included": {
+      "title": "O que vem no plano",
+      "ads": {
+        "title": "Anúncios",
+        "description": "Anúncio por IA no marketplace, Instagram, Facebook e Google."
+      },
+      "whatsapp": {
+        "title": "WhatsApp com IA",
+        "description": "Responde, qualifica e marca visitas."
+      },
+      "crm": {
+        "title": "CRM, agenda e propostas",
+        "description": "O lead chega com a conversa e o custo junto."
+      },
+      "landing": {
+        "title": "Landing pages",
+        "description": "Sua página e uma de cada imóvel, com link próprio."
+      },
+      "social": {
+        "title": "Redes sociais",
+        "description": "Posts de Facebook e Instagram sugeridos, você aprova."
+      }
+    },
+    "choosePlan": "Escolher {plan}",
+    "media": "<b>Mídia paga por você:</b> a partir de R$ 20 por dia por imóvel, só pelo que for gasto, até o teto que você definir.",
+    "separate": {
+      "title": "Contratando separado",
+      "items": "CRM {crm} + site {site} + atendimento com IA {ai} + social media {social} + gestor de tráfego {traffic}",
+      "perMonthMin": "/mês, no mínimo",
+      "savings": "{amount} a menos",
+      "savingsDetail": "por mês no Profissional, {pct}% de economia",
+      "footnote": "Preços públicos de referência, nov/2026. Mídia paga à parte nos dois casos."
+    },
+    "agencies": {
+      "title": "Para imobiliárias",
+      "description": "Hoje cada corretor da sua equipe usa o próprio Broker OS, com anúncios, leads e agenda. A gestão da equipe (distribuição de leads, carteira, repasses e produtividade por corretor) chega no Agency OS.",
+      "talk": "Falar com a gente",
+      "whatsappText": "Olá! Tenho uma imobiliária e quero saber mais sobre a Casvitta.",
+      "form": {
+        "open": "Quero ser avisado do Agency OS",
+        "title": "Aviso do Agency OS",
+        "description": "Avisamos pelo WhatsApp quando a gestão de equipe estiver pronta. Nada é cobrado.",
+        "company": "Imobiliária",
+        "companyError": "Escreva o nome da imobiliária.",
+        "brokers": "Quantos corretores (opcional)",
+        "brokersError": "Use um número entre 1 e 5.000.",
+        "city": "Cidade (opcional)",
+        "consent": "Autorizo a Casvitta a falar comigo pelo WhatsApp sobre o Agency OS.",
+        "submit": "Quero ser avisado",
+        "successTitle": "Pronto, você está na lista",
+        "successDescription": "Mandamos uma mensagem no seu WhatsApp. Responda SIM para confirmar o aviso."
+      }
+    }
   }
 }

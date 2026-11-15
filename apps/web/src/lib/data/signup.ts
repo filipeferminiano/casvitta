@@ -46,6 +46,13 @@ export function currentSignup(): SignupDraft | null {
   return id ? (db().signups[id] ?? null) : null;
 }
 
+const PLAN_KEY = 'casvitta.signup.plan';
+
+/** Plan picked on /para-corretores before the account exists. */
+export function rememberPlan(plan: 'essencial' | 'profissional'): void {
+  window.sessionStorage.setItem(PLAN_KEY, plan);
+}
+
 export function startSignup(name: string, phoneE164: string): SignupDraft {
   const draft: SignupDraft = {
     id: newId('signup'),
@@ -58,7 +65,7 @@ export function startSignup(name: string, phoneE164: string): SignupDraft {
     creciKind: 'F',
     creciStatus: 'missing',
     whatsappE164: null,
-    plan: 'profissional',
+    plan: window.sessionStorage.getItem(PLAN_KEY) === 'essencial' ? 'essencial' : 'profissional',
     createdAt: now().toISOString(),
   };
   mutate((data) => {

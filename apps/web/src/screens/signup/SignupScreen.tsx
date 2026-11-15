@@ -14,6 +14,7 @@ import {
   SIGNUP_STEPS,
   currentSignup,
   handoffToApp,
+  rememberPlan,
   signupSnapshot,
   startSignup,
   subscribeSignup,
@@ -81,8 +82,10 @@ export function SignupScreen({ step }: { step: SignupStep }) {
       startSignup('Ana Paula Ribeiro', '+5511927408912');
     }
     const plan = params.get('plano');
-    if (currentSignup() && (plan === 'essencial' || plan === 'profissional'))
-      updateSignup({ plan });
+    if (plan === 'essencial' || plan === 'profissional') {
+      if (currentSignup()) updateSignup({ plan });
+      else rememberPlan(plan);
+    }
     track({ name: 'signup_step', step });
   }, [params, step]);
 
