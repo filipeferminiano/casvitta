@@ -3,7 +3,7 @@ SHELL := /bin/bash
 API := apps/api
 UV := uv --directory $(API)
 
-.PHONY: setup infra-up infra-down dev check test e2e lint typecheck format storybook api\:gen db\:migrate db\:seed
+.PHONY: deploy-web setup infra-up infra-down dev check test e2e lint typecheck format storybook api\:gen db\:migrate db\:seed
 
 setup: ## Install JS and Python dependencies
 	pnpm install
@@ -58,3 +58,12 @@ db\:migrate:
 
 db\:seed:
 	$(UV) run python -m app.scripts.seed
+
+# Demo web on Cloud Run (project roas-164016, São Paulo, mock data, run.app URL).
+GCP_PROJECT ?= roas-164016
+GCP_REGION ?= southamerica-east1
+WEB_URL ?= https://casvitta-web-625004236871.southamerica-east1.run.app
+deploy-web: ## Build apps/web on Cloud Build and deploy it to Cloud Run (casvitta-web)
+	$(eval TAG := $(shell git rev-parse --short HEAD))
+	gcloud builds submit --project $(GCP_PROJECT) --region $(GCP_REGION) --config infra/cloudbuild/web.yaml --substitutions=_SITE_URL=$(WEB_URL),_TAG=$(TAG) .
+	gcloud run deploy casvitta-web --project $(GCP_PROJECT) --region $(GCP_REGION) --image $(GCP_REGION)-docker.pkg.dev/$(GCP_PROJECT)/casvitta/web:$(TAG) --port 8080 --memory 512Mi --cpu 1 --min-instances 0 --max-instances 3 --allow-unauthenticated --set-env-vars ROOT_DOMAIN=$(subst https://,,$(WEB_URL)),APP_SUBDOMAIN=app
