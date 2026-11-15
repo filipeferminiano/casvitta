@@ -17,7 +17,11 @@ const config = [
     rules: {
       'react/jsx-no-literals': [
         'error',
-        { noStrings: true, ignoreProps: true, allowedStrings: ['·', '—', '/', '|', '•'] },
+        {
+          noStrings: true,
+          ignoreProps: true,
+          allowedStrings: ['·', '—', '/', '|', '•', '›', ' › ', ' ›'],
+        },
       ],
     },
   },

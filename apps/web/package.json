@@ -10,7 +10,8 @@
     "lint": "eslint .",
     "typecheck": "next typegen && tsc --noEmit",
     "test": "vitest run",
-    "e2e": "playwright test"
+    "e2e": "playwright test",
+    "screens:capture": "node scripts/screens-capture.ts"
   },
   "dependencies": {
     "@casvitta/api-client": "workspace:*",

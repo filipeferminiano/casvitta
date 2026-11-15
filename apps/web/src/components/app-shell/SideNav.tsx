@@ -1,37 +1,56 @@
 'use client';
 
+import { cn, LogoMark } from '@casvitta/ui';
 import Link from 'next/link';
-import { cn, Logo, LogoMark } from '@casvitta/ui';
 import { useSelectedLayoutSegment } from 'next/navigation';
 import { useTranslations } from 'next-intl';
+
+import { useBroker, useNavCounts } from '@/lib/data/hooks';
 
 import { footerNav, hrefFor, moduleNav, primaryNav, type NavItem } from './nav-items';
 
 /**
- * Desktop side navigation: 264px from 1024px up, a 72px icon rail between 768px and 1024px,
- * hidden on phones (BottomTabs takes over).
+ * Desktop side navigation (mockups 04, 30): profile header, "Núcleo" (six fixed items),
+ * "Módulos" (activated modules), then store and settings. 264px from 1024px, 72px icon rail
+ * between 768px and 1024px, hidden on phones (BottomTabs).
  */
 export function SideNav() {
   const t = useTranslations('nav');
   const active = useSelectedLayoutSegment();
+  const broker = useBroker().data;
+  const counts = useNavCounts().data;
+
+  const countFor = (item: NavItem) =>
+    item.segment === 'leads'
+      ? counts?.leads
+      : item.segment === 'conversas'
+        ? counts?.conversations
+        : 0;
 
   const renderItem = (item: NavItem) => {
     const current = item.segment === active;
     const Icon = item.icon;
+    const count = countFor(item) ?? 0;
     return (
       <li key={item.segment}>
         <Link
           href={hrefFor(item)}
           aria-current={current ? 'page' : undefined}
           className={cn(
-            'flex min-h-11 items-center gap-3 rounded-control px-3 type-body-s font-medium text-fg-strong',
+            'relative flex min-h-11 items-center gap-3 rounded-control px-3 text-[15px] leading-5 font-medium text-fg-strong',
             'justify-center lg:justify-start',
             'hover:bg-subtle hover:text-fg',
             current && 'bg-action-subtle text-action-hover hover:bg-action-subtle',
           )}
         >
           <Icon aria-hidden="true" strokeWidth={1.6} className="size-5 shrink-0" />
-          <span className="sr-only lg:not-sr-only">{t(item.labelKey)}</span>
+          <span className="sr-only lg:not-sr-only lg:flex-1">{t(item.labelKey)}</span>
+          {count > 0 ? (
+            <span className="absolute top-1.5 right-1.5 min-w-5 rounded-pill bg-action px-1.5 text-center font-mono text-[11px] leading-5 font-semibold text-fg-on-action lg:static">
+              <span aria-hidden="true">{count}</span>
+              <span className="sr-only">{t('countLabel', { count })}</span>
+            </span>
+          ) : null}
         </Link>
       </li>
     );
@@ -39,23 +58,35 @@ export function SideNav() {
 
   return (
     <aside className="sticky top-0 hidden h-dvh w-[72px] shrink-0 flex-col border-r border-line bg-panel md:flex lg:w-(--layout-side-nav)">
-      <div className="flex h-16 items-center justify-center px-4 lg:justify-start lg:px-6">
-        <Link href={hrefFor(primaryNav[0]!)} aria-label={t('home')} className="rounded-control">
-          <Logo height={24} title={null} className="hidden lg:block" />
-          <LogoMark size={28} title={null} className="lg:hidden" />
+      <div className="mx-3 flex h-[68px] items-center gap-3 border-b border-line lg:px-2">
+        <Link
+          href={hrefFor(primaryNav[0]!)}
+          aria-label={t('home')}
+          className="flex size-8 shrink-0 items-center justify-center rounded-control bg-fg max-lg:mx-auto"
+        >
+          <LogoMark tone="white" size={22} title={null} />
         </Link>
+        {broker ? (
+          <div className="hidden min-w-0 flex-col lg:flex">
+            <span className="truncate type-body-s font-semibold text-fg">{broker.displayName}</span>
+            <span className="truncate type-caption">{broker.roleLabel}</span>
+          </div>
+        ) : null}
       </div>
-      <nav aria-label={t('label')} className="flex flex-1 flex-col gap-6 overflow-y-auto px-3 pb-4">
-        <ul className="flex flex-col gap-1">{primaryNav.map(renderItem)}</ul>
+      <nav aria-label={t('label')} className="flex flex-1 flex-col gap-4 overflow-y-auto px-3 py-4">
+        <div className="flex flex-col gap-1">
+          <h2 className="px-3 pb-1 type-eyebrow">
+            <span className="sr-only lg:not-sr-only">{t('coreGroup')}</span>
+          </h2>
+          <ul className="flex flex-col">{primaryNav.map(renderItem)}</ul>
+        </div>
         <div className="flex flex-col gap-1">
           <h2 className="px-3 pb-1 type-eyebrow">
             <span className="sr-only lg:not-sr-only">{t('modulesGroup')}</span>
           </h2>
-          <ul className="flex flex-col gap-1">{moduleNav.map(renderItem)}</ul>
+          <ul className="flex flex-col">{moduleNav.map(renderItem)}</ul>
         </div>
-        <ul className="mt-auto flex flex-col gap-1 border-t border-line pt-4">
-          {footerNav.map(renderItem)}
-        </ul>
+        <ul className="flex flex-col border-t border-line pt-4">{footerNav.map(renderItem)}</ul>
       </nav>
     </aside>
   );

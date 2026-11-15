@@ -1,15 +1,12 @@
-import { Users } from 'lucide-react';
+import { getTranslations } from 'next-intl/server';
 
-import { PlaceholderPage, placeholderMetadata } from '@/components/PlaceholderPage';
+import { LeadsScreen } from '@/screens/leads/LeadsScreen';
 
-export const generateMetadata = () => placeholderMetadata('leads');
+export async function generateMetadata() {
+  const t = await getTranslations('leads');
+  return { title: t('title') };
+}
 
 export default function Page() {
-  return (
-    <PlaceholderPage
-      page="leads"
-      icon={Users}
-      action={{ href: '/anuncios', labelKey: 'emptyAction' }}
-    />
-  );
+  return <LeadsScreen />;
 }

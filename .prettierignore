@@ -6,3 +6,4 @@ packages/config/tailwind-preset.css
 packages/ui/src/components/logo-paths.generated.ts
 packages/api-client/openapi.json
 design/
+docs/mockups/

@@ -1,4 +1,5 @@
-import { render, screen, within } from '@testing-library/react';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { render, screen, waitFor, within } from '@testing-library/react';
 import { NextIntlClientProvider } from 'next-intl';
 import type { ReactNode } from 'react';
 import { describe, expect, it, vi } from 'vitest';
@@ -13,19 +14,21 @@ vi.mock('next/navigation', () => ({ useSelectedLayoutSegment: () => segment.curr
 
 const wrap = (ui: ReactNode) =>
   render(
-    <NextIntlClientProvider locale="pt-BR" messages={messages}>
-      {ui}
-    </NextIntlClientProvider>,
+    <QueryClientProvider client={new QueryClient()}>
+      <NextIntlClientProvider locale="pt-BR" messages={messages}>
+        {ui}
+      </NextIntlClientProvider>
+    </QueryClientProvider>,
   );
 
 describe('Broker OS navigation', () => {
-  it('lists every section in pt-BR, with Anúncios under Módulos', () => {
+  it('lists every section in pt-BR, with Anúncios under Módulos and counters', async () => {
     wrap(<SideNav />);
     const nav = screen.getByRole('navigation', { name: 'Navegação principal' });
-    const names = within(nav)
+    const labels = within(nav)
       .getAllByRole('link')
-      .map((link) => link.textContent);
-    expect(names).toEqual([
+      .map((link) => link.querySelector('span')?.textContent);
+    expect(labels).toEqual([
       'Início',
       'Imóveis',
       'Leads',
@@ -36,19 +39,21 @@ describe('Broker OS navigation', () => {
       'Loja de módulos',
       'Configurações',
     ]);
+    expect(within(nav).getByRole('heading', { name: 'Núcleo' })).toBeInTheDocument();
     expect(within(nav).getByRole('heading', { name: 'Módulos' })).toBeInTheDocument();
     expect(nav).not.toHaveTextContent('Ads Studio');
+    await waitFor(() => expect(within(nav).getByText('4 novos')).toBeInTheDocument());
   });
 
   it('marks the current section with aria-current', () => {
     segment.current = 'leads';
     wrap(<SideNav />);
     const nav = screen.getByRole('navigation', { name: 'Navegação principal' });
-    expect(within(nav).getByRole('link', { name: 'Leads' })).toHaveAttribute(
+    expect(within(nav).getByRole('link', { name: /^Leads/ })).toHaveAttribute(
       'aria-current',
       'page',
     );
-    expect(within(nav).getByRole('link', { name: 'Início' })).not.toHaveAttribute('aria-current');
+    expect(within(nav).getByRole('link', { name: /^Início/ })).not.toHaveAttribute('aria-current');
   });
 
   it('bottom tabs show Início, Leads, Conversas, Agenda, Anúncios', () => {

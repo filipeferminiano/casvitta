@@ -6,7 +6,11 @@
   },
   "common": {
     "skipToContent": "Pular para o conteúdo",
-    "homeLink": "Casvitta, página inicial"
+    "homeLink": "Casvitta, página inicial",
+    "close": "Fechar",
+    "retry": "Tentar de novo",
+    "seeAll": "Ver todos",
+    "back": "Voltar"
   },
   "badges": {
     "demo": "Demonstrativo",
@@ -28,7 +32,9 @@
     "modulesGroup": "Módulos",
     "ads": "Anúncios",
     "moduleStore": "Loja de módulos",
-    "settings": "Configurações"
+    "settings": "Configurações",
+    "coreGroup": "Núcleo",
+    "countLabel": "{count, plural, one {# novo} other {# novos}}"
   },
   "app": {
     "home": {
@@ -96,5 +102,226 @@
     "title": "Página não encontrada",
     "description": "Confira o endereço ou volte para o início.",
     "action": "Voltar para o início"
+  },
+  "time": {
+    "ago": {
+      "now": "agora",
+      "minutes": "há {n} min",
+      "hours": "há {n} h",
+      "yesterday": "ontem",
+      "days": "há {n} dias"
+    },
+    "short": {
+      "now": "agora",
+      "minutes": "{n} min",
+      "hours": "{n} h",
+      "yesterday": "ontem",
+      "days": "{n} dias"
+    }
+  },
+  "stages": {
+    "new": "Novo",
+    "qualifying": "Em qualificação",
+    "qualified": "Qualificado",
+    "visit_booked": "Visita marcada",
+    "visit_done": "Visita feita",
+    "proposal": "Proposta",
+    "won": "Fechado",
+    "lost": "Perdido"
+  },
+  "sources": {
+    "instagram": "Instagram",
+    "facebook": "Facebook",
+    "google": "Google",
+    "marketplace": "Marketplace",
+    "referral": "Indicação",
+    "landing": "Sua página"
+  },
+  "states": {
+    "loadingTitle": "Carregando {subject}",
+    "loadingDescription": "Leva alguns segundos.",
+    "errorTitle": "Não conseguimos carregar {subject}.",
+    "errorStillWorks": "O resto do app segue funcionando.",
+    "errorHowToFix": "Confira sua conexão e tente de novo.",
+    "retry": "Tentar de novo",
+    "emptyTitle": "Nada por aqui ainda"
+  },
+  "dashboard": {
+    "subject": "seu resumo do dia",
+    "emptyTitle": "Seu resumo aparece aqui",
+    "emptyDescription": "Quando chegarem leads e visitas, o dia começa por esta tela.",
+    "greeting": {
+      "morning": "Bom dia, {name}",
+      "afternoon": "Boa tarde, {name}",
+      "evening": "Boa noite, {name}"
+    },
+    "subtitle": "{count, plural, =0 {Nada precisa de você agora. A IA está acompanhando.} one {1 coisa precisa de você hoje. O resto a IA está acompanhando.} other {# coisas precisam de você hoje. O resto a IA está acompanhando.}}",
+    "stats": {
+      "activeLeads": "Leads ativos",
+      "newThisWeek": "+{count} nesta semana",
+      "visits": "Visitas esta semana",
+      "confirmed": "{count, plural, one {# confirmada} other {# confirmadas}}",
+      "openProposals": "Propostas abertas",
+      "commission": "Comissão em negociação",
+      "commissionCaption": "se a maior proposta fechar · não garantida"
+    },
+    "needsYou": {
+      "title": "Precisa de você",
+      "count": "{count, plural, one {# item} other {# itens}}",
+      "compareTitle": "{count, plural, one {Uma proposta} =2 {Duas propostas} other {# propostas}} no {property}",
+      "proposalLine": "{name} {amount} {payment}",
+      "payment": {
+        "cash": "à vista",
+        "financed": "financiado",
+        "mixed": "financiado"
+      },
+      "compare": "Comparar",
+      "handoffTitle": "{name} {reason}",
+      "handoffDetail": "A IA não negocia preço e passou a conversa para você {since}",
+      "reply": "Responder",
+      "staleTitle": "{count, plural, one {1 lead sem retorno} other {# leads sem retorno}} há mais de 2 dias",
+      "staleDetail": "A IA pode mandar uma mensagem de retomada",
+      "review": "Revisar"
+    },
+    "today": {
+      "title": "Hoje",
+      "openCalendar": "Abrir agenda",
+      "visit": "Visita · {name}",
+      "task": "Tarefa",
+      "confirmed": "Confirmada",
+      "awaiting": "Aguardando confirmação",
+      "finances": "financia {pct}%",
+      "cameFrom": "veio {source, select, google {do Google} instagram {do Instagram} facebook {do Facebook} marketplace {do marketplace} referral {por indicação} other {da sua página}}"
+    },
+    "funnel": {
+      "title": "Funil agora",
+      "seeCrm": "Ver CRM"
+    },
+    "ads": {
+      "title": "Anúncios · semana {week}",
+      "live": "No ar",
+      "spent": "Investido",
+      "leads": "Leads",
+      "perVisit": "Por visita"
+    },
+    "rental": {
+      "title": "Você tem {count, plural, one {1 imóvel} other {# imóveis}} para locação",
+      "description": "O módulo de Locação vai cuidar de análise do inquilino, contrato e repasse ao proprietário. Ainda não está disponível.",
+      "notifyMe": "Quero ser avisado",
+      "interested": "Vamos te avisar",
+      "toastTitle": "Pronto, vamos te avisar.",
+      "toastDescription": "Seu interesse no módulo de Locação foi registrado."
+    }
+  },
+  "leads": {
+    "title": "Leads",
+    "breadcrumb": "Funil",
+    "subject": "seus leads",
+    "subtitle": "{leads} leads ativos em {properties, plural, one {1 imóvel} other {# imóveis}}. Fechados e perdidos ficam no histórico.",
+    "filters": {
+      "property": "Imóvel: {value}",
+      "source": "Origem: {value}",
+      "owner": "Responsável: {value}",
+      "allM": "todos",
+      "allF": "todas"
+    },
+    "legend": "Faixa amarela: precisa de ação humana",
+    "newLead": "Novo lead",
+    "boardLabel": "Funil de leads por etapa",
+    "moveTo": "Mover para…",
+    "moveMenuLabel": "Mover {name} para outra etapa",
+    "showMore": "+{count} leads",
+    "showLess": "Mostrar menos",
+    "moved": "{name} movido para {column}.",
+    "emptyColumn": "Nenhum lead nesta etapa",
+    "emptyTitle": "Nenhum lead ainda",
+    "emptyDescription": "Leads aparecem aqui quando alguém responde a um anúncio seu. Publique o primeiro imóvel para começar.",
+    "emptyAction": "Ir para Anúncios",
+    "footnote": "Arraste um card ou use o menu “Mover para…” para mudar de etapa. A IA move sozinha só de “Novo” para “Em qualificação” e para “Qualificado”; as demais etapas são suas. Valor no canto do card: custo de mídia do lead.",
+    "card": {
+      "aiActive": "IA atendendo",
+      "handedOff": "IA passou para você",
+      "fgts": "FGTS",
+      "financing": "Financia {pct}%",
+      "cash": "À vista",
+      "today": "Hoje {time}",
+      "onDay": "{day} · {time}",
+      "confirmed": "confirmada",
+      "awaiting": "aguardando confirmação",
+      "payment": {
+        "cash": "À vista",
+        "financed": "Financiado",
+        "mixed": "Financiado"
+      },
+      "proposalStatus": {
+        "draft": "rascunho",
+        "sent_to_owner": "enviada ao proprietário",
+        "countered": "contraproposta",
+        "accepted": "aceita",
+        "rejected": "recusada"
+      }
+    },
+    "newLeadPage": {
+      "title": "Novo lead",
+      "emptyTitle": "Cadastro manual em preparação",
+      "emptyDescription": "Por enquanto, os leads entram sozinhos pelos anúncios, pelo marketplace e pela sua página. Em breve você também poderá cadastrar um contato à mão."
+    }
+  },
+  "leadDetail": {
+    "subject": "este lead",
+    "notFoundTitle": "Lead não encontrado",
+    "notFoundDescription": "Ele pode ter sido removido. Volte para o funil e escolha outro lead.",
+    "breadcrumb": "Leads",
+    "stageLabel": "Etapa do lead",
+    "subtitle": "Do clique no {source} {stage, select, new {até agora} qualifying {até agora} qualified {à qualificação} visit_booked {à visita marcada} visit_done {à visita} proposal {à proposta} won {ao fechamento} other {até agora}} em {days, plural, one {1 dia} other {# dias}}. Tudo o que aconteceu está aqui.",
+    "openConversation": "Abrir conversa",
+    "phone": "Telefone",
+    "source": "Origem",
+    "financing": "Financia",
+    "fgts": "FGTS",
+    "income": "Renda informada",
+    "timeframe": "Prazo",
+    "consent": "Consentimento LGPD",
+    "consentValue": "contato sobre imóveis · {date}",
+    "noConsent": "não registrado",
+    "unverified": "Dados informados pelo lead, não verificados.",
+    "simulation": "Simulação",
+    "aboutProposal": "Sobre a proposta de {amount}",
+    "aboutPrice": "Sobre o preço pedido de {amount}",
+    "perMonth": "{amount}/mês",
+    "simulationDetails": "1ª parcela SAC · {term} meses · {rate} a.a. ilustrativa · {share} da renda · sem seguros e tarifas",
+    "history": "Histórico",
+    "movedTo": "Movido para “{stage}”",
+    "eventTitles": {
+      "arrived": "Chegou",
+      "qualified": "Qualificado pela IA",
+      "visit_booked": "Visita marcada pela IA",
+      "visit_done": "Visita feita",
+      "message": "Mensagem",
+      "proposal": "Proposta registrada",
+      "stage_changed": "Etapa alterada"
+    },
+    "nextStep": "Próximo passo",
+    "compareProposals": "Comparar propostas",
+    "alsoMatches": "Também combina com ele",
+    "photo": "Foto do imóvel",
+    "matchOrigin": {
+      "network": "{price} · de parceiro da rede, em breve",
+      "catalog": "{price} · seu catálogo"
+    },
+    "alsoMatchesNote": "Só mostra imóveis do seu catálogo. A rede de parceiros entra no módulo Network OS.",
+    "newLead": "Lead novo",
+    "arrivedBanner": "pediu contato {when} pelo {source}.",
+    "aiTalking": "A IA já está conversando.",
+    "chips": {
+      "financing": "Financia {pct}%",
+      "fgts": "FGTS ~{amount}",
+      "down": "Entrada {pct}%",
+      "income": "Renda ~{amount}"
+    },
+    "firstInstallment": "1ª parcela simulada",
+    "leadCost": "Custo deste lead: <strong>{amount}</strong> (média da semana)",
+    "seeConversation": "Ver conversa",
+    "call": "Ligar para o {name}"
   }
 }

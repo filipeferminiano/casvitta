@@ -1,15 +1,12 @@
-import { House } from 'lucide-react';
+import { getTranslations } from 'next-intl/server';
 
-import { PlaceholderPage, placeholderMetadata } from '@/components/PlaceholderPage';
+import { DashboardScreen } from '@/screens/dashboard/DashboardScreen';
 
-export const generateMetadata = () => placeholderMetadata('home');
+export async function generateMetadata() {
+  const t = await getTranslations('app.home');
+  return { title: t('title') };
+}
 
 export default function Page() {
-  return (
-    <PlaceholderPage
-      page="home"
-      icon={House}
-      action={{ href: '/anuncios', labelKey: 'emptyAction' }}
-    />
-  );
+  return <DashboardScreen />;
 }
