@@ -73,3 +73,11 @@ export {
   type ChatItem,
   type ChatThreadProps,
 } from './components/ChatThread.tsx';
+export {
+  CalendarWeek,
+  calendarStateClasses,
+  type CalendarItem,
+  type CalendarItemState,
+  type CalendarWeekProps,
+} from './components/CalendarWeek.tsx';
+export { ModuleCard, type ModuleCardProps } from './components/ModuleCard.tsx';

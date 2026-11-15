@@ -51,6 +51,16 @@ export function formatDayMonth(value: Date | string): string {
   }).format(date);
 }
 
+/** "14 nov". */
+export function formatDayMonthShort(value: Date | string): string {
+  const date = typeof value === 'string' ? new Date(value) : value;
+  const day = new Intl.DateTimeFormat('pt-BR', { timeZone: TZ, day: 'numeric' }).format(date);
+  const month = new Intl.DateTimeFormat('pt-BR', { timeZone: TZ, month: 'short' })
+    .format(date)
+    .replace('.', '');
+  return `${day} ${month}`;
+}
+
 /** "16 de novembro". */
 export function formatDayMonthLong(value: Date | string): string {
   const date = typeof value === 'string' ? new Date(value) : value;

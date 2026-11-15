@@ -1,9 +1,12 @@
-import { LayoutGrid } from 'lucide-react';
+import { getTranslations } from 'next-intl/server';
 
-import { PlaceholderPage, placeholderMetadata } from '@/components/PlaceholderPage';
+import { ModuleStoreScreen } from '@/screens/modules/ModuleStoreScreen';
 
-export const generateMetadata = () => placeholderMetadata('moduleStore');
+export async function generateMetadata() {
+  const t = await getTranslations('store');
+  return { title: t('title') };
+}
 
 export default function Page() {
-  return <PlaceholderPage page="moduleStore" icon={LayoutGrid} />;
+  return <ModuleStoreScreen />;
 }

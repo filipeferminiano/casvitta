@@ -8,6 +8,8 @@ import { byId, leadView, type LeadView } from './views';
 export type AppointmentView = Appointment & {
   lead: LeadView | null;
   propertyShortName: string;
+  /** Latest weekly report of the property's campaign, if any. */
+  reportId: string | null;
 };
 
 export type Week = {
@@ -30,6 +32,10 @@ function appointmentView(appointment: Appointment): AppointmentView {
     ...appointment,
     lead: lead ? leadView(lead, data) : null,
     propertyShortName: byId(data.properties, appointment.propertyId).shortName,
+    reportId:
+      data.reports
+        .filter((r) => r.propertyId === appointment.propertyId)
+        .sort((a, b) => b.periodEnd.localeCompare(a.periodEnd))[0]?.id ?? null,
   };
 }
 
@@ -84,6 +90,15 @@ export function getAppointment(appointmentId: string): Promise<AppointmentView |
 
 export function todayISO(): string {
   return new Date(now().getTime() - 3 * 3600_000).toISOString().slice(0, 10);
+}
+
+/** Turns a free-for-AI slot into a blocked one ("Bloquear horário"). */
+export async function blockSlot(slotId: string): Promise<void> {
+  mutate((data) => {
+    const slot = byId(data.slots, slotId);
+    slot.kind = 'blocked';
+    slot.label = null;
+  });
 }
 
 export async function setAiCanBook(enabled: boolean): Promise<void> {

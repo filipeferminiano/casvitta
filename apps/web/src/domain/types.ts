@@ -239,6 +239,8 @@ export type Proposal = {
   condition: string;
   deadlineDays: number;
   status: 'draft' | 'sent_to_owner' | 'countered' | 'accepted' | 'rejected';
+  /** Owner's counter-offer, when status = countered. */
+  counterAmountCents: Cents | null;
   createdAt: ISODateTime;
 };
 

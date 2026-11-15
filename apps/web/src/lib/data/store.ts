@@ -31,9 +31,11 @@ export type Db = {
   adDraft: AdDraft;
   /** Buyer-side visit picked on the marketplace chat, by property slug. */
   buyerVisits: Record<string, string>;
+  /** When the proposal comparison was sent to the owner, by property id. */
+  comparisonsSent: Record<string, string>;
 };
 
-const STORAGE_KEY = 'casvitta.mockdb.v1';
+const STORAGE_KEY = 'casvitta.mockdb.v2';
 
 export const DEFAULT_AD_DRAFT: AdDraft = {
   propertyId: null,
@@ -66,6 +68,7 @@ function seed(): Db {
     moduleInterest: [],
     adDraft: DEFAULT_AD_DRAFT,
     buyerVisits: {},
+    comparisonsSent: {},
   });
 }
 

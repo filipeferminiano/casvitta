@@ -1,9 +1,12 @@
-import { FileText } from 'lucide-react';
+import { getTranslations } from 'next-intl/server';
 
-import { PlaceholderPage, placeholderMetadata } from '@/components/PlaceholderPage';
+import { ProposalsScreen } from '@/screens/proposals/ProposalsScreen';
 
-export const generateMetadata = () => placeholderMetadata('proposals');
+export async function generateMetadata() {
+  const t = await getTranslations('proposals');
+  return { title: t('title') };
+}
 
 export default function Page() {
-  return <PlaceholderPage page="proposals" icon={FileText} />;
+  return <ProposalsScreen />;
 }

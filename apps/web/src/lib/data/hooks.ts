@@ -95,6 +95,7 @@ export const actions = {
   discardDraft: conversations.discardDraft,
   markRead: conversations.markRead,
   setAiCanBook: calendar.setAiCanBook,
+  blockSlot: calendar.blockSlot,
   bookSlot: calendar.bookSlot,
   registerInterest: modules.registerInterest,
   activateModule: modules.activateModule,
@@ -104,4 +105,6 @@ export const actions = {
   publishDraft: ads.publishDraft,
   applySuggestion: ads.applySuggestion,
   approvePost: social.approvePost,
+  sendComparison: proposals.sendComparison,
+  registerCounter: proposals.registerCounter,
 };

@@ -1,8 +1,10 @@
 import type { Property, Proposal } from '@/domain/types';
 import { COMMISSION_PCT } from '@/mocks/fixtures';
 
+import { now } from '@/mocks/clock';
+
 import { withScreenState } from './screen-state';
-import { db } from './store';
+import { db, mutate } from './store';
 import { byId, leadView, type LeadView } from './views';
 
 export type ProposalView = Proposal & {
@@ -16,6 +18,7 @@ export type PropertyProposals = {
   proposals: ProposalView[];
   /** Plain-language comparison for the owner, drafted by the AI. */
   ownerSummary: string | null;
+  comparisonSentAt: string | null;
 };
 
 export const commissionPct = COMMISSION_PCT;
@@ -42,7 +45,25 @@ export function listPropertiesWithProposals(): Promise<PropertyProposals[]> {
             property.id === 'prop-vm' && items.length === 2
               ? 'A proposta do Marcos paga R$ 7 mil a mais, mas depende do banco e leva até 60 dias. A do Pedro é à vista, em até 30 dias. Uma pré-análise de crédito do Marcos reduziria a incerteza antes da decisão.'
               : null,
+          comparisonSentAt: data.comparisonsSent[property.id] ?? null,
         };
       });
+  });
+}
+
+/** Sends the side-by-side comparison to the owner (WhatsApp/email in Milestone 1). */
+export async function sendComparison(propertyId: string): Promise<void> {
+  mutate((data) => {
+    data.comparisonsSent[propertyId] = now().toISOString();
+  });
+}
+
+/** Records the owner's counter-offer on a proposal. */
+export async function registerCounter(proposalId: string, amountCents: number): Promise<void> {
+  if (!Number.isInteger(amountCents) || amountCents <= 0) throw new Error('Invalid amount');
+  mutate((data) => {
+    const proposal = byId(data.proposals, proposalId);
+    proposal.status = 'countered';
+    proposal.counterAmountCents = amountCents;
   });
 }

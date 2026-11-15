@@ -787,15 +787,15 @@ export const slots: AvailabilitySlot[] = [
   // Week of 12–15/11 (visit booked flow, mockup 16).
   {
     id: 'slot-6',
-    startsAt: t('11-12', '10:00'),
-    endsAt: t('11-12', '11:00'),
+    startsAt: t('11-13', '10:00'),
+    endsAt: t('11-13', '11:00'),
     kind: 'free_for_ai',
     label: null,
   },
   {
     id: 'slot-7',
-    startsAt: t('11-13', '09:00'),
-    endsAt: t('11-13', '10:00'),
+    startsAt: t('11-14', '09:00'),
+    endsAt: t('11-14', '10:00'),
     kind: 'free_for_ai',
     label: null,
   },
@@ -950,7 +950,7 @@ export const appointments: Appointment[] = [
     kind: 'visit',
     leadId: 'lead-vanessa',
     propertyId: 'prop-saude',
-    startsAt: t('11-14', '14:00'),
+    startsAt: t('11-12', '14:00'),
     status: 'done',
     title: null,
     note: null,
@@ -972,6 +972,7 @@ export const proposals: Proposal[] = [
     condition: 'Depende da aprovação do banco',
     deadlineDays: 60,
     status: 'sent_to_owner',
+    counterAmountCents: null,
     createdAt: t('11-16', '09:12'),
   },
   {
@@ -984,6 +985,7 @@ export const proposals: Proposal[] = [
     condition: 'Sem condição',
     deadlineDays: 30,
     status: 'sent_to_owner',
+    counterAmountCents: null,
     createdAt: t('11-15', '17:00'),
   },
 ];

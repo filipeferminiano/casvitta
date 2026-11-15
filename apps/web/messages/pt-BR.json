@@ -443,5 +443,147 @@
     "notFoundTitle": "Conversa não encontrada",
     "notFoundDescription": "Volte para Conversas e escolha outra.",
     "subject": "esta conversa"
+  },
+  "agenda": {
+    "title": "Agenda",
+    "week": "Semana",
+    "subject": "sua agenda",
+    "subtitle": "{visits, plural, =0 {Nenhuma visita nesta semana.} one {1 visita nesta semana.} other {# visitas nesta semana.}} {byAi, plural, =0 {} one {1 foi marcada pela IA.} other {# foram marcadas pela IA.}}",
+    "block": "Bloquear horário",
+    "blockMenuLabel": "Qual horário livre bloquear?",
+    "noFreeSlots": "Nenhum horário livre nesta semana",
+    "blockedToast": "Horário bloqueado: {when}. A IA não vai oferecer.",
+    "emptyTitle": "Nenhuma visita marcada",
+    "emptyDescription": "Defina seus horários livres para a assistente virtual oferecer visitas aos leads.",
+    "range": "{from} a {to}",
+    "gridLabel": "Agenda da semana",
+    "free": "Livre",
+    "blocked": "Bloqueado",
+    "unavailable": "Indisponível",
+    "legend": {
+      "confirmed": "confirmada",
+      "awaiting": "aguardando lead",
+      "free": "livre para a IA oferecer"
+    },
+    "today": {
+      "title": "Hoje, {count, plural, =0 {nenhum compromisso} one {1 compromisso} other {# compromissos}}",
+      "status": {
+        "confirmed": "Confirmada",
+        "task": "Tarefa",
+        "awaiting": "Aguardando"
+      }
+    },
+    "aiSlots": {
+      "title": "Horários para a IA oferecer",
+      "canBook": "IA pode marcar visitas sozinha",
+      "note": "Só nos horários tracejados. Intervalo mínimo de 1 h entre visitas em bairros diferentes."
+    },
+    "daysLabel": "Dias da semana",
+    "countLabel": "{count, plural, =0 {sem compromissos} one {1 compromisso} other {# compromissos}}",
+    "mobile": {
+      "todayTitle": "Hoje, {weekday} · {count, plural, =0 {nenhum compromisso} one {1 compromisso} other {# compromissos}}",
+      "dayTitle": "{day} · {count, plural, =0 {nenhum compromisso} one {1 compromisso} other {# compromissos}}",
+      "directions": "Como chegar",
+      "seeProperty": "Ver imóvel",
+      "call": "Ligar",
+      "awaitingNote": "A IA pede confirmação à {name} às {time}. Sem resposta, você recebe um aviso."
+    }
+  },
+  "visit": {
+    "subject": "esta visita",
+    "notFoundTitle": "Visita não encontrada",
+    "notFoundDescription": "Volte para a Agenda e escolha outro horário.",
+    "title": "Visita marcada para {weekday}, {time}",
+    "mobileTitle": "Visita marcada",
+    "subtitleAi": "O {name} escolheu um horário que você deixou livre. Ninguém precisou ligar.",
+    "subtitle": "Visita marcada com {name}.",
+    "legendFree": "▢ tracejado: horário que a IA pode oferecer",
+    "confirmedTitle": "Visita confirmada",
+    "cancelled": "Visita cancelada",
+    "confirmedByLead": "Confirmada pelo lead",
+    "when": "{day}, {date} · {time}",
+    "now": "agora",
+    "reminders": {
+      "confirmation": "Confirmação para o {name} com endereço completo",
+      "day_before": "Lembrete 24 h antes, com pedido de confirmação",
+      "two_hours": "Lembrete 2 h antes, com rota",
+      "post_visit": "Pergunta pós-visita: gostou? quer fazer proposta?"
+    },
+    "notifyOwner": "Avisar o proprietário da visita",
+    "seeReport": "Ver relatório da semana",
+    "reschedule": "Remarcar",
+    "movedInCrm": "O lead foi movido para “Visita marcada” no CRM."
+  },
+  "proposals": {
+    "title": "Propostas",
+    "subject": "suas propostas",
+    "emptyTitle": "Nenhuma proposta ainda",
+    "emptyDescription": "Quando um lead fizer uma proposta, você compara as condições lado a lado aqui.",
+    "heading": "{count, plural, =0 {Nenhuma proposta} one {Uma proposta para decidir} =2 {Duas propostas para decidir} other {# propostas para decidir}}",
+    "subtitle": "O proprietário decide. Você leva as propostas lado a lado, com prazo e risco de cada uma.",
+    "byProperty": "Por imóvel",
+    "openCount": "{count, plural, =0 {nenhuma proposta} one {1 proposta aberta} other {# propostas abertas}}",
+    "rentalOutside": "locação · fora deste módulo",
+    "perMonth": "{amount}/mês",
+    "noneForProperty": "Ainda não há propostas para {property}.",
+    "propertyHeading": "{property} · pedido {price}",
+    "ownerLine": "Proprietário: {owner} · autorização {exclusive, select, true {com exclusividade} other {sem exclusividade}} até {until}",
+    "status": {
+      "draft": "Rascunho",
+      "sent_to_owner": "Enviada ao proprietário",
+      "countered": "Contraproposta",
+      "accepted": "Aceita",
+      "rejected": "Recusada"
+    },
+    "counterLine": "Contraproposta do proprietário: {amount}",
+    "payment": "Pagamento",
+    "paymentCash": "À vista",
+    "paymentFinanced": "Entrada {down} {fgts, select, true {(com FGTS) } other {}}+ financiamento",
+    "condition": "Condição",
+    "deadline": "Prazo para escritura",
+    "days": "até {days} dias",
+    "difference": "Diferença do pedido",
+    "ownerReading": "Leitura para o proprietário",
+    "sendComparison": "Enviar comparação ao proprietário",
+    "sent": "Comparação enviada",
+    "sentToast": "Comparação enviada para {owner}.",
+    "commission": {
+      "title": "Sua comissão",
+      "ifCloses": "Se fechar com {name} ({pct}%)",
+      "split": "Split com parceiros",
+      "none": "não há",
+      "note": "Estimativa. Só é devida se a venda fechar, nas condições da autorização de venda."
+    },
+    "contracts": "<strong>Proposta aceita? O próximo passo é o contrato.</strong> O módulo Contratos, com modelos e assinatura eletrônica, ainda não está disponível.",
+    "generateContract": "Gerar contrato · em breve",
+    "counter": {
+      "open": "Registrar contraproposta",
+      "label": "Contraproposta para {name}",
+      "help": "Valor que o proprietário aceita. Fica registrado na proposta.",
+      "save": "Salvar contraproposta",
+      "cancel": "Cancelar",
+      "saved": "Contraproposta registrada na proposta de {name}."
+    }
+  },
+  "store": {
+    "title": "Loja de módulos",
+    "subject": "os módulos",
+    "emptyTitle": "Nenhum módulo disponível",
+    "emptyDescription": "Os módulos do seu plano aparecem aqui.",
+    "subtitle": "Três estados honestos. <strong>Em breve</strong> não vende: o botão só registra seu interesse, e o módulo entra no roadmap quando aparece em 10% ou mais dos pedidos.",
+    "states": {
+      "active": "Ativo",
+      "available": "Disponível",
+      "soon": "Em breve"
+    },
+    "manage": "Gerenciar",
+    "adjustRules": "Ajustar regras",
+    "activate": "Ativar {name}",
+    "activating": "Ativando…",
+    "activatedToast": "{name} ativado. Já aparece no menu.",
+    "notifyMe": "Quero ser avisado",
+    "interested": "Vamos te avisar",
+    "interestToastTitle": "Pronto, vamos te avisar.",
+    "interestToastDescription": "Seu interesse em {name} foi registrado."
   }
 }
