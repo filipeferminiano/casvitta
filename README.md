@@ -41,12 +41,20 @@ Hosts in development (browsers resolve `*.localhost` to 127.0.0.1):
 
 Integrations run on fake adapters by default (`FAKE_INTEGRATIONS=true`).
 
+## Screens with demo data (Milestone 0.5)
+
+With `NEXT_PUBLIC_USE_MOCKS=true` (default) every screen reads an in-memory demo store, so
+actions (move a lead, take over a conversation, publish an ad, book a visit) really change state
+during the session. Add `?state=loading|empty|error` to any Broker OS URL to review the other
+states. `http://localhost:3000/dev/screens` lists every route with its mockup number.
+
 ## Everyday commands
 
 ```sh
 make check          # ruff, mypy, pytest, prettier, eslint, tsc, vitest
 make e2e            # Playwright (run `pnpm --filter @casvitta/web exec playwright install chromium` once)
 make storybook      # component library on :6006
+pnpm --filter @casvitta/web screens:capture   # screenshots of every route into docs/mockups/_impl (dev server running)
 make api:gen        # after any API change: export OpenAPI + regenerate packages/api-client
 pnpm --filter @casvitta/config build:css   # after changing tokens.ts
 uv run design/scripts/build_logo_assets.py # rebuild logo assets and favicons
