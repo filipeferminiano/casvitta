@@ -12,6 +12,9 @@ The mockups are the visual target; CLAUDE.md and DESIGN_SYSTEM.md win on conflic
 | "Sugestão" badge on AI suggestions (lead detail) | "Feito por IA" badge | Every AI-generated text carries "Feito por IA" (CLAUDE.md §4.3) |
 | Buyer chat: first AI message has no self-introduction (25) | "Sou o assistente virtual da Ana Ribeiro" in the first message | CLAUDE.md §4.3 |
 | "Assistente com IA" badge on the Q&A box (13) | "Feito por IA" | CLAUDE.md §4.3 |
+| "Ads Studio" in "O que vem no plano" (54) and the signup steps (55) | "Anúncios" | "Ads Studio" is an internal name only |
+| Featured listings include the Perdizes apartment (51, 53) | Perdizes (Rua Cardoso de Almeida) is left out of the marketplace | It has no owner authorization; nothing is published without one (CLAUDE.md §4.2) |
+| Investor example card without a broker (58) | Card shows the broker name and CRECI | Every published listing shows the responsible broker's CRECI (CLAUDE.md §4.1) |
 
 ## Known differences from Milestone 0.5 (mock data)
 
@@ -29,3 +32,16 @@ Screens are compared in `docs/mockups/_impl/` (`pnpm screens:capture`). These di
 - **Slides (40, 41, 42).** The sales-deck chrome is dropped; the page inside the browser frame is the route. The "[QR]" on 40 becomes an "Agende sua visita" button.
 - **Photos.** Blueprint-grid placeholders stand in for property photos until storage exists.
 - **Cross-host demo state.** The mock store lives in each host's sessionStorage, so a visit booked on `localhost` (buyer chat) does not show on `app.localhost`. The API in Milestone 1 removes this.
+
+## Known differences from Milestone 0.6 (public site, 51–61)
+
+Compared in `docs/mockups/_impl/51-*.png` … `61-*.png`.
+
+- **Demo inventory.** Search results (53) and the home (51/52) also show listings from two fictitious brokers (Bruno Lima, CRECI-SP 111.111-F; Camila Prado, CRECI-SP 222.222-F), all `is_demo`. Ana's Broker OS data is unchanged.
+- **Content width.** Public pages use the same container as the header (max 1280 px with 80 px side padding), so on a 1440 px screen the content is narrower than in the mockups and long titles wrap one line earlier (54, 56, 57, 58, 59).
+- **Form placeholders (56, 57, 59).** The mockups show sample values ("04010-100", "Paulo Mendes", "R$ 700.000") with a "Dados de exemplo · demonstrativo" note. The forms start empty with format placeholders, so the note is dropped.
+- **Agency OS and rental admin waitlists (54, 58).** "Quero ser avisado do Agency OS" and "Avise-me da administração de aluguel" open an inline form (name, WhatsApp, consent) instead of being a single click; signups need a phone and a consent (CLAUDE.md §4.8, §4.11).
+- **Choice chips (58, 59, 60).** Selectable chips use the design-system ChoiceChips (rounded rectangles, 44 px targets) instead of the mockups' small pills.
+- **Auction header on phones (60, 61).** The minimal header shows "Dúvidas? WhatsApp" (a link) instead of the "LEILÕES" label; the "Demonstrativo" badge on 61 sits above the check icon, not in the header, and only appears for `?demo=1` (real submissions show the visitor's own criteria).
+- **Footer on auction pages (60, 61).** The full site footer is kept on phones (the mockups show a compact one), so the legal line and CRECI-J stay visible everywhere.
+- **Not built here.** No consent banner: `track()` stays a no-op until analytics consent exists. `/favoritos`, `/minhas-visitas`, `/sobre`, `/privacidade` and `/termos` are placeholders.
