@@ -1,10 +1,13 @@
-import {
-  MarketplacePlaceholder,
-  placeholderMetadata,
-} from '@/screens/marketplace/MarketplacePlaceholder';
+import type { Metadata } from 'next';
+import { getTranslations } from 'next-intl/server';
 
-export const generateMetadata = () => placeholderMetadata('signIn');
+import { SignInScreen } from '@/screens/signup/SignInScreen';
+
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations('signIn');
+  return { title: t('title'), robots: { index: false, follow: false } };
+}
 
 export default function Page() {
-  return <MarketplacePlaceholder section="signIn" />;
+  return <SignInScreen />;
 }

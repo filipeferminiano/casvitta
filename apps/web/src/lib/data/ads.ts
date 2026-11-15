@@ -104,6 +104,8 @@ export async function publishDraft(): Promise<string> {
     if (!draft.propertyId) throw new Error('No property selected');
     const property = byId(data.properties, draft.propertyId);
     if (!isPublishable(property)) throw new Error('Property has no valid owner authorization');
+    // CLAUDE.md rule 1: no publishing until the broker's CRECI is verified.
+    if (!data.broker.creciVerifiedAt) throw new Error('CRECI not verified');
     if (draft.dailyBudgetCents < MIN_DAILY_BUDGET_CENTS)
       throw new Error('Daily budget below minimum');
     const creative =

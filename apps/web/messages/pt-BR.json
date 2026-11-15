@@ -89,18 +89,50 @@
     "title": "Imóveis à venda e para alugar",
     "emptyTitle": "Os primeiros imóveis chegam em breve",
     "emptyDescription": "Estamos preparando os anúncios. Todo imóvel aqui tem autorização do proprietário e um corretor com CRECI.",
-    "footer": "Todo anúncio mostra o CRECI do corretor responsável.",
+    "footer": {
+      "tagline": "Imóveis, corretores e proprietários conectados num lugar só, do anúncio à visita marcada.",
+      "whatsapp": "WhatsApp {phone}",
+      "columns": {
+        "forYou": {
+          "title": "Para você",
+          "buy": "Comprar",
+          "rent": "Alugar",
+          "listMine": "Anunciar meu imóvel",
+          "simulate": "Simular financiamento",
+          "auctions": "Imóveis de leilão"
+        },
+        "forPros": {
+          "title": "Para profissionais",
+          "brokers": "Corretores",
+          "agencies": "Imobiliárias",
+          "developers": "Incorporadoras · em breve",
+          "investors": "Investidores"
+        },
+        "casvitta": {
+          "title": "Casvitta",
+          "about": "Sobre",
+          "privacy": "Privacidade e LGPD",
+          "terms": "Termos de uso",
+          "contact": "Fale com a gente"
+        }
+      },
+      "legal": "Casvitta · CRECI-J {creci} · Toda intermediação é feita por corretores inscritos no CRECI. Simulações de financiamento não são aprovação de crédito."
+    },
     "search": {
       "label": "Buscar imóveis",
       "example": "Vila Mariana, 2 quartos, até R$ 750 mil"
     },
     "nav": {
-      "label": "Navegação do marketplace",
+      "label": "Navegação do site",
       "buy": "Comprar",
       "rent": "Alugar",
-      "favorites": "Favoritos",
-      "visits": "Minhas visitas",
-      "signIn": "Entrar"
+      "list": "Anunciar imóvel",
+      "brokers": "Para corretores",
+      "signIn": "Entrar",
+      "startAsBroker": "Começar como corretor",
+      "openMenu": "Abrir menu",
+      "closeMenu": "Fechar menu",
+      "questions": "Dúvidas? WhatsApp {phone}"
     },
     "placeholders": {
       "seeListings": "Ver imóveis no ar",
@@ -128,6 +160,21 @@
         "title": "Entrar",
         "emptyTitle": "Acesso em preparação",
         "emptyDescription": "Em breve você entra com seu e-mail ou celular para salvar favoritos e acompanhar visitas."
+      },
+      "about": {
+        "title": "Sobre a Casvitta",
+        "emptyTitle": "Página em preparação",
+        "emptyDescription": "Em breve contamos quem somos e como trabalhamos. Enquanto isso, fale com a gente pelo WhatsApp."
+      },
+      "privacy": {
+        "title": "Privacidade e LGPD",
+        "emptyTitle": "Política de privacidade em revisão",
+        "emptyDescription": "A versão final da política está sendo revisada. Para pedir seus dados ou a exclusão deles, fale com a gente pelo WhatsApp."
+      },
+      "terms": {
+        "title": "Termos de uso",
+        "emptyTitle": "Termos de uso em revisão",
+        "emptyDescription": "A versão final dos termos está sendo revisada."
       }
     }
   },
@@ -924,6 +971,11 @@
       "requirement": "Requer página do Facebook e conta profissional do Instagram conectadas pela Meta. Você pode desconectar quando quiser.",
       "planRequired": "Redes sociais fazem parte do plano Profissional.",
       "seePlans": "Ver planos"
+    },
+    "creciPending": {
+      "title": "Seu CRECI está em verificação",
+      "body": "Você pode montar o anúncio agora. Ele só é publicado depois que confirmarmos o CRECI-{state} {number}; avisamos pelo WhatsApp.",
+      "publishBlocked": "Publicação liberada depois da verificação do CRECI"
     }
   },
   "listing": {
@@ -983,7 +1035,9 @@
       "term": "Prazo",
       "months": "meses",
       "result": "Primeira parcela estimada (SAC)",
-      "disclaimer": "Taxa ilustrativa de {rate} a.a., sem seguros obrigatórios e tarifas. Taxa, valor e aprovação dependem do banco."
+      "disclaimer": "Taxa ilustrativa de {rate} a.a., sem seguros obrigatórios e tarifas. Taxa, valor e aprovação dependem do banco.",
+      "price": "Valor do imóvel",
+      "downWithFgts": "Entrada (com FGTS)"
     },
     "ask": {
       "title": "Pergunte sobre este imóvel",
@@ -1052,5 +1106,267 @@
       "mobile": "celular 390 × 844"
     },
     "states": "Em modo demonstrativo, acrescente ?state=loading, ?state=empty ou ?state=error a qualquer tela do app para ver os outros estados."
+  },
+  "home": {
+    "meta": {
+      "title": "Casvitta · imóveis com corretor credenciado e visita marcada",
+      "description": "Encontre imóveis à venda e para alugar anunciados por corretores com CRECI. Tire dúvidas a qualquer hora e marque a visita direto na agenda do corretor."
+    },
+    "eyebrow": "Comprar ou alugar",
+    "title": "Encontre seu imóvel e marque a visita hoje.",
+    "subtitle": "Imóveis anunciados por corretores credenciados, com tira-dúvidas a qualquer hora e a visita marcada direto na agenda do corretor.",
+    "search": {
+      "label": "Buscar imóveis",
+      "transaction": "Comprar ou alugar",
+      "buy": "Comprar",
+      "rent": "Alugar",
+      "where": "Onde",
+      "wherePlaceholder": "Vila Mariana, São Paulo",
+      "kind": "Tipo",
+      "anyKind": "Qualquer tipo",
+      "kinds": {
+        "apartment": "Apartamento",
+        "house": "Casa",
+        "studio": "Studio"
+      },
+      "upTo": "Até quanto",
+      "upToPlaceholder": "750.000,00",
+      "submit": "Buscar imóveis",
+      "shortcuts": "Atalhos:",
+      "shortcut": {
+        "fgts": "Aceita FGTS",
+        "metro": "Perto do metrô",
+        "bedrooms": "2 quartos ou mais",
+        "pet": "Aceita pet"
+      }
+    },
+    "featured": "Imóveis em destaque",
+    "seeAll": "Ver todos",
+    "emptyTitle": "Os primeiros imóveis chegam em breve",
+    "emptyDescription": "Todo imóvel aqui tem autorização do proprietário e um corretor com CRECI.",
+    "how": {
+      "title": "Como funciona para quem compra ou aluga",
+      "search": {
+        "title": "Busque do seu jeito",
+        "description": "Por bairro, perto do metrô, por valor da parcela ou por quem aceita FGTS."
+      },
+      "questions": {
+        "title": "Tire dúvidas a qualquer hora",
+        "description": "O assistente do corretor responde pelo WhatsApp com base na ficha do imóvel e se identifica como IA."
+      },
+      "visit": {
+        "title": "Visite com quem é credenciado",
+        "description": "Escolha um horário livre na agenda do corretor. Todo anúncio mostra o CRECI de quem atende."
+      }
+    },
+    "simulatorTitle": "Quanto fica a parcela?",
+    "audiences": {
+      "eyebrow": "Para quem trabalha com imóveis",
+      "title": "Você é…",
+      "owner": {
+        "title": "Proprietário",
+        "description": "Quer vender ou alugar? Um corretor credenciado da sua região cuida do anúncio, das visitas e da negociação.",
+        "cta": "Anunciar meu imóvel",
+        "mobileTitle": "Sou proprietário",
+        "mobileDescription": "Vender ou alugar meu imóvel"
+      },
+      "broker": {
+        "title": "Corretor",
+        "description": "Anúncio pronto por IA, WhatsApp que responde e agenda as visitas, sua página e a de cada imóvel.",
+        "cta": "Conhecer os planos",
+        "mobileTitle": "Sou corretor",
+        "mobileDescription": "Anúncios, WhatsApp e agenda"
+      },
+      "agency": {
+        "title": "Imobiliária",
+        "description": "Cada corretor da sua equipe com anúncios, leads e agenda num lugar. Gestão de equipe chega em breve.",
+        "cta": "Falar com a gente",
+        "mobileTitle": "Sou imobiliária",
+        "mobileDescription": "Minha equipe num lugar só"
+      },
+      "developer": {
+        "title": "Incorporadora",
+        "description": "Distribua lançamentos para corretores e compradores, com custo por visita.",
+        "cta": "Entrar na lista de espera",
+        "mobileTitle": "Sou incorporadora",
+        "mobileDescription": "Lançamentos · em breve"
+      },
+      "mobileTitle": "Trabalha com imóveis?"
+    },
+    "trust": {
+      "creci": {
+        "title": "CRECI em todo anúncio",
+        "description": "Você sempre sabe quem é o corretor responsável."
+      },
+      "ai": {
+        "title": "IA sempre identificada",
+        "description": "O assistente diz que é assistente e passa para o corretor quando precisa."
+      },
+      "data": {
+        "title": "Seus dados protegidos",
+        "description": "Contato só com seu consentimento, conforme a LGPD."
+      }
+    }
+  },
+  "search": {
+    "metaTitle": "Imóveis {transaction, select, rent {para alugar} other {à venda}}{hasPlace, select, true { na {place}} other {}}",
+    "title": "Imóveis {transaction, select, rent {para alugar} other {à venda}}",
+    "filtersLabel": "Filtros da busca",
+    "buy": "Comprar",
+    "rent": "Alugar",
+    "removeFilter": "Remover filtro {filter}",
+    "moreFilters": "Mais filtros",
+    "investMode": "Para investir",
+    "chips": {
+      "bedrooms": "{n}+ quartos",
+      "upTo": "Até {amount}",
+      "fgts": "Aceita FGTS",
+      "metro": "Perto do metrô",
+      "pet": "Aceita pet"
+    },
+    "count": "<strong>{count, plural, =0 {Nenhum imóvel} one {1 imóvel} other {# imóveis}}</strong> {transaction, select, rent {para alugar} other {à venda}}{hasPlace, select, true { na {place}} other {}}",
+    "demoNote": "exemplos demonstrativos",
+    "sortBy": "Ordenar por",
+    "sort": {
+      "relevance": "Mais relevantes",
+      "price_asc": "Menor preço",
+      "price_desc": "Maior preço",
+      "newest": "Mais recentes"
+    },
+    "save": "Salvar busca",
+    "savedTitle": "Busca salva.",
+    "savedDescription": "Quando você entrar na sua conta, avisamos por WhatsApp sobre imóveis novos com esses filtros.",
+    "investNote": "Modo Para investir: aluguel e rentabilidade estimados a partir de aluguéis parecidos no bairro. Só mostramos a estimativa quando há pelo menos 5 aluguéis parecidos.",
+    "emptyTitle": "Nenhum imóvel com esses filtros",
+    "emptyDescription": "Tire um filtro ou aumente o valor máximo para ver mais opções.",
+    "clear": "Limpar filtros",
+    "sponsoredNote": "Destaque pago aparece primeiro e sempre marcado. Os demais seguem a ordem escolhida.",
+    "mapLabel": "Mapa{place, select, other { · {place}}}",
+    "card": {
+      "photo": "Foto",
+      "kicker": "{kind} {transaction, select, rent {para alugar} other {à venda}}",
+      "installment": "Parcela simulada a partir de <strong>{amount}</strong>",
+      "estimateBadge": "Estimativa · não é garantia",
+      "estimateBasis": "Base: {count} aluguéis parecidos no bairro",
+      "estimatedRent": "Aluguel estimado",
+      "grossYield": "Rentabilidade bruta",
+      "perYear": "{pct} a.a."
+    }
+  },
+  "plans": {
+    "perMonth": "/mês",
+    "upTo": "Até {count} imóveis",
+    "media": "Mídia paga por você: a partir de R$ 20 por dia por imóvel, só pelo que for gasto, até o teto que você definir.",
+    "essencial": {
+      "name": "Essencial",
+      "features": {
+        "0": "Sua landing page + uma por imóvel",
+        "1": "CRM, conversas, agenda, propostas e assistente de IA no WhatsApp"
+      }
+    },
+    "profissional": {
+      "name": "Profissional",
+      "features": {
+        "0": "Tudo do Essencial",
+        "1": "Gestão de Facebook e Instagram e relatório semanal por canal"
+      }
+    }
+  },
+  "signup": {
+    "metaTitle": "Cadastro do corretor",
+    "progress": "Cadastro do corretor · passo {n} de {total}",
+    "title": "Comece em poucos minutos.",
+    "titleNamed": "Olá, {name}. Falta pouco para o primeiro anúncio.",
+    "stepsLabel": "Etapas do cadastro",
+    "stepDone": "concluído",
+    "steps": {
+      "conta": "Conta",
+      "creci": "CRECI",
+      "whatsapp": "WhatsApp",
+      "plano": "Plano",
+      "primeiro-imovel": "Primeiro imóvel"
+    },
+    "continue": "Continuar",
+    "back": "Voltar",
+    "saving": "Salvando…",
+    "perMonth": "{amount}/mês",
+    "plans": {
+      "essencial": "Essencial",
+      "profissional": "Profissional"
+    },
+    "startFirstTitle": "Comece pela sua conta",
+    "startFirstDescription": "Para seguir no cadastro, primeiro confirme seu celular.",
+    "startFirstAction": "Criar minha conta",
+    "account": {
+      "title": "Sua conta",
+      "description": "Seu celular é o seu acesso. Mandamos um código por SMS para confirmar.",
+      "name": "Seu nome completo",
+      "phone": "Celular",
+      "phonePlaceholder": "(11) 92740-8912",
+      "phoneHelp": "Com DDD.",
+      "sendCode": "Enviar código",
+      "code": "Código de 6 números",
+      "codeHelp": "Enviamos por SMS. Pode levar até 1 minuto.",
+      "changePhone": "Trocar número",
+      "nameError": "Digite seu nome para continuar.",
+      "phoneError": "Confira o celular: use DDD e número, como (11) 92740-8912.",
+      "codeError": "Código incorreto. Confira o SMS e digite de novo.",
+      "mockCode": "Ambiente de demonstração: use o código {code}."
+    },
+    "creci": {
+      "title": "Seu registro no CRECI",
+      "description": "O número aparece em todo anúncio seu. É exigência da profissão e o que dá confiança a quem compra.",
+      "name": "Nome como está no CRECI",
+      "number": "Número",
+      "state": "Estado",
+      "kind": "Tipo",
+      "kindF": "F · pessoa física",
+      "kindJ": "J · pessoa jurídica",
+      "numberError": "Use os 6 números do CRECI, como 000.000.",
+      "verification": "Conferimos o número na consulta pública do conselho regional. Enquanto isso, você já pode montar o primeiro anúncio; ele só é publicado depois da confirmação."
+    },
+    "whatsapp": {
+      "title": "WhatsApp para os leads",
+      "description": "Os pedidos de contato chegam neste número, com a assistente virtual atendendo primeiro.",
+      "label": "WhatsApp",
+      "help": "Pode ser o mesmo celular da conta.",
+      "error": "Confira o WhatsApp: use DDD e número.",
+      "note": "A conexão com a API oficial do WhatsApp é feita depois, em Configurações. Até lá, os leads ficam em Conversas."
+    },
+    "plano": {
+      "title": "Seu plano",
+      "description": "Você pode trocar de plano quando quiser.",
+      "legend": "Escolha um plano",
+      "choose": "Escolher",
+      "chosen": "Escolhido"
+    },
+    "firstProperty": {
+      "title": "Primeiro imóvel",
+      "description": "Tudo pronto para montar o primeiro anúncio.",
+      "account": "Conta confirmada: {phone}",
+      "creciPending": "CRECI-{state} {number}: em verificação",
+      "creciMissing": "CRECI ainda não informado",
+      "plan": "Plano {plan}",
+      "blocked": "Você já pode montar o anúncio. Ele só é publicado depois que confirmarmos seu CRECI.",
+      "open": "Montar meu primeiro anúncio",
+      "error": "Não conseguimos abrir os Anúncios. Tente de novo em alguns segundos."
+    },
+    "aside": {
+      "plan": "Plano escolhido",
+      "change": "Você pode trocar de plano depois.",
+      "afterTitle": "Depois do cadastro",
+      "landing": "Sua landing page fica pronta em {slug}.casvitta.com.br",
+      "whatsapp": "Você conecta o WhatsApp onde quer receber os leads",
+      "firstAd": "O primeiro imóvel abre direto em Anúncios",
+      "lgpd": "Seus dados são usados só para o cadastro e a verificação do CRECI, conforme a LGPD."
+    }
+  },
+  "signIn": {
+    "title": "Entrar",
+    "submit": "Entrar",
+    "mockSignedIn": "Celular confirmado. No ambiente de demonstração o acesso abre a conta da Ana Ribeiro.",
+    "openApp": "Abrir o app",
+    "noAccount": "Ainda não tem conta?",
+    "signUp": "Cadastre-se como corretor"
   }
 }

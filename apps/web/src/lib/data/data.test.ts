@@ -9,9 +9,18 @@ import * as calendar from './calendar';
 import * as conversations from './conversations';
 import { getDashboard } from './dashboard';
 import * as leads from './leads';
+import { parseFilters } from '@/lib/search-params';
+
 import * as marketplace from './marketplace';
+import * as signup from './signup';
+import { mutate } from './store';
 import * as modules from './modules';
 import { resetDb } from './store';
+
+const mutateBroker = (patch: Record<string, unknown>) =>
+  mutate((data) => {
+    data.broker = { ...data.broker, ...patch };
+  });
 
 beforeEach(() => {
   resetDb();
@@ -146,5 +155,62 @@ describe('marketplace (CLAUDE.md §4.2, §4.4)', () => {
     const columns = await leads.listKanban();
     expect(columns.find((c) => c.stage === 'visit_booked')?.leads.length).toBe(5);
     expect(marketplace.offeredSlots().some((s) => s.id === slot!.id)).toBe(false);
+  });
+});
+
+describe('search (mockup 53, CLAUDE.md rules 2 and 12)', () => {
+  const base = parseFilters(new URLSearchParams(), 'sale');
+
+  it('puts sponsored listings first and never shows unauthorized properties', () => {
+    const results = marketplace.searchListings(base);
+    expect(results[0]?.sponsored).toBe(true);
+    expect(results.some((r) => r.property.id === 'prop-perdizes')).toBe(false);
+    expect(results.every((r) => r.property.transaction === 'sale')).toBe(true);
+  });
+
+  it('filters by place, bedrooms, price and FGTS', () => {
+    const results = marketplace.searchListings({
+      ...base,
+      where: 'Vila Mariana',
+      minBedrooms: 2,
+      maxPriceCents: 75_000_000,
+      fgts: true,
+    });
+    expect(results.map((r) => r.property.slug)).toEqual([
+      'apto-vila-mariana',
+      'apto-joaquim-tavora',
+      'apto-franca-pinto',
+    ]);
+    expect(results.every((r) => r.installmentCents && r.installmentCents > 0)).toBe(true);
+  });
+
+  it('investor estimates appear only in invest mode and with at least 5 comparables', () => {
+    expect(marketplace.searchListings(base).every((r) => r.estimate === null)).toBe(true);
+    const invest = marketplace.searchListings({ ...base, invest: true });
+    const vm = invest.find((r) => r.property.id === 'prop-vm');
+    expect(vm?.estimate).toMatchObject({ monthlyRentCents: 390_000, comparables: 9 });
+    expect(vm?.estimate?.grossYield.toFixed(3)).toBe('0.068');
+    expect(invest.find((r) => r.property.id === 'mk-5')?.estimate).toBeNull(); // 3 comparables
+  });
+});
+
+describe('broker signup (CLAUDE.md rule 1)', () => {
+  it('a pending CRECI blocks publishing', async () => {
+    mutateBroker({ creciVerifiedAt: null });
+    await ads.selectProperty('prop-vm');
+    await expect(ads.publishDraft()).rejects.toThrow('CRECI not verified');
+  });
+
+  it('accepts only the demo code in mock mode and stores the CRECI as pending', () => {
+    expect(signup.verifyOtp('123 456')).toBe(true);
+    expect(signup.verifyOtp('000000')).toBe(false);
+    signup.startSignup('Ana Paula Ribeiro', '+5511927408912');
+    const draft = signup.submitCreci({
+      name: 'Ana Paula Ribeiro',
+      number: '000000',
+      state: 'SP',
+      kind: 'F',
+    });
+    expect(draft).toMatchObject({ creciNumber: '000.000-F', creciStatus: 'pending' });
   });
 });

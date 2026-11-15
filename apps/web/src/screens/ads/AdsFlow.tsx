@@ -3,6 +3,7 @@
 import {
   Badge,
   BudgetPicker,
+  Callout,
   Button,
   ChannelToggle,
   Checkbox,
@@ -22,6 +23,7 @@ import { Check, Megaphone } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useTranslations } from 'next-intl';
+import { useQueryClient } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 
 import { AiBadge, CreciBadge, SimulationBadge, SponsoredBadge } from '@/components/badges';
@@ -44,6 +46,7 @@ import {
   useDraftCreative,
   usePickerProperties,
 } from '@/lib/data/hooks';
+import { claimHandoff } from '@/lib/data/signup';
 import { simulateSac } from '@/lib/finance';
 import { formatBRL, formatBRLShort, formatDayMonth } from '@/lib/format';
 
@@ -126,11 +129,39 @@ function priceLabel(p: Property, t: ReturnType<typeof useTranslations<'ads'>>) {
     : formatBRL(p.priceCents);
 }
 
+/** CLAUDE.md rule 1: publishing waits for CRECI verification. */
+function CreciPendingNotice() {
+  const t = useTranslations('ads.creciPending');
+  const broker = useBroker().data;
+  if (!broker || broker.creciVerifiedAt) return null;
+  return (
+    <Callout tone="attention" title={t('title')}>
+      {t('body', { state: broker.creciState, number: broker.creciNumber })}
+    </Callout>
+  );
+}
+
+/** /cadastro hands off here with ?cadastro=<id> (mock mode, see app/api/dev/signup-handoff). */
+function useSignupHandoff() {
+  const params = useSearchParams();
+  const router = useRouter();
+  const client = useQueryClient();
+  const id = params.get('cadastro');
+  useEffect(() => {
+    if (!id) return;
+    void claimHandoff(id).then(async () => {
+      await client.invalidateQueries();
+      router.replace('/anuncios/novo');
+    });
+  }, [id, client, router]);
+}
+
 // ---------------------------------------------------------------- step 1
 
 export function AdsStepProperty() {
   const t = useTranslations('ads');
   const router = useRouter();
+  useSignupHandoff();
   const draft = useDraftFromQuery();
   const query = usePickerProperties();
   const select = useAction(actions.selectProperty);
@@ -145,6 +176,7 @@ export function AdsStepProperty() {
         title={t('step1.title')}
         subtitle={t('step1.subtitle')}
       />
+      <CreciPendingNotice />
       <ScreenStates
         query={query}
         subject={t('step1.subject')}
@@ -601,6 +633,7 @@ export function AdsStepPublish() {
               subtitle={t('step3.subtitle')}
               property={property}
             />
+            <CreciPendingNotice />
             <PublishForm property={property} />
           </div>
         ) : null
@@ -651,8 +684,12 @@ function PublishForm({ property }: { property: Property }) {
   const max = maxSpendCents(draft);
   const auth = property.authorization;
   const [confirmed, setConfirmed] = useState(true);
+  const creciOk = Boolean(broker?.creciVerifiedAt);
   const valid =
-    draft.dailyBudgetCents >= MIN_DAILY_BUDGET_CENTS && draft.channels.length > 0 && confirmed;
+    creciOk &&
+    draft.dailyBudgetCents >= MIN_DAILY_BUDGET_CENTS &&
+    draft.channels.length > 0 &&
+    confirmed;
 
   return (
     <div className="grid gap-5 xl:grid-cols-[minmax(0,1fr)_340px]">
@@ -789,6 +826,9 @@ function PublishForm({ property }: { property: Property }) {
         >
           {t('step3.publish')}
         </Button>
+        {!creciOk ? (
+          <p className="mt-2 type-body-s text-attention-fg">{t('creciPending.publishBlocked')}</p>
+        ) : null}
         {publish.isError ? (
           <p className="mt-2 type-body-s text-danger">{t('step3.publishError')}</p>
         ) : null}
@@ -885,7 +925,7 @@ function MobilePublish() {
       </Panel>
       <Button
         className="w-full"
-        disabled={draft.dailyBudgetCents < MIN_DAILY_BUDGET_CENTS}
+        disabled={draft.dailyBudgetCents < MIN_DAILY_BUDGET_CENTS || !broker.creciVerifiedAt}
         loading={publish.isPending}
         loadingLabel={t('step3.publishing')}
         onClick={run}
