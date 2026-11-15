@@ -1,0 +1,4 @@
+{
+  "extends": "@casvitta/config/tsconfig/react-library.json",
+  "include": ["src", ".storybook", "*.ts"]
+}

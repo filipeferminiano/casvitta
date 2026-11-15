@@ -1,0 +1,11 @@
+@import 'tailwindcss';
+@import '../styles/tokens.css';
+
+@source '../src';
+
+/* In the app the fonts come from next/font; Storybook loads them from Google Fonts. */
+:root {
+  --font-familjen-grotesk: 'Familjen Grotesk';
+  --font-ibm-plex-sans: 'IBM Plex Sans';
+  --font-ibm-plex-mono: 'IBM Plex Mono';
+}

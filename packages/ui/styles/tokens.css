@@ -1,0 +1,61 @@
+/*
+ * Casvitta design system styles. Import once from the app's global CSS, after `@import "tailwindcss"`.
+ * Theme variables come from the tokens (generated); base styles below.
+ */
+@import '@casvitta/config/tailwind-preset.css';
+
+@layer base {
+  html {
+    color: var(--color-fg);
+    background: var(--color-canvas);
+    font-family: var(--font-body);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  h1,
+  h2,
+  h3 {
+    text-wrap: balance;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-focus);
+    outline-offset: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+@utility tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Extends a small control's hit area to at least 44×44px without changing its look. */
+@utility hit-area-44 {
+  position: relative;
+  &::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: max(100%, 44px);
+    height: max(100%, 44px);
+    transform: translate(-50%, -50%);
+  }
+}
+
+@utility hatch {
+  background-image: repeating-linear-gradient(
+    -45deg,
+    var(--color-ink-100) 0 6px,
+    var(--color-surface) 6px 12px
+  );
+}
