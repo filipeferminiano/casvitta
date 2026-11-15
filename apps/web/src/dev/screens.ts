@@ -22,7 +22,7 @@ export const SCREENS: ScreenEntry[] = [
     mockup: '10-ads-studio-1-select-property',
     title: 'Anúncios · 1 Imóvel',
     host: 'app',
-    path: '/anuncios/novo',
+    path: '/anuncios/novo?imovel=prop-vm',
     viewport: 'desktop',
   },
   {
@@ -78,7 +78,7 @@ export const SCREENS: ScreenEntry[] = [
     mockup: '20-mobile-broker-publish',
     title: 'Mobile · Publicar',
     host: 'app',
-    path: '/anuncios/novo',
+    path: '/anuncios/novo?imovel=prop-vm',
     viewport: 'mobile',
   },
   {

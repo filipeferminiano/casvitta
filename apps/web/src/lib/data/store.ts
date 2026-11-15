@@ -35,11 +35,14 @@ export type Db = {
   comparisonsSent: Record<string, string>;
 };
 
-const STORAGE_KEY = 'casvitta.mockdb.v2';
+const STORAGE_KEY = 'casvitta.mockdb.v3';
 
 export const DEFAULT_AD_DRAFT: AdDraft = {
   propertyId: null,
   creativeVariant: 1,
+  editedTitle: null,
+  editedBody: null,
+  coverPhoto: 1,
   channels: ['landing', 'marketplace', 'meta', 'google'],
   dailyBudgetCents: 3_000,
   durationDays: 14,

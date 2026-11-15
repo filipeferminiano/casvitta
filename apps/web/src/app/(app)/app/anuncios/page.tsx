@@ -1,9 +1,17 @@
-import { Megaphone } from 'lucide-react';
+import { getTranslations } from 'next-intl/server';
+import { Suspense } from 'react';
 
-import { PlaceholderPage, placeholderMetadata } from '@/components/PlaceholderPage';
+import { AdsIndexScreen } from '@/screens/ads/AdsScreens';
 
-export const generateMetadata = () => placeholderMetadata('ads');
+export async function generateMetadata() {
+  const t = await getTranslations('ads');
+  return { title: t('title') };
+}
 
 export default function Page() {
-  return <PlaceholderPage page="ads" icon={Megaphone} />;
+  return (
+    <Suspense>
+      <AdsIndexScreen />
+    </Suspense>
+  );
 }

@@ -1113,8 +1113,7 @@ export const reports: WeeklyReport[] = [
     })),
     suggestion: {
       body: 'Instagram e Facebook trouxeram 2 das 3 visitas. Mover R$ 10/dia do Google para lá pode render mais visitas pelo mesmo valor.',
-      smallSample:
-        'Amostra pequena: 3 visitas em 7 dias. Trate como hipótese e reavalie na semana 2.',
+      smallSample: '3 visitas em 7 dias. Trate como hipótese e reavalie na semana 2.',
     },
   },
 ];

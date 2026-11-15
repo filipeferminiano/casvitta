@@ -51,6 +51,24 @@ export function formatDayMonth(value: Date | string): string {
   }).format(date);
 }
 
+/** "5/11" (no zero padding, for chart axes). */
+export function formatDayMonthCompact(value: Date | string): string {
+  const date = typeof value === 'string' ? new Date(value) : value;
+  const parts = new Intl.DateTimeFormat('pt-BR', {
+    timeZone: TZ,
+    day: 'numeric',
+    month: 'numeric',
+  }).formatToParts(date);
+  const get = (type: string) => parts.find((p) => p.type === type)?.value ?? '';
+  return `${Number(get('day'))}/${Number(get('month'))}`;
+}
+
+/** Day of month only: "5". */
+export function formatDayOfMonth(value: Date | string): string {
+  const date = typeof value === 'string' ? new Date(value) : value;
+  return new Intl.DateTimeFormat('pt-BR', { timeZone: TZ, day: 'numeric' }).format(date);
+}
+
 /** "14 nov". */
 export function formatDayMonthShort(value: Date | string): string {
   const date = typeof value === 'string' ? new Date(value) : value;

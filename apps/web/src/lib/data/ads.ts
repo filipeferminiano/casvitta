@@ -72,11 +72,19 @@ export async function regenerateCreative(): Promise<void> {
   mutate((data) => {
     const count = data.creatives.filter((c) => c.propertyId === data.adDraft.propertyId).length;
     data.adDraft.creativeVariant = (data.adDraft.creativeVariant % Math.max(count, 1)) + 1;
+    // A new version replaces the broker's edits.
+    data.adDraft.editedTitle = null;
+    data.adDraft.editedBody = null;
   });
 }
 
 export async function updateDraft(
-  patch: Partial<Pick<AdDraft, 'channels' | 'dailyBudgetCents' | 'durationDays'>>,
+  patch: Partial<
+    Pick<
+      AdDraft,
+      'channels' | 'dailyBudgetCents' | 'durationDays' | 'editedTitle' | 'editedBody' | 'coverPhoto'
+    >
+  >,
 ): Promise<void> {
   mutate((data) => {
     data.adDraft = { ...data.adDraft, ...patch };
@@ -103,11 +111,21 @@ export async function publishDraft(): Promise<string> {
         (c) => c.propertyId === property.id && c.variant === draft.creativeVariant,
       ) ?? data.creatives.find((c) => c.propertyId === property.id);
     if (!creative) throw new Error('No creative');
+    const finalCreative =
+      draft.editedTitle || draft.editedBody
+        ? {
+            ...creative,
+            id: newId('cr'),
+            title: draft.editedTitle ?? creative.title,
+            body: draft.editedBody ?? creative.body,
+          }
+        : creative;
+    if (finalCreative !== creative) data.creatives.push(finalCreative);
 
     const campaign: Campaign = {
       id: newId('camp'),
       propertyId: property.id,
-      creativeId: creative.id,
+      creativeId: finalCreative.id,
       channels: draft.channels,
       dailyBudgetCents: draft.dailyBudgetCents,
       durationDays: draft.durationDays,
@@ -144,6 +162,7 @@ export type CampaignPanel = {
   costPerLeadCents: number | null;
   costPerVisitCents: number | null;
   paidChannels: number;
+  latestReportId: string | null;
 };
 
 export function getCampaignPanel(campaignId: string): Promise<CampaignPanel | null> {
@@ -170,6 +189,10 @@ export function getCampaignPanel(campaignId: string): Promise<CampaignPanel | nu
         : null,
       costPerVisitCents: stats.visits ? Math.round(stats.spentCents / stats.visits) : null,
       paidChannels: campaign.channels.filter((c) => c !== 'landing').length,
+      latestReportId:
+        data.reports
+          .filter((r) => r.campaignId === campaign.id)
+          .sort((a, b) => b.periodEnd.localeCompare(a.periodEnd))[0]?.id ?? null,
     };
   });
 }

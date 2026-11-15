@@ -585,5 +585,296 @@
     "interested": "Vamos te avisar",
     "interestToastTitle": "Pronto, vamos te avisar.",
     "interestToastDescription": "Seu interesse em {name} foi registrado."
+  },
+  "ads": {
+    "title": "Anúncios",
+    "newAd": "Novo anúncio",
+    "mobileTitle": "Anunciar imóvel",
+    "stepsLabel": "Etapas do anúncio",
+    "stepDone": "concluído",
+    "steps": {
+      "property": "Imóvel",
+      "ad": "Anúncio",
+      "publish": "Publicar"
+    },
+    "kinds": {
+      "apartment": "Apartamento",
+      "house": "Casa",
+      "studio": "Studio"
+    },
+    "perMonth": "{amount}/mês",
+    "rental": "locação",
+    "bedrooms": "{count, plural, one {1 quarto} other {# quartos}}",
+    "parking": "{count, plural, one {1 vaga} other {# vagas}}",
+    "photos": "{count, plural, one {1 foto} other {# fotos}}",
+    "photo": "Foto do imóvel",
+    "cover": "Foto {n} · capa",
+    "aiShort": "IA",
+    "editText": "Editar texto",
+    "back": "Voltar",
+    "authSigned": "Autorização de {kind, select, rental {locação} other {venda}} assinada · {date}",
+    "noAuth": "Sem autorização de venda: não pode ser anunciado",
+    "attachAuth": "Anexar autorização assinada",
+    "included": "incluso",
+    "fromBudget": "do orçamento",
+    "channels": {
+      "landing": {
+        "name": "Página do imóvel",
+        "description": "Landing page própria: {url}"
+      },
+      "marketplace": {
+        "name": "Marketplace",
+        "description": "Aparece para quem busca imóvel na região"
+      },
+      "meta": {
+        "name": "Instagram e Facebook",
+        "description": "Mostramos para pessoas da região com perfil de comprador"
+      },
+      "google": {
+        "name": "Google",
+        "description": "Aparece para quem pesquisa “apartamento {neighborhood}”"
+      }
+    },
+    "status": {
+      "live": "No ar",
+      "paused": "Pausado",
+      "ended": "Encerrado"
+    },
+    "step1": {
+      "title": "Qual imóvel você quer anunciar?",
+      "subtitle": "Escolha um imóvel. A IA monta o anúncio a partir da ficha dele.",
+      "subject": "seus imóveis",
+      "emptyTitle": "Nenhum imóvel cadastrado",
+      "emptyDescription": "Cadastre um imóvel com a autorização do proprietário para anunciar.",
+      "yourProperties": "Seus imóveis ({count})",
+      "onlyAuthorized": "Só imóveis com autorização podem ser anunciados",
+      "aiUses": "O que a IA vai usar",
+      "pickFirst": "Escolha um imóvel para ver o que entra no anúncio.",
+      "usesPhotos": "{floorplan, select, true {As {count} fotos e a planta da ficha} other {As {count} fotos da ficha}}",
+      "usesSpecs": "Metragem, quartos, vaga, condomínio e IPTU",
+      "usesNearby": "O bairro e o que há perto ({place} a {distance} m)",
+      "usesNeighborhood": "O bairro do imóvel",
+      "usesCreci": "Seu nome e CRECI, que aparecem em todo anúncio",
+      "noInvention": "A IA não inventa dados. O que não está na ficha não entra no anúncio.",
+      "generate": "Gerar anúncio com IA",
+      "generating": "Gerando anúncio…",
+      "nothingPublished": "Nada é publicado nesta etapa."
+    },
+    "step2": {
+      "title": "Seu anúncio está pronto para revisar",
+      "subtitle": "Tudo foi escrito a partir da ficha do imóvel. Ajuste o que quiser antes de publicar.",
+      "subject": "o anúncio",
+      "noPropertyTitle": "Escolha um imóvel primeiro",
+      "noPropertyDescription": "O anúncio é montado a partir da ficha de um imóvel com autorização.",
+      "pickProperty": "Escolher imóvel",
+      "previewChannel": "Prévia por canal",
+      "previewNote": "Prévia aproximada. A aparência final depende de cada canal. O CRECI aparece na imagem e no texto em todos os formatos.",
+      "texts": "Textos do anúncio",
+      "titleLabel": "Título",
+      "bodyLabel": "Descrição",
+      "tooLong": "Use no máximo {max} caracteres. Encurte o texto para continuar.",
+      "sources": "De onde veio cada informação",
+      "source": {
+        "record": "ficha",
+        "map": "mapa",
+        "broker": "você marcou"
+      },
+      "regenerate": "Gerar outra versão",
+      "regenerating": "Gerando…",
+      "changeCover": "Trocar foto de capa",
+      "continue": "Continuar para publicar"
+    },
+    "preview": {
+      "sponsored": "Patrocinado",
+      "pageName": "{name} Imóveis",
+      "opensWhatsapp": "Abre conversa no WhatsApp",
+      "chat": "Conversar"
+    },
+    "step3": {
+      "title": "Onde e quanto investir",
+      "subtitle": "Três escolhas. A IA cuida do público e dos horários.",
+      "subject": "a publicação",
+      "where": "Onde publicar",
+      "howMuch": "Quanto investir por dia",
+      "howMuchShort": "Quanto por dia?",
+      "perDay": "por dia",
+      "recommended": "recomendado",
+      "other": "Outro valor por dia",
+      "otherHelp": "Mínimo de {min} por dia. Você paga só o que for gasto.",
+      "belowMinimum": "O mínimo é {min} por dia. Aumente o valor para publicar.",
+      "why": "<strong>Por que {amount}:</strong> imóveis parecidos na {neighborhood} receberam entre <strong>{min} e {max} pedidos de contato</strong> em {days} dias com esse valor. É uma faixa observada, não uma promessa.",
+      "whyShort": "Recomendado: {amount}. Parecidos receberam {min} a {max} contatos em {days} dias. Faixa, não promessa.",
+      "duration": "Duração",
+      "days": "{days} dias",
+      "region": "Região",
+      "regionValue": "5 km da {neighborhood}",
+      "maxSpend": "Gasto máximo",
+      "summary": "Resumo",
+      "channelsCount": "Canais",
+      "perDayLabel": "Por dia",
+      "canPause": "Você pode pausar",
+      "anytime": "a qualquer hora",
+      "authConfirm": "Autorização de {kind, select, rental {locação} other {venda}} assinada pelo proprietário ({date})",
+      "creciShown": "CRECI-{state} {number} exibido em todos os canais (obrigatório)",
+      "publish": "Publicar agora",
+      "publishing": "Publicando…",
+      "publishedToast": "Anúncio no ar. A página do imóvel e o marketplace já estão publicados.",
+      "publishError": "Não deu para publicar. Confira a autorização e o valor por dia e tente de novo.",
+      "billing": "A mídia é cobrada na forma de pagamento cadastrada, só pelo que for gasto, até {max}.",
+      "channelsLabel": "Canais",
+      "channelsList": "Página, marketplace, Meta, Google",
+      "durationMax": "Duração · máximo",
+      "authLabel": "Autorização de venda",
+      "signed": "Assinada"
+    },
+    "index": {
+      "subtitle": "Seus anúncios no ar, com custo por lead e por visita.",
+      "subject": "seus anúncios",
+      "create": "Criar anúncio",
+      "emptyTitle": "Nenhum anúncio ainda",
+      "emptyDescription": "Escolha um imóvel, a IA escreve o anúncio com os dados dele e você aprova antes de publicar. O orçamento começa em R$ 20 por dia.",
+      "rowDetails": "Dia {day} de {total} · {perDay} por dia",
+      "leads": "{count, plural, one {1 lead} other {# leads}}",
+      "visits": "{count, plural, one {1 visita} other {# visitas}}",
+      "openPanel": "Ver painel",
+      "openReport": "Relatório da semana",
+      "socialTitle": "Redes sociais",
+      "socialDescription": "Posts da semana sugeridos pela IA para sua página no Facebook e no Instagram. Nada sai sem você aprovar.",
+      "socialCta": "Abrir calendário"
+    },
+    "panel": {
+      "subject": "o anúncio",
+      "notFoundTitle": "Anúncio não encontrado",
+      "notFoundDescription": "Volte para Anúncios e escolha outro.",
+      "breadcrumb": "Anúncios no ar",
+      "title": "{property} · {days, plural, one {1 dia} other {# dias}} no ar",
+      "subtitle": "Cada pedido de contato vira um lead no seu CRM, com a origem e o custo junto.",
+      "newLead": "<strong>Novo lead: {name}</strong> veio pelo {source} {when}. A IA já está qualificando no WhatsApp.",
+      "follow": "Acompanhar conversa",
+      "spent": "Investido até agora",
+      "spentCaption": "de {max} · dia {day} de {total}",
+      "contacts": "Pedidos de contato",
+      "visits": "Visitas agendadas",
+      "each": "{amount} cada",
+      "status": "Status",
+      "channels": "{count, plural, one {1 canal} other {# canais}}",
+      "leadsTitle": "Leads deste anúncio",
+      "seeAll": "Ver todos no CRM",
+      "noLeads": "Os leads aparecem aqui assim que alguém pedir contato.",
+      "aiActive": "IA atendendo",
+      "needsYou": "Precisa de você",
+      "chips": {
+        "fgts": "Usa FGTS",
+        "financing": "Financia {pct}%",
+        "down": "Entrada {pct}%"
+      },
+      "funnelTitle": "Do alcance à visita",
+      "logNote": "Escala logarítmica para caber o alcance e as visitas na mesma régua.",
+      "funnel": {
+        "reach": "Pessoas alcançadas",
+        "clicks": "Cliques no anúncio",
+        "conversations": "Conversas iniciadas",
+        "qualified": "Qualificados",
+        "visits": "Visitas agendadas"
+      }
+    },
+    "report": {
+      "subject": "o relatório",
+      "notFoundTitle": "Relatório não encontrado",
+      "notFoundDescription": "Volte para Anúncios e escolha outro.",
+      "breadcrumb": "Relatórios",
+      "title": "Semana {week}: {amount} por visita agendada",
+      "subtitle": "{from} a {to}. Enviado também no seu WhatsApp toda segunda às 8h.",
+      "pdf": "Baixar PDF",
+      "spent": "Investido",
+      "spentCaption": "{perDay}/dia · {days} dias",
+      "perLead": "Custo por lead",
+      "contacts": "{count} pedidos de contato",
+      "perVisit": "Custo por visita agendada",
+      "visitsCaption": "{count} visitas · {done} já feita",
+      "perQualified": "Custo por lead qualificado",
+      "qualifiedCaption": "{count} qualificados pela IA",
+      "byChannel": "Resultado da semana por canal",
+      "cols": {
+        "channel": "Canal",
+        "spent": "Investido R$",
+        "leads": "Leads",
+        "qualified": "Qualificados",
+        "visits": "Visitas",
+        "perVisit": "R$ por visita"
+      },
+      "total": "Total",
+      "perDay": "Leads por dia",
+      "perDayLabel": "{total} leads em {days} dias",
+      "perDayCaption": "{total} leads em {days} dias. Gasto constante de {perDay}/dia.",
+      "suggestionTitle": "Sugestão para a próxima semana",
+      "smallSample": "Amostra pequena:",
+      "apply": "Aplicar sugestão",
+      "applying": "Aplicando…",
+      "appliedToast": "Sugestão aplicada: +R$ 10/dia em Instagram e Facebook.",
+      "keep": "Manter como está",
+      "keptToast": "Tudo certo, o orçamento fica como está.",
+      "footnote": "Visita agendada conta quando o lead confirma o horário. Resultados passados não garantem resultados futuros.",
+      "mobileTitle": "Semana {week}",
+      "mobilePeriod": "{property} · {from} a {to}",
+      "headline": "{amount} por visita agendada",
+      "perLeadShort": "Por lead",
+      "perVisitShort": "Por visita",
+      "visitsShort": "Visitas",
+      "funnelTitle": "Do alcance à visita",
+      "funnel": {
+        "contacts": "Pedidos de contato",
+        "qualified": "Qualificados pela IA",
+        "visits": "Visitas agendadas"
+      },
+      "suggestionShort": "Sugestão",
+      "ai": "IA"
+    },
+    "social": {
+      "breadcrumb": "Redes sociais",
+      "title": "Sua página no Facebook e no Instagram, em dia",
+      "subject": "os posts da semana",
+      "weekCalendar": "Calendário da semana",
+      "suggestedByAi": "Sugeridos pela IA",
+      "emptyTitle": "Nenhum post sugerido",
+      "emptyDescription": "A IA sugere posts toda semana a partir dos seus imóveis.",
+      "formats": {
+        "carousel": "Carrossel",
+        "reels": "Reels",
+        "post": "Post",
+        "story": "Story"
+      },
+      "channels": {
+        "instagram": "Instagram",
+        "facebook": "Facebook"
+      },
+      "status": {
+        "suggested": "Sugerido",
+        "awaiting_approval": "Aguarda sua aprovação",
+        "scheduled": "Agendado",
+        "published": "Publicado"
+      },
+      "scheduledAt": "Agendado · {time}",
+      "approve": "Aprovar e agendar",
+      "approving": "Agendando…",
+      "approvedToast": "Post aprovado e agendado.",
+      "points": {
+        "connect": "Conecte sua página do Facebook e seu Instagram profissional uma vez.",
+        "suggest": "A IA sugere posts da semana a partir dos seus imóveis: carrossel, reels e stories. Nada sai sem você aprovar.",
+        "inbox": "Comentários e mensagens diretas entram em Conversas, e o assistente responde e qualifica como no WhatsApp.",
+        "boost": "Um post que vai bem pode virar anúncio com o mesmo orçamento e teto dos seus Anúncios.",
+        "report": "No relatório de segunda: alcance, novos seguidores e mensagens recebidas."
+      },
+      "requirement": "Requer página do Facebook e conta profissional do Instagram conectadas pela Meta. Você pode desconectar quando quiser.",
+      "planRequired": "Redes sociais fazem parte do plano Profissional.",
+      "seePlans": "Ver planos"
+    }
+  },
+  "listing": {
+    "simulation": {
+      "title": "Simulação",
+      "perMonth": "{amount}/mês",
+      "details": "1ª parcela SAC, entrada 20% com FGTS, {term} meses, taxa ilustrativa 11,5% a.a., sem seguros e tarifas. Não é aprovação."
+    }
   }
 }

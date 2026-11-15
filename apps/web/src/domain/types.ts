@@ -299,6 +299,10 @@ export type Campaign = {
 export type AdDraft = {
   propertyId: ID | null;
   creativeVariant: number;
+  /** Broker's edits to the AI text (null = keep the AI version). */
+  editedTitle: string | null;
+  editedBody: string | null;
+  coverPhoto: number;
   channels: AdChannel[];
   dailyBudgetCents: Cents;
   durationDays: number;
