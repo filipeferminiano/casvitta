@@ -117,6 +117,13 @@
       "hours": "{n} h",
       "yesterday": "ontem",
       "days": "{n} dias"
+    },
+    "list": {
+      "now": "agora",
+      "minutes": "há {n} min",
+      "hours": "{n} h",
+      "yesterday": "ontem",
+      "days": "{n} dias"
     }
   },
   "stages": {
@@ -323,5 +330,118 @@
     "leadCost": "Custo deste lead: <strong>{amount}</strong> (média da semana)",
     "seeConversation": "Ver conversa",
     "call": "Ligar para o {name}"
+  },
+  "channels": {
+    "whatsapp": "WhatsApp",
+    "instagram": "Instagram",
+    "facebook": "Facebook",
+    "marketplace": "Marketplace"
+  },
+  "conversations": {
+    "title": "Conversas",
+    "subject": "suas conversas",
+    "subtitle": "A IA atende {ai, plural, one {1 conversa} other {# conversas}} agora. {needsYou, plural, =0 {Nenhuma precisa de você.} one {Uma precisa de você.} other {# precisam de você.}}",
+    "emptyTitle": "Nenhuma conversa ainda",
+    "emptyDescription": "As mensagens do WhatsApp, do Instagram e do Facebook chegam aqui. A assistente virtual atende primeiro e chama você quando precisar.",
+    "tabsLabel": "Filtrar conversas",
+    "tabs": {
+      "needsYou": "Precisa de você ({count})",
+      "needsYouShort": "Precisa ({count})",
+      "ai": "IA ({count})",
+      "all": "Todas"
+    },
+    "prefix": {
+      "ai": "IA: ",
+      "you": "Você: "
+    },
+    "needsYouTag": "Precisa de você",
+    "aiTag": "IA",
+    "youAreInControl": "Você está no controle",
+    "aiAnswering": "IA atendendo · você pode assumir",
+    "aiShort": "IA",
+    "rules": {
+      "title": "Agente de IA",
+      "on": "Ligado",
+      "off": "Desligado",
+      "values": {
+        "yes": "Sim",
+        "never": "Nunca"
+      },
+      "hours": "Horário de atendimento",
+      "note": "Quando uma regra “Nunca” aparece, a IA avisa o lead e passa a conversa para você.",
+      "edit": "Editar regras"
+    }
+  },
+  "conversation": {
+    "ai": "IA",
+    "you": "Você",
+    "threadLabel": "Conversa com {name}",
+    "events": {
+      "handoff": "IA passou a conversa para você · motivo: {reason}",
+      "takeover": "Você assumiu a conversa. A IA parou de responder.",
+      "handback": "Conversa devolvida para a IA.",
+      "adClick": "{name} clicou no anúncio do {source} · {time}",
+      "visitBooked": "Visita marcada · {day} · {time}",
+      "qualificationSaved": "Qualificação salva no lead",
+      "financing": "financia {pct}%",
+      "fgts": "FGTS",
+      "income": "renda {amount}"
+    },
+    "composer": {
+      "message": "Mensagem",
+      "assumePlaceholder": "Escreva para assumir a conversa no lugar da IA",
+      "assumePlaceholderShort": "Escreva para assumir",
+      "assume": "Assumir conversa",
+      "assumeShort": "Assumir",
+      "draftBadge": "Rascunho da IA · revise antes de enviar",
+      "draftLabel": "Resposta",
+      "discard": "Descartar",
+      "handBack": "Devolver para a IA",
+      "send": "Enviar",
+      "sending": "Enviando…",
+      "replyPlaceholder": "Escreva sua resposta"
+    },
+    "qualifyingTitle": "A IA está qualificando {name}",
+    "answeringTitle": "A IA está atendendo {name}",
+    "humanTitle": "Você está atendendo {name}",
+    "subtitle": "Três perguntas, sem formulário: financiamento, FGTS e entrada. As respostas vão direto para o lead.",
+    "qualification": {
+      "title": "Qualificação",
+      "financing": "Financiamento",
+      "fgts": "FGTS",
+      "down": "Entrada total",
+      "income": "Renda familiar informada",
+      "timeframe": "Prazo de compra",
+      "yesPct": "Sim, ~{pct}%",
+      "yesAmount": "Sim, ~{amount}",
+      "no": "Não",
+      "downValue": "~{amount} ({pct}%)",
+      "footnote": "Respostas do próprio {name}, coletadas pela IA. Não verificadas.",
+      "pending": "Em qualificação"
+    },
+    "simulation": {
+      "title": "Simulação",
+      "financed": "Financiado",
+      "first": "1ª parcela (SAC)",
+      "share": "% da renda",
+      "rate": "Taxa ilustrativa",
+      "rateValue": "{rate} a.a.",
+      "below": "Abaixo do limite usual de 30% da renda. O banco decide taxa, valor e aprovação.",
+      "above": "Acima do limite usual de 30% da renda. O banco decide taxa, valor e aprovação.",
+      "noIncome": "Sem renda informada. O banco decide taxa, valor e aprovação."
+    },
+    "rulesHere": {
+      "title": "Regras da IA nesta conversa",
+      "items": {
+        "intro": "Se apresenta como assistente da {broker}",
+        "noPromise": "Nunca promete aprovação nem desconto",
+        "slots": "Oferece só horários livres da sua agenda",
+        "handoff": "Passa para você se o lead pedir ou se irritar"
+      },
+      "cta": "Ver agenda e confirmar visita"
+    },
+    "notFoundTitle": "Conversa não encontrada",
+    "notFoundDescription": "Volte para Conversas e escolha outra.",
+    "subject": "esta conversa"
   }
 }

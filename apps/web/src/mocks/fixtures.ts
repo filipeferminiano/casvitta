@@ -593,7 +593,7 @@ export const conversations: Conversation[] = [
     id: 'conv-marcos',
     leadId: 'lead-marcos',
     channel: 'whatsapp',
-    aiMode: 'paused',
+    aiMode: 'active',
     handoffReason: null,
     unread: 0,
     context: null,
@@ -665,10 +665,12 @@ export const messages: Message[] = [
   m(
     'conv-sonia',
     'ai',
-    'Oi, Sônia! Sou o assistente virtual da Ana Ribeiro. A casa tem 2 vagas cobertas.',
+    'Oi, Sônia! Sou o assistente virtual da Ana Ribeiro, corretora da casa.',
     t('11-16', '09:48'),
   ),
+  m('conv-sonia', 'ai', 'A casa tem 2 vagas cobertas.', t('11-16', '09:48')),
 
+  m('conv-marcos', 'system', 'ad_click:instagram', t('11-11', '14:01')),
   m(
     'conv-marcos',
     'lead',
@@ -703,6 +705,8 @@ export const messages: Message[] = [
     'Obrigado! Pelos números, a primeira parcela ficaria perto de R$ 6,5 mil, numa simulação. Quem aprova é o banco. A Ana tem sábado às 10h ou 11h30 para te mostrar o apê. Qual prefere?',
     t('11-11', '14:03'),
   ),
+  m('conv-marcos', 'lead', '10h!', t('11-11', '14:04')),
+  m('conv-marcos', 'system', 'visit_booked:2026-11-14T10:00:00-03:00', t('11-11', '14:04')),
   m(
     'conv-marcos',
     'human',

@@ -66,3 +66,10 @@ export {
 } from './components/QualificationPanel.tsx';
 export { StageProgress, type StageProgressProps } from './components/StageProgress.tsx';
 export { Timeline, type TimelineItem } from './components/Timeline.tsx';
+export {
+  AiDraftComposer,
+  ChatThread,
+  type AiDraftComposerProps,
+  type ChatItem,
+  type ChatThreadProps,
+} from './components/ChatThread.tsx';

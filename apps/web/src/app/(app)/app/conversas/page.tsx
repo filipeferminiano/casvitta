@@ -1,9 +1,17 @@
-import { MessageSquare } from 'lucide-react';
+import { getTranslations } from 'next-intl/server';
+import { Suspense } from 'react';
 
-import { PlaceholderPage, placeholderMetadata } from '@/components/PlaceholderPage';
+import { ConversationsScreen } from '@/screens/conversations/ConversationsScreen';
 
-export const generateMetadata = () => placeholderMetadata('conversations');
+export async function generateMetadata() {
+  const t = await getTranslations('conversations');
+  return { title: t('title') };
+}
 
 export default function Page() {
-  return <PlaceholderPage page="conversations" icon={MessageSquare} />;
+  return (
+    <Suspense>
+      <ConversationsScreen />
+    </Suspense>
+  );
 }

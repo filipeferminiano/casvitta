@@ -43,7 +43,7 @@ export function SegmentedControl({
           disabled={option.disabled}
           className={cn(
             'rounded-chip px-3 type-body-s font-medium text-fg-muted transition-colors',
-            size === 'md' ? 'h-9' : 'hit-area-44 h-7',
+            size === 'md' ? 'min-h-9 py-1 leading-4' : 'hit-area-44 h-7',
             'hover:text-fg',
             'data-[state=on]:bg-panel data-[state=on]:text-fg data-[state=on]:shadow-[0_0_0_1px_var(--color-line)]',
             'disabled:cursor-not-allowed disabled:text-disabled-text',

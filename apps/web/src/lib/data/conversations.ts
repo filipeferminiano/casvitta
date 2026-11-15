@@ -13,6 +13,9 @@ export type Inbox = {
 };
 
 const needsYou = (c: ConversationView) => c.aiMode === 'handed_off';
+/** "IA" tab: the assistant is answering and spoke last. */
+export const isAiAnswering = (c: ConversationView) =>
+  c.aiMode === 'active' && c.lastMessage?.sender === 'ai';
 
 export function listConversations(): Promise<Inbox> {
   return withScreenState<Inbox>(
@@ -26,19 +29,11 @@ export function listConversations(): Promise<Inbox> {
             Number(needsYou(b)) - Number(needsYou(a)) ||
             (b.lastMessage?.sentAt ?? '').localeCompare(a.lastMessage?.sentAt ?? ''),
         );
-      // Mockup order: needs-you first, then AI-active conversations, then the rest by recency.
-      const ordered = [
-        ...items.filter(needsYou),
-        ...items.filter((c) => c.aiMode === 'active' && c.lastMessage?.sender !== 'lead'),
-        ...items.filter(
-          (c) => !needsYou(c) && !(c.aiMode === 'active' && c.lastMessage?.sender !== 'lead'),
-        ),
-      ];
       return {
-        conversations: ordered,
+        conversations: items,
         counts: {
           needsYou: items.filter(needsYou).length,
-          ai: items.filter((c) => c.aiMode === 'active' && c.lastMessage?.sender !== 'lead').length,
+          ai: items.filter(isAiAnswering).length,
           all: items.length,
         },
       };
