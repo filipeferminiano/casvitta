@@ -53,6 +53,11 @@ class Settings(BaseSettings):
     email_api_key: SecretStr | None = None
     sms_api_key: SecretStr | None = None
 
+    # Admin endpoints until real auth exists (Milestone 1). Unset = admin endpoints disabled.
+    admin_token: SecretStr | None = None
+    # Public interest form: requests per IP and kind per minute.
+    interest_rate_limit_per_minute: int = 5
+
     # Business configuration. Money in integer cents, rates in basis points.
     plan_essencial_price_cents: int = 19_700
     plan_essencial_max_active_properties: int = 3

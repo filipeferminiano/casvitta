@@ -44,10 +44,170 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/public/interest": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Create Interest
+         * @description Capture pages: store the signup and ask for WhatsApp double opt-in. No auth.
+         */
+        post: operations["createInterestSignup"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/admin/interest": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Interest */
+        get: operations["listInterestSignups"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        /** AgencyCriteria */
+        AgencyCriteria: {
+            /** Company */
+            company: string;
+            /** Brokers Count */
+            brokers_count?: number | null;
+            /** City */
+            city?: string | null;
+        };
+        /** AgencySignup */
+        AgencySignup: {
+            /** Name */
+            name: string;
+            /** Phone */
+            phone: string;
+            /** Email */
+            email?: string | null;
+            consents: components["schemas"]["ConsentIn"];
+            utm?: components["schemas"]["Utm"];
+            /** Source Page */
+            source_page?: string | null;
+            /** Website */
+            website?: string | null;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            kind: "agency";
+            criteria: components["schemas"]["AgencyCriteria"];
+        };
+        /** AuctionCriteria */
+        AuctionCriteria: {
+            /** Regions */
+            regions: string;
+            /** Property Kinds */
+            property_kinds: components["schemas"]["PropertyKind"][];
+            price_range: components["schemas"]["AuctionPriceRange"];
+            /**
+             * Payment
+             * @enum {string}
+             */
+            payment: "cash" | "financing" | "unsure";
+            /**
+             * Purpose
+             * @enum {string}
+             */
+            purpose: "live" | "invest";
+            /** Has Participated */
+            has_participated: boolean;
+        };
+        /**
+         * AuctionPriceRange
+         * @enum {string}
+         */
+        AuctionPriceRange: "up_to_300k" | "300k_to_600k" | "600k_to_1m" | "over_1m";
+        /** AuctionSignup */
+        AuctionSignup: {
+            /** Name */
+            name: string;
+            /** Phone */
+            phone: string;
+            /** Email */
+            email?: string | null;
+            consents: components["schemas"]["ConsentIn"];
+            utm?: components["schemas"]["Utm"];
+            /** Source Page */
+            source_page?: string | null;
+            /** Website */
+            website?: string | null;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            kind: "auction";
+            criteria: components["schemas"]["AuctionCriteria"];
+        };
+        /** ConsentIn */
+        ConsentIn: {
+            /** Contact About Properties */
+            contact_about_properties: boolean;
+            /**
+             * Marketing
+             * @default false
+             */
+            marketing: boolean;
+        };
+        /** DeveloperCriteria */
+        DeveloperCriteria: {
+            /** Company */
+            company: string;
+            /** Role */
+            role?: string | null;
+            /** Cities */
+            cities: string[];
+            /** Launches Per Year */
+            launches_per_year?: number | null;
+        };
+        /** DeveloperSignup */
+        DeveloperSignup: {
+            /** Name */
+            name: string;
+            /** Phone */
+            phone: string;
+            /** Email */
+            email?: string | null;
+            consents: components["schemas"]["ConsentIn"];
+            utm?: components["schemas"]["Utm"];
+            /** Source Page */
+            source_page?: string | null;
+            /** Website */
+            website?: string | null;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            kind: "developer";
+            criteria: components["schemas"]["DeveloperCriteria"];
+        };
+        /** HTTPValidationError */
+        HTTPValidationError: {
+            /** Detail */
+            detail?: components["schemas"]["ValidationError"][];
+        };
         /** HealthOut */
         HealthOut: {
             /**
@@ -56,6 +216,158 @@ export interface components {
              */
             status: "ok";
         };
+        /**
+         * InstitutionalFront
+         * @enum {string}
+         */
+        InstitutionalFront: "operations" | "leasing" | "tenant_risk" | "origination" | "data";
+        /**
+         * InstitutionalType
+         * @enum {string}
+         */
+        InstitutionalType: "fii_manager" | "family_office" | "securitizer" | "own_portfolio" | "other";
+        /**
+         * InterestKind
+         * @enum {string}
+         */
+        InterestKind: "agency" | "owner_listing" | "developer" | "investor_institutional" | "rental_admin" | "auction";
+        /**
+         * InterestSignupAccepted
+         * @description Same body for stored and honeypot-rejected requests, so bots learn nothing.
+         */
+        InterestSignupAccepted: {
+            /**
+             * Status
+             * @default accepted
+             * @constant
+             */
+            status: "accepted";
+            /**
+             * Opt In
+             * @enum {string}
+             */
+            opt_in: "whatsapp_sent" | "not_requested";
+        };
+        /** InterestSignupOut */
+        InterestSignupOut: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            kind: components["schemas"]["InterestKind"];
+            /** Name */
+            name: string;
+            /** Phone E164 */
+            phone_e164: string;
+            /** Email */
+            email: string | null;
+            /** Criteria */
+            criteria: {
+                [key: string]: unknown;
+            };
+            status: components["schemas"]["InterestStatus"];
+            /** Source Page */
+            source_page: string | null;
+            /** Utm Source */
+            utm_source: string | null;
+            /** Utm Medium */
+            utm_medium: string | null;
+            /** Utm Campaign */
+            utm_campaign: string | null;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /** Opt In Confirmed At */
+            opt_in_confirmed_at: string | null;
+        };
+        /**
+         * InterestStatus
+         * @enum {string}
+         */
+        InterestStatus: "pending_opt_in" | "confirmed" | "unsubscribed";
+        /** InvestorInstitutionalCriteria */
+        InvestorInstitutionalCriteria: {
+            /** Company */
+            company: string;
+            org_type: components["schemas"]["InstitutionalType"];
+            portfolio_size: components["schemas"]["PortfolioSize"];
+            /** Cities */
+            cities: string[];
+            /** Interests */
+            interests: components["schemas"]["InstitutionalFront"][];
+        };
+        /** InvestorInstitutionalSignup */
+        InvestorInstitutionalSignup: {
+            /** Name */
+            name: string;
+            /** Phone */
+            phone: string;
+            /** Email */
+            email?: string | null;
+            consents: components["schemas"]["ConsentIn"];
+            utm?: components["schemas"]["Utm"];
+            /** Source Page */
+            source_page?: string | null;
+            /** Website */
+            website?: string | null;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            kind: "investor_institutional";
+            criteria: components["schemas"]["InvestorInstitutionalCriteria"];
+        };
+        /** OwnerListingCriteria */
+        OwnerListingCriteria: {
+            /**
+             * Transaction
+             * @enum {string}
+             */
+            transaction: "sale" | "rent";
+            /** Cep */
+            cep: string;
+            property_kind: components["schemas"]["PropertyKind"];
+            /** Bedrooms */
+            bedrooms?: number | null;
+            /** Area M2 */
+            area_m2?: number | null;
+            /** Expected Price Cents */
+            expected_price_cents?: number | null;
+        };
+        /** OwnerListingSignup */
+        OwnerListingSignup: {
+            /** Name */
+            name: string;
+            /** Phone */
+            phone: string;
+            /** Email */
+            email?: string | null;
+            consents: components["schemas"]["ConsentIn"];
+            utm?: components["schemas"]["Utm"];
+            /** Source Page */
+            source_page?: string | null;
+            /** Website */
+            website?: string | null;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            kind: "owner_listing";
+            criteria: components["schemas"]["OwnerListingCriteria"];
+        };
+        /**
+         * PortfolioSize
+         * @enum {string}
+         */
+        PortfolioSize: "up_to_10" | "11_to_50" | "51_to_200" | "over_200";
+        /**
+         * PropertyKind
+         * @enum {string}
+         */
+        PropertyKind: "apartment" | "house" | "land" | "commercial";
         /** ReadinessOut */
         ReadinessOut: {
             /**
@@ -68,6 +380,56 @@ export interface components {
              * @enum {string}
              */
             database: "ok" | "unavailable";
+        };
+        /** RentalAdminCriteria */
+        RentalAdminCriteria: {
+            /** City */
+            city?: string | null;
+            /** Properties Count */
+            properties_count?: number | null;
+        };
+        /** RentalAdminSignup */
+        RentalAdminSignup: {
+            /** Name */
+            name: string;
+            /** Phone */
+            phone: string;
+            /** Email */
+            email?: string | null;
+            consents: components["schemas"]["ConsentIn"];
+            utm?: components["schemas"]["Utm"];
+            /** Source Page */
+            source_page?: string | null;
+            /** Website */
+            website?: string | null;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            kind: "rental_admin";
+            criteria: components["schemas"]["RentalAdminCriteria"];
+        };
+        /** Utm */
+        Utm: {
+            /** Source */
+            source?: string | null;
+            /** Medium */
+            medium?: string | null;
+            /** Campaign */
+            campaign?: string | null;
+        };
+        /** ValidationError */
+        ValidationError: {
+            /** Location */
+            loc: (string | number)[];
+            /** Message */
+            msg: string;
+            /** Error Type */
+            type: string;
+            /** Input */
+            input?: unknown;
+            /** Context */
+            ctx?: Record<string, never>;
         };
     };
     responses: never;
@@ -123,6 +485,74 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ReadinessOut"];
+                };
+            };
+        };
+    };
+    createInterestSignup: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AgencySignup"] | components["schemas"]["OwnerListingSignup"] | components["schemas"]["DeveloperSignup"] | components["schemas"]["InvestorInstitutionalSignup"] | components["schemas"]["RentalAdminSignup"] | components["schemas"]["AuctionSignup"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            202: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["InterestSignupAccepted"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    listInterestSignups: {
+        parameters: {
+            query?: {
+                kind?: components["schemas"]["InterestKind"] | null;
+                format?: string;
+            };
+            header?: {
+                "x-admin-token"?: string | null;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["InterestSignupOut"][];
+                    "text/csv": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
         };

@@ -58,10 +58,570 @@
           }
         }
       }
+    },
+    "/v1/public/interest": {
+      "post": {
+        "tags": [
+          "public"
+        ],
+        "summary": "Create Interest",
+        "description": "Capture pages: store the signup and ask for WhatsApp double opt-in. No auth.",
+        "operationId": "createInterestSignup",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/AgencySignup"
+                  },
+                  {
+                    "$ref": "#/components/schemas/OwnerListingSignup"
+                  },
+                  {
+                    "$ref": "#/components/schemas/DeveloperSignup"
+                  },
+                  {
+                    "$ref": "#/components/schemas/InvestorInstitutionalSignup"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RentalAdminSignup"
+                  },
+                  {
+                    "$ref": "#/components/schemas/AuctionSignup"
+                  }
+                ],
+                "title": "Payload",
+                "discriminator": {
+                  "propertyName": "kind",
+                  "mapping": {
+                    "agency": "#/components/schemas/AgencySignup",
+                    "owner_listing": "#/components/schemas/OwnerListingSignup",
+                    "developer": "#/components/schemas/DeveloperSignup",
+                    "investor_institutional": "#/components/schemas/InvestorInstitutionalSignup",
+                    "rental_admin": "#/components/schemas/RentalAdminSignup",
+                    "auction": "#/components/schemas/AuctionSignup"
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "202": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InterestSignupAccepted"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/admin/interest": {
+      "get": {
+        "tags": [
+          "admin"
+        ],
+        "summary": "List Interest",
+        "operationId": "listInterestSignups",
+        "parameters": [
+          {
+            "name": "kind",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/InterestKind"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Kind"
+            }
+          },
+          {
+            "name": "format",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "pattern": "^(json|csv)$",
+              "default": "json",
+              "title": "Format"
+            }
+          },
+          {
+            "name": "x-admin-token",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Admin-Token"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/InterestSignupOut"
+                  },
+                  "title": "Response Listinterestsignups"
+                }
+              },
+              "text/csv": {}
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
     "schemas": {
+      "AgencyCriteria": {
+        "properties": {
+          "company": {
+            "type": "string",
+            "maxLength": 120,
+            "minLength": 2,
+            "title": "Company"
+          },
+          "brokers_count": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 5000.0,
+                "minimum": 1.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Brokers Count"
+          },
+          "city": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 120
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "City"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "company"
+        ],
+        "title": "AgencyCriteria"
+      },
+      "AgencySignup": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 120,
+            "minLength": 2,
+            "title": "Name"
+          },
+          "phone": {
+            "type": "string",
+            "title": "Phone"
+          },
+          "email": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 254
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Email"
+          },
+          "consents": {
+            "$ref": "#/components/schemas/ConsentIn"
+          },
+          "utm": {
+            "$ref": "#/components/schemas/Utm"
+          },
+          "source_page": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 200
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source Page"
+          },
+          "website": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Website"
+          },
+          "kind": {
+            "type": "string",
+            "const": "agency",
+            "title": "Kind"
+          },
+          "criteria": {
+            "$ref": "#/components/schemas/AgencyCriteria"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "name",
+          "phone",
+          "consents",
+          "kind",
+          "criteria"
+        ],
+        "title": "AgencySignup"
+      },
+      "AuctionCriteria": {
+        "properties": {
+          "regions": {
+            "type": "string",
+            "maxLength": 200,
+            "minLength": 2,
+            "title": "Regions"
+          },
+          "property_kinds": {
+            "items": {
+              "$ref": "#/components/schemas/PropertyKind"
+            },
+            "type": "array",
+            "minItems": 1,
+            "title": "Property Kinds"
+          },
+          "price_range": {
+            "$ref": "#/components/schemas/AuctionPriceRange"
+          },
+          "payment": {
+            "type": "string",
+            "enum": [
+              "cash",
+              "financing",
+              "unsure"
+            ],
+            "title": "Payment"
+          },
+          "purpose": {
+            "type": "string",
+            "enum": [
+              "live",
+              "invest"
+            ],
+            "title": "Purpose"
+          },
+          "has_participated": {
+            "type": "boolean",
+            "title": "Has Participated"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "regions",
+          "property_kinds",
+          "price_range",
+          "payment",
+          "purpose",
+          "has_participated"
+        ],
+        "title": "AuctionCriteria"
+      },
+      "AuctionPriceRange": {
+        "type": "string",
+        "enum": [
+          "up_to_300k",
+          "300k_to_600k",
+          "600k_to_1m",
+          "over_1m"
+        ],
+        "title": "AuctionPriceRange"
+      },
+      "AuctionSignup": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 120,
+            "minLength": 2,
+            "title": "Name"
+          },
+          "phone": {
+            "type": "string",
+            "title": "Phone"
+          },
+          "email": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 254
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Email"
+          },
+          "consents": {
+            "$ref": "#/components/schemas/ConsentIn"
+          },
+          "utm": {
+            "$ref": "#/components/schemas/Utm"
+          },
+          "source_page": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 200
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source Page"
+          },
+          "website": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Website"
+          },
+          "kind": {
+            "type": "string",
+            "const": "auction",
+            "title": "Kind"
+          },
+          "criteria": {
+            "$ref": "#/components/schemas/AuctionCriteria"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "name",
+          "phone",
+          "consents",
+          "kind",
+          "criteria"
+        ],
+        "title": "AuctionSignup"
+      },
+      "ConsentIn": {
+        "properties": {
+          "contact_about_properties": {
+            "type": "boolean",
+            "title": "Contact About Properties"
+          },
+          "marketing": {
+            "type": "boolean",
+            "title": "Marketing",
+            "default": false
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "contact_about_properties"
+        ],
+        "title": "ConsentIn"
+      },
+      "DeveloperCriteria": {
+        "properties": {
+          "company": {
+            "type": "string",
+            "maxLength": 120,
+            "minLength": 2,
+            "title": "Company"
+          },
+          "role": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 80
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Role"
+          },
+          "cities": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "maxItems": 20,
+            "minItems": 1,
+            "title": "Cities"
+          },
+          "launches_per_year": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 1000.0,
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Launches Per Year"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "company",
+          "cities"
+        ],
+        "title": "DeveloperCriteria"
+      },
+      "DeveloperSignup": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 120,
+            "minLength": 2,
+            "title": "Name"
+          },
+          "phone": {
+            "type": "string",
+            "title": "Phone"
+          },
+          "email": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 254
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Email"
+          },
+          "consents": {
+            "$ref": "#/components/schemas/ConsentIn"
+          },
+          "utm": {
+            "$ref": "#/components/schemas/Utm"
+          },
+          "source_page": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 200
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source Page"
+          },
+          "website": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Website"
+          },
+          "kind": {
+            "type": "string",
+            "const": "developer",
+            "title": "Kind"
+          },
+          "criteria": {
+            "$ref": "#/components/schemas/DeveloperCriteria"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "name",
+          "phone",
+          "consents",
+          "kind",
+          "criteria"
+        ],
+        "title": "DeveloperSignup"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
       "HealthOut": {
         "properties": {
           "status": {
@@ -75,6 +635,464 @@
           "status"
         ],
         "title": "HealthOut"
+      },
+      "InstitutionalFront": {
+        "type": "string",
+        "enum": [
+          "operations",
+          "leasing",
+          "tenant_risk",
+          "origination",
+          "data"
+        ],
+        "title": "InstitutionalFront"
+      },
+      "InstitutionalType": {
+        "type": "string",
+        "enum": [
+          "fii_manager",
+          "family_office",
+          "securitizer",
+          "own_portfolio",
+          "other"
+        ],
+        "title": "InstitutionalType"
+      },
+      "InterestKind": {
+        "type": "string",
+        "enum": [
+          "agency",
+          "owner_listing",
+          "developer",
+          "investor_institutional",
+          "rental_admin",
+          "auction"
+        ],
+        "title": "InterestKind"
+      },
+      "InterestSignupAccepted": {
+        "properties": {
+          "status": {
+            "type": "string",
+            "const": "accepted",
+            "title": "Status",
+            "default": "accepted"
+          },
+          "opt_in": {
+            "type": "string",
+            "enum": [
+              "whatsapp_sent",
+              "not_requested"
+            ],
+            "title": "Opt In"
+          }
+        },
+        "type": "object",
+        "required": [
+          "opt_in"
+        ],
+        "title": "InterestSignupAccepted",
+        "description": "Same body for stored and honeypot-rejected requests, so bots learn nothing."
+      },
+      "InterestSignupOut": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "kind": {
+            "$ref": "#/components/schemas/InterestKind"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "phone_e164": {
+            "type": "string",
+            "title": "Phone E164"
+          },
+          "email": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Email"
+          },
+          "criteria": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Criteria"
+          },
+          "status": {
+            "$ref": "#/components/schemas/InterestStatus"
+          },
+          "source_page": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source Page"
+          },
+          "utm_source": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Utm Source"
+          },
+          "utm_medium": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Utm Medium"
+          },
+          "utm_campaign": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Utm Campaign"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          },
+          "opt_in_confirmed_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Opt In Confirmed At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "kind",
+          "name",
+          "phone_e164",
+          "email",
+          "criteria",
+          "status",
+          "source_page",
+          "utm_source",
+          "utm_medium",
+          "utm_campaign",
+          "created_at",
+          "opt_in_confirmed_at"
+        ],
+        "title": "InterestSignupOut"
+      },
+      "InterestStatus": {
+        "type": "string",
+        "enum": [
+          "pending_opt_in",
+          "confirmed",
+          "unsubscribed"
+        ],
+        "title": "InterestStatus"
+      },
+      "InvestorInstitutionalCriteria": {
+        "properties": {
+          "company": {
+            "type": "string",
+            "maxLength": 120,
+            "minLength": 2,
+            "title": "Company"
+          },
+          "org_type": {
+            "$ref": "#/components/schemas/InstitutionalType"
+          },
+          "portfolio_size": {
+            "$ref": "#/components/schemas/PortfolioSize"
+          },
+          "cities": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "maxItems": 20,
+            "minItems": 1,
+            "title": "Cities"
+          },
+          "interests": {
+            "items": {
+              "$ref": "#/components/schemas/InstitutionalFront"
+            },
+            "type": "array",
+            "minItems": 1,
+            "title": "Interests"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "company",
+          "org_type",
+          "portfolio_size",
+          "cities",
+          "interests"
+        ],
+        "title": "InvestorInstitutionalCriteria"
+      },
+      "InvestorInstitutionalSignup": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 120,
+            "minLength": 2,
+            "title": "Name"
+          },
+          "phone": {
+            "type": "string",
+            "title": "Phone"
+          },
+          "email": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 254
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Email"
+          },
+          "consents": {
+            "$ref": "#/components/schemas/ConsentIn"
+          },
+          "utm": {
+            "$ref": "#/components/schemas/Utm"
+          },
+          "source_page": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 200
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source Page"
+          },
+          "website": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Website"
+          },
+          "kind": {
+            "type": "string",
+            "const": "investor_institutional",
+            "title": "Kind"
+          },
+          "criteria": {
+            "$ref": "#/components/schemas/InvestorInstitutionalCriteria"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "name",
+          "phone",
+          "consents",
+          "kind",
+          "criteria"
+        ],
+        "title": "InvestorInstitutionalSignup"
+      },
+      "OwnerListingCriteria": {
+        "properties": {
+          "transaction": {
+            "type": "string",
+            "enum": [
+              "sale",
+              "rent"
+            ],
+            "title": "Transaction"
+          },
+          "cep": {
+            "type": "string",
+            "title": "Cep"
+          },
+          "property_kind": {
+            "$ref": "#/components/schemas/PropertyKind"
+          },
+          "bedrooms": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 20.0,
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Bedrooms"
+          },
+          "area_m2": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 100000.0,
+                "minimum": 10.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Area M2"
+          },
+          "expected_price_cents": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Expected Price Cents"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "transaction",
+          "cep",
+          "property_kind"
+        ],
+        "title": "OwnerListingCriteria"
+      },
+      "OwnerListingSignup": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 120,
+            "minLength": 2,
+            "title": "Name"
+          },
+          "phone": {
+            "type": "string",
+            "title": "Phone"
+          },
+          "email": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 254
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Email"
+          },
+          "consents": {
+            "$ref": "#/components/schemas/ConsentIn"
+          },
+          "utm": {
+            "$ref": "#/components/schemas/Utm"
+          },
+          "source_page": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 200
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source Page"
+          },
+          "website": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Website"
+          },
+          "kind": {
+            "type": "string",
+            "const": "owner_listing",
+            "title": "Kind"
+          },
+          "criteria": {
+            "$ref": "#/components/schemas/OwnerListingCriteria"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "name",
+          "phone",
+          "consents",
+          "kind",
+          "criteria"
+        ],
+        "title": "OwnerListingSignup"
+      },
+      "PortfolioSize": {
+        "type": "string",
+        "enum": [
+          "up_to_10",
+          "11_to_50",
+          "51_to_200",
+          "over_200"
+        ],
+        "title": "PortfolioSize"
+      },
+      "PropertyKind": {
+        "type": "string",
+        "enum": [
+          "apartment",
+          "house",
+          "land",
+          "commercial"
+        ],
+        "title": "PropertyKind"
       },
       "ReadinessOut": {
         "properties": {
@@ -101,6 +1119,194 @@
           "database"
         ],
         "title": "ReadinessOut"
+      },
+      "RentalAdminCriteria": {
+        "properties": {
+          "city": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 120
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "City"
+          },
+          "properties_count": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 10000.0,
+                "minimum": 1.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Properties Count"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "RentalAdminCriteria"
+      },
+      "RentalAdminSignup": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 120,
+            "minLength": 2,
+            "title": "Name"
+          },
+          "phone": {
+            "type": "string",
+            "title": "Phone"
+          },
+          "email": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 254
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Email"
+          },
+          "consents": {
+            "$ref": "#/components/schemas/ConsentIn"
+          },
+          "utm": {
+            "$ref": "#/components/schemas/Utm"
+          },
+          "source_page": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 200
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source Page"
+          },
+          "website": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Website"
+          },
+          "kind": {
+            "type": "string",
+            "const": "rental_admin",
+            "title": "Kind"
+          },
+          "criteria": {
+            "$ref": "#/components/schemas/RentalAdminCriteria"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "name",
+          "phone",
+          "consents",
+          "kind",
+          "criteria"
+        ],
+        "title": "RentalAdminSignup"
+      },
+      "Utm": {
+        "properties": {
+          "source": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 80
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source"
+          },
+          "medium": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 80
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Medium"
+          },
+          "campaign": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 120
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Campaign"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "Utm"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          },
+          "input": {
+            "title": "Input"
+          },
+          "ctx": {
+            "type": "object",
+            "title": "Context"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
       }
     }
   }

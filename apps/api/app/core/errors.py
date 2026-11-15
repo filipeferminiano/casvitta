@@ -43,6 +43,9 @@ _FIELD_ERRORS = {
 }
 
 
+_CUSTOM_FIELD_ERRORS = {"invalid_phone": "invalid_phone", "invalid_cep": "field.invalid_cep"}
+
+
 def _body(code: str, message: str, fields: list[dict[str, Any]] | None = None) -> dict[str, Any]:
     error: dict[str, Any] = {"code": code, "message": message}
     if fields is not None:
@@ -71,12 +74,19 @@ async def _validation_error(_request: Request, exc: Exception) -> JSONResponse:
     if not isinstance(exc, RequestValidationError):  # pragma: no cover
         raise exc
     fields = []
+    # Discriminated unions add the tag (e.g. "auction") to the location; hide it from clients.
+    body = exc.body if isinstance(exc.body, dict) else {}
+    tags = {str(body["kind"])} if "kind" in body else set()
     for err in exc.errors():
         key = _FIELD_ERRORS.get(str(err.get("type")), "field.invalid")
         ctx = err.get("ctx") or {}
+        # Validators raise ValueError("<catalog key>") for domain-specific messages.
+        code = str(ctx.get("error", "")) if err.get("type") == "value_error" else ""
+        if code in _CUSTOM_FIELD_ERRORS:
+            key = _CUSTOM_FIELD_ERRORS[code]
         fields.append(
             {
-                "path": [str(p) for p in err.get("loc", ()) if p != "body"],
+                "path": [str(p) for p in err.get("loc", ()) if p != "body" and str(p) not in tags],
                 "code": str(err.get("type")),
                 "message": translate(key, ctx),
             }

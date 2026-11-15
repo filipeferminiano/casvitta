@@ -13,5 +13,9 @@
   "field.too_long": "Use no máximo {max_length} caracteres.",
   "field.invalid_number": "Digite um número válido.",
   "field.invalid_email": "Digite um e-mail válido, como nome@exemplo.com.br.",
-  "field.invalid": "Confira o valor deste campo."
+  "field.invalid": "Confira o valor deste campo.",
+  "rate_limited": "Muitas tentativas em pouco tempo. Espere um minuto e tente de novo.",
+  "invalid_phone": "Confira o WhatsApp: use DDD e número, como (11) 92740-8912.",
+  "consent_required": "Para continuar, marque que aceita ser contatado.",
+  "field.invalid_cep": "Digite um CEP com 8 números, como 04014-000."
 }

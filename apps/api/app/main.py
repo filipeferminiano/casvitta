@@ -10,12 +10,15 @@ from app.api.v1.router import api_router
 from app.core.db import get_engine
 from app.core.errors import install_error_handlers
 from app.core.logging import configure_logging
+from app.core.rate_limit import InMemoryRateLimiter, RateLimiter
 from app.core.settings import Settings, get_settings
 from app.integrations.registry import Integrations, build_integrations
 
 
 def create_app(
-    settings: Settings | None = None, integrations: Integrations | None = None
+    settings: Settings | None = None,
+    integrations: Integrations | None = None,
+    rate_limiter: RateLimiter | None = None,
 ) -> FastAPI:
     settings = settings or get_settings()
     configure_logging(settings.log_level, settings.log_json)
@@ -33,6 +36,7 @@ def create_app(
     )
     app.state.settings = settings
     app.state.integrations = integrations or build_integrations(settings)
+    app.state.rate_limiter = rate_limiter or InMemoryRateLimiter()
     app.add_middleware(
         CORSMiddleware,
         allow_origins=settings.cors_origins,
