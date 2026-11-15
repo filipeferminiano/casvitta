@@ -1,0 +1,71 @@
+"""Builds the set of integration adapters for the running app.
+
+FAKE_INTEGRATIONS=true (the default) wires every port to its fake adapter. Real adapters are not
+implemented yet; asking for them fails fast at startup instead of silently calling nothing.
+"""
+
+from __future__ import annotations
+
+from dataclasses import dataclass
+
+from fastapi import Request
+
+from app.core.settings import Settings
+from app.integrations.ads.fake import FakeAdPlatform
+from app.integrations.ads.port import AdPlatform, AdPlatformPort
+from app.integrations.base import IntegrationNotConfigured
+from app.integrations.llm.fake import FakeLLM
+from app.integrations.llm.port import LLMPort
+from app.integrations.llm.service import LLMService
+from app.integrations.messaging.fake import FakeEmail, FakeSms
+from app.integrations.messaging.port import EmailPort, SmsPort
+from app.integrations.social.fake import FakeSocialPages
+from app.integrations.social.port import SocialPagesPort
+from app.integrations.storage.fake import FakeStorage
+from app.integrations.storage.port import StoragePort
+from app.integrations.whatsapp.fake import FakeWhatsApp
+from app.integrations.whatsapp.port import WhatsAppPort
+
+
+@dataclass(frozen=True, slots=True)
+class Integrations:
+    llm: LLMPort
+    whatsapp: WhatsAppPort
+    meta_ads: AdPlatformPort
+    google_ads: AdPlatformPort
+    social: SocialPagesPort
+    storage: StoragePort
+    email: EmailPort
+    sms: SmsPort
+    is_fake: bool
+
+    def llm_service(self, model: str) -> LLMService:
+        return LLMService(self.llm, model)
+
+
+def fake_integrations() -> Integrations:
+    return Integrations(
+        llm=FakeLLM(),
+        whatsapp=FakeWhatsApp(),
+        meta_ads=FakeAdPlatform(AdPlatform.META),
+        google_ads=FakeAdPlatform(AdPlatform.GOOGLE),
+        social=FakeSocialPages(),
+        storage=FakeStorage(),
+        email=FakeEmail(),
+        sms=FakeSms(),
+        is_fake=True,
+    )
+
+
+def build_integrations(settings: Settings) -> Integrations:
+    if settings.fake_integrations:
+        return fake_integrations()
+    raise IntegrationNotConfigured(
+        "Real integration adapters are not implemented yet; set FAKE_INTEGRATIONS=true."
+    )
+
+
+def get_integrations(request: Request) -> Integrations:
+    """FastAPI dependency."""
+    integrations: Integrations = request.app.state.integrations
+    return integrations
