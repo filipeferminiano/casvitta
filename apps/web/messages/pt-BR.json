@@ -1485,5 +1485,99 @@
         "successDescription": "Mandamos uma mensagem no seu WhatsApp. Responda SIM para confirmar o aviso."
       }
     }
+  },
+  "owner": {
+    "meta": {
+      "title": "Anunciar meu imóvel · Casvitta",
+      "description": "Venda ou alugue seu imóvel com um corretor credenciado da sua região cuidando da avaliação, do anúncio e das visitas."
+    },
+    "eyebrow": "Para proprietários",
+    "title": "Vender ou alugar seu imóvel, com um corretor credenciado cuidando de tudo.",
+    "subtitle": "Você conta sobre o imóvel em dois minutos. Um corretor da sua região faz a avaliação, anuncia e marca as visitas.",
+    "next": {
+      "title": "O que acontece depois",
+      "contact": {
+        "title": "Um corretor da sua região fala com você",
+        "description": "Corretor inscrito no CRECI, que já usa a Casvitta, entra em contato pelo WhatsApp."
+      },
+      "valuation": {
+        "title": "Avaliação de preço",
+        "description": "Ele compara com imóveis parecidos do bairro e sugere um valor."
+      },
+      "authorization": {
+        "title": "Autorização de venda ou locação",
+        "description": "Você assina, com ou sem exclusividade. Comissão e condições ficam no contrato com o corretor."
+      },
+      "listing": {
+        "title": "Anúncio, página e visitas",
+        "description": "O imóvel ganha anúncio, página própria e visitas marcadas. Você acompanha cada visita e proposta."
+      }
+    },
+    "note": "Na versão inicial, a equipe Casvitta indica o corretor. A distribuição automática por região e desempenho chega com a rede de parceiros.",
+    "form": {
+      "title": "Conte sobre o imóvel",
+      "transaction": "Vender ou alugar",
+      "sale": "Vender",
+      "rent": "Alugar",
+      "cep": "CEP",
+      "cepPlaceholder": "00000-000",
+      "cepError": "Confira o CEP: são 8 números.",
+      "kind": "Tipo",
+      "kinds": {
+        "apartment": "Apartamento",
+        "house": "Casa",
+        "land": "Terreno",
+        "commercial": "Comercial"
+      },
+      "bedrooms": "Quartos",
+      "bedroomsError": "Use um número até 20.",
+      "area": "Área (m²)",
+      "areaPlaceholder": "68",
+      "areaError": "A área precisa ter pelo menos 10 m².",
+      "price": "Valor que você imagina (opcional)",
+      "priceHelp": "O corretor traz uma avaliação com imóveis parecidos",
+      "whatsapp": "Seu WhatsApp",
+      "consent": "Aceito ser contatado por um corretor credenciado sobre este imóvel, conforme a política de privacidade.",
+      "submit": "Quero ser contatado",
+      "successTitle": "Pedido recebido",
+      "successDescription": "Mandamos uma mensagem no seu WhatsApp. Responda SIM para confirmar e um corretor credenciado da sua região fala com você."
+    }
+  },
+  "developers": {
+    "meta": {
+      "title": "Para incorporadoras · em breve · Casvitta",
+      "description": "Lista de espera do piloto para incorporadoras: distribuição de lançamentos para corretores e compradores."
+    },
+    "eyebrow": "Para incorporadoras",
+    "title": "Distribua seus lançamentos para corretores e compradores.",
+    "subtitle": "Estamos começando por corretores e imobiliárias. As primeiras incorporadoras entram num piloto: deixe seu contato e chamamos você.",
+    "fronts": {
+      "inventory": {
+        "title": "Estoque e tabela num lugar",
+        "description": "Torres, unidades, plantas e disponibilidade sempre atualizadas."
+      },
+      "distribution": {
+        "title": "Distribuição para corretores",
+        "description": "Corretores credenciados vendem seu estoque com material pronto."
+      },
+      "launch": {
+        "title": "Lançamento com custo por visita",
+        "description": "Campanhas no marketplace e nas redes, com relatório em reais."
+      }
+    },
+    "form": {
+      "title": "Entrar na lista de espera",
+      "company": "Empresa",
+      "companyError": "Escreva o nome da empresa.",
+      "role": "Cargo",
+      "cities": "Cidades dos lançamentos",
+      "citiesPlaceholder": "São Paulo, Campinas",
+      "citiesError": "Escreva pelo menos uma cidade.",
+      "launches": "Lançamentos por ano",
+      "consent": "Aceito receber contato da Casvitta sobre o piloto.",
+      "submit": "Entrar na lista",
+      "successTitle": "Você está na lista de espera",
+      "successDescription": "Mandamos uma mensagem no seu WhatsApp. Responda SIM para confirmar. Chamamos você quando o piloto abrir."
+    }
   }
 }

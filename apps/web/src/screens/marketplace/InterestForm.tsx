@@ -30,6 +30,9 @@ export function InterestForm({
   successTitle,
   successDescription,
   nameLabel,
+  phoneLabel,
+  arrange,
+  footer,
   className,
 }: {
   kind: Kind;
@@ -47,6 +50,14 @@ export function InterestForm({
   successTitle?: string;
   successDescription?: string;
   nameLabel?: string;
+  phoneLabel?: string;
+  /**
+   * Custom order of the fields. Receives the shared name and WhatsApp inputs; defaults to
+   * name, page fields, WhatsApp.
+   */
+  arrange?: (contact: { name: ReactNode; phone: ReactNode }) => ReactNode;
+  /** Small print under the submit button. */
+  footer?: ReactNode;
   className?: string;
 }) {
   const t = useTranslations('interest');
@@ -73,6 +84,28 @@ export function InterestForm({
       </Panel>
     );
   }
+
+  const nameInput = (
+    <Input
+      label={nameLabel ?? t('name')}
+      autoComplete="name"
+      value={name}
+      onChange={(e) => setName(e.target.value)}
+      error={errors.name}
+    />
+  );
+  const phoneInput = (
+    <Input
+      label={phoneLabel ?? t('whatsapp')}
+      type="tel"
+      inputMode="tel"
+      autoComplete="tel-national"
+      placeholder={t('whatsappPlaceholder')}
+      value={phone}
+      onChange={(e) => setPhone(e.target.value)}
+      error={errors.phone}
+    />
+  );
 
   return (
     <Panel title={title} className={className}>
@@ -114,24 +147,15 @@ export function InterestForm({
           onSuccess?.();
         }}
       >
-        <Input
-          label={nameLabel ?? t('name')}
-          autoComplete="name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          error={errors.name}
-        />
-        {fields}
-        <Input
-          label={t('whatsapp')}
-          type="tel"
-          inputMode="tel"
-          autoComplete="tel-national"
-          placeholder={t('whatsappPlaceholder')}
-          value={phone}
-          onChange={(e) => setPhone(e.target.value)}
-          error={errors.phone}
-        />
+        {arrange ? (
+          arrange({ name: nameInput, phone: phoneInput })
+        ) : (
+          <>
+            {nameInput}
+            {fields}
+            {phoneInput}
+          </>
+        )}
         {/* Honeypot: hidden from people, filled by bots. */}
         <div aria-hidden="true" className="absolute -left-[9999px] h-0 overflow-hidden">
           <label htmlFor={`website-${kind}`}>{t('honeypot')}</label>
@@ -164,6 +188,7 @@ export function InterestForm({
         <Button type="submit" loading={busy} loadingLabel={t('sending')}>
           {submitLabel}
         </Button>
+        {footer}
       </form>
     </Panel>
   );
