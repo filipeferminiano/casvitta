@@ -33,6 +33,25 @@ async def indexnow_submit(ctx: dict[str, Any], urls: list[str]) -> int:
     return result.submitted
 
 
+async def itbi_refresh(ctx: dict[str, Any], city: str = "sao-paulo") -> dict[str, Any]:
+    """Monthly ITBI refresh: download (ITBI_HTTP_ENABLED) or read the folder, rebuild, notify."""
+    from app.core.db import get_sessionmaker  # noqa: PLC0415 - worker-only imports
+    from app.workers.itbi import refresh_city, source_for  # noqa: PLC0415
+
+    settings = get_settings()
+    integrations: Integrations = ctx["integrations"]
+    async with get_sessionmaker()() as session:
+        result = await refresh_city(
+            session,
+            city,
+            source_for(settings, city),
+            settings.itbi_persist_raw,
+            settings,
+            integrations.search_index,
+        )
+    return {k: v for k, v in result.report.items() if k != "excluded_by_tab"}
+
+
 async def startup(ctx: dict[str, Any]) -> None:
     settings = get_settings()
     configure_logging(settings.log_level, settings.log_json)
@@ -41,6 +60,6 @@ async def startup(ctx: dict[str, Any]) -> None:
 
 
 class WorkerSettings:
-    functions: ClassVar[list[Any]] = [ping, indexnow_submit]
+    functions: ClassVar[list[Any]] = [ping, indexnow_submit, itbi_refresh]
     on_startup = startup
     redis_settings = RedisSettings.from_dsn(get_settings().redis_url)
