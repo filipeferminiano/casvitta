@@ -35,7 +35,8 @@ async def ingest(city: str, path: Path, persist_raw: bool) -> int:
         return 1
     async with get_sessionmaker()() as session:
         result = await run_ingestion(session, city, source, persist_raw=persist_raw)
-    summary = {k: v for k, v in result.run.report.items() if k != "tabs"} | result.extra
+    hidden = {"tabs", "excluded_by_tab"}
+    summary = {k: v for k, v in result.run.report.items() if k not in hidden}
     print(json.dumps(summary, indent=2, ensure_ascii=False, default=str))
     return 0
 
