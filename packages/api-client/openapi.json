@@ -212,10 +212,554 @@
           }
         }
       }
+    },
+    "/v1/auth/email-link": {
+      "post": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "Request Email Link",
+        "operationId": "requestEmailLink",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EmailLinkIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "202": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EmailLinkSent"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/auth/confirm": {
+      "post": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "Confirm Email Link",
+        "operationId": "confirmEmailLink",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TokenIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SignedIn"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/auth/refresh": {
+      "post": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "Refresh Session",
+        "operationId": "refreshSession",
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          }
+        }
+      }
+    },
+    "/v1/auth/sign-out": {
+      "post": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "Sign Out",
+        "operationId": "signOut",
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          }
+        }
+      }
+    },
+    "/v1/auth/handoff": {
+      "post": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "Create Handoff",
+        "operationId": "createHandoff",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HandoffOut"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/auth/handoff/claim": {
+      "post": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "Claim Handoff",
+        "operationId": "claimHandoff",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TokenIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/me": {
+      "get": {
+        "tags": [
+          "me"
+        ],
+        "summary": "Get Me",
+        "operationId": "getMe",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MeOut"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/me/broker-profile": {
+      "patch": {
+        "tags": [
+          "me"
+        ],
+        "summary": "Update Broker Profile",
+        "operationId": "updateBrokerProfile",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BrokerProfileUpdate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BrokerProfileOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/me/workspace": {
+      "patch": {
+        "tags": [
+          "me"
+        ],
+        "summary": "Update Workspace",
+        "operationId": "updateWorkspace",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WorkspaceUpdate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WorkspaceOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/admin/brokers": {
+      "get": {
+        "tags": [
+          "admin"
+        ],
+        "summary": "List Brokers",
+        "operationId": "listBrokersForStaff",
+        "parameters": [
+          {
+            "name": "creci_status",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "enum": [
+                    "missing",
+                    "pending",
+                    "verified"
+                  ],
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Creci Status"
+            }
+          },
+          {
+            "name": "x-admin-token",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Admin-Token"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AdminBrokerOut"
+                  },
+                  "title": "Response Listbrokersforstaff"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/admin/brokers/{profile_id}/creci/verify": {
+      "post": {
+        "tags": [
+          "admin"
+        ],
+        "summary": "Verify Creci",
+        "operationId": "verifyBrokerCreci",
+        "parameters": [
+          {
+            "name": "profile_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Profile Id"
+            }
+          },
+          {
+            "name": "x-admin-token",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Admin-Token"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BrokerProfileOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
     "schemas": {
+      "AdminBrokerOut": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "display_name": {
+            "type": "string",
+            "title": "Display Name"
+          },
+          "slug": {
+            "type": "string",
+            "title": "Slug"
+          },
+          "creci_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Creci Name"
+          },
+          "creci_number": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Creci Number"
+          },
+          "creci_state": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Creci State"
+          },
+          "creci_kind": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/CreciKind"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "creci_status": {
+            "type": "string",
+            "enum": [
+              "missing",
+              "pending",
+              "verified"
+            ],
+            "title": "Creci Status"
+          },
+          "creci_verified_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Creci Verified At"
+          },
+          "whatsapp_e164": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Whatsapp E164"
+          },
+          "regions": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Regions"
+          },
+          "is_demo": {
+            "type": "boolean",
+            "title": "Is Demo"
+          },
+          "workspace_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Workspace Id"
+          },
+          "email": {
+            "type": "string",
+            "title": "Email"
+          },
+          "creci_submitted_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Creci Submitted At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "display_name",
+          "slug",
+          "creci_name",
+          "creci_number",
+          "creci_state",
+          "creci_kind",
+          "creci_status",
+          "creci_verified_at",
+          "whatsapp_e164",
+          "regions",
+          "is_demo",
+          "workspace_id",
+          "email",
+          "creci_submitted_at"
+        ],
+        "title": "AdminBrokerOut"
+      },
       "AgencyCriteria": {
         "properties": {
           "company": {
@@ -466,6 +1010,201 @@
         ],
         "title": "AuctionSignup"
       },
+      "BrokerProfileOut": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "display_name": {
+            "type": "string",
+            "title": "Display Name"
+          },
+          "slug": {
+            "type": "string",
+            "title": "Slug"
+          },
+          "creci_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Creci Name"
+          },
+          "creci_number": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Creci Number"
+          },
+          "creci_state": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Creci State"
+          },
+          "creci_kind": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/CreciKind"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "creci_status": {
+            "type": "string",
+            "enum": [
+              "missing",
+              "pending",
+              "verified"
+            ],
+            "title": "Creci Status"
+          },
+          "creci_verified_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Creci Verified At"
+          },
+          "whatsapp_e164": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Whatsapp E164"
+          },
+          "regions": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Regions"
+          },
+          "is_demo": {
+            "type": "boolean",
+            "title": "Is Demo"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "display_name",
+          "slug",
+          "creci_name",
+          "creci_number",
+          "creci_state",
+          "creci_kind",
+          "creci_status",
+          "creci_verified_at",
+          "whatsapp_e164",
+          "regions",
+          "is_demo"
+        ],
+        "title": "BrokerProfileOut"
+      },
+      "BrokerProfileUpdate": {
+        "properties": {
+          "display_name": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 160,
+                "minLength": 2
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Display Name"
+          },
+          "creci_name": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 160,
+                "minLength": 2
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Creci Name"
+          },
+          "creci_number": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Creci Number"
+          },
+          "creci_state": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Creci State"
+          },
+          "creci_kind": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/CreciKind"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "whatsapp": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Whatsapp"
+          }
+        },
+        "type": "object",
+        "title": "BrokerProfileUpdate",
+        "description": "Signup steps and Configurações. Changing the CRECI sends it back to staff review."
+      },
       "ConsentIn": {
         "properties": {
           "contact_about_properties": {
@@ -484,6 +1223,14 @@
           "contact_about_properties"
         ],
         "title": "ConsentIn"
+      },
+      "CreciKind": {
+        "type": "string",
+        "enum": [
+          "F",
+          "J"
+        ],
+        "title": "CreciKind"
       },
       "DeveloperCriteria": {
         "properties": {
@@ -609,6 +1356,64 @@
         ],
         "title": "DeveloperSignup"
       },
+      "EmailLinkIn": {
+        "properties": {
+          "email": {
+            "type": "string",
+            "title": "Email"
+          },
+          "intent": {
+            "type": "string",
+            "enum": [
+              "sign_in",
+              "sign_up"
+            ],
+            "title": "Intent"
+          },
+          "name": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 160,
+                "minLength": 2
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name"
+          },
+          "plan": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Plan"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "email",
+          "intent"
+        ],
+        "title": "EmailLinkIn"
+      },
+      "EmailLinkSent": {
+        "properties": {
+          "status": {
+            "type": "string",
+            "const": "sent",
+            "title": "Status",
+            "default": "sent"
+          }
+        },
+        "type": "object",
+        "title": "EmailLinkSent",
+        "description": "Same body whether or not the address has an account (no account enumeration)."
+      },
       "HTTPValidationError": {
         "properties": {
           "detail": {
@@ -621,6 +1426,19 @@
         },
         "type": "object",
         "title": "HTTPValidationError"
+      },
+      "HandoffOut": {
+        "properties": {
+          "code": {
+            "type": "string",
+            "title": "Code"
+          }
+        },
+        "type": "object",
+        "required": [
+          "code"
+        ],
+        "title": "HandoffOut"
       },
       "HealthOut": {
         "properties": {
@@ -937,6 +1755,33 @@
         ],
         "title": "InvestorInstitutionalSignup"
       },
+      "MeOut": {
+        "properties": {
+          "user": {
+            "$ref": "#/components/schemas/UserOut"
+          },
+          "workspace": {
+            "$ref": "#/components/schemas/WorkspaceOut"
+          },
+          "broker": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/BrokerProfileOut"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "user",
+          "workspace",
+          "broker"
+        ],
+        "title": "MeOut"
+      },
       "OwnerListingCriteria": {
         "properties": {
           "transaction": {
@@ -1074,6 +1919,14 @@
           "criteria"
         ],
         "title": "OwnerListingSignup"
+      },
+      "Plan": {
+        "type": "string",
+        "enum": [
+          "essencial",
+          "profissional"
+        ],
+        "title": "Plan"
       },
       "PortfolioSize": {
         "type": "string",
@@ -1226,6 +2079,62 @@
         ],
         "title": "RentalAdminSignup"
       },
+      "SignedIn": {
+        "properties": {
+          "intent": {
+            "type": "string",
+            "enum": [
+              "sign_in",
+              "sign_up"
+            ],
+            "title": "Intent"
+          }
+        },
+        "type": "object",
+        "required": [
+          "intent"
+        ],
+        "title": "SignedIn"
+      },
+      "TokenIn": {
+        "properties": {
+          "token": {
+            "type": "string",
+            "maxLength": 200,
+            "minLength": 20,
+            "title": "Token"
+          }
+        },
+        "type": "object",
+        "required": [
+          "token"
+        ],
+        "title": "TokenIn"
+      },
+      "UserOut": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "email": {
+            "type": "string",
+            "title": "Email"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "email"
+        ],
+        "title": "UserOut"
+      },
       "Utm": {
         "properties": {
           "source": {
@@ -1308,6 +2217,46 @@
           "type"
         ],
         "title": "ValidationError"
+      },
+      "WorkspaceOut": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "plan": {
+            "$ref": "#/components/schemas/Plan"
+          },
+          "is_demo": {
+            "type": "boolean",
+            "title": "Is Demo"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "plan",
+          "is_demo"
+        ],
+        "title": "WorkspaceOut"
+      },
+      "WorkspaceUpdate": {
+        "properties": {
+          "plan": {
+            "$ref": "#/components/schemas/Plan"
+          }
+        },
+        "type": "object",
+        "required": [
+          "plan"
+        ],
+        "title": "WorkspaceUpdate"
       }
     }
   }

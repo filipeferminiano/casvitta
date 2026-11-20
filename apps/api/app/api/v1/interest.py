@@ -1,14 +1,13 @@
 from __future__ import annotations
 
-import secrets
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, Header, Query, Request, status
+from fastapi import APIRouter, Depends, Query, Request, status
 from fastapi.responses import PlainTextResponse
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.api.v1.deps import client_key, get_rate_limiter, get_settings_dep, require_admin
 from app.core.db import get_session
-from app.core.errors import AppError
 from app.core.rate_limit import RateLimiter
 from app.core.settings import Settings
 from app.domains.interest import service
@@ -18,23 +17,6 @@ from app.integrations.registry import Integrations, get_integrations
 
 public_router = APIRouter(prefix="/public", tags=["public"])
 admin_router = APIRouter(prefix="/admin", tags=["admin"])
-
-
-def get_settings_dep(request: Request) -> Settings:
-    settings: Settings = request.app.state.settings
-    return settings
-
-
-def get_rate_limiter(request: Request) -> RateLimiter:
-    limiter: RateLimiter = request.app.state.rate_limiter
-    return limiter
-
-
-def _client_key(request: Request) -> str:
-    forwarded = request.headers.get("x-forwarded-for")
-    if forwarded:
-        return forwarded.split(",")[0].strip()
-    return request.client.host if request.client else "unknown"
 
 
 @public_router.post(
@@ -57,20 +39,11 @@ async def create_interest(  # noqa: PLR0917 - FastAPI dependencies
         payload,
         whatsapp=integrations.whatsapp,
         limiter=limiter,
-        client_key=_client_key(request),
+        client_key=client_key(request),
         limit_per_minute=settings.interest_rate_limit_per_minute,
     )
     await session.commit()
     return InterestSignupAccepted(opt_in=opt_in)
-
-
-def require_admin(
-    settings: Annotated[Settings, Depends(get_settings_dep)],
-    x_admin_token: Annotated[str | None, Header()] = None,
-) -> None:
-    expected = settings.admin_token.get_secret_value() if settings.admin_token else None
-    if not expected or not x_admin_token or not secrets.compare_digest(expected, x_admin_token):
-        raise AppError("unauthorized", status_code=401)
 
 
 @admin_router.get(

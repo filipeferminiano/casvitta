@@ -43,7 +43,13 @@ _FIELD_ERRORS = {
 }
 
 
-_CUSTOM_FIELD_ERRORS = {"invalid_phone": "invalid_phone", "invalid_cep": "field.invalid_cep"}
+_CUSTOM_FIELD_ERRORS = {
+    "invalid_phone": "invalid_phone",
+    "invalid_cep": "field.invalid_cep",
+    "invalid_email": "field.invalid_email",
+    "invalid_creci": "field.invalid_creci",
+    "invalid_uf": "field.invalid_uf",
+}
 
 
 def _body(code: str, message: str, fields: list[dict[str, Any]] | None = None) -> dict[str, Any]:

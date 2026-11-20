@@ -81,10 +81,238 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/auth/email-link": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Request Email Link */
+        post: operations["requestEmailLink"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/auth/confirm": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Confirm Email Link */
+        post: operations["confirmEmailLink"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/auth/refresh": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Refresh Session */
+        post: operations["refreshSession"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/auth/sign-out": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Sign Out */
+        post: operations["signOut"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/auth/handoff": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Create Handoff */
+        post: operations["createHandoff"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/auth/handoff/claim": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Claim Handoff */
+        post: operations["claimHandoff"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/me": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Me */
+        get: operations["getMe"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/me/broker-profile": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Update Broker Profile */
+        patch: operations["updateBrokerProfile"];
+        trace?: never;
+    };
+    "/v1/me/workspace": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Update Workspace */
+        patch: operations["updateWorkspace"];
+        trace?: never;
+    };
+    "/v1/admin/brokers": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Brokers */
+        get: operations["listBrokersForStaff"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/admin/brokers/{profile_id}/creci/verify": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Verify Creci */
+        post: operations["verifyBrokerCreci"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        /** AdminBrokerOut */
+        AdminBrokerOut: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Display Name */
+            display_name: string;
+            /** Slug */
+            slug: string;
+            /** Creci Name */
+            creci_name: string | null;
+            /** Creci Number */
+            creci_number: string | null;
+            /** Creci State */
+            creci_state: string | null;
+            creci_kind: components["schemas"]["CreciKind"] | null;
+            /**
+             * Creci Status
+             * @enum {string}
+             */
+            creci_status: "missing" | "pending" | "verified";
+            /** Creci Verified At */
+            creci_verified_at: string | null;
+            /** Whatsapp E164 */
+            whatsapp_e164: string | null;
+            /** Regions */
+            regions: string[];
+            /** Is Demo */
+            is_demo: boolean;
+            /**
+             * Workspace Id
+             * Format: uuid
+             */
+            workspace_id: string;
+            /** Email */
+            email: string;
+            /** Creci Submitted At */
+            creci_submitted_at: string | null;
+        };
         /** AgencyCriteria */
         AgencyCriteria: {
             /** Company */
@@ -161,6 +389,55 @@ export interface components {
             kind: "auction";
             criteria: components["schemas"]["AuctionCriteria"];
         };
+        /** BrokerProfileOut */
+        BrokerProfileOut: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Display Name */
+            display_name: string;
+            /** Slug */
+            slug: string;
+            /** Creci Name */
+            creci_name: string | null;
+            /** Creci Number */
+            creci_number: string | null;
+            /** Creci State */
+            creci_state: string | null;
+            creci_kind: components["schemas"]["CreciKind"] | null;
+            /**
+             * Creci Status
+             * @enum {string}
+             */
+            creci_status: "missing" | "pending" | "verified";
+            /** Creci Verified At */
+            creci_verified_at: string | null;
+            /** Whatsapp E164 */
+            whatsapp_e164: string | null;
+            /** Regions */
+            regions: string[];
+            /** Is Demo */
+            is_demo: boolean;
+        };
+        /**
+         * BrokerProfileUpdate
+         * @description Signup steps and Configurações. Changing the CRECI sends it back to staff review.
+         */
+        BrokerProfileUpdate: {
+            /** Display Name */
+            display_name?: string | null;
+            /** Creci Name */
+            creci_name?: string | null;
+            /** Creci Number */
+            creci_number?: string | null;
+            /** Creci State */
+            creci_state?: string | null;
+            creci_kind?: components["schemas"]["CreciKind"] | null;
+            /** Whatsapp */
+            whatsapp?: string | null;
+        };
         /** ConsentIn */
         ConsentIn: {
             /** Contact About Properties */
@@ -171,6 +448,11 @@ export interface components {
              */
             marketing: boolean;
         };
+        /**
+         * CreciKind
+         * @enum {string}
+         */
+        CreciKind: "F" | "J";
         /** DeveloperCriteria */
         DeveloperCriteria: {
             /** Company */
@@ -203,10 +485,40 @@ export interface components {
             kind: "developer";
             criteria: components["schemas"]["DeveloperCriteria"];
         };
+        /** EmailLinkIn */
+        EmailLinkIn: {
+            /** Email */
+            email: string;
+            /**
+             * Intent
+             * @enum {string}
+             */
+            intent: "sign_in" | "sign_up";
+            /** Name */
+            name?: string | null;
+            plan?: components["schemas"]["Plan"] | null;
+        };
+        /**
+         * EmailLinkSent
+         * @description Same body whether or not the address has an account (no account enumeration).
+         */
+        EmailLinkSent: {
+            /**
+             * Status
+             * @default sent
+             * @constant
+             */
+            status: "sent";
+        };
         /** HTTPValidationError */
         HTTPValidationError: {
             /** Detail */
             detail?: components["schemas"]["ValidationError"][];
+        };
+        /** HandoffOut */
+        HandoffOut: {
+            /** Code */
+            code: string;
         };
         /** HealthOut */
         HealthOut: {
@@ -320,6 +632,12 @@ export interface components {
             kind: "investor_institutional";
             criteria: components["schemas"]["InvestorInstitutionalCriteria"];
         };
+        /** MeOut */
+        MeOut: {
+            user: components["schemas"]["UserOut"];
+            workspace: components["schemas"]["WorkspaceOut"];
+            broker: components["schemas"]["BrokerProfileOut"] | null;
+        };
         /** OwnerListingCriteria */
         OwnerListingCriteria: {
             /**
@@ -358,6 +676,11 @@ export interface components {
             kind: "owner_listing";
             criteria: components["schemas"]["OwnerListingCriteria"];
         };
+        /**
+         * Plan
+         * @enum {string}
+         */
+        Plan: "essencial" | "profissional";
         /**
          * PortfolioSize
          * @enum {string}
@@ -409,6 +732,31 @@ export interface components {
             kind: "rental_admin";
             criteria: components["schemas"]["RentalAdminCriteria"];
         };
+        /** SignedIn */
+        SignedIn: {
+            /**
+             * Intent
+             * @enum {string}
+             */
+            intent: "sign_in" | "sign_up";
+        };
+        /** TokenIn */
+        TokenIn: {
+            /** Token */
+            token: string;
+        };
+        /** UserOut */
+        UserOut: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Name */
+            name: string;
+            /** Email */
+            email: string;
+        };
         /** Utm */
         Utm: {
             /** Source */
@@ -430,6 +778,23 @@ export interface components {
             input?: unknown;
             /** Context */
             ctx?: Record<string, never>;
+        };
+        /** WorkspaceOut */
+        WorkspaceOut: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Name */
+            name: string;
+            plan: components["schemas"]["Plan"];
+            /** Is Demo */
+            is_demo: boolean;
+        };
+        /** WorkspaceUpdate */
+        WorkspaceUpdate: {
+            plan: components["schemas"]["Plan"];
         };
     };
     responses: never;
@@ -544,6 +909,311 @@ export interface operations {
                 content: {
                     "application/json": components["schemas"]["InterestSignupOut"][];
                     "text/csv": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    requestEmailLink: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["EmailLinkIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            202: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EmailLinkSent"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    confirmEmailLink: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["TokenIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SignedIn"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    refreshSession: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    signOut: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    createHandoff: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HandoffOut"];
+                };
+            };
+        };
+    };
+    claimHandoff: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["TokenIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    getMe: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MeOut"];
+                };
+            };
+        };
+    };
+    updateBrokerProfile: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["BrokerProfileUpdate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BrokerProfileOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    updateWorkspace: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["WorkspaceUpdate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["WorkspaceOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    listBrokersForStaff: {
+        parameters: {
+            query?: {
+                creci_status?: ("missing" | "pending" | "verified") | null;
+            };
+            header?: {
+                "x-admin-token"?: string | null;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminBrokerOut"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    verifyBrokerCreci: {
+        parameters: {
+            query?: never;
+            header?: {
+                "x-admin-token"?: string | null;
+            };
+            path: {
+                profile_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BrokerProfileOut"];
                 };
             };
             /** @description Validation Error */

@@ -19,6 +19,7 @@ from app.integrations.llm.port import LLMPort
 from app.integrations.llm.service import LLMService
 from app.integrations.messaging.fake import FakeEmail, FakeSms
 from app.integrations.messaging.port import EmailPort, SmsPort
+from app.integrations.messaging.resend import ResendEmail
 from app.integrations.search_index.fake import FakeSearchIndex
 from app.integrations.search_index.indexnow import IndexNow
 from app.integrations.search_index.port import SearchIndexPort
@@ -64,7 +65,14 @@ def fake_integrations() -> Integrations:
 
 def build_integrations(settings: Settings) -> Integrations:
     if settings.fake_integrations:
-        return replace(fake_integrations(), search_index=build_search_index(settings))
+        fakes = replace(fake_integrations(), search_index=build_search_index(settings))
+        # Per-integration opt-in: a real adapter replaces its fake as soon as it has credentials.
+        if settings.email_api_key:
+            return replace(
+                fakes,
+                email=ResendEmail(settings.email_api_key.get_secret_value(), settings.email_from),
+            )
+        return fakes
     raise IntegrationNotConfigured(
         "Real integration adapters are not implemented yet; set FAKE_INTEGRATIONS=true."
     )

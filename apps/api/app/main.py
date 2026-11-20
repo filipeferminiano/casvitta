@@ -10,6 +10,7 @@ from app.api.v1.router import api_router
 from app.core.db import get_engine
 from app.core.errors import install_error_handlers
 from app.core.logging import configure_logging
+from app.core.origin import install_origin_check
 from app.core.rate_limit import InMemoryRateLimiter, RateLimiter
 from app.core.settings import Settings, get_settings
 from app.integrations.registry import Integrations, build_integrations
@@ -45,6 +46,7 @@ def create_app(
         allow_headers=["*"],
     )
     install_error_handlers(app)
+    install_origin_check(app, settings)
     app.include_router(api_router)
     return app
 

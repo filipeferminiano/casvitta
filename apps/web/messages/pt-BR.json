@@ -21,6 +21,8 @@
     "creci": "CRECI-{state} {number}"
   },
   "nav": {
+    "signOut": "Sair",
+    "signingOut": "Saindo…",
     "label": "Navegação principal",
     "mobileLabel": "Navegação",
     "home": "Início",

@@ -17,5 +17,17 @@
   "rate_limited": "Muitas tentativas em pouco tempo. Espere um minuto e tente de novo.",
   "invalid_phone": "Confira o WhatsApp: use DDD e número, como (11) 92740-8912.",
   "consent_required": "Para continuar, marque que aceita ser contatado.",
-  "field.invalid_cep": "Digite um CEP com 8 números, como 04014-000."
+  "field.invalid_cep": "Digite um CEP com 8 números, como 04014-000.",
+  "field.invalid_creci": "Digite os 6 números do CRECI, como 000.000.",
+  "field.invalid_uf": "Escolha o estado do seu CRECI.",
+  "session_expired": "Sua sessão expirou. Entre de novo para continuar.",
+  "link_invalid": "Este link não vale mais: ele expira em 15 minutos e só pode ser usado uma vez. Peça um novo para entrar.",
+  "origin_not_allowed": "Esta ação só pode ser feita pelo site da Casvitta. Abra casvitta.com.br e tente de novo.",
+  "no_broker_profile": "Esta conta ainda não tem perfil de corretor. Termine o cadastro para continuar.",
+  "email.sign_in.subject": "Seu link para entrar na Casvitta",
+  "email.sign_in.text": "Olá, {name}.\n\nPara entrar na Casvitta, abra este link:\n{link}\n\nEle vale por {minutes} minutos e só funciona uma vez. Se não foi você que pediu, ignore este e-mail: ninguém entra na sua conta sem ele.\n\nCasvitta",
+  "email.sign_up.subject": "Confirme seu e-mail para criar sua conta na Casvitta",
+  "email.sign_up.text": "Olá, {name}.\n\nPara confirmar seu e-mail e continuar o cadastro, abra este link:\n{link}\n\nEle vale por {minutes} minutos e só funciona uma vez. Se não foi você que pediu, ignore este e-mail.\n\nCasvitta",
+  "email.no_account.subject": "Você ainda não tem conta na Casvitta",
+  "email.no_account.text": "Olá.\n\nAlguém pediu um link para entrar na Casvitta com este e-mail, mas não há conta com ele.\n\nPara criar sua conta de corretor, abra:\n{signup}\n\nSe não foi você, ignore este e-mail.\n\nCasvitta"
 }

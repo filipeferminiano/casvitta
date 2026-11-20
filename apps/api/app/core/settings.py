@@ -6,8 +6,11 @@ from functools import lru_cache
 from pathlib import Path
 from typing import Annotated, Literal
 
-from pydantic import Field, SecretStr, field_validator
+from pydantic import Field, SecretStr, field_validator, model_validator
 from pydantic_settings import BaseSettings, NoDecode, SettingsConfigDict
+
+# Development only; production refuses to start with it (see _production_secrets).
+DEV_JWT_SECRET = "dev-only-jwt-secret-change-me-in-production"  # noqa: S105
 
 _PARENTS = Path(__file__).resolve().parents
 # apps/api/app/core/settings.py -> repo root. The container image is shallower (/srv/app/...)
@@ -40,7 +43,19 @@ class Settings(BaseSettings):
     cors_origins: Annotated[list[str], NoDecode] = Field(
         default_factory=lambda: ["http://localhost:3000", "http://app.localhost:3000"]
     )
-    jwt_secret: SecretStr = SecretStr("change-me-in-production")
+    jwt_secret: SecretStr = SecretStr(DEV_JWT_SECRET)
+
+    # Sign-in. Links in emails point to the marketplace host; the app host gets its session
+    # through a one-time handoff code. Browsers call the API same-origin under /api/v1.
+    site_url: str = "http://localhost:3000"
+    app_url: str = "http://app.localhost:3000"
+    cookie_path_prefix: str = "/api"
+    cookie_secure: bool = False
+    access_token_ttl_minutes: int = 15
+    refresh_token_ttl_days: int = 30
+    login_link_ttl_minutes: int = 15
+    handoff_ttl_seconds: int = 60
+    auth_rate_limit_per_minute: int = 5
 
     # Integrations: fake adapters unless explicitly disabled AND credentials exist.
     fake_integrations: bool = True
@@ -81,6 +96,13 @@ class Settings(BaseSettings):
     plan_profissional_max_active_properties: int = 15
     min_daily_budget_cents: int = 2_000
     financing_illustrative_annual_rate_bps: int = 1_150
+
+    @model_validator(mode="after")
+    def _production_secrets(self) -> Settings:
+        secret = self.jwt_secret.get_secret_value()
+        if self.app_env == "production" and (secret == DEV_JWT_SECRET or len(secret) < 32):
+            raise ValueError("JWT_SECRET must be set in production (32+ characters)")
+        return self
 
     @field_validator("database_url", "test_database_url", mode="before")
     @classmethod

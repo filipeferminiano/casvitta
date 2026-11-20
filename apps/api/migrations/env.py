@@ -31,6 +31,13 @@ def run_migrations_offline() -> None:
         context.run_migrations()
 
 
+def _include_object(
+    _obj: object, name: str | None, type_: str, _reflected: bool, _compare_to: object
+) -> bool:
+    """Autogenerate must never touch Alembic's own version table."""
+    return not (type_ == "table" and name == "alembic_version")
+
+
 def _run(connection: Connection) -> None:
     schema = get_settings().database_schema
     connection.execute(text(f'CREATE SCHEMA IF NOT EXISTS "{schema}"'))
@@ -40,6 +47,7 @@ def _run(connection: Connection) -> None:
         target_metadata=target_metadata,
         compare_type=True,
         version_table_schema=schema,
+        include_object=_include_object,
     )
     with context.begin_transaction():
         context.run_migrations()
