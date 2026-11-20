@@ -1,0 +1,9 @@
+# Cloud Build upload for the API image (context: apps/api).
+.gcloudignore
+.venv/
+**/__pycache__/
+.mypy_cache/
+.pytest_cache/
+.ruff_cache/
+tests/
+.env

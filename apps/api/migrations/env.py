@@ -8,7 +8,7 @@ from sqlalchemy.engine import Connection
 from sqlalchemy.ext.asyncio import create_async_engine
 
 import app.models  # noqa: F401 - registers every model on Base.metadata
-from app.core.db import Base
+from app.core.db import Base, engine_options
 from app.core.settings import get_settings
 
 config = context.config
@@ -37,7 +37,7 @@ def _run(connection: Connection) -> None:
 
 
 async def run_migrations_online() -> None:
-    engine = create_async_engine(_url())
+    engine = create_async_engine(_url(), **engine_options(get_settings()))
     async with engine.connect() as connection:
         await connection.run_sync(_run)
     await engine.dispose()

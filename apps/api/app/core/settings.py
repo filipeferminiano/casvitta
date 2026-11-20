@@ -25,6 +25,11 @@ class Settings(BaseSettings):
 
     database_url: str = "postgresql+asyncpg://casvitta:casvitta@localhost:5432/casvitta"
     test_database_url: str = "postgresql+asyncpg://casvitta:casvitta@localhost:5432/casvitta_test"
+    # Managed Postgres (Supabase session pooler) needs TLS and a small pool: the Micro
+    # tier allows few pooled connections and Cloud Run may run more than one instance.
+    database_ssl_require: bool = False
+    database_pool_size: int = 5
+    database_max_overflow: int = 2
     redis_url: str = "redis://localhost:6379/0"
     cors_origins: Annotated[list[str], NoDecode] = Field(
         default_factory=lambda: ["http://localhost:3000", "http://app.localhost:3000"]
@@ -65,6 +70,16 @@ class Settings(BaseSettings):
     plan_profissional_max_active_properties: int = 15
     min_daily_budget_cents: int = 2_000
     financing_illustrative_annual_rate_bps: int = 1_150
+
+    @field_validator("database_url", "test_database_url", mode="before")
+    @classmethod
+    def _asyncpg_scheme(cls, value: object) -> object:
+        """Accept the plain postgres:// URLs that hosting providers hand out."""
+        if isinstance(value, str):
+            for prefix in ("postgresql://", "postgres://"):
+                if value.startswith(prefix):
+                    return "postgresql+asyncpg://" + value.removeprefix(prefix)
+        return value
 
     @field_validator("cors_origins", mode="before")
     @classmethod

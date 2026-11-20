@@ -1,0 +1,18 @@
+# Builds apps/api/Dockerfile and pushes it to Artifact Registry.
+#   gcloud builds submit --config infra/cloudbuild/api.yaml \
+#     --substitutions=_TAG=$(git rev-parse --short HEAD) apps/api
+substitutions:
+  _REGION: southamerica-east1
+  _REPO: casvitta
+  _IMAGE: api
+  _TAG: latest
+steps:
+  - name: gcr.io/cloud-builders/docker
+    args:
+      - build
+      - -t
+      - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO}/${_IMAGE}:${_TAG}
+      - .
+images:
+  - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO}/${_IMAGE}:${_TAG}
+timeout: 900s

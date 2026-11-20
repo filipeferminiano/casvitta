@@ -3,7 +3,7 @@ SHELL := /bin/bash
 API := apps/api
 UV := uv --directory $(API)
 
-.PHONY: deploy-web setup infra-up infra-down dev check test e2e lint typecheck format storybook api\:gen db\:migrate db\:seed
+.PHONY: deploy-web deploy-api setup infra-up infra-down dev check test e2e lint typecheck format storybook api\:gen db\:migrate db\:seed
 
 setup: ## Install JS and Python dependencies
 	pnpm install
@@ -67,3 +67,14 @@ deploy-web: ## Build apps/web on Cloud Build and deploy it to Cloud Run (casvitt
 	$(eval TAG := $(shell git rev-parse --short HEAD))
 	gcloud builds submit --project $(GCP_PROJECT) --region $(GCP_REGION) --config infra/cloudbuild/web.yaml --substitutions=_SITE_URL=$(WEB_URL),_TAG=$(TAG) .
 	gcloud run deploy casvitta-web --project $(GCP_PROJECT) --region $(GCP_REGION) --image $(GCP_REGION)-docker.pkg.dev/$(GCP_PROJECT)/casvitta/web:$(TAG) --port 8080 --memory 512Mi --cpu 1 --min-instances 0 --max-instances 3 --allow-unauthenticated --set-env-vars ROOT_DOMAIN=$(subst https://,,$(WEB_URL)),APP_SUBDOMAIN=app
+
+# API on Cloud Run next to the database (Supabase, AWS us-east-2 -> GCP us-east5, Ohio).
+# Reached only through the load balancer at https://api.casvitta.com.br.
+API_REGION ?= us-east5
+API_CORS ?= https://casvitta.com.br,https://www.casvitta.com.br
+deploy-api: ## Build apps/api, run migrations (Cloud Run job) and deploy casvitta-api
+	$(eval TAG := $(shell git rev-parse --short HEAD))
+	$(eval API_IMAGE := $(GCP_REGION)-docker.pkg.dev/$(GCP_PROJECT)/casvitta/api:$(TAG))
+	gcloud builds submit --project $(GCP_PROJECT) --region $(GCP_REGION) --config infra/cloudbuild/api.yaml --substitutions=_TAG=$(TAG) apps/api
+	gcloud run jobs deploy casvitta-migrate --project $(GCP_PROJECT) --region $(API_REGION) --image $(API_IMAGE) --command alembic --args upgrade,head --set-secrets DATABASE_URL=casvitta-database-url:latest --set-env-vars DATABASE_SSL_REQUIRE=true --max-retries 0 --execute-now --wait
+	gcloud run deploy casvitta-api --project $(GCP_PROJECT) --region $(API_REGION) --image $(API_IMAGE) --port 8080 --memory 512Mi --cpu 1 --min-instances 0 --max-instances 2 --allow-unauthenticated --ingress internal-and-cloud-load-balancing --set-secrets DATABASE_URL=casvitta-database-url:latest,JWT_SECRET=casvitta-jwt-secret:latest --set-env-vars "^@^APP_ENV=production@DATABASE_SSL_REQUIRE=true@CORS_ORIGINS=$(API_CORS)"

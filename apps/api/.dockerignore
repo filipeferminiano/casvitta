@@ -1,0 +1,9 @@
+# Docker build context for the API image.
+.gcloudignore
+.venv/
+**/__pycache__/
+.mypy_cache/
+.pytest_cache/
+.ruff_cache/
+tests/
+.env

@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from collections.abc import AsyncIterator
 from functools import lru_cache
+from typing import Any
 
 from sqlalchemy import MetaData
 from sqlalchemy.ext.asyncio import (
@@ -14,7 +15,7 @@ from sqlalchemy.ext.asyncio import (
 )
 from sqlalchemy.orm import DeclarativeBase
 
-from app.core.settings import get_settings
+from app.core.settings import Settings, get_settings
 
 NAMING_CONVENTION = {
     "ix": "ix_%(column_0_label)s",
@@ -29,9 +30,23 @@ class Base(DeclarativeBase):
     metadata = MetaData(naming_convention=NAMING_CONVENTION)
 
 
+def engine_options(settings: Settings) -> dict[str, Any]:
+    """Connection options shared by the app engine and Alembic."""
+    options: dict[str, Any] = {"pool_pre_ping": True}
+    if settings.database_ssl_require:
+        options["connect_args"] = {"ssl": "require"}
+    return options
+
+
 @lru_cache
 def get_engine() -> AsyncEngine:
-    return create_async_engine(get_settings().database_url, pool_pre_ping=True)
+    settings = get_settings()
+    return create_async_engine(
+        settings.database_url,
+        pool_size=settings.database_pool_size,
+        max_overflow=settings.database_max_overflow,
+        **engine_options(settings),
+    )
 
 
 @lru_cache
