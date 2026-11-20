@@ -37,9 +37,11 @@ export function AuctionForm() {
       contactConsentLabel={t('consent')}
       marketingConsentLabel={t('marketing')}
       submitLabel={t('submit')}
-      onSuccess={() => {
+      onSuccess={(optIn) => {
         if (sent.current) rememberAuctionCriteria(sent.current);
-        router.push('/leilao/confirmado');
+        router.push(
+          optIn === 'queued' ? '/leilao/confirmado?confirmacao=pendente' : '/leilao/confirmado',
+        );
       }}
       arrange={({ name, phone }) => (
         <>

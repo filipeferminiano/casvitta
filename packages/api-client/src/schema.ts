@@ -246,7 +246,7 @@ export interface components {
              * Opt In
              * @enum {string}
              */
-            opt_in: "whatsapp_sent" | "not_requested";
+            opt_in: "whatsapp_sent" | "queued" | "not_requested";
         };
         /** InterestSignupOut */
         InterestSignupOut: {

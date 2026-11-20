@@ -25,7 +25,7 @@ from app.domains.interest.models import (
     InterestSignupConsent,
     InterestStatus,
 )
-from app.domains.interest.schemas import InterestSignupIn
+from app.domains.interest.schemas import InterestSignupIn, OptInResult
 from app.integrations.whatsapp.port import TemplateMessage, WhatsAppPort
 
 log = get_logger(__name__)
@@ -48,13 +48,17 @@ async def create_signup(
     limiter: RateLimiter,
     client_key: str,
     limit_per_minute: int,
-) -> bool:
-    """Returns True when stored and the opt-in was sent; False for honeypot hits."""
+) -> OptInResult:
+    """Stores the signup and asks for WhatsApp opt-in.
+
+    "queued" when the adapter does not deliver (fake): opt_in_requested_at stays empty so the
+    opt-in is sent once WhatsApp is live, and the page must not claim a message was sent.
+    """
     if not limiter.hit(f"interest:{client_key}:{payload.kind}", limit_per_minute, 60):
         raise RateLimited
     if payload.website:
         log.info("interest_honeypot", kind=payload.kind)
-        return False
+        return "not_requested"
     if not payload.consents.contact_about_properties:
         raise ConsentRequired
 
@@ -95,14 +99,15 @@ async def create_signup(
             name=OPT_IN_TEMPLATE, parameters=(signup.name.split(" ")[0], signup.kind.value)
         ),
     )
-    signup.opt_in_requested_at = utcnow()
+    if whatsapp.delivers_messages:
+        signup.opt_in_requested_at = utcnow()
     if signup.kind is InterestKind.OWNER_LISTING:
         # Staff task: assign a CRECI-registered broker of the region (manual at first, rule 13).
         log.info(
             "staff_task_assign_broker", signup_id=str(signup.id), cep=signup.criteria.get("cep")
         )
     await session.flush()
-    return True
+    return "whatsapp_sent" if whatsapp.delivers_messages else "queued"
 
 
 async def handle_whatsapp_reply(session: AsyncSession, phone_e164: str, text: str) -> int:

@@ -1,6 +1,7 @@
 /**
  * Interest signups from capture pages (CLAUDE.md rule 11). Calls the API when
- * NEXT_PUBLIC_USE_MOCKS=false, otherwise stores in the in-memory demo store.
+ * NEXT_PUBLIC_USE_MOCKS=false or NEXT_PUBLIC_INTEREST_API=true (the public site sends real
+ * signups while other screens still use mocks); otherwise stores in the in-memory demo store.
  */
 import { isApiError, type paths } from '@casvitta/api-client';
 
@@ -12,12 +13,16 @@ import { mutate } from './store';
 export type InterestPayload =
   paths['/v1/public/interest']['post']['requestBody']['content']['application/json'];
 
+/** queued: stored, but the WhatsApp opt-in was not sent yet; pages must not say it was. */
+export type OptIn = 'whatsapp_sent' | 'queued' | 'not_requested';
+
 export type InterestResult =
-  | { ok: true; optIn: 'whatsapp_sent' | 'not_requested' }
-  | { ok: false; message: string; fields: Record<string, string> };
+  { ok: true; optIn: OptIn } | { ok: false; message: string; fields: Record<string, string> };
+
+const USE_API = !USE_MOCKS || process.env.NEXT_PUBLIC_INTEREST_API === 'true';
 
 export async function submitInterest(payload: InterestPayload): Promise<InterestResult> {
-  if (USE_MOCKS) {
+  if (!USE_API) {
     if (payload.website) return { ok: true, optIn: 'not_requested' };
     mutate((data) => {
       data.interestSignups.push({

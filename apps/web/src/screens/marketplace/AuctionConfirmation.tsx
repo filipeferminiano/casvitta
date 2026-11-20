@@ -51,7 +51,9 @@ export function AuctionConfirmation() {
         </span>
         <h1 className="type-display-l text-[28px] leading-9">{t('done.title')}</h1>
         <p className="type-body text-fg-strong">
-          {t.rich('done.reply', { b: (chunks) => <strong className="text-fg">{chunks}</strong> })}
+          {t.rich(params.get('confirmacao') === 'pendente' ? 'done.queued' : 'done.reply', {
+            b: (chunks) => <strong className="text-fg">{chunks}</strong>,
+          })}
         </p>
         {criteria ? (
           <section

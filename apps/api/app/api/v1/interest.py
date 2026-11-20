@@ -52,7 +52,7 @@ async def create_interest(  # noqa: PLR0917 - FastAPI dependencies
     settings: Annotated[Settings, Depends(get_settings_dep)],
 ) -> InterestSignupAccepted:
     """Capture pages: store the signup and ask for WhatsApp double opt-in. No auth."""
-    stored = await service.create_signup(
+    opt_in = await service.create_signup(
         session,
         payload,
         whatsapp=integrations.whatsapp,
@@ -61,7 +61,7 @@ async def create_interest(  # noqa: PLR0917 - FastAPI dependencies
         limit_per_minute=settings.interest_rate_limit_per_minute,
     )
     await session.commit()
-    return InterestSignupAccepted(opt_in="whatsapp_sent" if stored else "not_requested")
+    return InterestSignupAccepted(opt_in=opt_in)
 
 
 def require_admin(

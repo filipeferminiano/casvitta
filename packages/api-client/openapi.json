@@ -682,6 +682,7 @@
             "type": "string",
             "enum": [
               "whatsapp_sent",
+              "queued",
               "not_requested"
             ],
             "title": "Opt In"

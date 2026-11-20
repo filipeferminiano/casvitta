@@ -6,7 +6,7 @@ import { useTranslations } from 'next-intl';
 import { useState, type ReactNode } from 'react';
 
 import { track } from '@/lib/analytics';
-import { submitInterest, type InterestPayload } from '@/lib/data/interest';
+import { submitInterest, type InterestPayload, type OptIn } from '@/lib/data/interest';
 
 type Kind = InterestPayload['kind'];
 
@@ -45,7 +45,8 @@ export function InterestForm({
   /** Optional second, separate consent (marketing). */
   marketingConsentLabel?: string;
   submitLabel: string;
-  onSuccess?: () => void;
+  /** Replaces the inline success panel; receives whether the WhatsApp opt-in went out. */
+  onSuccess?: (optIn: OptIn) => void;
   successTitle?: string;
   successDescription?: string;
   nameLabel?: string;
@@ -67,7 +68,7 @@ export function InterestForm({
   const [marketing, setMarketing] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [busy, setBusy] = useState(false);
-  const [done, setDone] = useState(false);
+  const [done, setDone] = useState<OptIn | null>(null);
 
   if (done && !onSuccess) {
     return (
@@ -76,7 +77,9 @@ export function InterestForm({
           <CircleCheck aria-hidden="true" strokeWidth={1.6} className="size-8 text-success" />
           <p className="type-title">{successTitle ?? t('successTitle')}</p>
           <p className="type-body text-fg-strong">
-            {successDescription ?? t('successDescription')}
+            {done === 'queued'
+              ? t('queuedDescription')
+              : (successDescription ?? t('successDescription'))}
           </p>
         </div>
       </Panel>
@@ -148,8 +151,8 @@ export function InterestForm({
             page_path: window.location.pathname,
             marketing_consent: marketing,
           });
-          setDone(true);
-          onSuccess?.();
+          setDone(result.optIn);
+          onSuccess?.(result.optIn);
         }}
       >
         {arrange ? (

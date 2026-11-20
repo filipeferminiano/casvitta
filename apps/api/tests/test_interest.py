@@ -149,6 +149,7 @@ def test_unknown_criteria_fields_are_rejected() -> None:
 async def test_signup_is_stored_with_consents_and_opt_in_requested(
     api: AsyncClient, session: AsyncSession, integrations: Integrations
 ) -> None:
+    _whatsapp(integrations).delivers_messages = True  # stands in for the real adapter
     response = await api.post("/v1/public/interest", json=AUCTION)
     assert response.status_code == 202
     assert response.json() == {"status": "accepted", "opt_in": "whatsapp_sent"}
@@ -172,6 +173,18 @@ async def test_signup_is_stored_with_consents_and_opt_in_requested(
     assert len(outbox) == 1
     assert outbox[0].template is not None and outbox[0].template.name == service.OPT_IN_TEMPLATE
     assert outbox[0].body is None
+
+
+async def test_without_a_delivering_adapter_the_opt_in_is_queued(
+    api: AsyncClient, session: AsyncSession
+) -> None:
+    """Rule 11: the page may only say "we sent a WhatsApp" when one was really sent."""
+    response = await api.post("/v1/public/interest", json=AUCTION)
+    assert response.status_code == 202
+    assert response.json()["opt_in"] == "queued"
+    signup = (await session.scalars(select(InterestSignup))).one()
+    assert signup.status is InterestStatus.PENDING_OPT_IN
+    assert signup.opt_in_requested_at is None
 
 
 async def test_contact_consent_is_required(api: AsyncClient, session: AsyncSession) -> None:

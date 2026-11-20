@@ -21,6 +21,10 @@ class TemplateMessage:
 
 
 class WhatsAppPort(Protocol):
+    # False for adapters that only record messages (fakes). Callers must then not tell
+    # people that a message was sent (CLAUDE.md rule 11).
+    delivers_messages: bool
+
     async def send_text(self, to_e164: str, body: str) -> OutboundReceipt: ...
 
     async def send_template(self, to_e164: str, template: TemplateMessage) -> OutboundReceipt: ...

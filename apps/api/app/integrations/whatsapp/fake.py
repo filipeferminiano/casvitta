@@ -16,10 +16,14 @@ class SentWhatsApp:
 
 
 class FakeWhatsApp:
-    """Records outbound messages instead of sending them."""
+    """Records outbound messages instead of sending them.
 
-    def __init__(self) -> None:
+    `delivers_messages=True` makes it stand in for a real adapter in tests.
+    """
+
+    def __init__(self, *, delivers_messages: bool = False) -> None:
         self.outbox: list[SentWhatsApp] = []
+        self.delivers_messages = delivers_messages
 
     def _receipt(self) -> OutboundReceipt:
         return OutboundReceipt(external_id=f"wamid.fake.{uuid.uuid4().hex}", sent_at=utcnow())

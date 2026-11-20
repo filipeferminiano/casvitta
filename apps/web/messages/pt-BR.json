@@ -1391,7 +1391,8 @@
     "honeypot": "Não preencha este campo",
     "sending": "Enviando…",
     "successTitle": "Recebemos seu pedido",
-    "successDescription": "Mandamos uma mensagem no seu WhatsApp. Responda SIM para confirmar."
+    "successDescription": "Mandamos uma mensagem no seu WhatsApp. Responda SIM para confirmar.",
+    "queuedDescription": "Seus dados estão guardados. Em breve mandamos uma mensagem no seu WhatsApp para você confirmar."
   },
   "forBrokers": {
     "meta": {
@@ -1769,6 +1770,7 @@
       },
       "title": "Pronto, você está na lista.",
       "reply": "Mandamos uma mensagem no seu WhatsApp. <b>Responda “SIM”</b> para confirmar e começar a receber as oportunidades.",
+      "queued": "Seus critérios estão guardados. Em breve mandamos uma mensagem no seu WhatsApp: <b>responda “SIM”</b> para confirmar e começar a receber as oportunidades.",
       "criteria": "Seus critérios",
       "rows": {
         "region": "Região",

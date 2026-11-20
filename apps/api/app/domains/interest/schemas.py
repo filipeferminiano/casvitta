@@ -196,11 +196,15 @@ InterestSignupIn = Annotated[
 ]
 
 
+OptInResult = Literal["whatsapp_sent", "queued", "not_requested"]
+
+
 class InterestSignupAccepted(BaseModel):
     """Same body for stored and honeypot-rejected requests, so bots learn nothing."""
 
     status: Literal["accepted"] = "accepted"
-    opt_in: Literal["whatsapp_sent", "not_requested"]
+    # queued: stored, but no WhatsApp adapter delivers yet; the opt-in goes out later.
+    opt_in: OptInResult
 
 
 class InterestSignupOut(BaseModel):
