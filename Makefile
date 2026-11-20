@@ -63,9 +63,10 @@ db\:seed:
 GCP_PROJECT ?= roas-164016
 GCP_REGION ?= southamerica-east1
 WEB_URL ?= https://casvitta.com.br
+GOOGLE_SITE_VERIFICATION ?=
 deploy-web: ## Build apps/web on Cloud Build and deploy it to Cloud Run (casvitta-web)
 	$(eval TAG := $(shell git rev-parse --short HEAD))
-	gcloud builds submit --project $(GCP_PROJECT) --region $(GCP_REGION) --config infra/cloudbuild/web.yaml --substitutions=_SITE_URL=$(WEB_URL),_TAG=$(TAG) .
+	gcloud builds submit --project $(GCP_PROJECT) --region $(GCP_REGION) --config infra/cloudbuild/web.yaml --substitutions=_SITE_URL=$(WEB_URL),_TAG=$(TAG),_GOOGLE_SITE_VERIFICATION=$(GOOGLE_SITE_VERIFICATION) .
 	gcloud run deploy casvitta-web --project $(GCP_PROJECT) --region $(GCP_REGION) --image $(GCP_REGION)-docker.pkg.dev/$(GCP_PROJECT)/casvitta/web:$(TAG) --port 8080 --memory 512Mi --cpu 1 --min-instances 0 --max-instances 3 --allow-unauthenticated --set-env-vars ROOT_DOMAIN=$(subst https://,,$(WEB_URL)),APP_SUBDOMAIN=app
 
 # API on Cloud Run next to the database (Supabase, AWS us-east-2 -> GCP us-east5, Ohio).

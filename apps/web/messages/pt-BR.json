@@ -1786,5 +1786,55 @@
   },
   "og": {
     "brand": "CASVITTA"
+  },
+  "llms": {
+    "summary": "Marketplace de imóveis à venda e para alugar no Brasil, com corretores identificados pelo CRECI, e software para corretores autônomos anunciarem, atenderem no WhatsApp e marcarem visitas.",
+    "intro": "Todo imóvel publicado na Casvitta tem autorização do proprietário e um corretor responsável com CRECI verificado. Toda intermediação é feita por corretores inscritos no CRECI. Textos escritos por IA aparecem marcados como \"Feito por IA\", e o assistente de WhatsApp se apresenta como assistente virtual do corretor.",
+    "nav": {
+      "buy": "Comprar imóvel",
+      "rent": "Alugar imóvel",
+      "forBrokers": "Para corretores e imobiliárias",
+      "list": "Anunciar meu imóvel",
+      "investors": "Investidores",
+      "developers": "Incorporadoras",
+      "auction": "Imóveis de leilão"
+    },
+    "sections": {
+      "buyers": {
+        "title": "Para quem compra ou aluga",
+        "buy": "Imóveis à venda, com filtros por bairro, tipo, preço, quartos, uso de FGTS e modo \"Para investir\"",
+        "rent": "Imóveis para alugar",
+        "listing": "Página de cada imóvel: fotos, características, corretor com CRECI, tira-dúvidas e visita marcada direto na agenda do corretor"
+      },
+      "brokers": {
+        "title": "Para corretores e imobiliárias",
+        "forBrokers": "Broker OS: a IA monta o anúncio a partir do cadastro do imóvel, publica no marketplace, Instagram, Facebook e Google, atende no WhatsApp e marca visitas. Planos Essencial ({essencial}/mês, até {essencialMax} imóveis ativos) e Profissional ({profissional}/mês, até {profissionalMax} imóveis ativos)",
+        "media": "Mídia paga roda na conta de anúncios do próprio corretor no Meta e no Google, a partir de {minBudget} por dia por imóvel; a Casvitta não cobra nem revende mídia"
+      },
+      "owners": {
+        "title": "Para proprietários",
+        "list": "Anunciar um imóvel para venda ou locação: um corretor com CRECI da região faz a avaliação, anuncia e marca as visitas"
+      },
+      "interest": {
+        "title": "Investidores, incorporadoras e leilão",
+        "note": "O piloto para gestoras, a lista de incorporadoras e a de leilão só registram interesse; não há estoque, datas ou condições disponíveis.",
+        "investors": "Busca \"Para investir\" com aluguel e rentabilidade estimados a partir de aluguéis parecidos (estimativa, não garantia); piloto para gestoras e family offices em breve. A Casvitta não oferece cotas de fundos, CRIs ou outros valores mobiliários",
+        "developers": "Lista de espera",
+        "auction": "Lista de interesse. A Casvitta não é leiloeira"
+      },
+      "company": {
+        "title": "Institucional",
+        "about": "Sobre a Casvitta",
+        "privacy": "Privacidade e LGPD",
+        "terms": "Termos de uso"
+      }
+    },
+    "facts": {
+      "title": "Regras que valem em toda a plataforma",
+      "creci": "Todo anúncio, página e cartão de corretor mostra o CRECI do corretor responsável.",
+      "financing": "Valores de financiamento são sempre simulação (tabelas SAC e Price), não aprovação de crédito; seguros e taxas não estão incluídos.",
+      "ai": "A IA não negocia preço nem condições, não promete aprovação de crédito e só usa fatos do cadastro do imóvel.",
+      "contact": "Contato: WhatsApp {phone}."
+    }
   }
 }

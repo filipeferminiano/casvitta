@@ -16,6 +16,9 @@ export const SITE_URL = env(process.env.NEXT_PUBLIC_SITE_URL, 'http://localhost:
 /** Google Tag Manager container; empty string disables tracking (tests). */
 export const GTM_ID = env(process.env.NEXT_PUBLIC_GTM_ID, 'GTM-KT3NQN2G');
 
+/** Search Console HTML-tag verification token; empty omits the tag (DNS verification preferred). */
+export const GOOGLE_SITE_VERIFICATION = env(process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION, '');
+
 export const COMPANY = {
   whatsappE164: env(process.env.NEXT_PUBLIC_COMPANY_WHATSAPP, '+5511927408912'),
   /** Casvitta's own CRECI-J. Placeholder until registered. */

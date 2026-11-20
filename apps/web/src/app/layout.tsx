@@ -7,7 +7,7 @@ import type { ReactNode } from 'react';
 import { AnalyticsListener } from '@/components/AnalyticsListener';
 import { GoogleTagManager, GoogleTagManagerNoScript } from '@/components/GoogleTagManager';
 import { Providers } from '@/components/Providers';
-import { SITE_URL } from '@/config/site';
+import { GOOGLE_SITE_VERIFICATION, SITE_URL } from '@/config/site';
 import { OG_IMAGE } from '@/lib/metadata';
 
 import { familjenGrotesk, ibmPlexMono, ibmPlexSans } from './fonts';
@@ -20,6 +20,7 @@ export async function generateMetadata(): Promise<Metadata> {
     openGraph: { siteName: 'Casvitta', locale: 'pt_BR', type: 'website', images: [OG_IMAGE] },
     title: { default: t('title'), template: t('titleTemplate', { page: '%s' }) },
     description: t('description'),
+    ...(GOOGLE_SITE_VERIFICATION ? { verification: { google: GOOGLE_SITE_VERIFICATION } } : {}),
   };
 }
 

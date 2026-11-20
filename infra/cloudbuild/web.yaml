@@ -12,6 +12,7 @@ substitutions:
   # Capture forms post to the real API while the rest of the site still runs on mocks.
   _API_URL: https://api.casvitta.com.br
   _INTEREST_API: 'true'
+  _GOOGLE_SITE_VERIFICATION: ''
 steps:
   - name: gcr.io/cloud-builders/docker
     args:
@@ -23,6 +24,7 @@ steps:
       - --build-arg=NEXT_PUBLIC_GTM_ID=${_GTM_ID}
       - --build-arg=NEXT_PUBLIC_API_URL=${_API_URL}
       - --build-arg=NEXT_PUBLIC_INTEREST_API=${_INTEREST_API}
+      - --build-arg=NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION=${_GOOGLE_SITE_VERIFICATION}
       - -t
       - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO}/${_IMAGE}:${_TAG}
       - .
