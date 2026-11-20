@@ -67,7 +67,7 @@ WEB_URL ?= https://casvitta.com.br
 APP_URL ?= $(subst https://,https://app.,$(WEB_URL))
 API_URL ?= $(subst https://,https://api.,$(WEB_URL))
 # Areas the web build reads from the API (apps/web/src/lib/live.ts), '+'-separated.
-WEB_LIVE ?= interest
+WEB_LIVE ?= interest+accounts
 GOOGLE_SITE_VERIFICATION ?=
 # IndexNow key (public by design, served at /indexnow-key.txt). Read from Secret Manager when it
 # exists; deploys work without it. Create once: openssl rand -hex 16 | gcloud secrets create casvitta-indexnow-key --data-file=-
