@@ -64,6 +64,10 @@ db\:seed:
 GCP_PROJECT ?= roas-164016
 GCP_REGION ?= southamerica-east1
 WEB_URL ?= https://casvitta.com.br
+APP_URL ?= $(subst https://,https://app.,$(WEB_URL))
+API_URL ?= $(subst https://,https://api.,$(WEB_URL))
+# Areas the web build reads from the API (apps/web/src/lib/live.ts), '+'-separated.
+WEB_LIVE ?= interest
 GOOGLE_SITE_VERIFICATION ?=
 # IndexNow key (public by design, served at /indexnow-key.txt). Read from Secret Manager when it
 # exists; deploys work without it. Create once: openssl rand -hex 16 | gcloud secrets create casvitta-indexnow-key --data-file=-
@@ -72,8 +76,8 @@ indexnow-key = $(shell gcloud secrets versions access latest --secret=$(INDEXNOW
 deploy-web: ## Build apps/web on Cloud Build and deploy it to Cloud Run (casvitta-web)
 	$(eval TAG := $(shell git rev-parse --short HEAD))
 	$(eval INDEXNOW_KEY := $(indexnow-key))
-	gcloud builds submit --project $(GCP_PROJECT) --region $(GCP_REGION) --config infra/cloudbuild/web.yaml --substitutions=_SITE_URL=$(WEB_URL),_TAG=$(TAG),_GOOGLE_SITE_VERIFICATION=$(GOOGLE_SITE_VERIFICATION) .
-	gcloud run deploy casvitta-web --project $(GCP_PROJECT) --region $(GCP_REGION) --image $(GCP_REGION)-docker.pkg.dev/$(GCP_PROJECT)/casvitta/web:$(TAG) --port 8080 --memory 512Mi --cpu 1 --min-instances 0 --max-instances 3 --allow-unauthenticated --set-env-vars ROOT_DOMAIN=$(subst https://,,$(WEB_URL)),APP_SUBDOMAIN=app$(if $(INDEXNOW_KEY),$(comma)INDEXNOW_KEY=$(INDEXNOW_KEY))
+	gcloud builds submit --project $(GCP_PROJECT) --region $(GCP_REGION) --config infra/cloudbuild/web.yaml --substitutions=_SITE_URL=$(WEB_URL),_TAG=$(TAG),_LIVE=$(WEB_LIVE),_GOOGLE_SITE_VERIFICATION=$(GOOGLE_SITE_VERIFICATION) .
+	gcloud run deploy casvitta-web --project $(GCP_PROJECT) --region $(GCP_REGION) --image $(GCP_REGION)-docker.pkg.dev/$(GCP_PROJECT)/casvitta/web:$(TAG) --port 8080 --memory 512Mi --cpu 1 --min-instances 0 --max-instances 3 --allow-unauthenticated --set-env-vars ROOT_DOMAIN=$(subst https://,,$(WEB_URL)),APP_SUBDOMAIN=app,API_INTERNAL_URL=$(API_URL)$(if $(INDEXNOW_KEY),$(comma)INDEXNOW_KEY=$(INDEXNOW_KEY))
 
 indexnow: ## Submit the live sitemap(s) to IndexNow (Bing and others): make indexnow [SITEMAPS="url ..."]
 	$(eval INDEXNOW_KEY := $(indexnow-key))
@@ -87,6 +91,7 @@ API_CORS ?= https://casvitta.com.br,https://www.casvitta.com.br
 deploy-api: ## Build apps/api, run migrations (Cloud Run job) and deploy casvitta-api
 	$(eval TAG := $(shell git rev-parse --short HEAD))
 	$(eval API_IMAGE := $(GCP_REGION)-docker.pkg.dev/$(GCP_PROJECT)/casvitta/api:$(TAG))
+	$(eval EMAIL_SECRET := $(shell gcloud secrets describe casvitta-email-api-key --project $(GCP_PROJECT) --format='value(name)' >/dev/null 2>&1 && echo casvitta-email-api-key))
 	gcloud builds submit --project $(GCP_PROJECT) --region $(GCP_REGION) --config infra/cloudbuild/api.yaml --substitutions=_TAG=$(TAG) apps/api
 	gcloud run jobs deploy casvitta-migrate --project $(GCP_PROJECT) --region $(API_REGION) --image $(API_IMAGE) --command alembic --args upgrade,head --set-secrets DATABASE_URL=casvitta-database-url:latest --set-env-vars DATABASE_SSL_REQUIRE=true --max-retries 0 --execute-now --wait
-	gcloud run deploy casvitta-api --project $(GCP_PROJECT) --region $(API_REGION) --image $(API_IMAGE) --port 8080 --memory 512Mi --cpu 1 --min-instances 0 --max-instances 2 --allow-unauthenticated --ingress internal-and-cloud-load-balancing --set-secrets DATABASE_URL=casvitta-database-url:latest,JWT_SECRET=casvitta-jwt-secret:latest --set-env-vars "^@^APP_ENV=production@DATABASE_SSL_REQUIRE=true@CORS_ORIGINS=$(API_CORS)"
+	gcloud run deploy casvitta-api --project $(GCP_PROJECT) --region $(API_REGION) --image $(API_IMAGE) --port 8080 --memory 512Mi --cpu 1 --min-instances 0 --max-instances 2 --allow-unauthenticated --ingress internal-and-cloud-load-balancing --set-secrets DATABASE_URL=casvitta-database-url:latest,JWT_SECRET=casvitta-jwt-secret:latest,ADMIN_TOKEN=casvitta-admin-token:latest$(if $(EMAIL_SECRET),$(comma)EMAIL_API_KEY=$(EMAIL_SECRET):latest) --set-env-vars "^@^APP_ENV=production@DATABASE_SSL_REQUIRE=true@CORS_ORIGINS=$(API_CORS)@SITE_URL=$(WEB_URL)@APP_URL=$(APP_URL)@COOKIE_SECURE=true"
