@@ -117,3 +117,24 @@ def test_simulate_rejects_invalid_input(kwargs: dict[str, int]) -> None:
     } | kwargs
     with pytest.raises(FinancingInputError):
         simulate(**params)  # type: ignore[arg-type]
+
+
+def test_shared_vectors_match_core_finance() -> None:
+    """The web calculator is tested against the same vectors (apps/web finance.parity.test.ts)."""
+    import json  # noqa: PLC0415
+    from pathlib import Path  # noqa: PLC0415
+
+    from app.core.finance import AmortizationSystem, simulate  # noqa: PLC0415
+
+    vectors = json.loads((Path(__file__).parent / "fixtures" / "finance_vectors.json").read_text())
+    for case in vectors["cases"]:
+        result = simulate(
+            property_price_cents=case["price_cents"],
+            down_payment_cents=case["down_payment_cents"],
+            fgts_cents=case["fgts_cents"],
+            term_months=case["term_months"],
+            annual_rate_bps=case["annual_rate_bps"],
+            system=AmortizationSystem(case["system"]),
+        )
+        assert result.principal_cents == case["principal_cents"]
+        assert result.first_payment_cents == case["first_payment_cents"]

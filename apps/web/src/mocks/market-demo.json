@@ -1,0 +1,2842 @@
+{
+  "sao-paulo": {
+    "city": {
+      "name": "São Paulo",
+      "path": "/preco-m2/sao-paulo",
+      "slug": "sao-paulo"
+    },
+    "neighborhoods": [
+      {
+        "indexable": false,
+        "place": {
+          "name": "Aclimação",
+          "path": "/preco-m2/sao-paulo/aclimacao",
+          "slug": "aclimacao"
+        },
+        "stats": null,
+        "zone": "centro"
+      },
+      {
+        "indexable": false,
+        "place": {
+          "name": "Campo Belo",
+          "path": "/preco-m2/sao-paulo/campo-belo",
+          "slug": "campo-belo"
+        },
+        "stats": null,
+        "zone": "sul"
+      },
+      {
+        "indexable": false,
+        "place": {
+          "name": "Ipiranga",
+          "path": "/preco-m2/sao-paulo/ipiranga",
+          "slug": "ipiranga"
+        },
+        "stats": null,
+        "zone": "sul"
+      },
+      {
+        "indexable": true,
+        "place": {
+          "name": "Moema",
+          "path": "/preco-m2/sao-paulo/moema",
+          "slug": "moema"
+        },
+        "stats": {
+          "financed_pct": 50,
+          "last_sale_month": "2026-08",
+          "last_sale_year": 2026,
+          "median_built_area_m2": 68,
+          "median_construction_year": 2005,
+          "median_financed_pct": 70,
+          "median_price_m2_cents": 1116000,
+          "median_value_cents": 83900000,
+          "p25_built_area_m2": 62,
+          "p25_price_m2_cents": 1023000,
+          "p75_built_area_m2": 90,
+          "p75_price_m2_cents": 1253000,
+          "refreshed_at": "2026-11-20T19:55:01.547076Z",
+          "sales": 36,
+          "top_financing_type_code": 1,
+          "window": "last_12m",
+          "window_end": "2026-08-31",
+          "window_start": "2025-09-01"
+        },
+        "zone": "sul"
+      },
+      {
+        "indexable": false,
+        "place": {
+          "name": "Saúde",
+          "path": "/preco-m2/sao-paulo/saude",
+          "slug": "saude"
+        },
+        "stats": null,
+        "zone": "sul"
+      },
+      {
+        "indexable": false,
+        "place": {
+          "name": "Vila Clementino",
+          "path": "/preco-m2/sao-paulo/vila-clementino",
+          "slug": "vila-clementino"
+        },
+        "stats": null,
+        "zone": "sul"
+      },
+      {
+        "indexable": true,
+        "place": {
+          "name": "Vila Mariana",
+          "path": "/preco-m2/sao-paulo/vila-mariana",
+          "slug": "vila-mariana"
+        },
+        "stats": {
+          "financed_pct": 66,
+          "last_sale_month": "2026-08",
+          "last_sale_year": 2026,
+          "median_built_area_m2": 68,
+          "median_construction_year": 2005,
+          "median_financed_pct": 70,
+          "median_price_m2_cents": 1181000,
+          "median_value_cents": 82500000,
+          "p25_built_area_m2": 62,
+          "p25_price_m2_cents": 1078000,
+          "p75_built_area_m2": 90,
+          "p75_price_m2_cents": 1270000,
+          "refreshed_at": "2026-11-20T19:55:01.547076Z",
+          "sales": 56,
+          "top_financing_type_code": 1,
+          "window": "last_12m",
+          "window_end": "2026-08-31",
+          "window_start": "2025-09-01"
+        },
+        "zone": "sul"
+      }
+    ],
+    "source": {
+      "data_through": "2026-09-01",
+      "is_demo": true,
+      "refreshed_at": "2026-11-20T19:55:01.647213Z",
+      "window_end": "2026-08-31"
+    }
+  },
+  "sao-paulo/aclimacao": {
+    "apartments": null,
+    "area_bands": [],
+    "city": {
+      "name": "São Paulo",
+      "path": "/preco-m2/sao-paulo",
+      "slug": "sao-paulo"
+    },
+    "financing": null,
+    "gate": {
+      "indexable": false,
+      "min_sales": 30,
+      "passes": false,
+      "window": "last_12m"
+    },
+    "houses": null,
+    "kind": "neighborhood",
+    "monthly": [],
+    "neighborhood": {
+      "name": "Aclimação",
+      "path": "/preco-m2/sao-paulo/aclimacao",
+      "slug": "aclimacao"
+    },
+    "neighbors": [
+      {
+        "indexable": false,
+        "place": {
+          "name": "Ipiranga",
+          "path": "/preco-m2/sao-paulo/ipiranga",
+          "slug": "ipiranga"
+        },
+        "stats": null,
+        "zone": "sul"
+      },
+      {
+        "indexable": true,
+        "place": {
+          "name": "Vila Mariana",
+          "path": "/preco-m2/sao-paulo/vila-mariana",
+          "slug": "vila-mariana"
+        },
+        "stats": {
+          "financed_pct": 66,
+          "last_sale_month": "2026-08",
+          "last_sale_year": 2026,
+          "median_built_area_m2": 68,
+          "median_construction_year": 2005,
+          "median_financed_pct": 70,
+          "median_price_m2_cents": 1181000,
+          "median_value_cents": 82500000,
+          "p25_built_area_m2": 62,
+          "p25_price_m2_cents": 1078000,
+          "p75_built_area_m2": 90,
+          "p75_price_m2_cents": 1270000,
+          "refreshed_at": "2026-11-20T19:55:01.547076Z",
+          "sales": 56,
+          "top_financing_type_code": 1,
+          "window": "last_12m",
+          "window_end": "2026-08-31",
+          "window_start": "2025-09-01"
+        },
+        "zone": "sul"
+      }
+    ],
+    "source": {
+      "data_through": "2026-09-01",
+      "is_demo": true,
+      "refreshed_at": "2026-11-20T19:55:01.647213Z",
+      "window_end": "2026-08-31"
+    },
+    "stats": null,
+    "top_buildings": [],
+    "top_streets": [],
+    "years": []
+  },
+  "sao-paulo/aclimacao/buildings/edificio-aclimacao-exemplo": {
+    "building": {
+      "name": "Edifício Aclimacao Exemplo",
+      "path": "/condominio/sao-paulo/aclimacao/edificio-aclimacao-exemplo",
+      "slug": "edificio-aclimacao-exemplo"
+    },
+    "city": {
+      "name": "São Paulo",
+      "path": "/preco-m2/sao-paulo",
+      "slug": "sao-paulo"
+    },
+    "construction_year": null,
+    "gate": {
+      "indexable": false,
+      "min_sales": 5,
+      "passes": false,
+      "window": "all"
+    },
+    "kind": "building",
+    "last_24m": null,
+    "neighborhood": {
+      "name": "Aclimação",
+      "path": "/preco-m2/sao-paulo/aclimacao",
+      "slug": "aclimacao"
+    },
+    "source": {
+      "data_through": "2026-09-01",
+      "is_demo": true,
+      "refreshed_at": "2026-11-20T19:55:01.647213Z",
+      "window_end": "2026-08-31"
+    },
+    "stats": null,
+    "street": {
+      "name": "Rua dos Cedros Ficticios",
+      "path": "/preco-m2/sao-paulo/aclimacao/rua-dos-cedros-ficticios",
+      "slug": "rua-dos-cedros-ficticios"
+    },
+    "street_number": 77
+  },
+  "sao-paulo/aclimacao/financing": {
+    "annual_rate_bps": 1150,
+    "city": {
+      "name": "São Paulo",
+      "path": "/preco-m2/sao-paulo",
+      "slug": "sao-paulo"
+    },
+    "down_payment_pct": 20,
+    "financing": null,
+    "gate": {
+      "indexable": false,
+      "min_sales": 30,
+      "passes": false,
+      "window": "last_12m"
+    },
+    "kind": "financing",
+    "max_income_commitment_pct": 30,
+    "median_value_cents": null,
+    "neighborhood": {
+      "name": "Aclimação",
+      "path": "/preco-m2/sao-paulo/aclimacao",
+      "slug": "aclimacao"
+    },
+    "property_kind": "all",
+    "simulations": [],
+    "source": {
+      "data_through": "2026-09-01",
+      "is_demo": true,
+      "refreshed_at": "2026-11-20T19:55:01.647213Z",
+      "window_end": "2026-08-31"
+    },
+    "term_months": 360
+  },
+  "sao-paulo/aclimacao/streets/rua-dos-cedros-ficticios": {
+    "apartments": null,
+    "buildings": [],
+    "city": {
+      "name": "São Paulo",
+      "path": "/preco-m2/sao-paulo",
+      "slug": "sao-paulo"
+    },
+    "gate": {
+      "indexable": false,
+      "min_sales": 10,
+      "passes": false,
+      "window": "last_24m"
+    },
+    "kind": "street",
+    "last_12m": null,
+    "neighborhood": {
+      "name": "Aclimação",
+      "path": "/preco-m2/sao-paulo/aclimacao",
+      "slug": "aclimacao"
+    },
+    "source": {
+      "data_through": "2026-09-01",
+      "is_demo": true,
+      "refreshed_at": "2026-11-20T19:55:01.647213Z",
+      "window_end": "2026-08-31"
+    },
+    "stats": null,
+    "street": {
+      "name": "Rua dos Cedros Ficticios",
+      "path": "/preco-m2/sao-paulo/aclimacao/rua-dos-cedros-ficticios",
+      "slug": "rua-dos-cedros-ficticios"
+    }
+  },
+  "sao-paulo/bosque-da-saude": {
+    "apartments": null,
+    "area_bands": [],
+    "city": {
+      "name": "São Paulo",
+      "path": "/preco-m2/sao-paulo",
+      "slug": "sao-paulo"
+    },
+    "financing": null,
+    "gate": {
+      "indexable": false,
+      "min_sales": 30,
+      "passes": false,
+      "window": "last_12m"
+    },
+    "houses": null,
+    "kind": "neighborhood",
+    "monthly": [],
+    "neighborhood": {
+      "name": "Bosque da Saúde",
+      "path": "/preco-m2/sao-paulo/bosque-da-saude",
+      "slug": "bosque-da-saude"
+    },
+    "neighbors": [],
+    "source": {
+      "data_through": "2026-09-01",
+      "is_demo": true,
+      "refreshed_at": "2026-11-20T19:55:01.647213Z",
+      "window_end": "2026-08-31"
+    },
+    "stats": null,
+    "top_buildings": [],
+    "top_streets": [],
+    "years": []
+  },
+  "sao-paulo/bosque-da-saude/financing": {
+    "annual_rate_bps": 1150,
+    "city": {
+      "name": "São Paulo",
+      "path": "/preco-m2/sao-paulo",
+      "slug": "sao-paulo"
+    },
+    "down_payment_pct": 20,
+    "financing": null,
+    "gate": {
+      "indexable": false,
+      "min_sales": 30,
+      "passes": false,
+      "window": "last_12m"
+    },
+    "kind": "financing",
+    "max_income_commitment_pct": 30,
+    "median_value_cents": null,
+    "neighborhood": {
+      "name": "Bosque da Saúde",
+      "path": "/preco-m2/sao-paulo/bosque-da-saude",
+      "slug": "bosque-da-saude"
+    },
+    "property_kind": "all",
+    "simulations": [],
+    "source": {
+      "data_through": "2026-09-01",
+      "is_demo": true,
+      "refreshed_at": "2026-11-20T19:55:01.647213Z",
+      "window_end": "2026-08-31"
+    },
+    "term_months": 360
+  },
+  "sao-paulo/campo-belo": {
+    "apartments": null,
+    "area_bands": [],
+    "city": {
+      "name": "São Paulo",
+      "path": "/preco-m2/sao-paulo",
+      "slug": "sao-paulo"
+    },
+    "financing": null,
+    "gate": {
+      "indexable": false,
+      "min_sales": 30,
+      "passes": false,
+      "window": "last_12m"
+    },
+    "houses": null,
+    "kind": "neighborhood",
+    "monthly": [],
+    "neighborhood": {
+      "name": "Campo Belo",
+      "path": "/preco-m2/sao-paulo/campo-belo",
+      "slug": "campo-belo"
+    },
+    "neighbors": [
+      {
+        "indexable": true,
+        "place": {
+          "name": "Moema",
+          "path": "/preco-m2/sao-paulo/moema",
+          "slug": "moema"
+        },
+        "stats": {
+          "financed_pct": 50,
+          "last_sale_month": "2026-08",
+          "last_sale_year": 2026,
+          "median_built_area_m2": 68,
+          "median_construction_year": 2005,
+          "median_financed_pct": 70,
+          "median_price_m2_cents": 1116000,
+          "median_value_cents": 83900000,
+          "p25_built_area_m2": 62,
+          "p25_price_m2_cents": 1023000,
+          "p75_built_area_m2": 90,
+          "p75_price_m2_cents": 1253000,
+          "refreshed_at": "2026-11-20T19:55:01.547076Z",
+          "sales": 36,
+          "top_financing_type_code": 1,
+          "window": "last_12m",
+          "window_end": "2026-08-31",
+          "window_start": "2025-09-01"
+        },
+        "zone": "sul"
+      }
+    ],
+    "source": {
+      "data_through": "2026-09-01",
+      "is_demo": true,
+      "refreshed_at": "2026-11-20T19:55:01.647213Z",
+      "window_end": "2026-08-31"
+    },
+    "stats": null,
+    "top_buildings": [],
+    "top_streets": [],
+    "years": []
+  },
+  "sao-paulo/campo-belo/financing": {
+    "annual_rate_bps": 1150,
+    "city": {
+      "name": "São Paulo",
+      "path": "/preco-m2/sao-paulo",
+      "slug": "sao-paulo"
+    },
+    "down_payment_pct": 20,
+    "financing": null,
+    "gate": {
+      "indexable": false,
+      "min_sales": 30,
+      "passes": false,
+      "window": "last_12m"
+    },
+    "kind": "financing",
+    "max_income_commitment_pct": 30,
+    "median_value_cents": null,
+    "neighborhood": {
+      "name": "Campo Belo",
+      "path": "/preco-m2/sao-paulo/campo-belo",
+      "slug": "campo-belo"
+    },
+    "property_kind": "all",
+    "simulations": [],
+    "source": {
+      "data_through": "2026-09-01",
+      "is_demo": true,
+      "refreshed_at": "2026-11-20T19:55:01.647213Z",
+      "window_end": "2026-08-31"
+    },
+    "term_months": 360
+  },
+  "sao-paulo/cerqueira-cesar": {
+    "apartments": null,
+    "area_bands": [],
+    "city": {
+      "name": "São Paulo",
+      "path": "/preco-m2/sao-paulo",
+      "slug": "sao-paulo"
+    },
+    "financing": null,
+    "gate": {
+      "indexable": false,
+      "min_sales": 30,
+      "passes": false,
+      "window": "last_12m"
+    },
+    "houses": null,
+    "kind": "neighborhood",
+    "monthly": [],
+    "neighborhood": {
+      "name": "Cerqueira César",
+      "path": "/preco-m2/sao-paulo/cerqueira-cesar",
+      "slug": "cerqueira-cesar"
+    },
+    "neighbors": [],
+    "source": {
+      "data_through": "2026-09-01",
+      "is_demo": true,
+      "refreshed_at": "2026-11-20T19:55:01.647213Z",
+      "window_end": "2026-08-31"
+    },
+    "stats": null,
+    "top_buildings": [],
+    "top_streets": [],
+    "years": []
+  },
+  "sao-paulo/cerqueira-cesar/financing": {
+    "annual_rate_bps": 1150,
+    "city": {
+      "name": "São Paulo",
+      "path": "/preco-m2/sao-paulo",
+      "slug": "sao-paulo"
+    },
+    "down_payment_pct": 20,
+    "financing": null,
+    "gate": {
+      "indexable": false,
+      "min_sales": 30,
+      "passes": false,
+      "window": "last_12m"
+    },
+    "kind": "financing",
+    "max_income_commitment_pct": 30,
+    "median_value_cents": null,
+    "neighborhood": {
+      "name": "Cerqueira César",
+      "path": "/preco-m2/sao-paulo/cerqueira-cesar",
+      "slug": "cerqueira-cesar"
+    },
+    "property_kind": "all",
+    "simulations": [],
+    "source": {
+      "data_through": "2026-09-01",
+      "is_demo": true,
+      "refreshed_at": "2026-11-20T19:55:01.647213Z",
+      "window_end": "2026-08-31"
+    },
+    "term_months": 360
+  },
+  "sao-paulo/ipiranga": {
+    "apartments": null,
+    "area_bands": [],
+    "city": {
+      "name": "São Paulo",
+      "path": "/preco-m2/sao-paulo",
+      "slug": "sao-paulo"
+    },
+    "financing": null,
+    "gate": {
+      "indexable": false,
+      "min_sales": 30,
+      "passes": false,
+      "window": "last_12m"
+    },
+    "houses": null,
+    "kind": "neighborhood",
+    "monthly": [],
+    "neighborhood": {
+      "name": "Ipiranga",
+      "path": "/preco-m2/sao-paulo/ipiranga",
+      "slug": "ipiranga"
+    },
+    "neighbors": [
+      {
+        "indexable": false,
+        "place": {
+          "name": "Aclimação",
+          "path": "/preco-m2/sao-paulo/aclimacao",
+          "slug": "aclimacao"
+        },
+        "stats": null,
+        "zone": "centro"
+      },
+      {
+        "indexable": false,
+        "place": {
+          "name": "Saúde",
+          "path": "/preco-m2/sao-paulo/saude",
+          "slug": "saude"
+        },
+        "stats": null,
+        "zone": "sul"
+      }
+    ],
+    "source": {
+      "data_through": "2026-09-01",
+      "is_demo": true,
+      "refreshed_at": "2026-11-20T19:55:01.647213Z",
+      "window_end": "2026-08-31"
+    },
+    "stats": null,
+    "top_buildings": [],
+    "top_streets": [],
+    "years": []
+  },
+  "sao-paulo/ipiranga/financing": {
+    "annual_rate_bps": 1150,
+    "city": {
+      "name": "São Paulo",
+      "path": "/preco-m2/sao-paulo",
+      "slug": "sao-paulo"
+    },
+    "down_payment_pct": 20,
+    "financing": null,
+    "gate": {
+      "indexable": false,
+      "min_sales": 30,
+      "passes": false,
+      "window": "last_12m"
+    },
+    "kind": "financing",
+    "max_income_commitment_pct": 30,
+    "median_value_cents": null,
+    "neighborhood": {
+      "name": "Ipiranga",
+      "path": "/preco-m2/sao-paulo/ipiranga",
+      "slug": "ipiranga"
+    },
+    "property_kind": "all",
+    "simulations": [],
+    "source": {
+      "data_through": "2026-09-01",
+      "is_demo": true,
+      "refreshed_at": "2026-11-20T19:55:01.647213Z",
+      "window_end": "2026-08-31"
+    },
+    "term_months": 360
+  },
+  "sao-paulo/jardim-da-saude": {
+    "apartments": null,
+    "area_bands": [],
+    "city": {
+      "name": "São Paulo",
+      "path": "/preco-m2/sao-paulo",
+      "slug": "sao-paulo"
+    },
+    "financing": null,
+    "gate": {
+      "indexable": false,
+      "min_sales": 30,
+      "passes": false,
+      "window": "last_12m"
+    },
+    "houses": null,
+    "kind": "neighborhood",
+    "monthly": [],
+    "neighborhood": {
+      "name": "Jardim da Saúde",
+      "path": "/preco-m2/sao-paulo/jardim-da-saude",
+      "slug": "jardim-da-saude"
+    },
+    "neighbors": [],
+    "source": {
+      "data_through": "2026-09-01",
+      "is_demo": true,
+      "refreshed_at": "2026-11-20T19:55:01.647213Z",
+      "window_end": "2026-08-31"
+    },
+    "stats": null,
+    "top_buildings": [],
+    "top_streets": [],
+    "years": []
+  },
+  "sao-paulo/jardim-da-saude/financing": {
+    "annual_rate_bps": 1150,
+    "city": {
+      "name": "São Paulo",
+      "path": "/preco-m2/sao-paulo",
+      "slug": "sao-paulo"
+    },
+    "down_payment_pct": 20,
+    "financing": null,
+    "gate": {
+      "indexable": false,
+      "min_sales": 30,
+      "passes": false,
+      "window": "last_12m"
+    },
+    "kind": "financing",
+    "max_income_commitment_pct": 30,
+    "median_value_cents": null,
+    "neighborhood": {
+      "name": "Jardim da Saúde",
+      "path": "/preco-m2/sao-paulo/jardim-da-saude",
+      "slug": "jardim-da-saude"
+    },
+    "property_kind": "all",
+    "simulations": [],
+    "source": {
+      "data_through": "2026-09-01",
+      "is_demo": true,
+      "refreshed_at": "2026-11-20T19:55:01.647213Z",
+      "window_end": "2026-08-31"
+    },
+    "term_months": 360
+  },
+  "sao-paulo/jardim-paulista": {
+    "apartments": null,
+    "area_bands": [],
+    "city": {
+      "name": "São Paulo",
+      "path": "/preco-m2/sao-paulo",
+      "slug": "sao-paulo"
+    },
+    "financing": null,
+    "gate": {
+      "indexable": false,
+      "min_sales": 30,
+      "passes": false,
+      "window": "last_12m"
+    },
+    "houses": null,
+    "kind": "neighborhood",
+    "monthly": [],
+    "neighborhood": {
+      "name": "Jardim Paulista",
+      "path": "/preco-m2/sao-paulo/jardim-paulista",
+      "slug": "jardim-paulista"
+    },
+    "neighbors": [],
+    "source": {
+      "data_through": "2026-09-01",
+      "is_demo": true,
+      "refreshed_at": "2026-11-20T19:55:01.647213Z",
+      "window_end": "2026-08-31"
+    },
+    "stats": null,
+    "top_buildings": [],
+    "top_streets": [],
+    "years": []
+  },
+  "sao-paulo/jardim-paulista/financing": {
+    "annual_rate_bps": 1150,
+    "city": {
+      "name": "São Paulo",
+      "path": "/preco-m2/sao-paulo",
+      "slug": "sao-paulo"
+    },
+    "down_payment_pct": 20,
+    "financing": null,
+    "gate": {
+      "indexable": false,
+      "min_sales": 30,
+      "passes": false,
+      "window": "last_12m"
+    },
+    "kind": "financing",
+    "max_income_commitment_pct": 30,
+    "median_value_cents": null,
+    "neighborhood": {
+      "name": "Jardim Paulista",
+      "path": "/preco-m2/sao-paulo/jardim-paulista",
+      "slug": "jardim-paulista"
+    },
+    "property_kind": "all",
+    "simulations": [],
+    "source": {
+      "data_through": "2026-09-01",
+      "is_demo": true,
+      "refreshed_at": "2026-11-20T19:55:01.647213Z",
+      "window_end": "2026-08-31"
+    },
+    "term_months": 360
+  },
+  "sao-paulo/moema": {
+    "apartments": {
+      "financed_pct": 50,
+      "last_sale_month": "2026-08",
+      "last_sale_year": 2026,
+      "median_built_area_m2": 68,
+      "median_construction_year": 2005,
+      "median_financed_pct": 70,
+      "median_price_m2_cents": 1116000,
+      "median_value_cents": 83900000,
+      "p25_built_area_m2": 62,
+      "p25_price_m2_cents": 1023000,
+      "p75_built_area_m2": 90,
+      "p75_price_m2_cents": 1253000,
+      "refreshed_at": "2026-11-20T19:55:01.547076Z",
+      "sales": 36,
+      "top_financing_type_code": 1,
+      "window": "last_12m",
+      "window_end": "2026-08-31",
+      "window_start": "2025-09-01"
+    },
+    "area_bands": [
+      {
+        "band": "ate-50",
+        "max_m2": 50,
+        "median_value_cents": null,
+        "min_m2": 0,
+        "sales": 0
+      },
+      {
+        "band": "50-70",
+        "max_m2": 70,
+        "median_value_cents": 68300000,
+        "min_m2": 50,
+        "sales": 20
+      },
+      {
+        "band": "70-100",
+        "max_m2": 100,
+        "median_value_cents": 88700000,
+        "min_m2": 70,
+        "sales": 8
+      },
+      {
+        "band": "100-150",
+        "max_m2": 150,
+        "median_value_cents": 124100000,
+        "min_m2": 100,
+        "sales": 8
+      },
+      {
+        "band": "150-mais",
+        "max_m2": null,
+        "median_value_cents": null,
+        "min_m2": 150,
+        "sales": 0
+      }
+    ],
+    "city": {
+      "name": "São Paulo",
+      "path": "/preco-m2/sao-paulo",
+      "slug": "sao-paulo"
+    },
+    "financing": null,
+    "gate": {
+      "indexable": true,
+      "min_sales": 30,
+      "passes": true,
+      "window": "last_12m"
+    },
+    "houses": null,
+    "kind": "neighborhood",
+    "monthly": [
+      {
+        "median_price_m2_cents": 1181000,
+        "month": "2025-09",
+        "sales": 6
+      },
+      {
+        "median_price_m2_cents": 1167000,
+        "month": "2025-12",
+        "sales": 6
+      },
+      {
+        "median_price_m2_cents": 1090000,
+        "month": "2026-03",
+        "sales": 6
+      },
+      {
+        "median_price_m2_cents": 1040000,
+        "month": "2026-06",
+        "sales": 6
+      },
+      {
+        "median_price_m2_cents": 1076000,
+        "month": "2026-08",
+        "sales": 12
+      }
+    ],
+    "neighborhood": {
+      "name": "Moema",
+      "path": "/preco-m2/sao-paulo/moema",
+      "slug": "moema"
+    },
+    "neighbors": [
+      {
+        "indexable": false,
+        "place": {
+          "name": "Campo Belo",
+          "path": "/preco-m2/sao-paulo/campo-belo",
+          "slug": "campo-belo"
+        },
+        "stats": null,
+        "zone": "sul"
+      },
+      {
+        "indexable": false,
+        "place": {
+          "name": "Vila Clementino",
+          "path": "/preco-m2/sao-paulo/vila-clementino",
+          "slug": "vila-clementino"
+        },
+        "stats": null,
+        "zone": "sul"
+      },
+      {
+        "indexable": true,
+        "place": {
+          "name": "Vila Mariana",
+          "path": "/preco-m2/sao-paulo/vila-mariana",
+          "slug": "vila-mariana"
+        },
+        "stats": {
+          "financed_pct": 66,
+          "last_sale_month": "2026-08",
+          "last_sale_year": 2026,
+          "median_built_area_m2": 68,
+          "median_construction_year": 2005,
+          "median_financed_pct": 70,
+          "median_price_m2_cents": 1181000,
+          "median_value_cents": 82500000,
+          "p25_built_area_m2": 62,
+          "p25_price_m2_cents": 1078000,
+          "p75_built_area_m2": 90,
+          "p75_price_m2_cents": 1270000,
+          "refreshed_at": "2026-11-20T19:55:01.547076Z",
+          "sales": 56,
+          "top_financing_type_code": 1,
+          "window": "last_12m",
+          "window_end": "2026-08-31",
+          "window_start": "2025-09-01"
+        },
+        "zone": "sul"
+      }
+    ],
+    "source": {
+      "data_through": "2026-09-01",
+      "is_demo": true,
+      "refreshed_at": "2026-11-20T19:55:01.647213Z",
+      "window_end": "2026-08-31"
+    },
+    "stats": {
+      "financed_pct": 50,
+      "last_sale_month": "2026-08",
+      "last_sale_year": 2026,
+      "median_built_area_m2": 68,
+      "median_construction_year": 2005,
+      "median_financed_pct": 70,
+      "median_price_m2_cents": 1116000,
+      "median_value_cents": 83900000,
+      "p25_built_area_m2": 62,
+      "p25_price_m2_cents": 1023000,
+      "p75_built_area_m2": 90,
+      "p75_price_m2_cents": 1253000,
+      "refreshed_at": "2026-11-20T19:55:01.547076Z",
+      "sales": 36,
+      "top_financing_type_code": 1,
+      "window": "last_12m",
+      "window_end": "2026-08-31",
+      "window_start": "2025-09-01"
+    },
+    "top_buildings": [
+      {
+        "place": {
+          "name": "Condomínio Moema Exemplo",
+          "path": "/condominio/sao-paulo/moema/condominio-moema-exemplo",
+          "slug": "condominio-moema-exemplo"
+        },
+        "stats": {
+          "financed_pct": 50,
+          "last_sale_month": "2026-08",
+          "last_sale_year": 2026,
+          "median_built_area_m2": 68,
+          "median_construction_year": 2005,
+          "median_financed_pct": 70,
+          "median_price_m2_cents": 1116000,
+          "median_value_cents": 83900000,
+          "p25_built_area_m2": 62,
+          "p25_price_m2_cents": 1023000,
+          "p75_built_area_m2": 90,
+          "p75_price_m2_cents": 1253000,
+          "refreshed_at": "2026-11-20T19:55:01.547076Z",
+          "sales": 36,
+          "top_financing_type_code": 1,
+          "window": "all",
+          "window_end": "2026-08-31",
+          "window_start": null
+        },
+        "street_name": "Alameda das Palmeiras Ficticias",
+        "street_number": 10
+      }
+    ],
+    "top_streets": [
+      {
+        "place": {
+          "name": "Alameda das Palmeiras Ficticias",
+          "path": "/preco-m2/sao-paulo/moema/alameda-das-palmeiras-ficticias",
+          "slug": "alameda-das-palmeiras-ficticias"
+        },
+        "stats": {
+          "financed_pct": 50,
+          "last_sale_month": "2026-08",
+          "last_sale_year": 2026,
+          "median_built_area_m2": 68,
+          "median_construction_year": 2005,
+          "median_financed_pct": 70,
+          "median_price_m2_cents": 1116000,
+          "median_value_cents": 83900000,
+          "p25_built_area_m2": 62,
+          "p25_price_m2_cents": 1023000,
+          "p75_built_area_m2": 90,
+          "p75_price_m2_cents": 1253000,
+          "refreshed_at": "2026-11-20T19:55:01.547076Z",
+          "sales": 36,
+          "top_financing_type_code": 1,
+          "window": "last_24m",
+          "window_end": "2026-08-31",
+          "window_start": "2024-09-01"
+        }
+      }
+    ],
+    "years": [
+      {
+        "partial_until": null,
+        "stats": null,
+        "year": 2019
+      },
+      {
+        "partial_until": null,
+        "stats": null,
+        "year": 2020
+      },
+      {
+        "partial_until": null,
+        "stats": null,
+        "year": 2021
+      },
+      {
+        "partial_until": null,
+        "stats": null,
+        "year": 2022
+      },
+      {
+        "partial_until": null,
+        "stats": null,
+        "year": 2023
+      },
+      {
+        "partial_until": null,
+        "stats": null,
+        "year": 2024
+      },
+      {
+        "partial_until": null,
+        "stats": null,
+        "year": 2025
+      },
+      {
+        "partial_until": "2026-08-31",
+        "stats": null,
+        "year": 2026
+      }
+    ]
+  },
+  "sao-paulo/moema/buildings/condominio-moema-exemplo": {
+    "building": {
+      "name": "Condomínio Moema Exemplo",
+      "path": "/condominio/sao-paulo/moema/condominio-moema-exemplo",
+      "slug": "condominio-moema-exemplo"
+    },
+    "city": {
+      "name": "São Paulo",
+      "path": "/preco-m2/sao-paulo",
+      "slug": "sao-paulo"
+    },
+    "construction_year": 2005,
+    "gate": {
+      "indexable": true,
+      "min_sales": 5,
+      "passes": true,
+      "window": "all"
+    },
+    "kind": "building",
+    "last_24m": {
+      "financed_pct": 50,
+      "last_sale_month": "2026-08",
+      "last_sale_year": 2026,
+      "median_built_area_m2": 68,
+      "median_construction_year": 2005,
+      "median_financed_pct": 70,
+      "median_price_m2_cents": 1116000,
+      "median_value_cents": 83900000,
+      "p25_built_area_m2": 62,
+      "p25_price_m2_cents": 1023000,
+      "p75_built_area_m2": 90,
+      "p75_price_m2_cents": 1253000,
+      "refreshed_at": "2026-11-20T19:55:01.547076Z",
+      "sales": 36,
+      "top_financing_type_code": 1,
+      "window": "last_24m",
+      "window_end": "2026-08-31",
+      "window_start": "2024-09-01"
+    },
+    "neighborhood": {
+      "name": "Moema",
+      "path": "/preco-m2/sao-paulo/moema",
+      "slug": "moema"
+    },
+    "source": {
+      "data_through": "2026-09-01",
+      "is_demo": true,
+      "refreshed_at": "2026-11-20T19:55:01.647213Z",
+      "window_end": "2026-08-31"
+    },
+    "stats": {
+      "financed_pct": 50,
+      "last_sale_month": "2026-08",
+      "last_sale_year": 2026,
+      "median_built_area_m2": 68,
+      "median_construction_year": 2005,
+      "median_financed_pct": 70,
+      "median_price_m2_cents": 1116000,
+      "median_value_cents": 83900000,
+      "p25_built_area_m2": 62,
+      "p25_price_m2_cents": 1023000,
+      "p75_built_area_m2": 90,
+      "p75_price_m2_cents": 1253000,
+      "refreshed_at": "2026-11-20T19:55:01.547076Z",
+      "sales": 36,
+      "top_financing_type_code": 1,
+      "window": "all",
+      "window_end": "2026-08-31",
+      "window_start": null
+    },
+    "street": {
+      "name": "Alameda das Palmeiras Ficticias",
+      "path": "/preco-m2/sao-paulo/moema/alameda-das-palmeiras-ficticias",
+      "slug": "alameda-das-palmeiras-ficticias"
+    },
+    "street_number": 10
+  },
+  "sao-paulo/moema/financing": {
+    "annual_rate_bps": 1150,
+    "city": {
+      "name": "São Paulo",
+      "path": "/preco-m2/sao-paulo",
+      "slug": "sao-paulo"
+    },
+    "down_payment_pct": 20,
+    "financing": null,
+    "gate": {
+      "indexable": true,
+      "min_sales": 30,
+      "passes": true,
+      "window": "last_12m"
+    },
+    "kind": "financing",
+    "max_income_commitment_pct": 30,
+    "median_value_cents": 83900000,
+    "neighborhood": {
+      "name": "Moema",
+      "path": "/preco-m2/sao-paulo/moema",
+      "slug": "moema"
+    },
+    "property_kind": "apartment",
+    "simulations": [
+      {
+        "annual_rate_bps": 1150,
+        "down_payment_cents": 16780000,
+        "fgts_cents": 0,
+        "first_payment_cents": 798074,
+        "last_payment_cents": 188143,
+        "min_income_cents": 2660247,
+        "principal_cents": 67120000,
+        "property_price_cents": 83900000,
+        "system": "sac",
+        "term_months": 360
+      },
+      {
+        "annual_rate_bps": 1150,
+        "down_payment_cents": 16780000,
+        "fgts_cents": 0,
+        "first_payment_cents": 635903,
+        "last_payment_cents": 636169,
+        "min_income_cents": 2119677,
+        "principal_cents": 67120000,
+        "property_price_cents": 83900000,
+        "system": "price",
+        "term_months": 360
+      }
+    ],
+    "source": {
+      "data_through": "2026-09-01",
+      "is_demo": true,
+      "refreshed_at": "2026-11-20T19:55:01.647213Z",
+      "window_end": "2026-08-31"
+    },
+    "term_months": 360
+  },
+  "sao-paulo/moema/streets/alameda-das-palmeiras-ficticias": {
+    "apartments": {
+      "financed_pct": 50,
+      "last_sale_month": "2026-08",
+      "last_sale_year": 2026,
+      "median_built_area_m2": 68,
+      "median_construction_year": 2005,
+      "median_financed_pct": 70,
+      "median_price_m2_cents": 1116000,
+      "median_value_cents": 83900000,
+      "p25_built_area_m2": 62,
+      "p25_price_m2_cents": 1023000,
+      "p75_built_area_m2": 90,
+      "p75_price_m2_cents": 1253000,
+      "refreshed_at": "2026-11-20T19:55:01.547076Z",
+      "sales": 36,
+      "top_financing_type_code": 1,
+      "window": "last_24m",
+      "window_end": "2026-08-31",
+      "window_start": "2024-09-01"
+    },
+    "buildings": [
+      {
+        "place": {
+          "name": "Condomínio Moema Exemplo",
+          "path": "/condominio/sao-paulo/moema/condominio-moema-exemplo",
+          "slug": "condominio-moema-exemplo"
+        },
+        "stats": {
+          "financed_pct": 50,
+          "last_sale_month": "2026-08",
+          "last_sale_year": 2026,
+          "median_built_area_m2": 68,
+          "median_construction_year": 2005,
+          "median_financed_pct": 70,
+          "median_price_m2_cents": 1116000,
+          "median_value_cents": 83900000,
+          "p25_built_area_m2": 62,
+          "p25_price_m2_cents": 1023000,
+          "p75_built_area_m2": 90,
+          "p75_price_m2_cents": 1253000,
+          "refreshed_at": "2026-11-20T19:55:01.547076Z",
+          "sales": 36,
+          "top_financing_type_code": 1,
+          "window": "all",
+          "window_end": "2026-08-31",
+          "window_start": null
+        },
+        "street_name": "Alameda das Palmeiras Ficticias",
+        "street_number": 10
+      }
+    ],
+    "city": {
+      "name": "São Paulo",
+      "path": "/preco-m2/sao-paulo",
+      "slug": "sao-paulo"
+    },
+    "gate": {
+      "indexable": true,
+      "min_sales": 10,
+      "passes": true,
+      "window": "last_24m"
+    },
+    "kind": "street",
+    "last_12m": {
+      "financed_pct": 50,
+      "last_sale_month": "2026-08",
+      "last_sale_year": 2026,
+      "median_built_area_m2": 68,
+      "median_construction_year": 2005,
+      "median_financed_pct": 70,
+      "median_price_m2_cents": 1116000,
+      "median_value_cents": 83900000,
+      "p25_built_area_m2": 62,
+      "p25_price_m2_cents": 1023000,
+      "p75_built_area_m2": 90,
+      "p75_price_m2_cents": 1253000,
+      "refreshed_at": "2026-11-20T19:55:01.547076Z",
+      "sales": 36,
+      "top_financing_type_code": 1,
+      "window": "last_12m",
+      "window_end": "2026-08-31",
+      "window_start": "2025-09-01"
+    },
+    "neighborhood": {
+      "name": "Moema",
+      "path": "/preco-m2/sao-paulo/moema",
+      "slug": "moema"
+    },
+    "source": {
+      "data_through": "2026-09-01",
+      "is_demo": true,
+      "refreshed_at": "2026-11-20T19:55:01.647213Z",
+      "window_end": "2026-08-31"
+    },
+    "stats": {
+      "financed_pct": 50,
+      "last_sale_month": "2026-08",
+      "last_sale_year": 2026,
+      "median_built_area_m2": 68,
+      "median_construction_year": 2005,
+      "median_financed_pct": 70,
+      "median_price_m2_cents": 1116000,
+      "median_value_cents": 83900000,
+      "p25_built_area_m2": 62,
+      "p25_price_m2_cents": 1023000,
+      "p75_built_area_m2": 90,
+      "p75_price_m2_cents": 1253000,
+      "refreshed_at": "2026-11-20T19:55:01.547076Z",
+      "sales": 36,
+      "top_financing_type_code": 1,
+      "window": "last_24m",
+      "window_end": "2026-08-31",
+      "window_start": "2024-09-01"
+    },
+    "street": {
+      "name": "Alameda das Palmeiras Ficticias",
+      "path": "/preco-m2/sao-paulo/moema/alameda-das-palmeiras-ficticias",
+      "slug": "alameda-das-palmeiras-ficticias"
+    }
+  },
+  "sao-paulo/saude": {
+    "apartments": null,
+    "area_bands": [],
+    "city": {
+      "name": "São Paulo",
+      "path": "/preco-m2/sao-paulo",
+      "slug": "sao-paulo"
+    },
+    "financing": null,
+    "gate": {
+      "indexable": false,
+      "min_sales": 30,
+      "passes": false,
+      "window": "last_12m"
+    },
+    "houses": null,
+    "kind": "neighborhood",
+    "monthly": [],
+    "neighborhood": {
+      "name": "Saúde",
+      "path": "/preco-m2/sao-paulo/saude",
+      "slug": "saude"
+    },
+    "neighbors": [
+      {
+        "indexable": false,
+        "place": {
+          "name": "Ipiranga",
+          "path": "/preco-m2/sao-paulo/ipiranga",
+          "slug": "ipiranga"
+        },
+        "stats": null,
+        "zone": "sul"
+      },
+      {
+        "indexable": false,
+        "place": {
+          "name": "Vila Clementino",
+          "path": "/preco-m2/sao-paulo/vila-clementino",
+          "slug": "vila-clementino"
+        },
+        "stats": null,
+        "zone": "sul"
+      },
+      {
+        "indexable": true,
+        "place": {
+          "name": "Vila Mariana",
+          "path": "/preco-m2/sao-paulo/vila-mariana",
+          "slug": "vila-mariana"
+        },
+        "stats": {
+          "financed_pct": 66,
+          "last_sale_month": "2026-08",
+          "last_sale_year": 2026,
+          "median_built_area_m2": 68,
+          "median_construction_year": 2005,
+          "median_financed_pct": 70,
+          "median_price_m2_cents": 1181000,
+          "median_value_cents": 82500000,
+          "p25_built_area_m2": 62,
+          "p25_price_m2_cents": 1078000,
+          "p75_built_area_m2": 90,
+          "p75_price_m2_cents": 1270000,
+          "refreshed_at": "2026-11-20T19:55:01.547076Z",
+          "sales": 56,
+          "top_financing_type_code": 1,
+          "window": "last_12m",
+          "window_end": "2026-08-31",
+          "window_start": "2025-09-01"
+        },
+        "zone": "sul"
+      }
+    ],
+    "source": {
+      "data_through": "2026-09-01",
+      "is_demo": true,
+      "refreshed_at": "2026-11-20T19:55:01.647213Z",
+      "window_end": "2026-08-31"
+    },
+    "stats": null,
+    "top_buildings": [],
+    "top_streets": [],
+    "years": []
+  },
+  "sao-paulo/saude/financing": {
+    "annual_rate_bps": 1150,
+    "city": {
+      "name": "São Paulo",
+      "path": "/preco-m2/sao-paulo",
+      "slug": "sao-paulo"
+    },
+    "down_payment_pct": 20,
+    "financing": null,
+    "gate": {
+      "indexable": false,
+      "min_sales": 30,
+      "passes": false,
+      "window": "last_12m"
+    },
+    "kind": "financing",
+    "max_income_commitment_pct": 30,
+    "median_value_cents": null,
+    "neighborhood": {
+      "name": "Saúde",
+      "path": "/preco-m2/sao-paulo/saude",
+      "slug": "saude"
+    },
+    "property_kind": "all",
+    "simulations": [],
+    "source": {
+      "data_through": "2026-09-01",
+      "is_demo": true,
+      "refreshed_at": "2026-11-20T19:55:01.647213Z",
+      "window_end": "2026-08-31"
+    },
+    "term_months": 360
+  },
+  "sao-paulo/sitemaps/bairros": {
+    "entries": [
+      {
+        "last_modified": "2026-11-20T19:55:01.647213Z",
+        "path": "/preco-m2/sao-paulo"
+      },
+      {
+        "last_modified": "2026-11-20T19:55:01.547076Z",
+        "path": "/preco-m2/sao-paulo/moema"
+      },
+      {
+        "last_modified": "2026-11-20T19:55:01.547076Z",
+        "path": "/preco-m2/sao-paulo/vila-mariana"
+      }
+    ],
+    "template": "bairros"
+  },
+  "sao-paulo/sitemaps/condominios": {
+    "entries": [
+      {
+        "last_modified": "2026-11-20T19:55:01.547076Z",
+        "path": "/condominio/sao-paulo/moema/condominio-moema-exemplo"
+      },
+      {
+        "last_modified": "2026-11-20T19:55:01.547076Z",
+        "path": "/condominio/sao-paulo/vila-mariana/condominio-jardim-exemplo"
+      },
+      {
+        "last_modified": "2026-11-20T19:55:01.547076Z",
+        "path": "/condominio/sao-paulo/vila-mariana/condominio-reserva-demonstrativa"
+      },
+      {
+        "last_modified": "2026-11-20T19:55:01.547076Z",
+        "path": "/condominio/sao-paulo/vila-mariana/edificio-na-avenida-dos-ipes-ficticios-200"
+      },
+      {
+        "last_modified": "2026-11-20T19:55:01.547076Z",
+        "path": "/condominio/sao-paulo/vila-mariana/edificio-torre-exemplo"
+      }
+    ],
+    "template": "condominios"
+  },
+  "sao-paulo/sitemaps/financiamento": {
+    "entries": [
+      {
+        "last_modified": "2026-11-20T19:55:01.547076Z",
+        "path": "/financiamento/sao-paulo/moema"
+      },
+      {
+        "last_modified": "2026-11-20T19:55:01.547076Z",
+        "path": "/financiamento/sao-paulo/vila-mariana"
+      }
+    ],
+    "template": "financiamento"
+  },
+  "sao-paulo/sitemaps/ruas": {
+    "entries": [
+      {
+        "last_modified": "2026-11-20T19:55:01.547076Z",
+        "path": "/preco-m2/sao-paulo/moema/alameda-das-palmeiras-ficticias"
+      },
+      {
+        "last_modified": "2026-11-20T19:55:01.547076Z",
+        "path": "/preco-m2/sao-paulo/vila-mariana/avenida-dos-ipes-ficticios"
+      },
+      {
+        "last_modified": "2026-11-20T19:55:01.547076Z",
+        "path": "/preco-m2/sao-paulo/vila-mariana/rua-das-acacias-ficticias"
+      }
+    ],
+    "template": "ruas"
+  },
+  "sao-paulo/vila-clementino": {
+    "apartments": null,
+    "area_bands": [],
+    "city": {
+      "name": "São Paulo",
+      "path": "/preco-m2/sao-paulo",
+      "slug": "sao-paulo"
+    },
+    "financing": null,
+    "gate": {
+      "indexable": false,
+      "min_sales": 30,
+      "passes": false,
+      "window": "last_12m"
+    },
+    "houses": null,
+    "kind": "neighborhood",
+    "monthly": [],
+    "neighborhood": {
+      "name": "Vila Clementino",
+      "path": "/preco-m2/sao-paulo/vila-clementino",
+      "slug": "vila-clementino"
+    },
+    "neighbors": [
+      {
+        "indexable": true,
+        "place": {
+          "name": "Moema",
+          "path": "/preco-m2/sao-paulo/moema",
+          "slug": "moema"
+        },
+        "stats": {
+          "financed_pct": 50,
+          "last_sale_month": "2026-08",
+          "last_sale_year": 2026,
+          "median_built_area_m2": 68,
+          "median_construction_year": 2005,
+          "median_financed_pct": 70,
+          "median_price_m2_cents": 1116000,
+          "median_value_cents": 83900000,
+          "p25_built_area_m2": 62,
+          "p25_price_m2_cents": 1023000,
+          "p75_built_area_m2": 90,
+          "p75_price_m2_cents": 1253000,
+          "refreshed_at": "2026-11-20T19:55:01.547076Z",
+          "sales": 36,
+          "top_financing_type_code": 1,
+          "window": "last_12m",
+          "window_end": "2026-08-31",
+          "window_start": "2025-09-01"
+        },
+        "zone": "sul"
+      },
+      {
+        "indexable": false,
+        "place": {
+          "name": "Saúde",
+          "path": "/preco-m2/sao-paulo/saude",
+          "slug": "saude"
+        },
+        "stats": null,
+        "zone": "sul"
+      },
+      {
+        "indexable": true,
+        "place": {
+          "name": "Vila Mariana",
+          "path": "/preco-m2/sao-paulo/vila-mariana",
+          "slug": "vila-mariana"
+        },
+        "stats": {
+          "financed_pct": 66,
+          "last_sale_month": "2026-08",
+          "last_sale_year": 2026,
+          "median_built_area_m2": 68,
+          "median_construction_year": 2005,
+          "median_financed_pct": 70,
+          "median_price_m2_cents": 1181000,
+          "median_value_cents": 82500000,
+          "p25_built_area_m2": 62,
+          "p25_price_m2_cents": 1078000,
+          "p75_built_area_m2": 90,
+          "p75_price_m2_cents": 1270000,
+          "refreshed_at": "2026-11-20T19:55:01.547076Z",
+          "sales": 56,
+          "top_financing_type_code": 1,
+          "window": "last_12m",
+          "window_end": "2026-08-31",
+          "window_start": "2025-09-01"
+        },
+        "zone": "sul"
+      }
+    ],
+    "source": {
+      "data_through": "2026-09-01",
+      "is_demo": true,
+      "refreshed_at": "2026-11-20T19:55:01.647213Z",
+      "window_end": "2026-08-31"
+    },
+    "stats": null,
+    "top_buildings": [],
+    "top_streets": [],
+    "years": []
+  },
+  "sao-paulo/vila-clementino/financing": {
+    "annual_rate_bps": 1150,
+    "city": {
+      "name": "São Paulo",
+      "path": "/preco-m2/sao-paulo",
+      "slug": "sao-paulo"
+    },
+    "down_payment_pct": 20,
+    "financing": null,
+    "gate": {
+      "indexable": false,
+      "min_sales": 30,
+      "passes": false,
+      "window": "last_12m"
+    },
+    "kind": "financing",
+    "max_income_commitment_pct": 30,
+    "median_value_cents": null,
+    "neighborhood": {
+      "name": "Vila Clementino",
+      "path": "/preco-m2/sao-paulo/vila-clementino",
+      "slug": "vila-clementino"
+    },
+    "property_kind": "all",
+    "simulations": [],
+    "source": {
+      "data_through": "2026-09-01",
+      "is_demo": true,
+      "refreshed_at": "2026-11-20T19:55:01.647213Z",
+      "window_end": "2026-08-31"
+    },
+    "term_months": 360
+  },
+  "sao-paulo/vila-da-saude": {
+    "apartments": null,
+    "area_bands": [],
+    "city": {
+      "name": "São Paulo",
+      "path": "/preco-m2/sao-paulo",
+      "slug": "sao-paulo"
+    },
+    "financing": null,
+    "gate": {
+      "indexable": false,
+      "min_sales": 30,
+      "passes": false,
+      "window": "last_12m"
+    },
+    "houses": null,
+    "kind": "neighborhood",
+    "monthly": [],
+    "neighborhood": {
+      "name": "Vila da Saúde",
+      "path": "/preco-m2/sao-paulo/vila-da-saude",
+      "slug": "vila-da-saude"
+    },
+    "neighbors": [],
+    "source": {
+      "data_through": "2026-09-01",
+      "is_demo": true,
+      "refreshed_at": "2026-11-20T19:55:01.647213Z",
+      "window_end": "2026-08-31"
+    },
+    "stats": null,
+    "top_buildings": [],
+    "top_streets": [],
+    "years": []
+  },
+  "sao-paulo/vila-da-saude/financing": {
+    "annual_rate_bps": 1150,
+    "city": {
+      "name": "São Paulo",
+      "path": "/preco-m2/sao-paulo",
+      "slug": "sao-paulo"
+    },
+    "down_payment_pct": 20,
+    "financing": null,
+    "gate": {
+      "indexable": false,
+      "min_sales": 30,
+      "passes": false,
+      "window": "last_12m"
+    },
+    "kind": "financing",
+    "max_income_commitment_pct": 30,
+    "median_value_cents": null,
+    "neighborhood": {
+      "name": "Vila da Saúde",
+      "path": "/preco-m2/sao-paulo/vila-da-saude",
+      "slug": "vila-da-saude"
+    },
+    "property_kind": "all",
+    "simulations": [],
+    "source": {
+      "data_through": "2026-09-01",
+      "is_demo": true,
+      "refreshed_at": "2026-11-20T19:55:01.647213Z",
+      "window_end": "2026-08-31"
+    },
+    "term_months": 360
+  },
+  "sao-paulo/vila-mariana": {
+    "apartments": {
+      "financed_pct": 66,
+      "last_sale_month": "2026-08",
+      "last_sale_year": 2026,
+      "median_built_area_m2": 68,
+      "median_construction_year": 2005,
+      "median_financed_pct": 70,
+      "median_price_m2_cents": 1181000,
+      "median_value_cents": 82500000,
+      "p25_built_area_m2": 62,
+      "p25_price_m2_cents": 1078000,
+      "p75_built_area_m2": 90,
+      "p75_price_m2_cents": 1270000,
+      "refreshed_at": "2026-11-20T19:55:01.547076Z",
+      "sales": 56,
+      "top_financing_type_code": 1,
+      "window": "last_12m",
+      "window_end": "2026-08-31",
+      "window_start": "2025-09-01"
+    },
+    "area_bands": [
+      {
+        "band": "ate-50",
+        "max_m2": 50,
+        "median_value_cents": null,
+        "min_m2": 0,
+        "sales": 0
+      },
+      {
+        "band": "50-70",
+        "max_m2": 70,
+        "median_value_cents": 71100000,
+        "min_m2": 50,
+        "sales": 29
+      },
+      {
+        "band": "70-100",
+        "max_m2": 100,
+        "median_value_cents": 95000000,
+        "min_m2": 70,
+        "sales": 21
+      },
+      {
+        "band": "100-150",
+        "max_m2": 150,
+        "median_value_cents": 134800000,
+        "min_m2": 100,
+        "sales": 6
+      },
+      {
+        "band": "150-mais",
+        "max_m2": null,
+        "median_value_cents": null,
+        "min_m2": 150,
+        "sales": 0
+      }
+    ],
+    "city": {
+      "name": "São Paulo",
+      "path": "/preco-m2/sao-paulo",
+      "slug": "sao-paulo"
+    },
+    "financing": {
+      "financed_pct": 56,
+      "median_financed_pct": 70,
+      "top_financing_type_code": 1,
+      "year": 2026
+    },
+    "gate": {
+      "indexable": true,
+      "min_sales": 30,
+      "passes": true,
+      "window": "last_12m"
+    },
+    "houses": null,
+    "kind": "neighborhood",
+    "monthly": [
+      {
+        "median_price_m2_cents": 1207000,
+        "month": "2025-09",
+        "sales": 12
+      },
+      {
+        "median_price_m2_cents": 1214000,
+        "month": "2025-12",
+        "sales": 12
+      },
+      {
+        "median_price_m2_cents": 1199000,
+        "month": "2026-03",
+        "sales": 8
+      },
+      {
+        "median_price_m2_cents": 1208000,
+        "month": "2026-06",
+        "sales": 8
+      },
+      {
+        "median_price_m2_cents": 1159000,
+        "month": "2026-08",
+        "sales": 16
+      }
+    ],
+    "neighborhood": {
+      "name": "Vila Mariana",
+      "path": "/preco-m2/sao-paulo/vila-mariana",
+      "slug": "vila-mariana"
+    },
+    "neighbors": [
+      {
+        "indexable": false,
+        "place": {
+          "name": "Aclimação",
+          "path": "/preco-m2/sao-paulo/aclimacao",
+          "slug": "aclimacao"
+        },
+        "stats": null,
+        "zone": "centro"
+      },
+      {
+        "indexable": true,
+        "place": {
+          "name": "Moema",
+          "path": "/preco-m2/sao-paulo/moema",
+          "slug": "moema"
+        },
+        "stats": {
+          "financed_pct": 50,
+          "last_sale_month": "2026-08",
+          "last_sale_year": 2026,
+          "median_built_area_m2": 68,
+          "median_construction_year": 2005,
+          "median_financed_pct": 70,
+          "median_price_m2_cents": 1116000,
+          "median_value_cents": 83900000,
+          "p25_built_area_m2": 62,
+          "p25_price_m2_cents": 1023000,
+          "p75_built_area_m2": 90,
+          "p75_price_m2_cents": 1253000,
+          "refreshed_at": "2026-11-20T19:55:01.547076Z",
+          "sales": 36,
+          "top_financing_type_code": 1,
+          "window": "last_12m",
+          "window_end": "2026-08-31",
+          "window_start": "2025-09-01"
+        },
+        "zone": "sul"
+      },
+      {
+        "indexable": false,
+        "place": {
+          "name": "Saúde",
+          "path": "/preco-m2/sao-paulo/saude",
+          "slug": "saude"
+        },
+        "stats": null,
+        "zone": "sul"
+      },
+      {
+        "indexable": false,
+        "place": {
+          "name": "Vila Clementino",
+          "path": "/preco-m2/sao-paulo/vila-clementino",
+          "slug": "vila-clementino"
+        },
+        "stats": null,
+        "zone": "sul"
+      }
+    ],
+    "source": {
+      "data_through": "2026-09-01",
+      "is_demo": true,
+      "refreshed_at": "2026-11-20T19:55:01.647213Z",
+      "window_end": "2026-08-31"
+    },
+    "stats": {
+      "financed_pct": 66,
+      "last_sale_month": "2026-08",
+      "last_sale_year": 2026,
+      "median_built_area_m2": 68,
+      "median_construction_year": 2005,
+      "median_financed_pct": 70,
+      "median_price_m2_cents": 1181000,
+      "median_value_cents": 82500000,
+      "p25_built_area_m2": 62,
+      "p25_price_m2_cents": 1078000,
+      "p75_built_area_m2": 90,
+      "p75_price_m2_cents": 1270000,
+      "refreshed_at": "2026-11-20T19:55:01.547076Z",
+      "sales": 56,
+      "top_financing_type_code": 1,
+      "window": "last_12m",
+      "window_end": "2026-08-31",
+      "window_start": "2025-09-01"
+    },
+    "top_buildings": [
+      {
+        "place": {
+          "name": "Edifício na Avenida dos Ipes Ficticios, 200",
+          "path": "/condominio/sao-paulo/vila-mariana/edificio-na-avenida-dos-ipes-ficticios-200",
+          "slug": "edificio-na-avenida-dos-ipes-ficticios-200"
+        },
+        "stats": {
+          "financed_pct": 46,
+          "last_sale_month": "2026-08",
+          "last_sale_year": 2026,
+          "median_built_area_m2": 68,
+          "median_construction_year": 2005,
+          "median_financed_pct": 70,
+          "median_price_m2_cents": 1181000,
+          "median_value_cents": 85400000,
+          "p25_built_area_m2": 62,
+          "p25_price_m2_cents": 1134000,
+          "p75_built_area_m2": 90,
+          "p75_price_m2_cents": 1317000,
+          "refreshed_at": "2026-11-20T19:55:01.547076Z",
+          "sales": 26,
+          "top_financing_type_code": 1,
+          "window": "all",
+          "window_end": "2026-08-31",
+          "window_start": null
+        },
+        "street_name": "Avenida dos Ipes Ficticios",
+        "street_number": 200
+      },
+      {
+        "place": {
+          "name": "Condomínio Jardim Exemplo",
+          "path": "/condominio/sao-paulo/vila-mariana/condominio-jardim-exemplo",
+          "slug": "condominio-jardim-exemplo"
+        },
+        "stats": {
+          "financed_pct": 79,
+          "last_sale_month": "2026-08",
+          "last_sale_year": 2026,
+          "median_built_area_m2": 68,
+          "median_construction_year": 2012,
+          "median_financed_pct": 70,
+          "median_price_m2_cents": 1179000,
+          "median_value_cents": 78800000,
+          "p25_built_area_m2": 64,
+          "p25_price_m2_cents": 1048000,
+          "p75_built_area_m2": 75,
+          "p75_price_m2_cents": 1237000,
+          "refreshed_at": "2026-11-20T19:55:01.547076Z",
+          "sales": 14,
+          "top_financing_type_code": 1,
+          "window": "all",
+          "window_end": "2026-08-31",
+          "window_start": null
+        },
+        "street_name": "Avenida dos Ipes Ficticios",
+        "street_number": 45
+      },
+      {
+        "place": {
+          "name": "Condomínio Reserva Demonstrativa",
+          "path": "/condominio/sao-paulo/vila-mariana/condominio-reserva-demonstrativa",
+          "slug": "condominio-reserva-demonstrativa"
+        },
+        "stats": {
+          "financed_pct": 88,
+          "last_sale_month": null,
+          "last_sale_year": 2026,
+          "median_built_area_m2": 75,
+          "median_construction_year": 2002,
+          "median_financed_pct": 70,
+          "median_price_m2_cents": 1248000,
+          "median_value_cents": 96700000,
+          "p25_built_area_m2": null,
+          "p25_price_m2_cents": null,
+          "p75_built_area_m2": null,
+          "p75_price_m2_cents": null,
+          "refreshed_at": "2026-11-20T19:55:01.547076Z",
+          "sales": 8,
+          "top_financing_type_code": 1,
+          "window": "all",
+          "window_end": "2026-08-31",
+          "window_start": null
+        },
+        "street_name": "Rua das Acacias Ficticias",
+        "street_number": 120
+      },
+      {
+        "place": {
+          "name": "Edifício Torre Exemplo",
+          "path": "/condominio/sao-paulo/vila-mariana/edificio-torre-exemplo",
+          "slug": "edificio-torre-exemplo"
+        },
+        "stats": {
+          "financed_pct": 83,
+          "last_sale_month": null,
+          "last_sale_year": 2026,
+          "median_built_area_m2": 70,
+          "median_construction_year": 2005,
+          "median_financed_pct": 70,
+          "median_price_m2_cents": 1082000,
+          "median_value_cents": 82200000,
+          "p25_built_area_m2": null,
+          "p25_price_m2_cents": null,
+          "p75_built_area_m2": null,
+          "p75_price_m2_cents": null,
+          "refreshed_at": "2026-11-20T19:55:01.547076Z",
+          "sales": 6,
+          "top_financing_type_code": 1,
+          "window": "all",
+          "window_end": "2026-08-31",
+          "window_start": null
+        },
+        "street_name": "Rua das Acacias Ficticias",
+        "street_number": 300
+      }
+    ],
+    "top_streets": [
+      {
+        "place": {
+          "name": "Avenida dos Ipes Ficticios",
+          "path": "/preco-m2/sao-paulo/vila-mariana/avenida-dos-ipes-ficticios",
+          "slug": "avenida-dos-ipes-ficticios"
+        },
+        "stats": {
+          "financed_pct": 60,
+          "last_sale_month": "2026-08",
+          "last_sale_year": 2026,
+          "median_built_area_m2": 68,
+          "median_construction_year": 2005,
+          "median_financed_pct": 70,
+          "median_price_m2_cents": 1177000,
+          "median_value_cents": 81300000,
+          "p25_built_area_m2": 62,
+          "p25_price_m2_cents": 1081000,
+          "p75_built_area_m2": 86,
+          "p75_price_m2_cents": 1267000,
+          "refreshed_at": "2026-11-20T19:55:01.547076Z",
+          "sales": 42,
+          "top_financing_type_code": 1,
+          "window": "last_24m",
+          "window_end": "2026-08-31",
+          "window_start": "2024-09-01"
+        }
+      },
+      {
+        "place": {
+          "name": "Rua das Acacias Ficticias",
+          "path": "/preco-m2/sao-paulo/vila-mariana/rua-das-acacias-ficticias",
+          "slug": "rua-das-acacias-ficticias"
+        },
+        "stats": {
+          "financed_pct": 86,
+          "last_sale_month": "2026-08",
+          "last_sale_year": 2026,
+          "median_built_area_m2": 75,
+          "median_construction_year": 2005,
+          "median_financed_pct": 70,
+          "median_price_m2_cents": 1192000,
+          "median_value_cents": 87200000,
+          "p25_built_area_m2": 68,
+          "p25_price_m2_cents": 1089000,
+          "p75_built_area_m2": 90,
+          "p75_price_m2_cents": 1271000,
+          "refreshed_at": "2026-11-20T19:55:01.547076Z",
+          "sales": 14,
+          "top_financing_type_code": 1,
+          "window": "last_24m",
+          "window_end": "2026-08-31",
+          "window_start": "2024-09-01"
+        }
+      }
+    ],
+    "years": [
+      {
+        "partial_until": null,
+        "stats": null,
+        "year": 2019
+      },
+      {
+        "partial_until": null,
+        "stats": null,
+        "year": 2020
+      },
+      {
+        "partial_until": null,
+        "stats": null,
+        "year": 2021
+      },
+      {
+        "partial_until": null,
+        "stats": null,
+        "year": 2022
+      },
+      {
+        "partial_until": null,
+        "stats": null,
+        "year": 2023
+      },
+      {
+        "partial_until": null,
+        "stats": null,
+        "year": 2024
+      },
+      {
+        "partial_until": null,
+        "stats": null,
+        "year": 2025
+      },
+      {
+        "partial_until": "2026-08-31",
+        "stats": {
+          "financed_pct": 56,
+          "last_sale_month": "2026-08",
+          "last_sale_year": 2026,
+          "median_built_area_m2": 68,
+          "median_construction_year": 2005,
+          "median_financed_pct": 70,
+          "median_price_m2_cents": 1178000,
+          "median_value_cents": 80500000,
+          "p25_built_area_m2": 67,
+          "p25_price_m2_cents": 1068000,
+          "p75_built_area_m2": 79,
+          "p75_price_m2_cents": 1262000,
+          "refreshed_at": "2026-11-20T19:55:01.547076Z",
+          "sales": 32,
+          "top_financing_type_code": 1,
+          "window": "y2026",
+          "window_end": "2026-08-31",
+          "window_start": "2026-01-01"
+        },
+        "year": 2026
+      }
+    ]
+  },
+  "sao-paulo/vila-mariana/buildings/condominio-jardim-exemplo": {
+    "building": {
+      "name": "Condomínio Jardim Exemplo",
+      "path": "/condominio/sao-paulo/vila-mariana/condominio-jardim-exemplo",
+      "slug": "condominio-jardim-exemplo"
+    },
+    "city": {
+      "name": "São Paulo",
+      "path": "/preco-m2/sao-paulo",
+      "slug": "sao-paulo"
+    },
+    "construction_year": 2012,
+    "gate": {
+      "indexable": true,
+      "min_sales": 5,
+      "passes": true,
+      "window": "all"
+    },
+    "kind": "building",
+    "last_24m": {
+      "financed_pct": 79,
+      "last_sale_month": "2026-08",
+      "last_sale_year": 2026,
+      "median_built_area_m2": 68,
+      "median_construction_year": 2012,
+      "median_financed_pct": 70,
+      "median_price_m2_cents": 1179000,
+      "median_value_cents": 78800000,
+      "p25_built_area_m2": 64,
+      "p25_price_m2_cents": 1048000,
+      "p75_built_area_m2": 75,
+      "p75_price_m2_cents": 1237000,
+      "refreshed_at": "2026-11-20T19:55:01.547076Z",
+      "sales": 14,
+      "top_financing_type_code": 1,
+      "window": "last_24m",
+      "window_end": "2026-08-31",
+      "window_start": "2024-09-01"
+    },
+    "neighborhood": {
+      "name": "Vila Mariana",
+      "path": "/preco-m2/sao-paulo/vila-mariana",
+      "slug": "vila-mariana"
+    },
+    "source": {
+      "data_through": "2026-09-01",
+      "is_demo": true,
+      "refreshed_at": "2026-11-20T19:55:01.647213Z",
+      "window_end": "2026-08-31"
+    },
+    "stats": {
+      "financed_pct": 79,
+      "last_sale_month": "2026-08",
+      "last_sale_year": 2026,
+      "median_built_area_m2": 68,
+      "median_construction_year": 2012,
+      "median_financed_pct": 70,
+      "median_price_m2_cents": 1179000,
+      "median_value_cents": 78800000,
+      "p25_built_area_m2": 64,
+      "p25_price_m2_cents": 1048000,
+      "p75_built_area_m2": 75,
+      "p75_price_m2_cents": 1237000,
+      "refreshed_at": "2026-11-20T19:55:01.547076Z",
+      "sales": 14,
+      "top_financing_type_code": 1,
+      "window": "all",
+      "window_end": "2026-08-31",
+      "window_start": null
+    },
+    "street": {
+      "name": "Avenida dos Ipes Ficticios",
+      "path": "/preco-m2/sao-paulo/vila-mariana/avenida-dos-ipes-ficticios",
+      "slug": "avenida-dos-ipes-ficticios"
+    },
+    "street_number": 45
+  },
+  "sao-paulo/vila-mariana/buildings/condominio-reserva-demonstrativa": {
+    "building": {
+      "name": "Condomínio Reserva Demonstrativa",
+      "path": "/condominio/sao-paulo/vila-mariana/condominio-reserva-demonstrativa",
+      "slug": "condominio-reserva-demonstrativa"
+    },
+    "city": {
+      "name": "São Paulo",
+      "path": "/preco-m2/sao-paulo",
+      "slug": "sao-paulo"
+    },
+    "construction_year": 1998,
+    "gate": {
+      "indexable": true,
+      "min_sales": 5,
+      "passes": true,
+      "window": "all"
+    },
+    "kind": "building",
+    "last_24m": {
+      "financed_pct": 88,
+      "last_sale_month": null,
+      "last_sale_year": 2026,
+      "median_built_area_m2": 75,
+      "median_construction_year": 2002,
+      "median_financed_pct": 70,
+      "median_price_m2_cents": 1248000,
+      "median_value_cents": 96700000,
+      "p25_built_area_m2": null,
+      "p25_price_m2_cents": null,
+      "p75_built_area_m2": null,
+      "p75_price_m2_cents": null,
+      "refreshed_at": "2026-11-20T19:55:01.547076Z",
+      "sales": 8,
+      "top_financing_type_code": 1,
+      "window": "last_24m",
+      "window_end": "2026-08-31",
+      "window_start": "2024-09-01"
+    },
+    "neighborhood": {
+      "name": "Vila Mariana",
+      "path": "/preco-m2/sao-paulo/vila-mariana",
+      "slug": "vila-mariana"
+    },
+    "source": {
+      "data_through": "2026-09-01",
+      "is_demo": true,
+      "refreshed_at": "2026-11-20T19:55:01.647213Z",
+      "window_end": "2026-08-31"
+    },
+    "stats": {
+      "financed_pct": 88,
+      "last_sale_month": null,
+      "last_sale_year": 2026,
+      "median_built_area_m2": 75,
+      "median_construction_year": 2002,
+      "median_financed_pct": 70,
+      "median_price_m2_cents": 1248000,
+      "median_value_cents": 96700000,
+      "p25_built_area_m2": null,
+      "p25_price_m2_cents": null,
+      "p75_built_area_m2": null,
+      "p75_price_m2_cents": null,
+      "refreshed_at": "2026-11-20T19:55:01.547076Z",
+      "sales": 8,
+      "top_financing_type_code": 1,
+      "window": "all",
+      "window_end": "2026-08-31",
+      "window_start": null
+    },
+    "street": {
+      "name": "Rua das Acacias Ficticias",
+      "path": "/preco-m2/sao-paulo/vila-mariana/rua-das-acacias-ficticias",
+      "slug": "rua-das-acacias-ficticias"
+    },
+    "street_number": 120
+  },
+  "sao-paulo/vila-mariana/buildings/edificio-na-avenida-dos-ipes-ficticios-200": {
+    "building": {
+      "name": "Edifício na Avenida dos Ipes Ficticios, 200",
+      "path": "/condominio/sao-paulo/vila-mariana/edificio-na-avenida-dos-ipes-ficticios-200",
+      "slug": "edificio-na-avenida-dos-ipes-ficticios-200"
+    },
+    "city": {
+      "name": "São Paulo",
+      "path": "/preco-m2/sao-paulo",
+      "slug": "sao-paulo"
+    },
+    "construction_year": 2005,
+    "gate": {
+      "indexable": true,
+      "min_sales": 5,
+      "passes": true,
+      "window": "all"
+    },
+    "kind": "building",
+    "last_24m": {
+      "financed_pct": 46,
+      "last_sale_month": "2026-08",
+      "last_sale_year": 2026,
+      "median_built_area_m2": 68,
+      "median_construction_year": 2005,
+      "median_financed_pct": 70,
+      "median_price_m2_cents": 1181000,
+      "median_value_cents": 85400000,
+      "p25_built_area_m2": 62,
+      "p25_price_m2_cents": 1134000,
+      "p75_built_area_m2": 90,
+      "p75_price_m2_cents": 1317000,
+      "refreshed_at": "2026-11-20T19:55:01.547076Z",
+      "sales": 26,
+      "top_financing_type_code": 1,
+      "window": "last_24m",
+      "window_end": "2026-08-31",
+      "window_start": "2024-09-01"
+    },
+    "neighborhood": {
+      "name": "Vila Mariana",
+      "path": "/preco-m2/sao-paulo/vila-mariana",
+      "slug": "vila-mariana"
+    },
+    "source": {
+      "data_through": "2026-09-01",
+      "is_demo": true,
+      "refreshed_at": "2026-11-20T19:55:01.647213Z",
+      "window_end": "2026-08-31"
+    },
+    "stats": {
+      "financed_pct": 46,
+      "last_sale_month": "2026-08",
+      "last_sale_year": 2026,
+      "median_built_area_m2": 68,
+      "median_construction_year": 2005,
+      "median_financed_pct": 70,
+      "median_price_m2_cents": 1181000,
+      "median_value_cents": 85400000,
+      "p25_built_area_m2": 62,
+      "p25_price_m2_cents": 1134000,
+      "p75_built_area_m2": 90,
+      "p75_price_m2_cents": 1317000,
+      "refreshed_at": "2026-11-20T19:55:01.547076Z",
+      "sales": 26,
+      "top_financing_type_code": 1,
+      "window": "all",
+      "window_end": "2026-08-31",
+      "window_start": null
+    },
+    "street": {
+      "name": "Avenida dos Ipes Ficticios",
+      "path": "/preco-m2/sao-paulo/vila-mariana/avenida-dos-ipes-ficticios",
+      "slug": "avenida-dos-ipes-ficticios"
+    },
+    "street_number": 200
+  },
+  "sao-paulo/vila-mariana/buildings/edificio-poucos-dados": {
+    "building": {
+      "name": "Edifício Poucos Dados",
+      "path": "/condominio/sao-paulo/vila-mariana/edificio-poucos-dados",
+      "slug": "edificio-poucos-dados"
+    },
+    "city": {
+      "name": "São Paulo",
+      "path": "/preco-m2/sao-paulo",
+      "slug": "sao-paulo"
+    },
+    "construction_year": null,
+    "gate": {
+      "indexable": false,
+      "min_sales": 5,
+      "passes": false,
+      "window": "all"
+    },
+    "kind": "building",
+    "last_24m": null,
+    "neighborhood": {
+      "name": "Vila Mariana",
+      "path": "/preco-m2/sao-paulo/vila-mariana",
+      "slug": "vila-mariana"
+    },
+    "source": {
+      "data_through": "2026-09-01",
+      "is_demo": true,
+      "refreshed_at": "2026-11-20T19:55:01.647213Z",
+      "window_end": "2026-08-31"
+    },
+    "stats": null,
+    "street": {
+      "name": "Avenida dos Ipes Ficticios",
+      "path": "/preco-m2/sao-paulo/vila-mariana/avenida-dos-ipes-ficticios",
+      "slug": "avenida-dos-ipes-ficticios"
+    },
+    "street_number": 90
+  },
+  "sao-paulo/vila-mariana/buildings/edificio-torre-exemplo": {
+    "building": {
+      "name": "Edifício Torre Exemplo",
+      "path": "/condominio/sao-paulo/vila-mariana/edificio-torre-exemplo",
+      "slug": "edificio-torre-exemplo"
+    },
+    "city": {
+      "name": "São Paulo",
+      "path": "/preco-m2/sao-paulo",
+      "slug": "sao-paulo"
+    },
+    "construction_year": 1998,
+    "gate": {
+      "indexable": true,
+      "min_sales": 5,
+      "passes": true,
+      "window": "all"
+    },
+    "kind": "building",
+    "last_24m": {
+      "financed_pct": 83,
+      "last_sale_month": null,
+      "last_sale_year": 2026,
+      "median_built_area_m2": 70,
+      "median_construction_year": 2005,
+      "median_financed_pct": 70,
+      "median_price_m2_cents": 1082000,
+      "median_value_cents": 82200000,
+      "p25_built_area_m2": null,
+      "p25_price_m2_cents": null,
+      "p75_built_area_m2": null,
+      "p75_price_m2_cents": null,
+      "refreshed_at": "2026-11-20T19:55:01.547076Z",
+      "sales": 6,
+      "top_financing_type_code": 1,
+      "window": "last_24m",
+      "window_end": "2026-08-31",
+      "window_start": "2024-09-01"
+    },
+    "neighborhood": {
+      "name": "Vila Mariana",
+      "path": "/preco-m2/sao-paulo/vila-mariana",
+      "slug": "vila-mariana"
+    },
+    "source": {
+      "data_through": "2026-09-01",
+      "is_demo": true,
+      "refreshed_at": "2026-11-20T19:55:01.647213Z",
+      "window_end": "2026-08-31"
+    },
+    "stats": {
+      "financed_pct": 83,
+      "last_sale_month": null,
+      "last_sale_year": 2026,
+      "median_built_area_m2": 70,
+      "median_construction_year": 2005,
+      "median_financed_pct": 70,
+      "median_price_m2_cents": 1082000,
+      "median_value_cents": 82200000,
+      "p25_built_area_m2": null,
+      "p25_price_m2_cents": null,
+      "p75_built_area_m2": null,
+      "p75_price_m2_cents": null,
+      "refreshed_at": "2026-11-20T19:55:01.547076Z",
+      "sales": 6,
+      "top_financing_type_code": 1,
+      "window": "all",
+      "window_end": "2026-08-31",
+      "window_start": null
+    },
+    "street": {
+      "name": "Rua das Acacias Ficticias",
+      "path": "/preco-m2/sao-paulo/vila-mariana/rua-das-acacias-ficticias",
+      "slug": "rua-das-acacias-ficticias"
+    },
+    "street_number": 300
+  },
+  "sao-paulo/vila-mariana/financing": {
+    "annual_rate_bps": 1150,
+    "city": {
+      "name": "São Paulo",
+      "path": "/preco-m2/sao-paulo",
+      "slug": "sao-paulo"
+    },
+    "down_payment_pct": 20,
+    "financing": {
+      "financed_pct": 56,
+      "median_financed_pct": 70,
+      "top_financing_type_code": 1,
+      "year": 2026
+    },
+    "gate": {
+      "indexable": true,
+      "min_sales": 30,
+      "passes": true,
+      "window": "last_12m"
+    },
+    "kind": "financing",
+    "max_income_commitment_pct": 30,
+    "median_value_cents": 82500000,
+    "neighborhood": {
+      "name": "Vila Mariana",
+      "path": "/preco-m2/sao-paulo/vila-mariana",
+      "slug": "vila-mariana"
+    },
+    "property_kind": "apartment",
+    "simulations": [
+      {
+        "annual_rate_bps": 1150,
+        "down_payment_cents": 16500000,
+        "fgts_cents": 0,
+        "first_payment_cents": 784757,
+        "last_payment_cents": 185004,
+        "min_income_cents": 2615857,
+        "principal_cents": 66000000,
+        "property_price_cents": 82500000,
+        "system": "sac",
+        "term_months": 360
+      },
+      {
+        "annual_rate_bps": 1150,
+        "down_payment_cents": 16500000,
+        "fgts_cents": 0,
+        "first_payment_cents": 625292,
+        "last_payment_cents": 625388,
+        "min_income_cents": 2084307,
+        "principal_cents": 66000000,
+        "property_price_cents": 82500000,
+        "system": "price",
+        "term_months": 360
+      }
+    ],
+    "source": {
+      "data_through": "2026-09-01",
+      "is_demo": true,
+      "refreshed_at": "2026-11-20T19:55:01.647213Z",
+      "window_end": "2026-08-31"
+    },
+    "term_months": 360
+  },
+  "sao-paulo/vila-mariana/streets/avenida-dos-ipes-ficticios": {
+    "apartments": {
+      "financed_pct": 60,
+      "last_sale_month": "2026-08",
+      "last_sale_year": 2026,
+      "median_built_area_m2": 68,
+      "median_construction_year": 2005,
+      "median_financed_pct": 70,
+      "median_price_m2_cents": 1177000,
+      "median_value_cents": 81300000,
+      "p25_built_area_m2": 62,
+      "p25_price_m2_cents": 1081000,
+      "p75_built_area_m2": 86,
+      "p75_price_m2_cents": 1267000,
+      "refreshed_at": "2026-11-20T19:55:01.547076Z",
+      "sales": 42,
+      "top_financing_type_code": 1,
+      "window": "last_24m",
+      "window_end": "2026-08-31",
+      "window_start": "2024-09-01"
+    },
+    "buildings": [
+      {
+        "place": {
+          "name": "Edifício na Avenida dos Ipes Ficticios, 200",
+          "path": "/condominio/sao-paulo/vila-mariana/edificio-na-avenida-dos-ipes-ficticios-200",
+          "slug": "edificio-na-avenida-dos-ipes-ficticios-200"
+        },
+        "stats": {
+          "financed_pct": 46,
+          "last_sale_month": "2026-08",
+          "last_sale_year": 2026,
+          "median_built_area_m2": 68,
+          "median_construction_year": 2005,
+          "median_financed_pct": 70,
+          "median_price_m2_cents": 1181000,
+          "median_value_cents": 85400000,
+          "p25_built_area_m2": 62,
+          "p25_price_m2_cents": 1134000,
+          "p75_built_area_m2": 90,
+          "p75_price_m2_cents": 1317000,
+          "refreshed_at": "2026-11-20T19:55:01.547076Z",
+          "sales": 26,
+          "top_financing_type_code": 1,
+          "window": "all",
+          "window_end": "2026-08-31",
+          "window_start": null
+        },
+        "street_name": "Avenida dos Ipes Ficticios",
+        "street_number": 200
+      },
+      {
+        "place": {
+          "name": "Condomínio Jardim Exemplo",
+          "path": "/condominio/sao-paulo/vila-mariana/condominio-jardim-exemplo",
+          "slug": "condominio-jardim-exemplo"
+        },
+        "stats": {
+          "financed_pct": 79,
+          "last_sale_month": "2026-08",
+          "last_sale_year": 2026,
+          "median_built_area_m2": 68,
+          "median_construction_year": 2012,
+          "median_financed_pct": 70,
+          "median_price_m2_cents": 1179000,
+          "median_value_cents": 78800000,
+          "p25_built_area_m2": 64,
+          "p25_price_m2_cents": 1048000,
+          "p75_built_area_m2": 75,
+          "p75_price_m2_cents": 1237000,
+          "refreshed_at": "2026-11-20T19:55:01.547076Z",
+          "sales": 14,
+          "top_financing_type_code": 1,
+          "window": "all",
+          "window_end": "2026-08-31",
+          "window_start": null
+        },
+        "street_name": "Avenida dos Ipes Ficticios",
+        "street_number": 45
+      }
+    ],
+    "city": {
+      "name": "São Paulo",
+      "path": "/preco-m2/sao-paulo",
+      "slug": "sao-paulo"
+    },
+    "gate": {
+      "indexable": true,
+      "min_sales": 10,
+      "passes": true,
+      "window": "last_24m"
+    },
+    "kind": "street",
+    "last_12m": {
+      "financed_pct": 60,
+      "last_sale_month": "2026-08",
+      "last_sale_year": 2026,
+      "median_built_area_m2": 68,
+      "median_construction_year": 2005,
+      "median_financed_pct": 70,
+      "median_price_m2_cents": 1177000,
+      "median_value_cents": 81300000,
+      "p25_built_area_m2": 62,
+      "p25_price_m2_cents": 1081000,
+      "p75_built_area_m2": 86,
+      "p75_price_m2_cents": 1267000,
+      "refreshed_at": "2026-11-20T19:55:01.547076Z",
+      "sales": 42,
+      "top_financing_type_code": 1,
+      "window": "last_12m",
+      "window_end": "2026-08-31",
+      "window_start": "2025-09-01"
+    },
+    "neighborhood": {
+      "name": "Vila Mariana",
+      "path": "/preco-m2/sao-paulo/vila-mariana",
+      "slug": "vila-mariana"
+    },
+    "source": {
+      "data_through": "2026-09-01",
+      "is_demo": true,
+      "refreshed_at": "2026-11-20T19:55:01.647213Z",
+      "window_end": "2026-08-31"
+    },
+    "stats": {
+      "financed_pct": 60,
+      "last_sale_month": "2026-08",
+      "last_sale_year": 2026,
+      "median_built_area_m2": 68,
+      "median_construction_year": 2005,
+      "median_financed_pct": 70,
+      "median_price_m2_cents": 1177000,
+      "median_value_cents": 81300000,
+      "p25_built_area_m2": 62,
+      "p25_price_m2_cents": 1081000,
+      "p75_built_area_m2": 86,
+      "p75_price_m2_cents": 1267000,
+      "refreshed_at": "2026-11-20T19:55:01.547076Z",
+      "sales": 42,
+      "top_financing_type_code": 1,
+      "window": "last_24m",
+      "window_end": "2026-08-31",
+      "window_start": "2024-09-01"
+    },
+    "street": {
+      "name": "Avenida dos Ipes Ficticios",
+      "path": "/preco-m2/sao-paulo/vila-mariana/avenida-dos-ipes-ficticios",
+      "slug": "avenida-dos-ipes-ficticios"
+    }
+  },
+  "sao-paulo/vila-mariana/streets/rua-das-acacias-ficticias": {
+    "apartments": {
+      "financed_pct": 86,
+      "last_sale_month": "2026-08",
+      "last_sale_year": 2026,
+      "median_built_area_m2": 75,
+      "median_construction_year": 2005,
+      "median_financed_pct": 70,
+      "median_price_m2_cents": 1192000,
+      "median_value_cents": 87200000,
+      "p25_built_area_m2": 68,
+      "p25_price_m2_cents": 1089000,
+      "p75_built_area_m2": 90,
+      "p75_price_m2_cents": 1271000,
+      "refreshed_at": "2026-11-20T19:55:01.547076Z",
+      "sales": 14,
+      "top_financing_type_code": 1,
+      "window": "last_24m",
+      "window_end": "2026-08-31",
+      "window_start": "2024-09-01"
+    },
+    "buildings": [
+      {
+        "place": {
+          "name": "Condomínio Reserva Demonstrativa",
+          "path": "/condominio/sao-paulo/vila-mariana/condominio-reserva-demonstrativa",
+          "slug": "condominio-reserva-demonstrativa"
+        },
+        "stats": {
+          "financed_pct": 88,
+          "last_sale_month": null,
+          "last_sale_year": 2026,
+          "median_built_area_m2": 75,
+          "median_construction_year": 2002,
+          "median_financed_pct": 70,
+          "median_price_m2_cents": 1248000,
+          "median_value_cents": 96700000,
+          "p25_built_area_m2": null,
+          "p25_price_m2_cents": null,
+          "p75_built_area_m2": null,
+          "p75_price_m2_cents": null,
+          "refreshed_at": "2026-11-20T19:55:01.547076Z",
+          "sales": 8,
+          "top_financing_type_code": 1,
+          "window": "all",
+          "window_end": "2026-08-31",
+          "window_start": null
+        },
+        "street_name": "Rua das Acacias Ficticias",
+        "street_number": 120
+      },
+      {
+        "place": {
+          "name": "Edifício Torre Exemplo",
+          "path": "/condominio/sao-paulo/vila-mariana/edificio-torre-exemplo",
+          "slug": "edificio-torre-exemplo"
+        },
+        "stats": {
+          "financed_pct": 83,
+          "last_sale_month": null,
+          "last_sale_year": 2026,
+          "median_built_area_m2": 70,
+          "median_construction_year": 2005,
+          "median_financed_pct": 70,
+          "median_price_m2_cents": 1082000,
+          "median_value_cents": 82200000,
+          "p25_built_area_m2": null,
+          "p25_price_m2_cents": null,
+          "p75_built_area_m2": null,
+          "p75_price_m2_cents": null,
+          "refreshed_at": "2026-11-20T19:55:01.547076Z",
+          "sales": 6,
+          "top_financing_type_code": 1,
+          "window": "all",
+          "window_end": "2026-08-31",
+          "window_start": null
+        },
+        "street_name": "Rua das Acacias Ficticias",
+        "street_number": 300
+      }
+    ],
+    "city": {
+      "name": "São Paulo",
+      "path": "/preco-m2/sao-paulo",
+      "slug": "sao-paulo"
+    },
+    "gate": {
+      "indexable": true,
+      "min_sales": 10,
+      "passes": true,
+      "window": "last_24m"
+    },
+    "kind": "street",
+    "last_12m": {
+      "financed_pct": 86,
+      "last_sale_month": "2026-08",
+      "last_sale_year": 2026,
+      "median_built_area_m2": 75,
+      "median_construction_year": 2005,
+      "median_financed_pct": 70,
+      "median_price_m2_cents": 1192000,
+      "median_value_cents": 87200000,
+      "p25_built_area_m2": 68,
+      "p25_price_m2_cents": 1089000,
+      "p75_built_area_m2": 90,
+      "p75_price_m2_cents": 1271000,
+      "refreshed_at": "2026-11-20T19:55:01.547076Z",
+      "sales": 14,
+      "top_financing_type_code": 1,
+      "window": "last_12m",
+      "window_end": "2026-08-31",
+      "window_start": "2025-09-01"
+    },
+    "neighborhood": {
+      "name": "Vila Mariana",
+      "path": "/preco-m2/sao-paulo/vila-mariana",
+      "slug": "vila-mariana"
+    },
+    "source": {
+      "data_through": "2026-09-01",
+      "is_demo": true,
+      "refreshed_at": "2026-11-20T19:55:01.647213Z",
+      "window_end": "2026-08-31"
+    },
+    "stats": {
+      "financed_pct": 86,
+      "last_sale_month": "2026-08",
+      "last_sale_year": 2026,
+      "median_built_area_m2": 75,
+      "median_construction_year": 2005,
+      "median_financed_pct": 70,
+      "median_price_m2_cents": 1192000,
+      "median_value_cents": 87200000,
+      "p25_built_area_m2": 68,
+      "p25_price_m2_cents": 1089000,
+      "p75_built_area_m2": 90,
+      "p75_price_m2_cents": 1271000,
+      "refreshed_at": "2026-11-20T19:55:01.547076Z",
+      "sales": 14,
+      "top_financing_type_code": 1,
+      "window": "last_24m",
+      "window_end": "2026-08-31",
+      "window_start": "2024-09-01"
+    },
+    "street": {
+      "name": "Rua das Acacias Ficticias",
+      "path": "/preco-m2/sao-paulo/vila-mariana/rua-das-acacias-ficticias",
+      "slug": "rua-das-acacias-ficticias"
+    }
+  }
+}

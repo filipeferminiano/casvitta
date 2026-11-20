@@ -1,3 +1,4 @@
+import { TooltipProvider } from '@casvitta/ui';
 import { getTranslations } from 'next-intl/server';
 import type { ReactNode } from 'react';
 
@@ -19,7 +20,7 @@ export default async function MarketplaceLayout({ children }: { children: ReactN
       </a>
       <MarketplaceHeader />
       <main id="content" className="flex-1">
-        {children}
+        <TooltipProvider>{children}</TooltipProvider>
       </main>
       <SiteFooter />
     </div>

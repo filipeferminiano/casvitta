@@ -1,0 +1,93 @@
+{
+  "_note": "Generated from app/core/finance.py; the web calculator must reproduce these (apps/web/src/lib/finance.parity.test.ts).",
+  "cases": [
+    {
+      "system": "sac",
+      "price_cents": 69000000,
+      "down_payment_cents": 13800000,
+      "fgts_cents": 0,
+      "term_months": 360,
+      "annual_rate_bps": 1150,
+      "principal_cents": 55200000,
+      "first_payment_cents": 656342,
+      "min_income_cents_30pct": 2187807
+    },
+    {
+      "system": "price",
+      "price_cents": 69000000,
+      "down_payment_cents": 13800000,
+      "fgts_cents": 0,
+      "term_months": 360,
+      "annual_rate_bps": 1150,
+      "principal_cents": 55200000,
+      "first_payment_cents": 522972,
+      "min_income_cents_30pct": 1743240
+    },
+    {
+      "system": "sac",
+      "price_cents": 123456700,
+      "down_payment_cents": 24691340,
+      "fgts_cents": 0,
+      "term_months": 360,
+      "annual_rate_bps": 1150,
+      "principal_cents": 98765360,
+      "first_payment_cents": 1174345,
+      "min_income_cents_30pct": 3914484
+    },
+    {
+      "system": "price",
+      "price_cents": 123456700,
+      "down_payment_cents": 24691340,
+      "fgts_cents": 0,
+      "term_months": 360,
+      "annual_rate_bps": 1150,
+      "principal_cents": 98765360,
+      "first_payment_cents": 935715,
+      "min_income_cents_30pct": 3119050
+    },
+    {
+      "system": "sac",
+      "price_cents": 82500000,
+      "down_payment_cents": 24750000,
+      "fgts_cents": 5000000,
+      "term_months": 240,
+      "annual_rate_bps": 1150,
+      "principal_cents": 52750000,
+      "first_payment_cents": 700475,
+      "min_income_cents_30pct": 2334917
+    },
+    {
+      "system": "price",
+      "price_cents": 82500000,
+      "down_payment_cents": 24750000,
+      "fgts_cents": 5000000,
+      "term_months": 240,
+      "annual_rate_bps": 1150,
+      "principal_cents": 52750000,
+      "first_payment_cents": 542146,
+      "min_income_cents_30pct": 1807154
+    },
+    {
+      "system": "sac",
+      "price_cents": 45000000,
+      "down_payment_cents": 4500000,
+      "fgts_cents": 0,
+      "term_months": 420,
+      "annual_rate_bps": 1199,
+      "principal_cents": 40500000,
+      "first_payment_cents": 480421,
+      "min_income_cents_30pct": 1601404
+    },
+    {
+      "system": "price",
+      "price_cents": 45000000,
+      "down_payment_cents": 4500000,
+      "fgts_cents": 0,
+      "term_months": 420,
+      "annual_rate_bps": 1199,
+      "principal_cents": 40500000,
+      "first_payment_cents": 391429,
+      "min_income_cents_30pct": 1304764
+    }
+  ]
+}
