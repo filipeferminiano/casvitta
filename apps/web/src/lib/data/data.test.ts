@@ -201,16 +201,19 @@ describe('broker signup (CLAUDE.md rule 1)', () => {
     await expect(ads.publishDraft()).rejects.toThrow('CRECI not verified');
   });
 
-  it('accepts only the demo code in mock mode and stores the CRECI as pending', () => {
-    expect(signup.verifyOtp('123 456')).toBe(true);
-    expect(signup.verifyOtp('000000')).toBe(false);
-    signup.startSignup('Ana Paula Ribeiro', '+5511927408912');
-    const draft = signup.submitCreci({
+  it('stores the CRECI as pending in demo mode', async () => {
+    signup.startDemoSignup('Ana Paula Ribeiro', 'ana@exemplo.com.br');
+    const result = await signup.saveCreci({
       name: 'Ana Paula Ribeiro',
       number: '000000',
       state: 'SP',
       kind: 'F',
     });
-    expect(draft).toMatchObject({ creciNumber: '000.000-F', creciStatus: 'pending' });
+    expect(result).toEqual({ ok: true });
+    expect(signup.currentSignup()).toMatchObject({
+      email: 'ana@exemplo.com.br',
+      creciNumber: '000.000-F',
+      creciStatus: 'pending',
+    });
   });
 });

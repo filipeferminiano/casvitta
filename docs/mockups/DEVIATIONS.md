@@ -45,3 +45,9 @@ Compared in `docs/mockups/_impl/51-*.png` … `61-*.png`.
 - **Auction header on phones (60, 61).** The minimal header shows "Dúvidas? WhatsApp" (a link) instead of the "LEILÕES" label; the "Demonstrativo" badge on 61 sits above the check icon, not in the header, and only appears for `?demo=1` (real submissions show the visitor's own criteria).
 - **Footer on auction pages (60, 61).** The full site footer is kept on phones (the mockups show a compact one), so the legal line and CRECI-J stay visible everywhere.
 - **Not built here.** No consent banner: `track()` stays a no-op until analytics consent exists. `/favoritos`, `/minhas-visitas`, `/sobre`, `/privacidade` and `/termos` are placeholders.
+
+## Real accounts (app on the database, phase 1, Nov 2026)
+
+- **Sign-up and sign-in by email link (55, /entrar).** The mockups ask for a phone number and a 6-digit SMS code. The account step now asks for name and email and sends a single-use link (15 minutes) through Resend's free tier; SMS needs a paid provider. The phone stays in the signup as the WhatsApp step. Demo mode shows "Abrir o link (demonstração)" instead of sending an email. Product decision, 20/11/2026.
+- **Link confirmation page.** `/entrar/confirmar` has no mockup: it confirms the link from the URL fragment, then continues the signup (`/cadastro/creci`) or opens the app (`app.` host, via a one-time handoff code).
+- **"Sair".** The side nav and Configurações gain a sign-out button (not in the mockups).

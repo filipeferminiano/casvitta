@@ -4,29 +4,27 @@ import { Button, Callout, Input, Panel, PlanCard, Select, Stepper, cn } from '@c
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useTranslations } from 'next-intl';
-import { useEffect, useMemo, useState, useSyncExternalStore } from 'react';
+import { useEffect, useState } from 'react';
 
 import { PLANS, type PlanKey } from '@/config/site';
 import type { SignupDraft, SignupStep } from '@/domain/types';
+import { isLive } from '@/lib/live';
 import { track, trackBeforeNavigation } from '@/lib/analytics';
 import {
   CRECI_NUMBER,
   SIGNUP_STEPS,
   currentSignup,
-  handoffToApp,
-  rememberPlan,
-  signupSnapshot,
-  startSignup,
-  subscribeSignup,
-  submitCreci,
-  updateSignup,
+  openAppWithSession,
+  saveCreci,
+  savePlan,
+  saveWhatsApp,
+  startDemoSignup,
 } from '@/lib/data/signup';
+import { useSignupDraft } from '@/lib/data/use-signup-draft';
 import { formatBRL, formatPhoneBR } from '@/lib/format';
 import { USE_MOCKS } from '@/mocks/clock';
 
 import { AccountStep, toE164 } from './AccountStep';
-
-const SERVER = '\u0000server';
 
 const UFS = [
   'AC',
@@ -69,23 +67,15 @@ export function SignupScreen({ step }: { step: SignupStep }) {
   const t = useTranslations('signup');
   const router = useRouter();
   const params = useSearchParams();
-  const snapshot = useSyncExternalStore(subscribeSignup, signupSnapshot, () => SERVER);
-  const ready = snapshot !== SERVER;
-  const draft = useMemo<SignupDraft | null>(
-    () => (snapshot && snapshot !== SERVER ? (JSON.parse(snapshot) as SignupDraft) : null),
-    [snapshot],
-  );
+  const { ready, draft } = useSignupDraft();
 
   useEffect(() => {
     // ?demo=1 (mock mode) fills the account step so later steps can be reviewed directly.
-    if (!currentSignup() && USE_MOCKS && params.get('demo') === '1') {
-      startSignup('Ana Paula Ribeiro', '+5511927408912');
+    if (!isLive('accounts') && !currentSignup() && USE_MOCKS && params.get('demo') === '1') {
+      startDemoSignup('Ana Paula Ribeiro', 'ana@exemplo.com.br');
     }
     const plan = params.get('plano');
-    if (plan === 'essencial' || plan === 'profissional') {
-      if (currentSignup()) updateSignup({ plan });
-      else rememberPlan(plan);
-    }
+    if (plan === 'essencial' || plan === 'profissional') void savePlan(plan);
     track({ name: 'signup_step', step });
   }, [params, step]);
 
@@ -127,10 +117,10 @@ export function SignupScreen({ step }: { step: SignupStep }) {
           <p className="mb-5 -mt-1 type-body text-fg-strong">{t(`${stepKey(step)}.description`)}</p>
           {step === 'conta' ? (
             <AccountStep
-              withName
-              submitLabel={t('continue')}
-              onVerified={({ name, phoneE164 }) => {
-                startSignup(name, phoneE164);
+              intent="sign_up"
+              submitLabel={t('account.sendLink')}
+              onDemoConfirmed={({ name, email }) => {
+                startDemoSignup(name, email);
                 go('creci');
               }}
             />
@@ -229,17 +219,24 @@ function CreciStep({
   const [state, setState] = useState(draft.creciState ?? 'SP');
   const [kind, setKind] = useState<'F' | 'J'>(draft.creciKind ?? 'F');
   const [error, setError] = useState<string | undefined>();
+  const [busy, setBusy] = useState(false);
   return (
     <form
       className="flex flex-col gap-4"
       noValidate
-      onSubmit={(e) => {
+      onSubmit={async (e) => {
         e.preventDefault();
         if (!CRECI_NUMBER.test(number.trim())) {
           setError(t('numberError'));
           return;
         }
-        submitCreci({ name, number, state, kind });
+        setBusy(true);
+        const result = await saveCreci({ name, number, state, kind });
+        setBusy(false);
+        if (!result.ok) {
+          setError(result.fields.creci_number ?? (result.message || tSignup('saveError')));
+          return;
+        }
         onDone();
       }}
     >
@@ -270,7 +267,7 @@ function CreciStep({
         />
       </div>
       <Callout>{t('verification')}</Callout>
-      <StepActions onBack={onBack} submitLabel={tSignup('continue')} />
+      <StepActions onBack={onBack} submitLabel={tSignup('continue')} busy={busy} />
     </form>
   );
 }
@@ -286,20 +283,27 @@ function WhatsAppStep({
 }) {
   const t = useTranslations('signup.whatsapp');
   const tSignup = useTranslations('signup');
-  const [phone, setPhone] = useState(formatPhoneBR(draft.whatsappE164 ?? draft.phoneE164));
+  const [phone, setPhone] = useState(draft.whatsappE164 ? formatPhoneBR(draft.whatsappE164) : '');
   const [error, setError] = useState<string | undefined>();
+  const [busy, setBusy] = useState(false);
   return (
     <form
       className="flex flex-col gap-4"
       noValidate
-      onSubmit={(e) => {
+      onSubmit={async (e) => {
         e.preventDefault();
         const e164 = toE164(phone);
         if (!e164) {
           setError(t('error'));
           return;
         }
-        updateSignup({ whatsappE164: e164 });
+        setBusy(true);
+        const result = await saveWhatsApp(e164);
+        setBusy(false);
+        if (!result.ok) {
+          setError(result.fields.whatsapp ?? (result.message || tSignup('saveError')));
+          return;
+        }
         onDone();
       }}
     >
@@ -312,7 +316,7 @@ function WhatsAppStep({
         error={error}
       />
       <Callout>{t('note')}</Callout>
-      <StepActions onBack={onBack} submitLabel={tSignup('continue')} />
+      <StepActions onBack={onBack} submitLabel={tSignup('continue')} busy={busy} />
     </form>
   );
 }
@@ -330,12 +334,20 @@ function PlanStep({
   const tSignup = useTranslations('signup');
   const tPlans = useTranslations('plans');
   const [plan, setPlan] = useState<PlanKey>(draft.plan);
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string | undefined>();
   return (
     <form
       className="flex flex-col gap-4"
-      onSubmit={(e) => {
+      onSubmit={async (e) => {
         e.preventDefault();
-        updateSignup({ plan });
+        setBusy(true);
+        const result = await savePlan(plan);
+        setBusy(false);
+        if (!result.ok) {
+          setError(result.message || tSignup('saveError'));
+          return;
+        }
         track({ name: 'select_plan', plan, location: 'signup' });
         onDone();
       }}
@@ -376,7 +388,8 @@ function PlanStep({
         ))}
       </fieldset>
       <p className="type-body-s text-fg-muted">{tPlans('media')}</p>
-      <StepActions onBack={onBack} submitLabel={tSignup('continue')} />
+      {error ? <p className="type-body-s text-danger">{error}</p> : null}
+      <StepActions onBack={onBack} submitLabel={tSignup('continue')} busy={busy} />
     </form>
   );
 }
@@ -394,8 +407,8 @@ function FirstPropertyStep({ draft, onBack }: { draft: SignupDraft; onBack: () =
         setBusy(true);
         setFailed(false);
         try {
-          const url = await handoffToApp(appOrigin());
-          await trackBeforeNavigation({ name: 'sign_up', method: 'phone', plan: draft.plan });
+          const url = await openAppWithSession(appOrigin(), '/anuncios/novo');
+          await trackBeforeNavigation({ name: 'sign_up', method: 'email', plan: draft.plan });
           window.location.assign(url);
         } catch {
           setFailed(true);
@@ -404,7 +417,7 @@ function FirstPropertyStep({ draft, onBack }: { draft: SignupDraft; onBack: () =
       }}
     >
       <ul className="flex flex-col gap-2 type-body-s text-fg-strong">
-        <li>{t('account', { phone: formatPhoneBR(draft.phoneE164) })}</li>
+        <li>{t('account', { email: draft.email })}</li>
         <li>
           {draft.creciNumber
             ? t('creciPending', { state: draft.creciState ?? '', number: draft.creciNumber })

@@ -64,15 +64,16 @@ test('broker signup → Anúncios, publishing blocked until the CRECI is verifie
   await expect(page).toHaveURL(/\/cadastro\/conta\?plano=essencial/);
 
   await page.getByLabel('Seu nome completo').fill('Bruno Lima');
-  await page.getByLabel('Celular').fill('(11) 92740-8912');
-  await page.getByRole('button', { name: 'Enviar código' }).click();
-  await page.getByLabel('Código de 6 números').fill('123456');
-  await page.getByRole('button', { name: 'Continuar' }).click();
+  await page.getByLabel('E-mail').fill('bruno@exemplo.com.br');
+  await page.getByRole('button', { name: 'Enviar link de confirmação' }).click();
+  await expect(page.getByText('Confira seu e-mail')).toBeVisible();
+  await page.getByRole('button', { name: 'Abrir o link (demonstração)' }).click();
 
   await expect(page).toHaveURL(/\/cadastro\/creci/);
   await page.getByLabel('Número').fill('111111');
   await page.getByRole('button', { name: 'Continuar' }).click();
   await expect(page).toHaveURL(/\/cadastro\/whatsapp/);
+  await page.getByRole('textbox', { name: 'WhatsApp' }).fill('(11) 92740-8912');
   await page.getByRole('button', { name: 'Continuar' }).click();
   await expect(page).toHaveURL(/\/cadastro\/plano/);
   await expect(page.getByRole('radio', { name: /^Essencial/ })).toBeChecked();
@@ -84,7 +85,7 @@ test('broker signup → Anúncios, publishing blocked until the CRECI is verifie
   await expect(page).toHaveURL(new RegExp(`app\\.localhost:${port}/anuncios/novo`));
   await expect(page.getByText('Seu CRECI está em verificação')).toBeVisible();
   // The opaque handoff id is consumed and removed from the URL; no PII in it.
-  await expect(page).not.toHaveURL(/92740|Bruno/);
+  await expect(page).not.toHaveURL(/92740|bruno|Bruno/);
 });
 
 test('buyer journey pushes analytics events without personal data', async ({ page }) => {

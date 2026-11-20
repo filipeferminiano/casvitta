@@ -367,12 +367,12 @@ export type ModuleItem = {
 
 export type SignupStep = 'conta' | 'creci' | 'whatsapp' | 'plano' | 'primeiro-imovel';
 
-/** /cadastro draft (mock mode). Real auth and profiles arrive in Milestone 1. */
+/** /cadastro in progress: the demo store draft, or the live account as read from /me. */
 export type SignupDraft = {
   id: ID;
   name: string;
-  phoneE164: string;
-  phoneVerified: boolean;
+  /** Confirmed by the emailed link: the account's sign-in. */
+  email: string;
   creciName: string | null;
   creciNumber: string | null;
   creciState: string | null;

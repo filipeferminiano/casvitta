@@ -1,12 +1,12 @@
 /**
  * Interest signups from capture pages (CLAUDE.md rule 11). Calls the API when
- * NEXT_PUBLIC_USE_MOCKS=false or NEXT_PUBLIC_INTEREST_API=true (the public site sends real
- * signups while other screens still use mocks); otherwise stores in the in-memory demo store.
+ * the 'interest' area is live (see lib/live.ts); otherwise stores in the in-memory demo store.
  */
 import { isApiError, type paths } from '@casvitta/api-client';
 
 import { api } from '@/lib/api';
-import { USE_MOCKS, now } from '@/mocks/clock';
+import { isLive } from '@/lib/live';
+import { now } from '@/mocks/clock';
 
 import { mutate } from './store';
 
@@ -19,7 +19,7 @@ export type OptIn = 'whatsapp_sent' | 'queued' | 'not_requested';
 export type InterestResult =
   { ok: true; optIn: OptIn } | { ok: false; message: string; fields: Record<string, string> };
 
-const USE_API = !USE_MOCKS || process.env.NEXT_PUBLIC_INTEREST_API === 'true';
+const USE_API = isLive('interest');
 
 export async function submitInterest(payload: InterestPayload): Promise<InterestResult> {
   if (!USE_API) {

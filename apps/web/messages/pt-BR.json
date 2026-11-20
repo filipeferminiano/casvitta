@@ -1302,6 +1302,7 @@
     "continue": "Continuar",
     "back": "Voltar",
     "saving": "Salvando…",
+    "saveError": "Não conseguimos salvar agora. Tente de novo em alguns minutos.",
     "perMonth": "{amount}/mês",
     "plans": {
       "essencial": "Essencial",
@@ -1312,19 +1313,22 @@
     "startFirstAction": "Criar minha conta",
     "account": {
       "title": "Sua conta",
-      "description": "Seu celular é o seu acesso. Mandamos um código por SMS para confirmar.",
+      "description": "Seu e-mail é o seu acesso. Mandamos um link para confirmar; não há senha para lembrar.",
       "name": "Seu nome completo",
-      "phone": "Celular",
-      "phonePlaceholder": "(11) 92740-8912",
-      "phoneHelp": "Com DDD.",
-      "sendCode": "Enviar código",
-      "code": "Código de 6 números",
-      "codeHelp": "Enviamos por SMS. Pode levar até 1 minuto.",
-      "changePhone": "Trocar número",
+      "email": "E-mail",
+      "emailPlaceholder": "nome@exemplo.com.br",
+      "emailHelp": "Use um e-mail que você abre no celular.",
+      "sendLink": "Enviar link de confirmação",
+      "sending": "Enviando…",
+      "sentTitle": "Confira seu e-mail",
+      "sent": "Enviamos um link para {email}. Abra o e-mail e toque no link para continuar. Ele vale por 15 minutos. Não chegou? Veja a caixa de spam.",
+      "resend": "Reenviar link",
+      "changeEmail": "Trocar e-mail",
       "nameError": "Digite seu nome para continuar.",
-      "phoneError": "Confira o celular: use DDD e número, como (11) 92740-8912.",
-      "codeError": "Código incorreto. Confira o SMS e digite de novo.",
-      "mockCode": "Ambiente de demonstração: use o código {code}."
+      "emailError": "Digite um e-mail válido, como nome@exemplo.com.br.",
+      "sendError": "Não conseguimos enviar agora. Tente de novo em alguns minutos.",
+      "demoNote": "Ambiente de demonstração: nenhum e-mail é enviado.",
+      "demoOpen": "Abrir o link (demonstração)"
     },
     "creci": {
       "title": "Seu registro no CRECI",
@@ -1356,7 +1360,7 @@
     "firstProperty": {
       "title": "Primeiro imóvel",
       "description": "Tudo pronto para montar o primeiro anúncio.",
-      "account": "Conta confirmada: {phone}",
+      "account": "Conta confirmada: {email}",
       "creciPending": "CRECI-{state} {number}: em verificação",
       "creciMissing": "CRECI ainda não informado",
       "plan": "Plano {plan}",
@@ -1377,8 +1381,18 @@
   "signIn": {
     "title": "Entrar",
     "submit": "Entrar",
-    "mockSignedIn": "Celular confirmado. No ambiente de demonstração o acesso abre a conta da Ana Ribeiro.",
+    "mockSignedIn": "E-mail confirmado. No ambiente de demonstração o acesso abre a conta da Ana Ribeiro.",
     "openApp": "Abrir o app",
+    "sessionExpired": "Sua sessão terminou. Entre de novo com seu e-mail.",
+    "confirm": {
+      "title": "Entrando na Casvitta",
+      "checking": "Confirmando seu link…",
+      "invalidTitle": "Este link não vale mais",
+      "invalid": "Os links expiram em 15 minutos e só funcionam uma vez. Peça um novo para entrar.",
+      "missingTitle": "Não encontramos o link",
+      "missing": "Abra esta página pelo link do e-mail que enviamos. Se ele não abriu direto aqui, peça um novo.",
+      "requestNew": "Pedir um novo link"
+    },
     "noAccount": "Ainda não tem conta?",
     "signUp": "Cadastre-se como corretor"
   },

@@ -8,6 +8,7 @@ import { useTranslations } from 'next-intl';
 import { useBroker, useNavCounts } from '@/lib/data/hooks';
 
 import { footerNav, hrefFor, moduleNav, primaryNav, type NavItem } from './nav-items';
+import { SignOutButton } from './SignOutButton';
 
 /**
  * Desktop side navigation (mockups 04, 30): profile header, "Núcleo" (six fixed items),
@@ -87,6 +88,7 @@ export function SideNav() {
           <ul className="flex flex-col">{moduleNav.map(renderItem)}</ul>
         </div>
         <ul className="flex flex-col border-t border-line pt-4">{footerNav.map(renderItem)}</ul>
+        <SignOutButton compact />
       </nav>
     </aside>
   );

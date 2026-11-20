@@ -23,8 +23,7 @@ export async function POST(request: NextRequest) {
   if (!USE_MOCKS) return new NextResponse(null, { status: 404 });
   sweep();
   const draft = (await request.json()) as SignupDraft;
-  if (!draft?.name || !draft.phoneE164)
-    return NextResponse.json({ error: 'invalid' }, { status: 422 });
+  if (!draft?.name || !draft.email) return NextResponse.json({ error: 'invalid' }, { status: 422 });
   const id = randomUUID();
   store.set(id, { draft, expiresAt: Date.now() + TTL_MS });
   return NextResponse.json({ id });

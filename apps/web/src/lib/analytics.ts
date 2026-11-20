@@ -46,7 +46,7 @@ export type TrackEvent =
   | { name: 'generate_lead'; lead_type: string; page_path: string; marketing_consent: boolean }
   | { name: 'select_plan'; plan: string; location: string }
   | { name: 'signup_step'; step: string }
-  | { name: 'sign_up'; method: 'phone'; plan: string }
+  | { name: 'sign_up'; method: 'email'; plan: string }
   | ({ name: 'publish_ad'; channels: string; item_id: string } & Money)
   | { name: 'module_interest'; module: string }
   | { name: 'whatsapp_click'; location: string }
