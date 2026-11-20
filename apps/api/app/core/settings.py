@@ -97,6 +97,31 @@ class Settings(BaseSettings):
     min_daily_budget_cents: int = 2_000
     financing_illustrative_annual_rate_bps: int = 1_150
 
+    # Market data (ITBI, public price pages). Thresholds are privacy gates: below them a page
+    # shows no numbers, is noindex and stays out of sitemaps.
+    itbi_data_dir: str = "data/raw/itbi"
+    # Raw source rows are an audit copy; keep them off in production (shared database disk).
+    itbi_persist_raw: bool = True
+    itbi_http_enabled: bool = False
+    itbi_source_urls: Annotated[list[str], NoDecode] = Field(default_factory=list)
+    # ITBI is paid weeks after the deed: rolling windows end this many months before the newest
+    # complete payment month.
+    market_window_lag_months: int = 1
+    market_min_neighborhood_12m: int = 30
+    market_min_street_24m: int = 10
+    market_min_building_all: int = 5
+    # Below this many sales, show the median only (no p25/p75, no area range, year not month).
+    market_min_for_ranges: int = 10
+    market_round_value_cents: int = 100_000  # R$ 1.000
+    market_round_price_m2_cents: int = 1_000  # R$ 10
+    # Financing page defaults (rate comes from financing_illustrative_annual_rate_bps).
+    market_down_payment_pct: int = 20
+    market_term_months: int = 360
+    market_max_income_commitment_pct: int = 30
+    # Web cache revalidation after each refresh (empty URL = skip).
+    web_revalidate_url: str = ""
+    web_revalidate_secret: SecretStr | None = None
+
     @model_validator(mode="after")
     def _production_secrets(self) -> Settings:
         secret = self.jwt_secret.get_secret_value()
@@ -114,7 +139,7 @@ class Settings(BaseSettings):
                     return "postgresql+asyncpg://" + value.removeprefix(prefix)
         return value
 
-    @field_validator("cors_origins", mode="before")
+    @field_validator("cors_origins", "itbi_source_urls", mode="before")
     @classmethod
     def _split_csv(cls, value: object) -> object:
         if isinstance(value, str):
