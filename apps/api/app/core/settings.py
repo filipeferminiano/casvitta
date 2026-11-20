@@ -31,6 +31,9 @@ class Settings(BaseSettings):
     # Managed Postgres (Supabase session pooler) needs TLS and a small pool: the Micro
     # tier allows few pooled connections and Cloud Run may run more than one instance.
     database_ssl_require: bool = False
+    # All tables live in this Postgres schema (the Supabase project is shared with other apps,
+    # so nothing goes to public). Set as search_path on every connection.
+    database_schema: str = Field(default="casvitta", pattern=r"^[a-z_][a-z0-9_]*$")
     database_pool_size: int = 5
     database_max_overflow: int = 2
     redis_url: str = "redis://localhost:6379/0"

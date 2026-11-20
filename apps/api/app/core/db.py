@@ -6,7 +6,7 @@ from collections.abc import AsyncIterator
 from functools import lru_cache
 from typing import Any
 
-from sqlalchemy import MetaData
+from sqlalchemy import MetaData, event
 from sqlalchemy.ext.asyncio import (
     AsyncEngine,
     AsyncSession,
@@ -38,15 +38,34 @@ def engine_options(settings: Settings) -> dict[str, Any]:
     return options
 
 
+def use_schema(engine: AsyncEngine, schema: str) -> None:
+    """Every new connection works inside `schema`: unqualified tables resolve there.
+
+    Set in autocommit so the pool's rollback on checkin cannot undo it. `extensions` is where
+    Supabase installs extensions (ignored when it does not exist, e.g. locally).
+    """
+
+    @event.listens_for(engine.sync_engine, "connect", insert=True)
+    def _set_search_path(dbapi_connection: Any, _record: Any) -> None:
+        autocommit = dbapi_connection.autocommit
+        dbapi_connection.autocommit = True
+        cursor = dbapi_connection.cursor()
+        cursor.execute(f'SET SESSION search_path TO "{schema}", extensions')
+        cursor.close()
+        dbapi_connection.autocommit = autocommit
+
+
 @lru_cache
 def get_engine() -> AsyncEngine:
     settings = get_settings()
-    return create_async_engine(
+    engine = create_async_engine(
         settings.database_url,
         pool_size=settings.database_pool_size,
         max_overflow=settings.database_max_overflow,
         **engine_options(settings),
     )
+    use_schema(engine, settings.database_schema)
+    return engine
 
 
 @lru_cache

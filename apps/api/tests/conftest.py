@@ -9,6 +9,7 @@ from collections.abc import AsyncIterator
 
 import pytest
 from httpx import ASGITransport, AsyncClient
+from sqlalchemy import text
 from sqlalchemy.ext.asyncio import (
     AsyncConnection,
     AsyncEngine,
@@ -18,7 +19,7 @@ from sqlalchemy.ext.asyncio import (
 
 import app.models  # noqa: F401
 import tests.tenancy_probe  # noqa: F401 - registers the probe table
-from app.core.db import Base, get_session
+from app.core.db import Base, get_session, use_schema
 from app.core.settings import get_settings
 from app.integrations.registry import Integrations, fake_integrations
 from app.main import create_app
@@ -26,8 +27,11 @@ from app.main import create_app
 
 @pytest.fixture(scope="session")
 async def engine() -> AsyncIterator[AsyncEngine]:
-    engine = create_async_engine(get_settings().test_database_url)
+    settings = get_settings()
+    engine = create_async_engine(settings.test_database_url)
+    use_schema(engine, settings.database_schema)
     async with engine.begin() as conn:
+        await conn.execute(text(f'CREATE SCHEMA IF NOT EXISTS "{settings.database_schema}"'))
         await conn.run_sync(Base.metadata.drop_all)
         await conn.run_sync(Base.metadata.create_all)
     yield engine

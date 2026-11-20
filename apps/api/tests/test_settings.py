@@ -1,9 +1,11 @@
 from __future__ import annotations
 
 import pytest
+from sqlalchemy import text
+from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.core.db import engine_options
-from app.core.settings import Settings
+from app.core.db import Base, engine_options
+from app.core.settings import Settings, get_settings
 
 
 @pytest.mark.parametrize(
@@ -23,3 +25,19 @@ def test_ssl_is_required_only_when_configured() -> None:
     assert "connect_args" not in engine_options(Settings())
     options = engine_options(Settings(database_ssl_require=True))
     assert options["connect_args"] == {"ssl": "require"}
+
+
+def test_schema_name_is_validated() -> None:
+    with pytest.raises(ValueError, match="database_schema"):
+        Settings(database_schema='casvitta"; drop table x; --')
+
+
+async def test_tables_live_in_the_configured_schema(session: AsyncSession) -> None:
+    """The Supabase project is shared: nothing of ours may land in public."""
+    schema = get_settings().database_schema
+    assert await session.scalar(text("select current_schema()")) == schema
+    in_schema = await session.scalar(
+        text("select count(*) from information_schema.tables where table_schema = :s"),
+        {"s": schema},
+    )
+    assert in_schema >= len(Base.metadata.tables)
