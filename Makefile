@@ -2,8 +2,9 @@
 SHELL := /bin/bash
 API := apps/api
 UV := uv --directory $(API)
+comma := ,
 
-.PHONY: deploy-web deploy-api setup infra-up infra-down dev check test e2e lint typecheck format storybook api\:gen db\:migrate db\:seed
+.PHONY: deploy-web deploy-api indexnow setup infra-up infra-down dev check test e2e lint typecheck format storybook api\:gen db\:migrate db\:seed
 
 setup: ## Install JS and Python dependencies
 	pnpm install
@@ -64,10 +65,20 @@ GCP_PROJECT ?= roas-164016
 GCP_REGION ?= southamerica-east1
 WEB_URL ?= https://casvitta.com.br
 GOOGLE_SITE_VERIFICATION ?=
+# IndexNow key (public by design, served at /indexnow-key.txt). Read from Secret Manager when it
+# exists; deploys work without it. Create once: openssl rand -hex 16 | gcloud secrets create casvitta-indexnow-key --data-file=-
+INDEXNOW_SECRET ?= casvitta-indexnow-key
+indexnow-key = $(shell gcloud secrets versions access latest --secret=$(INDEXNOW_SECRET) --project $(GCP_PROJECT) 2>/dev/null)
 deploy-web: ## Build apps/web on Cloud Build and deploy it to Cloud Run (casvitta-web)
 	$(eval TAG := $(shell git rev-parse --short HEAD))
+	$(eval INDEXNOW_KEY := $(indexnow-key))
 	gcloud builds submit --project $(GCP_PROJECT) --region $(GCP_REGION) --config infra/cloudbuild/web.yaml --substitutions=_SITE_URL=$(WEB_URL),_TAG=$(TAG),_GOOGLE_SITE_VERIFICATION=$(GOOGLE_SITE_VERIFICATION) .
-	gcloud run deploy casvitta-web --project $(GCP_PROJECT) --region $(GCP_REGION) --image $(GCP_REGION)-docker.pkg.dev/$(GCP_PROJECT)/casvitta/web:$(TAG) --port 8080 --memory 512Mi --cpu 1 --min-instances 0 --max-instances 3 --allow-unauthenticated --set-env-vars ROOT_DOMAIN=$(subst https://,,$(WEB_URL)),APP_SUBDOMAIN=app
+	gcloud run deploy casvitta-web --project $(GCP_PROJECT) --region $(GCP_REGION) --image $(GCP_REGION)-docker.pkg.dev/$(GCP_PROJECT)/casvitta/web:$(TAG) --port 8080 --memory 512Mi --cpu 1 --min-instances 0 --max-instances 3 --allow-unauthenticated --set-env-vars ROOT_DOMAIN=$(subst https://,,$(WEB_URL)),APP_SUBDOMAIN=app$(if $(INDEXNOW_KEY),$(comma)INDEXNOW_KEY=$(INDEXNOW_KEY))
+
+indexnow: ## Submit the live sitemap(s) to IndexNow (Bing and others): make indexnow [SITEMAPS="url ..."]
+	$(eval INDEXNOW_KEY := $(indexnow-key))
+	@test -n "$(INDEXNOW_KEY)" || (echo "No IndexNow key: create the $(INDEXNOW_SECRET) secret (see above)." && exit 1)
+	INDEXNOW_ENABLED=true INDEXNOW_KEY=$(INDEXNOW_KEY) $(UV) run python -m app.scripts.indexnow_submit $(or $(SITEMAPS),$(WEB_URL)/sitemap.xml)
 
 # API on Cloud Run next to the database (Supabase, AWS us-east-2 -> GCP us-east5, Ohio).
 # Reached only through the load balancer at https://api.casvitta.com.br.

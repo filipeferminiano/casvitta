@@ -63,6 +63,11 @@ class Settings(BaseSettings):
     email_from: str = "Casvitta <nao-responda@casvitta.com.br>"
     email_api_key: SecretStr | None = None
     sms_api_key: SecretStr | None = None
+    # IndexNow (Bing and others). Real calls only when enabled with a key; the same key must be
+    # set on the web app, which serves it at /indexnow-key.txt. Not a secret: it is public.
+    indexnow_enabled: bool = False
+    indexnow_key: str | None = Field(default=None, pattern=r"^[A-Za-z0-9-]{8,128}$")
+    indexnow_root_domain: str = "casvitta.com.br"
 
     # Admin endpoints until real auth exists (Milestone 1). Unset = admin endpoints disabled.
     admin_token: SecretStr | None = None
@@ -93,6 +98,12 @@ class Settings(BaseSettings):
         if isinstance(value, str):
             return [item.strip() for item in value.split(",") if item.strip()]
         return value
+
+    @field_validator("indexnow_key", mode="before")
+    @classmethod
+    def _empty_is_unset(cls, value: object) -> object:
+        """INDEXNOW_KEY= (as in .env.example) means no key."""
+        return None if isinstance(value, str) and not value.strip() else value
 
 
 @lru_cache

@@ -6,7 +6,7 @@ implemented yet; asking for them fails fast at startup instead of silently calli
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 
 from fastapi import Request
 
@@ -19,6 +19,9 @@ from app.integrations.llm.port import LLMPort
 from app.integrations.llm.service import LLMService
 from app.integrations.messaging.fake import FakeEmail, FakeSms
 from app.integrations.messaging.port import EmailPort, SmsPort
+from app.integrations.search_index.fake import FakeSearchIndex
+from app.integrations.search_index.indexnow import IndexNow
+from app.integrations.search_index.port import SearchIndexPort
 from app.integrations.social.fake import FakeSocialPages
 from app.integrations.social.port import SocialPagesPort
 from app.integrations.storage.fake import FakeStorage
@@ -37,6 +40,7 @@ class Integrations:
     storage: StoragePort
     email: EmailPort
     sms: SmsPort
+    search_index: SearchIndexPort
     is_fake: bool
 
     def llm_service(self, model: str) -> LLMService:
@@ -53,16 +57,26 @@ def fake_integrations() -> Integrations:
         storage=FakeStorage(),
         email=FakeEmail(),
         sms=FakeSms(),
+        search_index=FakeSearchIndex(),
         is_fake=True,
     )
 
 
 def build_integrations(settings: Settings) -> Integrations:
     if settings.fake_integrations:
-        return fake_integrations()
+        return replace(fake_integrations(), search_index=build_search_index(settings))
     raise IntegrationNotConfigured(
         "Real integration adapters are not implemented yet; set FAKE_INTEGRATIONS=true."
     )
+
+
+def build_search_index(settings: Settings) -> SearchIndexPort:
+    """IndexNow has its own flag: it can be on while the other adapters are still fake."""
+    if not settings.indexnow_enabled:
+        return FakeSearchIndex()
+    if not settings.indexnow_key:
+        raise IntegrationNotConfigured("INDEXNOW_ENABLED=true needs INDEXNOW_KEY.")
+    return IndexNow(settings.indexnow_key)
 
 
 def get_integrations(request: Request) -> Integrations:
