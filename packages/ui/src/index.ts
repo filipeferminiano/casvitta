@@ -99,3 +99,28 @@ export { EstimateBox, type EstimateBoxProps } from './components/EstimateBox.tsx
 export { MapPins, type MapPin, type MapPinsProps } from './components/MapPins.tsx';
 export { NumberedSteps, type NumberedStepsProps } from './components/NumberedSteps.tsx';
 export { PlanCard, type PlanCardProps } from './components/PlanCard.tsx';
+export {
+  Breadcrumbs,
+  type BreadcrumbItem,
+  type BreadcrumbsProps,
+} from './components/Breadcrumbs.tsx';
+export {
+  Tooltip,
+  TooltipProvider,
+  type TooltipProps,
+  type TooltipProviderProps,
+} from './components/Tooltip.tsx';
+export {
+  MonthlySeriesChart,
+  type MonthlyPoint,
+  type MonthlySeriesChartProps,
+} from './components/MonthlySeriesChart.tsx';
+export { SourceNote, type SourceNoteProps } from './components/SourceNote.tsx';
+export {
+  LeadAlertForm,
+  type LeadAlertFormLabels,
+  type LeadAlertFormProps,
+  type LeadAlertIntent,
+  type LeadAlertResult,
+  type LeadAlertValues,
+} from './components/LeadAlertForm.tsx';
