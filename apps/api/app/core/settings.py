@@ -9,7 +9,10 @@ from typing import Annotated, Literal
 from pydantic import Field, SecretStr, field_validator
 from pydantic_settings import BaseSettings, NoDecode, SettingsConfigDict
 
-REPO_ROOT = Path(__file__).resolve().parents[4]
+_PARENTS = Path(__file__).resolve().parents
+# apps/api/app/core/settings.py -> repo root. The container image is shallower (/srv/app/...)
+# and has no .env file: settings come from the environment there.
+REPO_ROOT = _PARENTS[4] if len(_PARENTS) > 4 else _PARENTS[-1]
 
 
 class Settings(BaseSettings):
