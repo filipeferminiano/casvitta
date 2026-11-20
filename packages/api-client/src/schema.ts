@@ -268,6 +268,165 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/public/market/{city}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get City */
+        get: operations["getMarketCity"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/public/market/{city}/neighborhoods/{neighborhood}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Neighborhood */
+        get: operations["getMarketNeighborhood"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/public/market/{city}/neighborhoods/{neighborhood}/streets/{street}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Street */
+        get: operations["getMarketStreet"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/public/market/{city}/neighborhoods/{neighborhood}/buildings/{building}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Building */
+        get: operations["getMarketBuilding"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/public/market/{city}/neighborhoods/{neighborhood}/financing": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Financing */
+        get: operations["getMarketFinancing"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/public/market/{city}/sitemaps/{template}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Sitemap */
+        get: operations["getMarketSitemap"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/public/property-alerts": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Create Property Alert
+         * @description Price pages: "avise-me" and "quanto vale o meu apartamento?". Stored only; no message.
+         */
+        post: operations["createPropertyAlert"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/admin/property-alerts": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Property Alerts */
+        get: operations["listPropertyAlerts"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/admin/property-alerts/{alert_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /**
+         * Delete Property Alert
+         * @description LGPD: delete a person's alert on request.
+         */
+        delete: operations["deletePropertyAlert"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -342,6 +501,34 @@ export interface components {
              */
             kind: "agency";
             criteria: components["schemas"]["AgencyCriteria"];
+        };
+        /**
+         * AlertIntent
+         * @enum {string}
+         */
+        AlertIntent: "buy" | "owner";
+        /**
+         * AlertScope
+         * @enum {string}
+         */
+        AlertScope: "neighborhood" | "street" | "building";
+        /**
+         * AlertStatus
+         * @enum {string}
+         */
+        AlertStatus: "active" | "cancelled";
+        /** AreaBand */
+        AreaBand: {
+            /** Band */
+            band: string;
+            /** Min M2 */
+            min_m2: number;
+            /** Max M2 */
+            max_m2: number | null;
+            /** Sales */
+            sales: number;
+            /** Median Value Cents */
+            median_value_cents: number | null;
         };
         /** AuctionCriteria */
         AuctionCriteria: {
@@ -438,6 +625,43 @@ export interface components {
             /** Whatsapp */
             whatsapp?: string | null;
         };
+        /** BuildingPage */
+        BuildingPage: {
+            /**
+             * Kind
+             * @default building
+             * @constant
+             */
+            kind: "building";
+            city: components["schemas"]["PlaceRef"];
+            neighborhood: components["schemas"]["PlaceRef"];
+            street: components["schemas"]["PlaceRef"];
+            building: components["schemas"]["PlaceRef"];
+            /** Street Number */
+            street_number: number;
+            /** Construction Year */
+            construction_year: number | null;
+            gate: components["schemas"]["GateInfo"];
+            source: components["schemas"]["SourceInfo"];
+            stats: components["schemas"]["PublicStats"] | null;
+            last_24m: components["schemas"]["PublicStats"] | null;
+        };
+        /** BuildingRow */
+        BuildingRow: {
+            place: components["schemas"]["PlaceRef"];
+            /** Street Name */
+            street_name: string;
+            /** Street Number */
+            street_number: number;
+            stats: components["schemas"]["PublicStats"] | null;
+        };
+        /** CityIndexPage */
+        CityIndexPage: {
+            city: components["schemas"]["PlaceRef"];
+            source: components["schemas"]["SourceInfo"];
+            /** Neighborhoods */
+            neighborhoods: components["schemas"]["NeighborhoodRow"][];
+        };
         /** ConsentIn */
         ConsentIn: {
             /** Contact About Properties */
@@ -509,6 +733,59 @@ export interface components {
              * @constant
              */
             status: "sent";
+        };
+        /** FinancingContext */
+        FinancingContext: {
+            /** Year */
+            year: number;
+            /** Financed Pct */
+            financed_pct: number;
+            /** Median Financed Pct */
+            median_financed_pct: number | null;
+            /** Top Financing Type Code */
+            top_financing_type_code: number | null;
+        };
+        /** FinancingPage */
+        FinancingPage: {
+            /**
+             * Kind
+             * @default financing
+             * @constant
+             */
+            kind: "financing";
+            city: components["schemas"]["PlaceRef"];
+            neighborhood: components["schemas"]["PlaceRef"];
+            gate: components["schemas"]["GateInfo"];
+            source: components["schemas"]["SourceInfo"];
+            /**
+             * Property Kind
+             * @enum {string}
+             */
+            property_kind: "apartment" | "all";
+            /** Median Value Cents */
+            median_value_cents: number | null;
+            /** Down Payment Pct */
+            down_payment_pct: number;
+            /** Term Months */
+            term_months: number;
+            /** Annual Rate Bps */
+            annual_rate_bps: number;
+            /** Max Income Commitment Pct */
+            max_income_commitment_pct: number;
+            /** Simulations */
+            simulations: components["schemas"]["Simulation"][];
+            financing: components["schemas"]["FinancingContext"] | null;
+        };
+        /** GateInfo */
+        GateInfo: {
+            /** Passes */
+            passes: boolean;
+            /** Indexable */
+            indexable: boolean;
+            /** Min Sales */
+            min_sales: number;
+            /** Window */
+            window: string;
         };
         /** HTTPValidationError */
         HTTPValidationError: {
@@ -638,6 +915,53 @@ export interface components {
             workspace: components["schemas"]["WorkspaceOut"];
             broker: components["schemas"]["BrokerProfileOut"] | null;
         };
+        /** MonthlyPoint */
+        MonthlyPoint: {
+            /** Month */
+            month: string;
+            /** Sales */
+            sales: number;
+            /** Median Price M2 Cents */
+            median_price_m2_cents: number | null;
+        };
+        /** NeighborhoodPage */
+        NeighborhoodPage: {
+            /**
+             * Kind
+             * @default neighborhood
+             * @constant
+             */
+            kind: "neighborhood";
+            city: components["schemas"]["PlaceRef"];
+            neighborhood: components["schemas"]["PlaceRef"];
+            gate: components["schemas"]["GateInfo"];
+            source: components["schemas"]["SourceInfo"];
+            stats: components["schemas"]["PublicStats"] | null;
+            apartments: components["schemas"]["PublicStats"] | null;
+            houses: components["schemas"]["PublicStats"] | null;
+            /** Years */
+            years: components["schemas"]["YearRow"][];
+            /** Monthly */
+            monthly: components["schemas"]["MonthlyPoint"][];
+            /** Area Bands */
+            area_bands: components["schemas"]["AreaBand"][];
+            /** Top Streets */
+            top_streets: components["schemas"]["StreetRow"][];
+            /** Top Buildings */
+            top_buildings: components["schemas"]["BuildingRow"][];
+            /** Neighbors */
+            neighbors: components["schemas"]["NeighborhoodRow"][];
+            financing: components["schemas"]["FinancingContext"] | null;
+        };
+        /** NeighborhoodRow */
+        NeighborhoodRow: {
+            place: components["schemas"]["PlaceRef"];
+            /** Zone */
+            zone: string | null;
+            /** Indexable */
+            indexable: boolean;
+            stats: components["schemas"]["PublicStats"] | null;
+        };
         /** OwnerListingCriteria */
         OwnerListingCriteria: {
             /**
@@ -676,6 +1000,15 @@ export interface components {
             kind: "owner_listing";
             criteria: components["schemas"]["OwnerListingCriteria"];
         };
+        /** PlaceRef */
+        PlaceRef: {
+            /** Slug */
+            slug: string;
+            /** Name */
+            name: string;
+            /** Path */
+            path: string;
+        };
         /**
          * Plan
          * @enum {string}
@@ -686,11 +1019,125 @@ export interface components {
          * @enum {string}
          */
         PortfolioSize: "up_to_10" | "11_to_50" | "51_to_200" | "over_200";
+        /** PropertyAlertAccepted */
+        PropertyAlertAccepted: {
+            /**
+             * Status
+             * @default stored
+             * @constant
+             */
+            status: "stored";
+        };
+        /**
+         * PropertyAlertIn
+         * @description The page says where it is by slugs; the server resolves them (never trusts ids).
+         */
+        PropertyAlertIn: {
+            scope: components["schemas"]["AlertScope"];
+            /** City */
+            city: string;
+            /** Neighborhood */
+            neighborhood: string;
+            /** Street */
+            street?: string | null;
+            /** Building */
+            building?: string | null;
+            intent: components["schemas"]["AlertIntent"];
+            /** Name */
+            name: string;
+            /** Phone */
+            phone: string;
+            /** Email */
+            email?: string | null;
+            consents: components["schemas"]["ConsentIn"];
+            utm?: components["schemas"]["Utm"];
+            /** Source Page */
+            source_page?: string | null;
+            /** Website */
+            website?: string | null;
+        };
+        /** PropertyAlertOut */
+        PropertyAlertOut: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            scope: components["schemas"]["AlertScope"];
+            /** Scope Name */
+            scope_name: string;
+            /** Scope Path */
+            scope_path: string;
+            intent: components["schemas"]["AlertIntent"];
+            /** Name */
+            name: string;
+            /** Phone E164 */
+            phone_e164: string;
+            /** Email */
+            email: string | null;
+            status: components["schemas"]["AlertStatus"];
+            /** Contact Consent */
+            contact_consent: boolean;
+            /** Marketing Consent */
+            marketing_consent: boolean;
+            /** Source Page */
+            source_page: string | null;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+        };
         /**
          * PropertyKind
          * @enum {string}
          */
         PropertyKind: "apartment" | "house" | "land" | "commercial";
+        /** PublicStats */
+        PublicStats: {
+            /** Sales */
+            sales: number;
+            /** Window */
+            window: string;
+            /** Window Start */
+            window_start: string | null;
+            /**
+             * Window End
+             * Format: date
+             */
+            window_end: string;
+            /** Median Value Cents */
+            median_value_cents: number | null;
+            /** Median Price M2 Cents */
+            median_price_m2_cents: number | null;
+            /** P25 Price M2 Cents */
+            p25_price_m2_cents: number | null;
+            /** P75 Price M2 Cents */
+            p75_price_m2_cents: number | null;
+            /** Median Built Area M2 */
+            median_built_area_m2: number | null;
+            /** P25 Built Area M2 */
+            p25_built_area_m2: number | null;
+            /** P75 Built Area M2 */
+            p75_built_area_m2: number | null;
+            /** Financed Pct */
+            financed_pct: number | null;
+            /** Median Financed Pct */
+            median_financed_pct: number | null;
+            /** Top Financing Type Code */
+            top_financing_type_code: number | null;
+            /** Median Construction Year */
+            median_construction_year: number | null;
+            /** Last Sale Month */
+            last_sale_month: string | null;
+            /** Last Sale Year */
+            last_sale_year: number | null;
+            /**
+             * Refreshed At
+             * Format: date-time
+             */
+            refreshed_at: string;
+        };
         /** ReadinessOut */
         ReadinessOut: {
             /**
@@ -703,6 +1150,17 @@ export interface components {
              * @enum {string}
              */
             database: "ok" | "unavailable";
+        };
+        /** Redirect */
+        Redirect: {
+            /**
+             * Kind
+             * @default redirect
+             * @constant
+             */
+            kind: "redirect";
+            /** Path */
+            path: string;
         };
         /** RentalAdminCriteria */
         RentalAdminCriteria: {
@@ -739,6 +1197,90 @@ export interface components {
              * @enum {string}
              */
             intent: "sign_in" | "sign_up";
+        };
+        /** Simulation */
+        Simulation: {
+            /**
+             * System
+             * @enum {string}
+             */
+            system: "sac" | "price";
+            /** Property Price Cents */
+            property_price_cents: number;
+            /** Down Payment Cents */
+            down_payment_cents: number;
+            /** Fgts Cents */
+            fgts_cents: number;
+            /** Principal Cents */
+            principal_cents: number;
+            /** Term Months */
+            term_months: number;
+            /** Annual Rate Bps */
+            annual_rate_bps: number;
+            /** First Payment Cents */
+            first_payment_cents: number;
+            /** Last Payment Cents */
+            last_payment_cents: number;
+            /** Min Income Cents */
+            min_income_cents: number;
+        };
+        /** Sitemap */
+        Sitemap: {
+            /**
+             * Template
+             * @enum {string}
+             */
+            template: "bairros" | "ruas" | "condominios" | "financiamento";
+            /** Entries */
+            entries: components["schemas"]["SitemapEntry"][];
+        };
+        /** SitemapEntry */
+        SitemapEntry: {
+            /** Path */
+            path: string;
+            /** Last Modified */
+            last_modified: string | null;
+        };
+        /**
+         * SourceInfo
+         * @description 'Fonte: Prefeitura de São Paulo — guias de ITBI · Atualizado em dd/MM/yyyy'.
+         */
+        SourceInfo: {
+            /** Refreshed At */
+            refreshed_at: string | null;
+            /** Data Through */
+            data_through: string | null;
+            /** Window End */
+            window_end: string | null;
+            /**
+             * Is Demo
+             * @default false
+             */
+            is_demo: boolean;
+        };
+        /** StreetPage */
+        StreetPage: {
+            /**
+             * Kind
+             * @default street
+             * @constant
+             */
+            kind: "street";
+            city: components["schemas"]["PlaceRef"];
+            neighborhood: components["schemas"]["PlaceRef"];
+            street: components["schemas"]["PlaceRef"];
+            gate: components["schemas"]["GateInfo"];
+            source: components["schemas"]["SourceInfo"];
+            stats: components["schemas"]["PublicStats"] | null;
+            last_12m: components["schemas"]["PublicStats"] | null;
+            apartments: components["schemas"]["PublicStats"] | null;
+            /** Buildings */
+            buildings: components["schemas"]["BuildingRow"][];
+        };
+        /** StreetRow */
+        StreetRow: {
+            place: components["schemas"]["PlaceRef"];
+            stats: components["schemas"]["PublicStats"] | null;
         };
         /** TokenIn */
         TokenIn: {
@@ -795,6 +1337,14 @@ export interface components {
         /** WorkspaceUpdate */
         WorkspaceUpdate: {
             plan: components["schemas"]["Plan"];
+        };
+        /** YearRow */
+        YearRow: {
+            /** Year */
+            year: number;
+            /** Partial Until */
+            partial_until: string | null;
+            stats: components["schemas"]["PublicStats"] | null;
         };
     };
     responses: never;
@@ -1215,6 +1765,297 @@ export interface operations {
                 content: {
                     "application/json": components["schemas"]["BrokerProfileOut"];
                 };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    getMarketCity: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                city: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CityIndexPage"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    getMarketNeighborhood: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                city: string;
+                neighborhood: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["NeighborhoodPage"] | components["schemas"]["Redirect"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    getMarketStreet: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                city: string;
+                neighborhood: string;
+                street: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["StreetPage"] | components["schemas"]["Redirect"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    getMarketBuilding: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                city: string;
+                neighborhood: string;
+                building: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BuildingPage"] | components["schemas"]["Redirect"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    getMarketFinancing: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                city: string;
+                neighborhood: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["FinancingPage"] | components["schemas"]["Redirect"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    getMarketSitemap: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                city: string;
+                template: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Sitemap"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    createPropertyAlert: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PropertyAlertIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            202: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PropertyAlertAccepted"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    listPropertyAlerts: {
+        parameters: {
+            query?: {
+                format?: string;
+            };
+            header?: {
+                "x-admin-token"?: string | null;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PropertyAlertOut"][];
+                    "text/csv": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    deletePropertyAlert: {
+        parameters: {
+            query?: never;
+            header?: {
+                "x-admin-token"?: string | null;
+            };
+            path: {
+                alert_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
             /** @description Validation Error */
             422: {

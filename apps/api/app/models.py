@@ -9,6 +9,7 @@ from app.domains.accounts.models import (
     User,
     Workspace,
 )
+from app.domains.alerts.models import PropertyAlert, PropertyAlertConsent
 from app.domains.interest.models import InterestSignup, InterestSignupConsent
 from app.domains.market_data.models import (
     IptuStandardCode,
@@ -49,6 +50,8 @@ __all__ = [
     "MarketStats",
     "MarketStreet",
     "Membership",
+    "PropertyAlert",
+    "PropertyAlertConsent",
     "User",
     "Workspace",
 ]

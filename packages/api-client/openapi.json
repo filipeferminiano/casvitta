@@ -613,6 +613,513 @@
           }
         }
       }
+    },
+    "/v1/public/market/{city}": {
+      "get": {
+        "tags": [
+          "market"
+        ],
+        "summary": "Get City",
+        "operationId": "getMarketCity",
+        "parameters": [
+          {
+            "name": "city",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "City"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CityIndexPage"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/public/market/{city}/neighborhoods/{neighborhood}": {
+      "get": {
+        "tags": [
+          "market"
+        ],
+        "summary": "Get Neighborhood",
+        "operationId": "getMarketNeighborhood",
+        "parameters": [
+          {
+            "name": "city",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "City"
+            }
+          },
+          {
+            "name": "neighborhood",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Neighborhood"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/NeighborhoodPage"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Redirect"
+                    }
+                  ],
+                  "title": "Response Getmarketneighborhood"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/public/market/{city}/neighborhoods/{neighborhood}/streets/{street}": {
+      "get": {
+        "tags": [
+          "market"
+        ],
+        "summary": "Get Street",
+        "operationId": "getMarketStreet",
+        "parameters": [
+          {
+            "name": "city",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "City"
+            }
+          },
+          {
+            "name": "neighborhood",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Neighborhood"
+            }
+          },
+          {
+            "name": "street",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Street"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/StreetPage"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Redirect"
+                    }
+                  ],
+                  "title": "Response Getmarketstreet"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/public/market/{city}/neighborhoods/{neighborhood}/buildings/{building}": {
+      "get": {
+        "tags": [
+          "market"
+        ],
+        "summary": "Get Building",
+        "operationId": "getMarketBuilding",
+        "parameters": [
+          {
+            "name": "city",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "City"
+            }
+          },
+          {
+            "name": "neighborhood",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Neighborhood"
+            }
+          },
+          {
+            "name": "building",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Building"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/BuildingPage"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Redirect"
+                    }
+                  ],
+                  "title": "Response Getmarketbuilding"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/public/market/{city}/neighborhoods/{neighborhood}/financing": {
+      "get": {
+        "tags": [
+          "market"
+        ],
+        "summary": "Get Financing",
+        "operationId": "getMarketFinancing",
+        "parameters": [
+          {
+            "name": "city",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "City"
+            }
+          },
+          {
+            "name": "neighborhood",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Neighborhood"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/FinancingPage"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Redirect"
+                    }
+                  ],
+                  "title": "Response Getmarketfinancing"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/public/market/{city}/sitemaps/{template}": {
+      "get": {
+        "tags": [
+          "market"
+        ],
+        "summary": "Get Sitemap",
+        "operationId": "getMarketSitemap",
+        "parameters": [
+          {
+            "name": "city",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "City"
+            }
+          },
+          {
+            "name": "template",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Template"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Sitemap"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/public/property-alerts": {
+      "post": {
+        "tags": [
+          "public"
+        ],
+        "summary": "Create Property Alert",
+        "description": "Price pages: \"avise-me\" and \"quanto vale o meu apartamento?\". Stored only; no message.",
+        "operationId": "createPropertyAlert",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PropertyAlertIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "202": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PropertyAlertAccepted"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/admin/property-alerts": {
+      "get": {
+        "tags": [
+          "admin"
+        ],
+        "summary": "List Property Alerts",
+        "operationId": "listPropertyAlerts",
+        "parameters": [
+          {
+            "name": "format",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "pattern": "^(json|csv)$",
+              "default": "json",
+              "title": "Format"
+            }
+          },
+          {
+            "name": "x-admin-token",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Admin-Token"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PropertyAlertOut"
+                  },
+                  "title": "Response Listpropertyalerts"
+                }
+              },
+              "text/csv": {}
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/admin/property-alerts/{alert_id}": {
+      "delete": {
+        "tags": [
+          "admin"
+        ],
+        "summary": "Delete Property Alert",
+        "description": "LGPD: delete a person's alert on request.",
+        "operationId": "deletePropertyAlert",
+        "parameters": [
+          {
+            "name": "alert_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Alert Id"
+            }
+          },
+          {
+            "name": "x-admin-token",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Admin-Token"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -873,6 +1380,78 @@
           "criteria"
         ],
         "title": "AgencySignup"
+      },
+      "AlertIntent": {
+        "type": "string",
+        "enum": [
+          "buy",
+          "owner"
+        ],
+        "title": "AlertIntent"
+      },
+      "AlertScope": {
+        "type": "string",
+        "enum": [
+          "neighborhood",
+          "street",
+          "building"
+        ],
+        "title": "AlertScope"
+      },
+      "AlertStatus": {
+        "type": "string",
+        "enum": [
+          "active",
+          "cancelled"
+        ],
+        "title": "AlertStatus"
+      },
+      "AreaBand": {
+        "properties": {
+          "band": {
+            "type": "string",
+            "title": "Band"
+          },
+          "min_m2": {
+            "type": "integer",
+            "title": "Min M2"
+          },
+          "max_m2": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Max M2"
+          },
+          "sales": {
+            "type": "integer",
+            "title": "Sales"
+          },
+          "median_value_cents": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Median Value Cents"
+          }
+        },
+        "type": "object",
+        "required": [
+          "band",
+          "min_m2",
+          "max_m2",
+          "sales",
+          "median_value_cents"
+        ],
+        "title": "AreaBand"
       },
       "AuctionCriteria": {
         "properties": {
@@ -1205,6 +1784,140 @@
         "title": "BrokerProfileUpdate",
         "description": "Signup steps and Configurações. Changing the CRECI sends it back to staff review."
       },
+      "BuildingPage": {
+        "properties": {
+          "kind": {
+            "type": "string",
+            "const": "building",
+            "title": "Kind",
+            "default": "building"
+          },
+          "city": {
+            "$ref": "#/components/schemas/PlaceRef"
+          },
+          "neighborhood": {
+            "$ref": "#/components/schemas/PlaceRef"
+          },
+          "street": {
+            "$ref": "#/components/schemas/PlaceRef"
+          },
+          "building": {
+            "$ref": "#/components/schemas/PlaceRef"
+          },
+          "street_number": {
+            "type": "integer",
+            "title": "Street Number"
+          },
+          "construction_year": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Construction Year"
+          },
+          "gate": {
+            "$ref": "#/components/schemas/GateInfo"
+          },
+          "source": {
+            "$ref": "#/components/schemas/SourceInfo"
+          },
+          "stats": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/PublicStats"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "last_24m": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/PublicStats"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "city",
+          "neighborhood",
+          "street",
+          "building",
+          "street_number",
+          "construction_year",
+          "gate",
+          "source",
+          "stats",
+          "last_24m"
+        ],
+        "title": "BuildingPage"
+      },
+      "BuildingRow": {
+        "properties": {
+          "place": {
+            "$ref": "#/components/schemas/PlaceRef"
+          },
+          "street_name": {
+            "type": "string",
+            "title": "Street Name"
+          },
+          "street_number": {
+            "type": "integer",
+            "title": "Street Number"
+          },
+          "stats": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/PublicStats"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "place",
+          "street_name",
+          "street_number",
+          "stats"
+        ],
+        "title": "BuildingRow"
+      },
+      "CityIndexPage": {
+        "properties": {
+          "city": {
+            "$ref": "#/components/schemas/PlaceRef"
+          },
+          "source": {
+            "$ref": "#/components/schemas/SourceInfo"
+          },
+          "neighborhoods": {
+            "items": {
+              "$ref": "#/components/schemas/NeighborhoodRow"
+            },
+            "type": "array",
+            "title": "Neighborhoods"
+          }
+        },
+        "type": "object",
+        "required": [
+          "city",
+          "source",
+          "neighborhoods"
+        ],
+        "title": "CityIndexPage"
+      },
       "ConsentIn": {
         "properties": {
           "contact_about_properties": {
@@ -1413,6 +2126,166 @@
         "type": "object",
         "title": "EmailLinkSent",
         "description": "Same body whether or not the address has an account (no account enumeration)."
+      },
+      "FinancingContext": {
+        "properties": {
+          "year": {
+            "type": "integer",
+            "title": "Year"
+          },
+          "financed_pct": {
+            "type": "integer",
+            "title": "Financed Pct"
+          },
+          "median_financed_pct": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Median Financed Pct"
+          },
+          "top_financing_type_code": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Top Financing Type Code"
+          }
+        },
+        "type": "object",
+        "required": [
+          "year",
+          "financed_pct",
+          "median_financed_pct",
+          "top_financing_type_code"
+        ],
+        "title": "FinancingContext"
+      },
+      "FinancingPage": {
+        "properties": {
+          "kind": {
+            "type": "string",
+            "const": "financing",
+            "title": "Kind",
+            "default": "financing"
+          },
+          "city": {
+            "$ref": "#/components/schemas/PlaceRef"
+          },
+          "neighborhood": {
+            "$ref": "#/components/schemas/PlaceRef"
+          },
+          "gate": {
+            "$ref": "#/components/schemas/GateInfo"
+          },
+          "source": {
+            "$ref": "#/components/schemas/SourceInfo"
+          },
+          "property_kind": {
+            "type": "string",
+            "enum": [
+              "apartment",
+              "all"
+            ],
+            "title": "Property Kind"
+          },
+          "median_value_cents": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Median Value Cents"
+          },
+          "down_payment_pct": {
+            "type": "integer",
+            "title": "Down Payment Pct"
+          },
+          "term_months": {
+            "type": "integer",
+            "title": "Term Months"
+          },
+          "annual_rate_bps": {
+            "type": "integer",
+            "title": "Annual Rate Bps"
+          },
+          "max_income_commitment_pct": {
+            "type": "integer",
+            "title": "Max Income Commitment Pct"
+          },
+          "simulations": {
+            "items": {
+              "$ref": "#/components/schemas/Simulation"
+            },
+            "type": "array",
+            "title": "Simulations"
+          },
+          "financing": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/FinancingContext"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "city",
+          "neighborhood",
+          "gate",
+          "source",
+          "property_kind",
+          "median_value_cents",
+          "down_payment_pct",
+          "term_months",
+          "annual_rate_bps",
+          "max_income_commitment_pct",
+          "simulations",
+          "financing"
+        ],
+        "title": "FinancingPage"
+      },
+      "GateInfo": {
+        "properties": {
+          "passes": {
+            "type": "boolean",
+            "title": "Passes"
+          },
+          "indexable": {
+            "type": "boolean",
+            "title": "Indexable"
+          },
+          "min_sales": {
+            "type": "integer",
+            "title": "Min Sales"
+          },
+          "window": {
+            "type": "string",
+            "title": "Window"
+          }
+        },
+        "type": "object",
+        "required": [
+          "passes",
+          "indexable",
+          "min_sales",
+          "window"
+        ],
+        "title": "GateInfo"
       },
       "HTTPValidationError": {
         "properties": {
@@ -1782,6 +2655,198 @@
         ],
         "title": "MeOut"
       },
+      "MonthlyPoint": {
+        "properties": {
+          "month": {
+            "type": "string",
+            "title": "Month"
+          },
+          "sales": {
+            "type": "integer",
+            "title": "Sales"
+          },
+          "median_price_m2_cents": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Median Price M2 Cents"
+          }
+        },
+        "type": "object",
+        "required": [
+          "month",
+          "sales",
+          "median_price_m2_cents"
+        ],
+        "title": "MonthlyPoint"
+      },
+      "NeighborhoodPage": {
+        "properties": {
+          "kind": {
+            "type": "string",
+            "const": "neighborhood",
+            "title": "Kind",
+            "default": "neighborhood"
+          },
+          "city": {
+            "$ref": "#/components/schemas/PlaceRef"
+          },
+          "neighborhood": {
+            "$ref": "#/components/schemas/PlaceRef"
+          },
+          "gate": {
+            "$ref": "#/components/schemas/GateInfo"
+          },
+          "source": {
+            "$ref": "#/components/schemas/SourceInfo"
+          },
+          "stats": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/PublicStats"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "apartments": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/PublicStats"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "houses": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/PublicStats"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "years": {
+            "items": {
+              "$ref": "#/components/schemas/YearRow"
+            },
+            "type": "array",
+            "title": "Years"
+          },
+          "monthly": {
+            "items": {
+              "$ref": "#/components/schemas/MonthlyPoint"
+            },
+            "type": "array",
+            "title": "Monthly"
+          },
+          "area_bands": {
+            "items": {
+              "$ref": "#/components/schemas/AreaBand"
+            },
+            "type": "array",
+            "title": "Area Bands"
+          },
+          "top_streets": {
+            "items": {
+              "$ref": "#/components/schemas/StreetRow"
+            },
+            "type": "array",
+            "title": "Top Streets"
+          },
+          "top_buildings": {
+            "items": {
+              "$ref": "#/components/schemas/BuildingRow"
+            },
+            "type": "array",
+            "title": "Top Buildings"
+          },
+          "neighbors": {
+            "items": {
+              "$ref": "#/components/schemas/NeighborhoodRow"
+            },
+            "type": "array",
+            "title": "Neighbors"
+          },
+          "financing": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/FinancingContext"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "city",
+          "neighborhood",
+          "gate",
+          "source",
+          "stats",
+          "apartments",
+          "houses",
+          "years",
+          "monthly",
+          "area_bands",
+          "top_streets",
+          "top_buildings",
+          "neighbors",
+          "financing"
+        ],
+        "title": "NeighborhoodPage"
+      },
+      "NeighborhoodRow": {
+        "properties": {
+          "place": {
+            "$ref": "#/components/schemas/PlaceRef"
+          },
+          "zone": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Zone"
+          },
+          "indexable": {
+            "type": "boolean",
+            "title": "Indexable"
+          },
+          "stats": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/PublicStats"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "place",
+          "zone",
+          "indexable",
+          "stats"
+        ],
+        "title": "NeighborhoodRow"
+      },
       "OwnerListingCriteria": {
         "properties": {
           "transaction": {
@@ -1920,6 +2985,29 @@
         ],
         "title": "OwnerListingSignup"
       },
+      "PlaceRef": {
+        "properties": {
+          "slug": {
+            "type": "string",
+            "title": "Slug"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "path": {
+            "type": "string",
+            "title": "Path"
+          }
+        },
+        "type": "object",
+        "required": [
+          "slug",
+          "name",
+          "path"
+        ],
+        "title": "PlaceRef"
+      },
       "Plan": {
         "type": "string",
         "enum": [
@@ -1938,6 +3026,214 @@
         ],
         "title": "PortfolioSize"
       },
+      "PropertyAlertAccepted": {
+        "properties": {
+          "status": {
+            "type": "string",
+            "const": "stored",
+            "title": "Status",
+            "default": "stored"
+          }
+        },
+        "type": "object",
+        "title": "PropertyAlertAccepted"
+      },
+      "PropertyAlertIn": {
+        "properties": {
+          "scope": {
+            "$ref": "#/components/schemas/AlertScope"
+          },
+          "city": {
+            "type": "string",
+            "maxLength": 60,
+            "minLength": 2,
+            "title": "City"
+          },
+          "neighborhood": {
+            "type": "string",
+            "maxLength": 80,
+            "minLength": 2,
+            "title": "Neighborhood"
+          },
+          "street": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 140
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Street"
+          },
+          "building": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 180
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Building"
+          },
+          "intent": {
+            "$ref": "#/components/schemas/AlertIntent"
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 120,
+            "minLength": 2,
+            "title": "Name"
+          },
+          "phone": {
+            "type": "string",
+            "title": "Phone"
+          },
+          "email": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 254
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Email"
+          },
+          "consents": {
+            "$ref": "#/components/schemas/ConsentIn"
+          },
+          "utm": {
+            "$ref": "#/components/schemas/Utm"
+          },
+          "source_page": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 300
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source Page"
+          },
+          "website": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Website"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "scope",
+          "city",
+          "neighborhood",
+          "intent",
+          "name",
+          "phone",
+          "consents"
+        ],
+        "title": "PropertyAlertIn",
+        "description": "The page says where it is by slugs; the server resolves them (never trusts ids)."
+      },
+      "PropertyAlertOut": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "scope": {
+            "$ref": "#/components/schemas/AlertScope"
+          },
+          "scope_name": {
+            "type": "string",
+            "title": "Scope Name"
+          },
+          "scope_path": {
+            "type": "string",
+            "title": "Scope Path"
+          },
+          "intent": {
+            "$ref": "#/components/schemas/AlertIntent"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "phone_e164": {
+            "type": "string",
+            "title": "Phone E164"
+          },
+          "email": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Email"
+          },
+          "status": {
+            "$ref": "#/components/schemas/AlertStatus"
+          },
+          "contact_consent": {
+            "type": "boolean",
+            "title": "Contact Consent"
+          },
+          "marketing_consent": {
+            "type": "boolean",
+            "title": "Marketing Consent"
+          },
+          "source_page": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source Page"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "scope",
+          "scope_name",
+          "scope_path",
+          "intent",
+          "name",
+          "phone_e164",
+          "email",
+          "status",
+          "contact_consent",
+          "marketing_consent",
+          "source_page",
+          "created_at"
+        ],
+        "title": "PropertyAlertOut"
+      },
       "PropertyKind": {
         "type": "string",
         "enum": [
@@ -1947,6 +3243,205 @@
           "commercial"
         ],
         "title": "PropertyKind"
+      },
+      "PublicStats": {
+        "properties": {
+          "sales": {
+            "type": "integer",
+            "title": "Sales"
+          },
+          "window": {
+            "type": "string",
+            "title": "Window"
+          },
+          "window_start": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Window Start"
+          },
+          "window_end": {
+            "type": "string",
+            "format": "date",
+            "title": "Window End"
+          },
+          "median_value_cents": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Median Value Cents"
+          },
+          "median_price_m2_cents": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Median Price M2 Cents"
+          },
+          "p25_price_m2_cents": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "P25 Price M2 Cents"
+          },
+          "p75_price_m2_cents": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "P75 Price M2 Cents"
+          },
+          "median_built_area_m2": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Median Built Area M2"
+          },
+          "p25_built_area_m2": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "P25 Built Area M2"
+          },
+          "p75_built_area_m2": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "P75 Built Area M2"
+          },
+          "financed_pct": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Financed Pct"
+          },
+          "median_financed_pct": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Median Financed Pct"
+          },
+          "top_financing_type_code": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Top Financing Type Code"
+          },
+          "median_construction_year": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Median Construction Year"
+          },
+          "last_sale_month": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Last Sale Month"
+          },
+          "last_sale_year": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Last Sale Year"
+          },
+          "refreshed_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Refreshed At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "sales",
+          "window",
+          "window_start",
+          "window_end",
+          "median_value_cents",
+          "median_price_m2_cents",
+          "p25_price_m2_cents",
+          "p75_price_m2_cents",
+          "median_built_area_m2",
+          "p25_built_area_m2",
+          "p75_built_area_m2",
+          "financed_pct",
+          "median_financed_pct",
+          "top_financing_type_code",
+          "median_construction_year",
+          "last_sale_month",
+          "last_sale_year",
+          "refreshed_at"
+        ],
+        "title": "PublicStats"
       },
       "ReadinessOut": {
         "properties": {
@@ -1973,6 +3468,25 @@
           "database"
         ],
         "title": "ReadinessOut"
+      },
+      "Redirect": {
+        "properties": {
+          "kind": {
+            "type": "string",
+            "const": "redirect",
+            "title": "Kind",
+            "default": "redirect"
+          },
+          "path": {
+            "type": "string",
+            "title": "Path"
+          }
+        },
+        "type": "object",
+        "required": [
+          "path"
+        ],
+        "title": "Redirect"
       },
       "RentalAdminCriteria": {
         "properties": {
@@ -2095,6 +3609,272 @@
           "intent"
         ],
         "title": "SignedIn"
+      },
+      "Simulation": {
+        "properties": {
+          "system": {
+            "type": "string",
+            "enum": [
+              "sac",
+              "price"
+            ],
+            "title": "System"
+          },
+          "property_price_cents": {
+            "type": "integer",
+            "title": "Property Price Cents"
+          },
+          "down_payment_cents": {
+            "type": "integer",
+            "title": "Down Payment Cents"
+          },
+          "fgts_cents": {
+            "type": "integer",
+            "title": "Fgts Cents"
+          },
+          "principal_cents": {
+            "type": "integer",
+            "title": "Principal Cents"
+          },
+          "term_months": {
+            "type": "integer",
+            "title": "Term Months"
+          },
+          "annual_rate_bps": {
+            "type": "integer",
+            "title": "Annual Rate Bps"
+          },
+          "first_payment_cents": {
+            "type": "integer",
+            "title": "First Payment Cents"
+          },
+          "last_payment_cents": {
+            "type": "integer",
+            "title": "Last Payment Cents"
+          },
+          "min_income_cents": {
+            "type": "integer",
+            "title": "Min Income Cents"
+          }
+        },
+        "type": "object",
+        "required": [
+          "system",
+          "property_price_cents",
+          "down_payment_cents",
+          "fgts_cents",
+          "principal_cents",
+          "term_months",
+          "annual_rate_bps",
+          "first_payment_cents",
+          "last_payment_cents",
+          "min_income_cents"
+        ],
+        "title": "Simulation"
+      },
+      "Sitemap": {
+        "properties": {
+          "template": {
+            "type": "string",
+            "enum": [
+              "bairros",
+              "ruas",
+              "condominios",
+              "financiamento"
+            ],
+            "title": "Template"
+          },
+          "entries": {
+            "items": {
+              "$ref": "#/components/schemas/SitemapEntry"
+            },
+            "type": "array",
+            "title": "Entries"
+          }
+        },
+        "type": "object",
+        "required": [
+          "template",
+          "entries"
+        ],
+        "title": "Sitemap"
+      },
+      "SitemapEntry": {
+        "properties": {
+          "path": {
+            "type": "string",
+            "title": "Path"
+          },
+          "last_modified": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Last Modified"
+          }
+        },
+        "type": "object",
+        "required": [
+          "path",
+          "last_modified"
+        ],
+        "title": "SitemapEntry"
+      },
+      "SourceInfo": {
+        "properties": {
+          "refreshed_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Refreshed At"
+          },
+          "data_through": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Data Through"
+          },
+          "window_end": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Window End"
+          },
+          "is_demo": {
+            "type": "boolean",
+            "title": "Is Demo",
+            "default": false
+          }
+        },
+        "type": "object",
+        "required": [
+          "refreshed_at",
+          "data_through",
+          "window_end"
+        ],
+        "title": "SourceInfo",
+        "description": "'Fonte: Prefeitura de São Paulo — guias de ITBI · Atualizado em dd/MM/yyyy'."
+      },
+      "StreetPage": {
+        "properties": {
+          "kind": {
+            "type": "string",
+            "const": "street",
+            "title": "Kind",
+            "default": "street"
+          },
+          "city": {
+            "$ref": "#/components/schemas/PlaceRef"
+          },
+          "neighborhood": {
+            "$ref": "#/components/schemas/PlaceRef"
+          },
+          "street": {
+            "$ref": "#/components/schemas/PlaceRef"
+          },
+          "gate": {
+            "$ref": "#/components/schemas/GateInfo"
+          },
+          "source": {
+            "$ref": "#/components/schemas/SourceInfo"
+          },
+          "stats": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/PublicStats"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "last_12m": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/PublicStats"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "apartments": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/PublicStats"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "buildings": {
+            "items": {
+              "$ref": "#/components/schemas/BuildingRow"
+            },
+            "type": "array",
+            "title": "Buildings"
+          }
+        },
+        "type": "object",
+        "required": [
+          "city",
+          "neighborhood",
+          "street",
+          "gate",
+          "source",
+          "stats",
+          "last_12m",
+          "apartments",
+          "buildings"
+        ],
+        "title": "StreetPage"
+      },
+      "StreetRow": {
+        "properties": {
+          "place": {
+            "$ref": "#/components/schemas/PlaceRef"
+          },
+          "stats": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/PublicStats"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "place",
+          "stats"
+        ],
+        "title": "StreetRow"
       },
       "TokenIn": {
         "properties": {
@@ -2257,6 +4037,43 @@
           "plan"
         ],
         "title": "WorkspaceUpdate"
+      },
+      "YearRow": {
+        "properties": {
+          "year": {
+            "type": "integer",
+            "title": "Year"
+          },
+          "partial_until": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Partial Until"
+          },
+          "stats": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/PublicStats"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "year",
+          "partial_until",
+          "stats"
+        ],
+        "title": "YearRow"
       }
     }
   }
