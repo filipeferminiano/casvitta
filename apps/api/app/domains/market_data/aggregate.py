@@ -109,10 +109,12 @@ def summarize(rows: Sequence[CleanRow]) -> dict[str, Any]:
     """Exact stats of a group. Medians use rows without quality flags only."""
     sample = [r for r in rows if not r.under_declared and not r.price_outlier]
     financed = [r for r in rows if r.has_financing]
+    # A declared financed amount above the price is a data error: it still counts as a financed
+    # purchase, but not in the median financed share.
     financed_shares = [
         Decimal(r.financed_value_cents) / Decimal(r.value_cents)
         for r in financed
-        if r.financed_value_cents
+        if r.financed_value_cents and r.financed_value_cents <= r.value_cents
     ]
     types = Counter(r.financing_type_code for r in financed if r.financing_type_code is not None)
     years = sorted(r.construction_year for r in rows if r.construction_year)

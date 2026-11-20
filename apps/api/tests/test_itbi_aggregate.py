@@ -90,16 +90,18 @@ def test_summarize_excludes_flagged_rows_from_medians_only() -> None:
         clean_row(80_000_000, "100", date(2026, 3, 5), financed=60_000_000, financing_type=2),
         clean_row(1_000_000, "100", date(2026, 4, 5), under_declared=True, financing_type=1),
         clean_row(900_000_000, "100", date(2026, 5, 20), outlier=True, year=None),
+        # Financed amount above the price: counted as financed, not in the share median.
+        clean_row(70_000_000, "100", date(2026, 1, 9), financed=90_000_000, financing_type=1),
     ]
     stats = summarize(rows)
-    assert stats["tx_count"] == 5
-    assert stats["median_sample"] == 3
-    assert stats["median_value_cents"] == 60_000_000
-    assert stats["median_price_m2_cents"] == 600_000  # R$ 6.000 per built m²
-    assert stats["p25_price_m2_cents"] == 550_000
-    assert stats["p75_price_m2_cents"] == 700_000
+    assert stats["tx_count"] == 6
+    assert stats["median_sample"] == 4
+    assert stats["median_value_cents"] == 65_000_000
+    assert stats["median_price_m2_cents"] == 650_000  # R$ 6.500 per built m²
+    assert stats["p25_price_m2_cents"] == 575_000
+    assert stats["p75_price_m2_cents"] == 725_000
     assert stats["median_built_area_m2"] == Decimal("100")
-    assert stats["financed_share"] == Decimal("0.6000")  # 3 of 5 declared financing
+    assert stats["financed_share"] == Decimal("0.6667")  # 4 of 6 declared financing
     assert stats["median_financed_share"] == Decimal("0.6250")  # median of 0.5 and 0.75
     assert stats["top_financing_type_code"] == 1
     assert stats["median_construction_year"] == 2001
