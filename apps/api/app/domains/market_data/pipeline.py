@@ -7,6 +7,7 @@ source on every run, so a rule change only needs a re-run; published slugs stay 
 
 from __future__ import annotations
 
+import gc
 from collections import Counter, defaultdict
 from dataclasses import dataclass, field
 from datetime import date
@@ -156,18 +157,27 @@ async def _read_source(  # noqa: PLR0917
     cleaning: CleaningState,
     persist_raw: bool,
 ) -> None:
-    """One pass over the source: CEP votes, cleaning, and the optional raw copy."""
+    """One pass over the source: CEP votes, cleaning, and the optional raw copy.
+
+    Hundreds of thousands of rows stay in memory until the derived tables are built; the cyclic
+    garbage collector would rescan them on every allocation burst (the run slowed from seconds to
+    minutes per tab), and these objects have no cycles, so it is paused for the pass.
+    """
     batch: list[SourceRow] = []
-    for source_row in iter_rows(source, report):
-        location.observe(source_row.row.cep, source_row.row.neighborhood_raw)
-        cleaning.take(source_row)
-        if persist_raw:
-            batch.append(source_row)
-            if len(batch) >= RAW_BATCH:
-                await store_raw(session, city.id, run.id, batch, report)
-                batch.clear()
-    if batch:
-        await store_raw(session, city.id, run.id, batch, report)
+    gc.disable()
+    try:
+        for source_row in iter_rows(source, report):
+            location.observe(source_row.row.cep, source_row.row.neighborhood_raw)
+            cleaning.take(source_row)
+            if persist_raw:
+                batch.append(source_row)
+                if len(batch) >= RAW_BATCH:
+                    await store_raw(session, city.id, run.id, batch, report)
+                    batch.clear()
+        if batch:
+            await store_raw(session, city.id, run.id, batch, report)
+    finally:
+        gc.enable()
 
 
 @dataclass(slots=True)
