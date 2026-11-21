@@ -11,15 +11,26 @@ export type StatTileProps = {
   badge?: ReactNode;
   /** 4px blue top border for the metric that matters most on the screen. */
   highlighted?: boolean;
+  /** 4px yellow top border: this number is waiting for someone (backoffice queues). */
+  attention?: boolean;
   className?: string;
 };
 
-export function StatTile({ label, value, caption, badge, highlighted, className }: StatTileProps) {
+export function StatTile({
+  label,
+  value,
+  caption,
+  badge,
+  highlighted,
+  attention,
+  className,
+}: StatTileProps) {
   return (
     <div
       className={cn(
         'flex flex-col gap-1 rounded-card border border-line bg-panel p-4',
         highlighted && 'border-t-4 border-t-action pt-3',
+        attention && 'border-t-4 border-t-attention pt-3',
         className,
       )}
     >

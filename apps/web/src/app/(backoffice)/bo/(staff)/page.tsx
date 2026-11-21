@@ -1,6 +1,5 @@
-import { redirect } from 'next/navigation';
+import { OverviewScreen } from '@/screens/backoffice/OverviewScreen';
 
-/** Visão geral arrives with BO1; until then the team screen is home. */
 export default function BackofficeHome() {
-  redirect('/equipe');
+  return <OverviewScreen />;
 }

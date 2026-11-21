@@ -528,7 +528,7 @@ def _audit_query(filters: AuditFilters) -> Select[AuditLog, str]:
     return query
 
 
-def _actor_name(row: AuditLog, staff_name: str | None) -> str:
+def actor_name(row: AuditLog, staff_name: str | None) -> str:
     if staff_name:
         return staff_name
     if row.actor == ADMIN_TOKEN_ACTOR:
@@ -543,7 +543,7 @@ def _entry(row: AuditLog, staff_name: str | None) -> AuditEntryOut:
         id=row.id,
         occurred_at=row.occurred_at,
         actor=row.actor,
-        actor_name=_actor_name(row, staff_name),
+        actor_name=actor_name(row, staff_name),
         actor_staff_id=row.actor_staff_id,
         action=row.action,
         entity=row.entity,
@@ -592,7 +592,7 @@ async def export_audit_csv(session: AsyncSession, actor: Actor, filters: AuditFi
             [
                 format_date(row.occurred_at),
                 format_time(row.occurred_at),
-                _actor_name(row, name),
+                actor_name(row, name),
                 row.action,
                 row.entity,
                 row.entity_id or "",

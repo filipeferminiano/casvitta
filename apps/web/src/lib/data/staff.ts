@@ -20,6 +20,9 @@ export type StaffMember = components['schemas']['StaffMemberOut'];
 export type StaffRole = components['schemas']['StaffRole'];
 export type Permission = components['schemas']['Permission'];
 export type AuditEntry = components['schemas']['AuditEntryOut'];
+export type Overview = components['schemas']['OverviewOut'];
+export type SearchHit = components['schemas']['SearchHit'];
+export type InterestKind = components['schemas']['InterestKind'];
 
 export const STAFF_ROLES: StaffRole[] = [
   'admin',
@@ -62,6 +65,8 @@ export const ROLE_PERMISSIONS: Record<StaffRole, Permission[]> = {
 const ROOT = 'staff';
 export const staffKeys = {
   me: [ROOT, 'me'] as const,
+  overview: [ROOT, 'overview'] as const,
+  search: (q: string) => [ROOT, 'search', q] as const,
   team: [ROOT, 'team'] as const,
   audit: (filters: AuditFilters) => [ROOT, 'audit', filters] as const,
 };
@@ -200,5 +205,27 @@ export function useExportAudit() {
     mutationFn: (filters: AuditFilters) =>
       downloadCsv('/v1/staff/audit/export', auditQuery(filters)),
     onSettled: () => invalidateAll(client),
+  });
+}
+
+// ------------------------------------------------------------------ overview and search
+
+export function useOverview() {
+  return useQuery({
+    queryKey: staffKeys.overview,
+    queryFn: async () => unwrap(await staffApi.GET('/v1/staff/overview')),
+    refetchInterval: 60_000,
+  });
+}
+
+/** Global search. Each search is audited server-side, so it runs only for 2+ characters. */
+export function useStaffSearch(q: string) {
+  const query = q.trim();
+  return useQuery({
+    queryKey: staffKeys.search(query),
+    enabled: query.length >= 2,
+    staleTime: 30_000,
+    queryFn: async () =>
+      unwrap(await staffApi.GET('/v1/staff/search', { params: { query: { q: query } } })),
   });
 }

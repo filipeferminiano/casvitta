@@ -2612,6 +2612,100 @@
       "note": "Registro só de acréscimo: ninguém edita nem apaga. Ver dados pessoais completos pede um motivo.",
       "reason": "motivo: {reason}",
       "exported": "Auditoria exportada."
+    },
+    "greeting": {
+      "morning": "Bom dia, {name}",
+      "afternoon": "Boa tarde, {name}",
+      "evening": "Boa noite, {name}"
+    },
+    "kinds": {
+      "auction": "Leilão",
+      "owner_listing": "Proprietários (corretor)",
+      "owner_listing_start": "Proprietários (anúncio próprio)",
+      "investor_institutional": "Gestores e family offices",
+      "agency": "Imobiliárias (Agency OS)",
+      "agency_demo": "Imobiliárias (demonstração)",
+      "developer": "Incorporadoras",
+      "rental_admin": "Adm. de aluguel"
+    },
+    "overview": {
+      "description": "O que precisa de alguém da equipe hoje, e como o funil de corretores está andando.",
+      "subject": "a visão geral",
+      "tiles": {
+        "brokers": "Corretores cadastrados",
+        "brokersCaption": "+{count} nesta semana",
+        "creci": "CRECI pendentes",
+        "creciCaption": "{count} há mais de {hours} h",
+        "captures": "Captações em 7 dias",
+        "capturesCaption": "{count} de leilão"
+      },
+      "queue": {
+        "title": "Precisa de você",
+        "open": "Abrir",
+        "openLabel": "Abrir {title} ({count})",
+        "creci": "CRECI para verificar",
+        "creciDescription": "{count} passaram de {hours} h, o prazo prometido no cadastro",
+        "creciDescriptionOk": "Todos dentro do prazo de {hours} h prometido no cadastro",
+        "owner_requests": "Pedidos de proprietário sem corretor",
+        "owner_requestsDescription": "Indicar um corretor verificado da região",
+        "institutional_investors": "Gestores e family offices aguardando conversa",
+        "institutional_investorsDescription": "Formulário de investidores institucionais",
+        "empty": "Nada esperando a equipe agora."
+      },
+      "captures": {
+        "title": "Captações por tipo",
+        "all": "Ver todas",
+        "kind": "Tipo",
+        "last7d": "7 dias",
+        "confirmed": "Opt-in confirmado",
+        "open": "Sem tratamento",
+        "none": "—"
+      },
+      "funnel": {
+        "title": "Do cadastro ao assinante",
+        "since": "desde o lançamento",
+        "steps": {
+          "signed_up": "Cadastro iniciado",
+          "creci_sent": "CRECI enviado",
+          "creci_verified": "CRECI verificado"
+        },
+        "caption": "Os próximos passos (1º imóvel, 1º anúncio no ar, assinante) aparecem quando imóveis e cobrança estiverem no banco."
+      },
+      "activity": {
+        "title": "Atividade da equipe",
+        "link": "Auditoria",
+        "empty": "Nenhuma ação da equipe ainda.",
+        "yesterday": "ontem",
+        "actions": {
+          "creci_verified": "verificou o CRECI {creci}",
+          "broker_profile_creci_verified": "verificou o CRECI {creci}",
+          "creci_correction_requested": "pediu correção do CRECI {creci}",
+          "creci_rejected": "recusou o CRECI {creci}",
+          "interest_assigned": "indicou {broker} para o pedido de {person}",
+          "interest_exported": "exportou {count} contatos",
+          "contact_revealed": "viu o contato de {person}",
+          "staff_invited": "convidou {name} para a equipe",
+          "staff_updated": "mudou o acesso de {name}",
+          "staff_bootstrapped": "criou o primeiro Admin",
+          "staff_added_by_script": "adicionou uma pessoa à equipe",
+          "audit_exported": "exportou a auditoria ({count} linhas)",
+          "other": "fez {action}"
+        }
+      }
+    },
+    "search": {
+      "label": "Buscar",
+      "placeholder": "Buscar corretor, CRECI, telefone, e-mail ou imóvel",
+      "hint": "Digite pelo menos 2 letras.",
+      "searching": "Buscando…",
+      "empty": "Nada encontrado para “{query}”.",
+      "results": "{count, plural, =0 {Nenhum resultado} one {# resultado} other {# resultados}}",
+      "groups": {
+        "account": "Contas",
+        "creci": "CRECI",
+        "person": "Pessoas das captações"
+      },
+      "error": "A busca falhou. Tente de novo."
     }
   },
   "audience": {

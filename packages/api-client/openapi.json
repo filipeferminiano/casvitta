@@ -2085,6 +2085,116 @@
           }
         }
       }
+    },
+    "/v1/staff/overview": {
+      "get": {
+        "tags": [
+          "staff"
+        ],
+        "summary": "Overview",
+        "description": "Every role reads it; the team activity needs the audit permission.",
+        "operationId": "getStaffOverview",
+        "parameters": [
+          {
+            "name": "x-admin-token",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Admin-Token"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OverviewOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/staff/search": {
+      "get": {
+        "tags": [
+          "staff"
+        ],
+        "summary": "Search",
+        "operationId": "staffSearch",
+        "parameters": [
+          {
+            "name": "q",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 2,
+              "maxLength": 120,
+              "title": "Q"
+            }
+          },
+          {
+            "name": "x-admin-token",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Admin-Token"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SearchOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -2097,6 +2207,36 @@
           "over_500"
         ],
         "title": "ActivePropertiesRange"
+      },
+      "ActivityItem": {
+        "properties": {
+          "occurred_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Occurred At"
+          },
+          "actor_name": {
+            "type": "string",
+            "title": "Actor Name"
+          },
+          "action": {
+            "type": "string",
+            "title": "Action"
+          },
+          "details": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Details"
+          }
+        },
+        "type": "object",
+        "required": [
+          "occurred_at",
+          "actor_name",
+          "action",
+          "details"
+        ],
+        "title": "ActivityItem"
       },
       "AddressSuggestion": {
         "properties": {
@@ -3218,6 +3358,40 @@
         ],
         "title": "BuildingRow"
       },
+      "CaptureKindRow": {
+        "properties": {
+          "kind": {
+            "$ref": "#/components/schemas/InterestKind"
+          },
+          "last_7d": {
+            "type": "integer",
+            "title": "Last 7D"
+          },
+          "confirmed_7d": {
+            "type": "integer",
+            "title": "Confirmed 7D"
+          },
+          "open": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Open"
+          }
+        },
+        "type": "object",
+        "required": [
+          "kind",
+          "last_7d",
+          "confirmed_7d",
+          "open"
+        ],
+        "title": "CaptureKindRow"
+      },
       "CityIndexPage": {
         "properties": {
           "city": {
@@ -3691,6 +3865,29 @@
           "neighbors"
         ],
         "title": "FinancingPage"
+      },
+      "FunnelStep": {
+        "properties": {
+          "key": {
+            "type": "string",
+            "enum": [
+              "signed_up",
+              "creci_sent",
+              "creci_verified"
+            ],
+            "title": "Key"
+          },
+          "count": {
+            "type": "integer",
+            "title": "Count"
+          }
+        },
+        "type": "object",
+        "required": [
+          "key",
+          "count"
+        ],
+        "title": "FunnelStep"
       },
       "GateInfo": {
         "properties": {
@@ -4445,6 +4642,101 @@
           "stats"
         ],
         "title": "NeighborhoodRow"
+      },
+      "OverviewOut": {
+        "properties": {
+          "tiles": {
+            "$ref": "#/components/schemas/OverviewTiles"
+          },
+          "queue": {
+            "items": {
+              "$ref": "#/components/schemas/QueueItem"
+            },
+            "type": "array",
+            "title": "Queue"
+          },
+          "captures": {
+            "items": {
+              "$ref": "#/components/schemas/CaptureKindRow"
+            },
+            "type": "array",
+            "title": "Captures"
+          },
+          "funnel": {
+            "items": {
+              "$ref": "#/components/schemas/FunnelStep"
+            },
+            "type": "array",
+            "title": "Funnel"
+          },
+          "activity": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/ActivityItem"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Activity"
+          },
+          "creci_sla_hours": {
+            "type": "integer",
+            "title": "Creci Sla Hours"
+          }
+        },
+        "type": "object",
+        "required": [
+          "tiles",
+          "queue",
+          "captures",
+          "funnel",
+          "activity",
+          "creci_sla_hours"
+        ],
+        "title": "OverviewOut"
+      },
+      "OverviewTiles": {
+        "properties": {
+          "brokers_total": {
+            "type": "integer",
+            "title": "Brokers Total"
+          },
+          "brokers_this_week": {
+            "type": "integer",
+            "title": "Brokers This Week"
+          },
+          "creci_pending": {
+            "type": "integer",
+            "title": "Creci Pending"
+          },
+          "creci_pending_over_sla": {
+            "type": "integer",
+            "title": "Creci Pending Over Sla"
+          },
+          "captures_7d": {
+            "type": "integer",
+            "title": "Captures 7D"
+          },
+          "captures_7d_auction": {
+            "type": "integer",
+            "title": "Captures 7D Auction"
+          }
+        },
+        "type": "object",
+        "required": [
+          "brokers_total",
+          "brokers_this_week",
+          "creci_pending",
+          "creci_pending_over_sla",
+          "captures_7d",
+          "captures_7d_auction"
+        ],
+        "title": "OverviewTiles",
+        "description": "Only numbers that exist in the database today. Tiles without data are absent, not zero."
       },
       "OwnerListingCriteria": {
         "properties": {
@@ -5283,6 +5575,35 @@
         "title": "PublicStats",
         "description": "``priced`` false: the group is below MARKET_MIN_PRICE_GROUP, only the count is public."
       },
+      "QueueItem": {
+        "properties": {
+          "key": {
+            "type": "string",
+            "enum": [
+              "creci",
+              "owner_requests",
+              "institutional_investors"
+            ],
+            "title": "Key"
+          },
+          "count": {
+            "type": "integer",
+            "title": "Count"
+          },
+          "over_sla": {
+            "type": "integer",
+            "title": "Over Sla",
+            "default": 0
+          }
+        },
+        "type": "object",
+        "required": [
+          "key",
+          "count"
+        ],
+        "title": "QueueItem",
+        "description": "A line of \"Precisa de você\": a queue that waits for someone, with a link target."
+      },
       "ReadinessOut": {
         "properties": {
           "status": {
@@ -5446,6 +5767,66 @@
           "criteria"
         ],
         "title": "RentalAdminSignup"
+      },
+      "SearchHit": {
+        "properties": {
+          "kind": {
+            "type": "string",
+            "enum": [
+              "account",
+              "person",
+              "creci"
+            ],
+            "title": "Kind"
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "subtitle": {
+            "type": "string",
+            "title": "Subtitle"
+          },
+          "is_demo": {
+            "type": "boolean",
+            "title": "Is Demo",
+            "default": false
+          }
+        },
+        "type": "object",
+        "required": [
+          "kind",
+          "id",
+          "title",
+          "subtitle"
+        ],
+        "title": "SearchHit"
+      },
+      "SearchOut": {
+        "properties": {
+          "query": {
+            "type": "string",
+            "title": "Query"
+          },
+          "hits": {
+            "items": {
+              "$ref": "#/components/schemas/SearchHit"
+            },
+            "type": "array",
+            "title": "Hits"
+          }
+        },
+        "type": "object",
+        "required": [
+          "query",
+          "hits"
+        ],
+        "title": "SearchOut"
       },
       "SignedIn": {
         "properties": {

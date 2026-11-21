@@ -12,7 +12,9 @@ import { useSelectedLayoutSegment } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { useState, type ReactNode } from 'react';
 
-import { signOutStaff, useStaffMe } from '@/lib/data/staff';
+import { signOutStaff, useOverview, useStaffMe } from '@/lib/data/staff';
+
+import { GlobalSearch } from './GlobalSearch';
 
 import { ReauthProvider } from './ReauthProvider';
 
@@ -50,20 +52,17 @@ const SEGMENT: Record<string, BoModule> = {
 
 export type QueueCounts = Partial<Record<BoModule, number>>;
 
-export function StaffShell({
-  children,
-  search,
-  counts,
-}: {
-  children: ReactNode;
-  search?: ReactNode;
-  counts?: QueueCounts;
-}) {
+export function StaffShell({ children }: { children: ReactNode }) {
   const t = useTranslations('backoffice.shell');
   const tRoles = useTranslations('backoffice.roles');
   const segment = useSelectedLayoutSegment();
   const active: BoModule = segment ? (SEGMENT[segment] ?? 'overview') : 'overview';
   const me = useStaffMe().data;
+  const overview = useOverview().data;
+  const counts: QueueCounts = {
+    creci: overview?.tiles.creci_pending,
+    captures: overview?.queue.find((q) => q.key === 'owner_requests')?.count,
+  };
   const [leaving, setLeaving] = useState(false);
 
   const item = (key: BoModule): BackofficeNavItem => ({
@@ -73,7 +72,7 @@ export function StaffShell({
     icon: ICONS[key],
     current: active === key,
     count: counts?.[key],
-    countTone: key === 'captures' ? 'neutral' : 'attention',
+    countTone: 'attention',
     countLabel: counts?.[key] ? t('countLabel', { count: counts[key] }) : undefined,
   });
 
@@ -99,7 +98,7 @@ export function StaffShell({
         skipLabel={t('skip')}
         linkAs={Link}
         groups={groups}
-        search={search}
+        search={<GlobalSearch />}
         badges={
           me ? (
             <EnvironmentBadge

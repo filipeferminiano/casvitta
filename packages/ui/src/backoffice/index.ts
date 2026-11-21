@@ -11,3 +11,10 @@ export {
   type EnvironmentBadgeProps,
 } from './BackofficeShell.tsx';
 export { PermissionMatrix, type PermissionMatrixProps } from './PermissionMatrix.tsx';
+export {
+  ActivityList,
+  QueueList,
+  type ActivityListProps,
+  type QueueListItem,
+  type QueueListProps,
+} from './Overview.tsx';

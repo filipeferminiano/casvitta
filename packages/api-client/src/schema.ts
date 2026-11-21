@@ -701,6 +701,43 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/staff/overview": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Overview
+         * @description Every role reads it; the team activity needs the audit permission.
+         */
+        get: operations["getStaffOverview"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/staff/search": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Search */
+        get: operations["staffSearch"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -710,6 +747,22 @@ export interface components {
          * @enum {string}
          */
         ActivePropertiesRange: "up_to_200" | "201_to_500" | "over_500";
+        /** ActivityItem */
+        ActivityItem: {
+            /**
+             * Occurred At
+             * Format: date-time
+             */
+            occurred_at: string;
+            /** Actor Name */
+            actor_name: string;
+            /** Action */
+            action: string;
+            /** Details */
+            details: {
+                [key: string]: unknown;
+            };
+        };
         /** AddressSuggestion */
         AddressSuggestion: {
             /** Id */
@@ -1039,6 +1092,16 @@ export interface components {
             construction_year?: number | null;
             stats: components["schemas"]["PublicStats"] | null;
         };
+        /** CaptureKindRow */
+        CaptureKindRow: {
+            kind: components["schemas"]["InterestKind"];
+            /** Last 7D */
+            last_7d: number;
+            /** Confirmed 7D */
+            confirmed_7d: number;
+            /** Open */
+            open: number | null;
+        };
         /** CityIndexPage */
         CityIndexPage: {
             city: components["schemas"]["PlaceRef"];
@@ -1191,6 +1254,16 @@ export interface components {
             financed_by_year: components["schemas"]["FinancedYear"][];
             /** Neighbors */
             neighbors: components["schemas"]["NeighborIncome"][];
+        };
+        /** FunnelStep */
+        FunnelStep: {
+            /**
+             * Key
+             * @enum {string}
+             */
+            key: "signed_up" | "creci_sent" | "creci_verified";
+            /** Count */
+            count: number;
         };
         /** GateInfo */
         GateInfo: {
@@ -1423,6 +1496,38 @@ export interface components {
             /** Indexable */
             indexable: boolean;
             stats: components["schemas"]["PublicStats"] | null;
+        };
+        /** OverviewOut */
+        OverviewOut: {
+            tiles: components["schemas"]["OverviewTiles"];
+            /** Queue */
+            queue: components["schemas"]["QueueItem"][];
+            /** Captures */
+            captures: components["schemas"]["CaptureKindRow"][];
+            /** Funnel */
+            funnel: components["schemas"]["FunnelStep"][];
+            /** Activity */
+            activity: components["schemas"]["ActivityItem"][] | null;
+            /** Creci Sla Hours */
+            creci_sla_hours: number;
+        };
+        /**
+         * OverviewTiles
+         * @description Only numbers that exist in the database today. Tiles without data are absent, not zero.
+         */
+        OverviewTiles: {
+            /** Brokers Total */
+            brokers_total: number;
+            /** Brokers This Week */
+            brokers_this_week: number;
+            /** Creci Pending */
+            creci_pending: number;
+            /** Creci Pending Over Sla */
+            creci_pending_over_sla: number;
+            /** Captures 7D */
+            captures_7d: number;
+            /** Captures 7D Auction */
+            captures_7d_auction: number;
         };
         /** OwnerListingCriteria */
         OwnerListingCriteria: {
@@ -1679,6 +1784,24 @@ export interface components {
              */
             refreshed_at: string;
         };
+        /**
+         * QueueItem
+         * @description A line of "Precisa de você": a queue that waits for someone, with a link target.
+         */
+        QueueItem: {
+            /**
+             * Key
+             * @enum {string}
+             */
+            key: "creci" | "owner_requests" | "institutional_investors";
+            /** Count */
+            count: number;
+            /**
+             * Over Sla
+             * @default 0
+             */
+            over_sla: number;
+        };
         /** ReadinessOut */
         ReadinessOut: {
             /**
@@ -1735,6 +1858,35 @@ export interface components {
              */
             kind: "rental_admin";
             criteria: components["schemas"]["RentalAdminCriteria"];
+        };
+        /** SearchHit */
+        SearchHit: {
+            /**
+             * Kind
+             * @enum {string}
+             */
+            kind: "account" | "person" | "creci";
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Title */
+            title: string;
+            /** Subtitle */
+            subtitle: string;
+            /**
+             * Is Demo
+             * @default false
+             */
+            is_demo: boolean;
+        };
+        /** SearchOut */
+        SearchOut: {
+            /** Query */
+            query: string;
+            /** Hits */
+            hits: components["schemas"]["SearchHit"][];
         };
         /** SignedIn */
         SignedIn: {
@@ -3264,6 +3416,70 @@ export interface operations {
                 content: {
                     "text/plain": string;
                     "text/csv": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    getStaffOverview: {
+        parameters: {
+            query?: never;
+            header?: {
+                "x-admin-token"?: string | null;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OverviewOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    staffSearch: {
+        parameters: {
+            query: {
+                q: string;
+            };
+            header?: {
+                "x-admin-token"?: string | null;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SearchOut"];
                 };
             };
             /** @description Validation Error */
