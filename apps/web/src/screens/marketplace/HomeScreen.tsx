@@ -4,8 +4,11 @@ import Link from 'next/link';
 import { getTranslations } from 'next-intl/server';
 
 import { SoonBadge } from '@/components/badges';
+import { getCityIndex } from '@/lib/data/market';
 import { listPublicListings } from '@/lib/data/marketplace';
+import { NAV_CITY, navHoods, SITE_MAP_PATH } from '@/lib/site-nav';
 
+import { HomeLinkBlocks } from './HomeLinkBlocks';
 import { HomeSearch } from './HomeSearch';
 import { ListingGrid } from './ListingGrid';
 import { FinancingSimulator } from './ListingIslands';
@@ -28,6 +31,7 @@ const TRUST = [
 export async function HomeScreen() {
   const t = await getTranslations('home');
   const tTools = await getTranslations('marketplace.tools');
+  const hoods = navHoods(await getCityIndex(NAV_CITY).catch(() => null));
   // Featured: published listings only (rule 2). Not a search, so no sponsored slots here:
   // "Patrocinado" only appears in searches the property matches (Destaques §4).
   const featured = listPublicListings().slice(0, 4);
@@ -83,18 +87,29 @@ export async function HomeScreen() {
         </div>
       </section>
 
+      <HomeLinkBlocks hoods={hoods} />
+
       {/* Entry into the market-data pages (site link structure: home → tools → bairro). */}
       <nav
         aria-labelledby="tools-title"
         className="mx-auto flex max-w-7xl flex-col gap-4 px-4 pb-14 md:px-8 xl:px-20"
       >
-        <div>
-          <h2 id="tools-title" className="type-title">
-            {tTools('title')}
-          </h2>
-          <p className="type-body-s text-fg-muted">{tTools('subtitle')}</p>
+        <div className="flex flex-wrap items-end justify-between gap-4">
+          <div>
+            <h2 id="tools-title" className="type-title">
+              {tTools('title')}
+            </h2>
+            <p className="type-body-s text-fg-muted">{tTools('subtitle')}</p>
+          </div>
+          <Link
+            href={`${SITE_MAP_PATH}#ferramentas`}
+            className="type-body-s font-semibold text-action underline underline-offset-2"
+          >
+            {t('links.allTools')}
+            <span aria-hidden="true">{' ›'}</span>
+          </Link>
         </div>
-        <ul className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        <ul className="grid grid-cols-1 gap-3 sm:grid-cols-3">
           {TOOL_LINKS.map((link) => (
             <li key={link.key}>
               <Link

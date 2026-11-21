@@ -1,6 +1,6 @@
 'use client';
 
-import { Button, cn, Logo } from '@casvitta/ui';
+import { Button, Logo } from '@casvitta/ui';
 import { Menu, X } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -9,20 +9,9 @@ import { useState } from 'react';
 
 import { COMPANY, whatsappLink } from '@/config/site';
 import { formatPhoneIntl } from '@/lib/format';
-import {
-  AudienceHeaderCta,
-  AudienceHeaderNav,
-  AudienceTabs,
-  audienceFor,
-} from '@/screens/audience/AudienceNav';
+import type { NavMenu } from '@/lib/site-nav';
 
-const ITEMS = [
-  { href: '/comprar', key: 'buy', match: ['/comprar', '/imovel'] },
-  { href: '/alugar', key: 'rent', match: ['/alugar'] },
-  { href: '/anunciar-imovel', key: 'list', match: ['/anunciar-imovel'] },
-  { href: '/para-corretores', key: 'brokers', match: ['/para-corretores'] },
-  { href: '/para-imobiliarias', key: 'agencies', match: ['/para-imobiliarias'] },
-] as const;
+import { DesktopMenus, MobileMenus } from './SiteMenus';
 
 /** Brokers see the plan before signing up; the page's CTA carries ?plano=corretor. */
 const BROKER_START = '/para-corretores';
@@ -30,8 +19,8 @@ const BROKER_START = '/para-corretores';
 /** Focused flows (signup, auction capture) get a minimal header (mockups 55, 59). */
 const MINIMAL = ['/cadastro', '/leilao'];
 
-/** Public-site header (mockups 51, 52, 53). */
-export function MarketplaceHeader() {
+/** Public-site header (mockups 51, 52, 53; menus: docs/mockups/navigation). */
+export function MarketplaceHeader({ menus }: { menus: NavMenu[] }) {
   const t = useTranslations('marketplace.nav');
   const tCommon = useTranslations('common');
   const pathname = usePathname();
@@ -39,8 +28,6 @@ export function MarketplaceHeader() {
   const [openOn, setOpenOn] = useState<string | null>(null);
   const open = openOn === pathname;
   const minimal = MINIMAL.some((p) => pathname.startsWith(p));
-  // Audience pages (owners, brokers, agencies) swap the nav and CTA for the audience switch.
-  const audience = audienceFor(pathname);
   const phone = formatPhoneIntl(COMPANY.whatsappE164);
 
   return (
@@ -59,42 +46,14 @@ export function MarketplaceHeader() {
           </a>
         ) : (
           <>
-            {audience ? (
-              <AudienceHeaderNav current={audience} />
-            ) : (
-              <nav aria-label={t('label')} className="hidden lg:block">
-                <ul className="flex gap-1">
-                  {ITEMS.map((item) => {
-                    const current = item.match.some((m) => pathname.startsWith(m));
-                    return (
-                      <li key={item.key}>
-                        <Link
-                          href={item.href}
-                          aria-current={current ? 'page' : undefined}
-                          className={cn(
-                            'flex min-h-11 items-center rounded-control px-3 type-body-s font-medium text-fg hover:bg-subtle',
-                            current && 'bg-action-subtle font-semibold',
-                          )}
-                        >
-                          {t(item.key)}
-                        </Link>
-                      </li>
-                    );
-                  })}
-                </ul>
-              </nav>
-            )}
+            <DesktopMenus menus={menus} />
             <div className="ml-auto hidden items-center gap-4 lg:flex">
               <Link href="/entrar" className="type-body-s font-medium text-fg hover:underline">
                 {t('signIn')}
               </Link>
-              {audience ? (
-                <AudienceHeaderCta current={audience} />
-              ) : (
-                <Button asChild size="sm">
-                  <Link href={BROKER_START}>{t('startAsBroker')}</Link>
-                </Button>
-              )}
+              <Button asChild size="sm">
+                <Link href={BROKER_START}>{t('startAsBroker')}</Link>
+              </Button>
             </div>
             <button
               type="button"
@@ -113,37 +72,19 @@ export function MarketplaceHeader() {
           </>
         )}
       </div>
-      {audience ? <AudienceTabs current={audience} /> : null}
       {!minimal && open ? (
-        <nav
-          id="site-menu"
-          aria-label={t('label')}
-          className="border-t border-line bg-panel px-4 pb-4 lg:hidden"
-        >
-          <ul className="flex flex-col">
-            {ITEMS.map((item) => (
-              <li key={item.key}>
-                <Link
-                  href={item.href}
-                  className="flex min-h-12 items-center border-b border-line type-body font-medium"
-                >
-                  {t(item.key)}
-                </Link>
-              </li>
-            ))}
-            <li>
-              <Link
-                href="/entrar"
-                className="flex min-h-12 items-center border-b border-line type-body font-medium"
-              >
-                {t('signIn')}
-              </Link>
-            </li>
-          </ul>
+        <div id="site-menu" className="border-t border-line bg-panel px-4 pb-4 lg:hidden">
+          <MobileMenus menus={menus} onNavigate={() => setOpenOn(null)} />
+          <Link
+            href="/entrar"
+            className="flex min-h-12 items-center border-b border-line type-body font-semibold"
+          >
+            {t('signIn')}
+          </Link>
           <Button asChild className="mt-4 w-full">
             <Link href={BROKER_START}>{t('startAsBroker')}</Link>
           </Button>
-        </nav>
+        </div>
       ) : null}
     </header>
   );

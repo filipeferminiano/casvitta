@@ -1,5 +1,6 @@
 import {
   Building2,
+  Calculator,
   CalendarDays,
   FileText,
   House,
@@ -20,6 +21,7 @@ export type NavLabelKey =
   | 'calendar'
   | 'proposals'
   | 'ads'
+  | 'tools'
   | 'moduleStore'
   | 'settings';
 
@@ -45,6 +47,8 @@ export const primaryNav: NavItem[] = [
 export const moduleNav: NavItem[] = [{ segment: 'anuncios', labelKey: 'ads', icon: Megaphone }];
 
 export const footerNav: NavItem[] = [
+  // Public tools a broker opens or sends to clients (valuation, ITBI, financing, price per m²).
+  { segment: 'ferramentas', labelKey: 'tools', icon: Calculator },
   { segment: 'modulos', labelKey: 'moduleStore', icon: LayoutGrid },
   { segment: 'configuracoes', labelKey: 'settings', icon: Settings },
 ];

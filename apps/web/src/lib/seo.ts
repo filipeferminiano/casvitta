@@ -15,6 +15,7 @@ export const MARKETPLACE_PAGES = [
   { path: '/investidores', priority: 0.6 },
   { path: '/incorporadoras', priority: 0.5 },
   { path: '/leilao', priority: 0.5 },
+  { path: '/mapa-do-site', priority: 0.5 },
   { path: '/sobre', priority: 0.3 },
   { path: '/privacidade', priority: 0.2 },
   { path: '/termos', priority: 0.2 },

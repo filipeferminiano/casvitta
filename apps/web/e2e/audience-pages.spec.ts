@@ -1,8 +1,9 @@
 import { expect, test, type Page } from '@playwright/test';
 
 /**
- * Audience landing pages (docs/mockups/landing-pages/): switch between owners, brokers and
- * agencies, and submit the owner start form and the agency demo form, at 390 and 1440 px.
+ * Audience landing pages (docs/mockups/landing-pages/): reach owners, brokers and agencies from
+ * the site menus with the same header as every other page, and submit the owner start form and
+ * the agency demo form, at 390 and 1440 px.
  * Screenshots for the side-by-side comparison come from `pnpm screens:capture landing-pages`.
  */
 const port = Number(process.env.E2E_PORT ?? 3100);
@@ -14,7 +15,7 @@ test.skip(({ isMobile }) => isMobile, 'viewports are set per describe block');
 const signups = (page: Page) =>
   page.evaluate(
     () =>
-      (JSON.parse(window.sessionStorage.getItem('casvitta.mockdb.v4') ?? '{}').interestSignups ??
+      (JSON.parse(window.sessionStorage.getItem('casvitta.mockdb.v5') ?? '{}').interestSignups ??
         []) as { kind: string; criteria: Record<string, unknown>; email?: string }[],
   );
 
@@ -27,40 +28,54 @@ for (const { name, viewport, mobile } of VIEWPORTS) {
   test.describe(name, () => {
     test.use({ viewport, hasTouch: mobile });
 
-    test('owners → brokers → agencies through the audience switch', async ({ page }) => {
-      const go = async (label: string, short: string) => {
-        const nav = page.getByRole('navigation', { name: 'Páginas por público' });
-        await nav.getByRole('link', { name: mobile ? short : label, exact: true }).click();
+    test('the three pages keep the site header and are reached from its menus', async ({
+      page,
+    }) => {
+      const nav = page.getByRole('navigation', { name: 'Navegação do site' });
+      /** Open a header menu (accordion on phones) and follow one of its links. */
+      const follow = async (menu: string, link: string) => {
+        if (mobile) await page.getByRole('button', { name: 'Abrir menu' }).click();
+        await nav.getByRole('button', { name: menu }).click();
+        await nav.getByRole('link', { name: link, exact: true }).click();
       };
-      const current = (text: string) =>
-        expect(
-          page
-            .getByRole('navigation', { name: 'Páginas por público' })
-            .getByRole('link', { name: text, exact: true }),
-        ).toHaveAttribute('aria-current', 'page');
+      /** Same header as every other public page: the five menus and the broker CTA. */
+      const siteHeader = async () => {
+        if (mobile) {
+          await expect(page.getByRole('button', { name: 'Abrir menu' })).toBeVisible();
+          return;
+        }
+        for (const menu of ['Comprar', 'Alugar', 'Vender', 'Ferramentas', 'Para profissionais'])
+          await expect(nav.getByRole('button', { name: menu })).toBeVisible();
+        await expect(
+          page.getByRole('banner').getByRole('link', { name: 'Começar como corretor' }),
+        ).toBeVisible();
+      };
 
-      await page.goto(market('/anunciar-imovel'));
+      await page.goto(market('/'));
+      await follow('Vender', 'Anunciar meu imóvel');
+      await expect(page).toHaveURL(/\/anunciar-imovel$/);
       await expect(page).toHaveTitle('Anunciar imóvel sem mensalidade: 30 ou 90 dias | Casvitta');
       await expect(page.getByRole('heading', { level: 1 })).toHaveText(
         'Seu imóvel anunciado, sem contratar um software.',
       );
-      await current(mobile ? 'proprietários' : 'Para proprietários');
+      await siteHeader();
 
-      await go('Para corretores', 'corretores');
+      await follow('Para profissionais', 'Planos para corretores');
       await expect(page).toHaveURL(/\/para-corretores$/);
       await expect(page).toHaveTitle(
         'Software para corretor de imóveis com portal incluído | Casvitta',
       );
-      await current(mobile ? 'corretores' : 'Para corretores');
+      await siteHeader();
       await expect(
         page.getByText('R$ 99', { exact: true }).filter({ visible: true }).first(),
       ).toBeVisible();
 
-      await go('Para imobiliárias', 'imobiliárias');
+      await follow('Para profissionais', 'Imobiliárias');
       await expect(page).toHaveURL(/\/para-imobiliarias$/);
       await expect(page).toHaveTitle('Sistema para imobiliárias com portal incluído | Casvitta');
-      await current(mobile ? 'imobiliárias' : 'Para imobiliárias');
+      await siteHeader();
       await expect(page.getByText('Sob consulta').filter({ visible: true }).first()).toBeVisible();
+      await expect(page.getByRole('navigation', { name: 'Páginas por público' })).toHaveCount(0);
     });
 
     test('owner start form stores owner_listing_start and charges nothing', async ({ page }) => {

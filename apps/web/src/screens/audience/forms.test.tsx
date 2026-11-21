@@ -8,7 +8,6 @@ import { db, resetDb } from '@/lib/data/store';
 import messages from '../../../messages/pt-BR.json';
 
 import { AgencyDemoForm } from './AgencyDemoForm';
-import { audienceFor } from './AudienceNav';
 import { OwnerStartForm } from './OwnerStartForm';
 
 globalThis.ResizeObserver ??= class {
@@ -138,15 +137,5 @@ describe('agency demo form (kind agency_demo)', () => {
       email: 'carla@imobiliariasul.com.br',
       criteria: { company: 'Imobiliária Sul', team_size: '6_15', active_properties: 'up_to_200' },
     });
-  });
-});
-
-describe('audience switch routing', () => {
-  it('only the three audience pages get the switch', () => {
-    expect(audienceFor('/anunciar-imovel')).toBe('owners');
-    expect(audienceFor('/para-corretores')).toBe('brokers');
-    expect(audienceFor('/para-imobiliarias')).toBe('agencies');
-    expect(audienceFor('/anunciar-imovel/corretor')).toBeNull();
-    expect(audienceFor('/comprar')).toBeNull();
   });
 });

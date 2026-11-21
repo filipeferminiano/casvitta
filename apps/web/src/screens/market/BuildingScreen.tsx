@@ -16,6 +16,7 @@ import { formatChange, formatPriceM2 } from '@/lib/market-format';
 
 import { AlertForm } from './AlertForm';
 import { JsonLd, breadcrumbList, dataset, place } from './MarketJsonLd';
+import { MarketSimulator } from './MarketSimulator';
 import {
   ContinueLinks,
   MarketBreadcrumbs,
@@ -222,6 +223,13 @@ export async function BuildingScreen({ page }: { page: BuildingPage }) {
         </section>
       )}
 
+      {priced && page.gate.passes ? (
+        <MarketSimulator
+          medianValueCents={stats?.median_value_cents}
+          where={tMarket('simulator.thisBuilding')}
+          itemId={`condominio-${page.building.slug}`}
+        />
+      ) : null}
       <section aria-labelledby="anuncios" className="flex flex-col gap-4">
         <h2 id="anuncios" className="type-title">
           {t('listings.title')}

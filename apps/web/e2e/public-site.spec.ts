@@ -50,7 +50,7 @@ test('auction interest is stored and the confirmation shows the criteria', async
   await expect(criteria.getByText('Investir')).toBeVisible();
   await expect(page.getByText('Demonstrativo')).toHaveCount(0);
   const stored = await page.evaluate(() =>
-    JSON.parse(window.sessionStorage.getItem('casvitta.mockdb.v4') ?? '{}'),
+    JSON.parse(window.sessionStorage.getItem('casvitta.mockdb.v5') ?? '{}'),
   );
   expect(stored.interestSignups).toHaveLength(1);
   expect(stored.interestSignups[0]).toMatchObject({ kind: 'auction', status: 'pending_opt_in' });
