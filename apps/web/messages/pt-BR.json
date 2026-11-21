@@ -3243,7 +3243,7 @@
       "usage": "imóveis ativos no plano",
       "usageValue": "{value} de {max}",
       "ownerBadge": "Anúncio do proprietário",
-      "highlightBadge": "Destaque",
+      "highlightBadge": "Patrocinado",
       "photo": "Foto do imóvel",
       "published": "Publicado",
       "draft": "Rascunho",
@@ -3368,9 +3368,9 @@
       },
       "highlight": {
         "title": "Destaque: mais exposição dentro do portal",
-        "body": "Com o destaque, seu anúncio aparece em posições de maior visibilidade nas buscas do portal Casvitta, com o selo “Destaque”. É opcional, cobrado à parte e contratado quando você quiser.",
+        "body": "Com o destaque, seu anúncio pode aparecer em espaços marcados como Patrocinado nas buscas do portal Casvitta que combinam com o imóvel. É opcional, cobrado à parte e contratado quando você quiser.",
         "callout": "O destaque aumenta a exposição dentro do portal. Não garante contatos, venda ou locação, e não inclui campanhas no Google ou nas redes sociais.",
-        "label": "Exemplo ilustrativo: um anúncio com o selo Destaque ao lado de um anúncio sem destaque"
+        "label": "Exemplo ilustrativo: um anúncio com o selo Patrocinado ao lado de um anúncio sem destaque"
       },
       "faq": {
         "software": {
@@ -3630,7 +3630,7 @@
         "title": "Publicação no portal Casvitta incluída no plano",
         "body": "Os imóveis ativos da carteira podem ser publicados no portal sem custo adicional, até o limite do plano. Cada anúncio mostra a imobiliária, o corretor responsável e o CRECI.",
         "note": "Publicação incluída não significa posição privilegiada na busca. Destaques são opcionais e cobrados à parte.",
-        "label": "Exemplo ilustrativo: dois anúncios da imobiliária no portal, um com o selo Destaque, e o uso do plano"
+        "label": "Exemplo ilustrativo: dois anúncios da imobiliária no portal, um com o selo Patrocinado, e o uso do plano"
       },
       "plans": {
         "eyebrow": "Planos",
