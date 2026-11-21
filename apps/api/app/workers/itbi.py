@@ -1,6 +1,7 @@
 """ITBI ingestion CLI.
 
     uv run python -m app.workers.itbi ingest --city sao-paulo --path data/raw/itbi/sao-paulo
+    uv run python -m app.workers.itbi release-wave --city sao-paulo --wave 2
 
 Relative paths resolve from the current folder, then from the repository root. ``--no-raw``
 skips the raw audit copy (use it against the shared production database).
@@ -23,6 +24,7 @@ from app.core.settings import REPO_ROOT, Settings, get_settings
 from app.domains.market_data.models import MarketCity
 from app.domains.market_data.pipeline import RunResult, run_ingestion
 from app.domains.market_data.refresh import after_refresh, snapshot
+from app.domains.market_data.release import release_wave
 from app.integrations.itbi.http import HttpItbiSource
 from app.integrations.itbi.local import LocalFileItbiSource
 from app.integrations.itbi.port import ItbiSource
@@ -77,6 +79,16 @@ async def ingest(city: str, path: Path, persist_raw: bool) -> int:
     return 0
 
 
+async def release(city: str, wave: int) -> int:
+    settings = get_settings()
+    search_index = build_integrations(settings).search_index
+    async with get_sessionmaker()() as session:
+        summary = await release_wave(session, city, wave, settings, search_index)
+        await session.commit()
+    print(json.dumps(summary, indent=2, ensure_ascii=False))
+    return 0
+
+
 def main(argv: list[str] | None = None) -> int:
     settings = get_settings()
     configure_logging(settings.log_level, settings.log_json)
@@ -86,7 +98,14 @@ def main(argv: list[str] | None = None) -> int:
     run.add_argument("--city", default="sao-paulo")
     run.add_argument("--path", default=None, help="folder with the .xlsx files")
     run.add_argument("--no-raw", action="store_true", help="do not store raw source rows")
+    rel = commands.add_parser(
+        "release-wave", help="make a wave of curated neighborhoods indexable (seeds.py)"
+    )
+    rel.add_argument("--city", default="sao-paulo")
+    rel.add_argument("--wave", type=int, required=True)
     args = parser.parse_args(argv)
+    if args.command == "release-wave":
+        return asyncio.run(release(args.city, args.wave))
     path = resolve_path(args.path or f"{settings.itbi_data_dir}/{args.city}")
     persist_raw = settings.itbi_persist_raw and not args.no_raw
     return asyncio.run(ingest(args.city, path, persist_raw))

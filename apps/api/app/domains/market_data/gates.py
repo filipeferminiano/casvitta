@@ -1,7 +1,7 @@
 """Privacy and quality gates: the only way a number leaves the market-data domain.
 
 - An entity page shows numbers only when its gate passes (neighborhood: 30 sales in 12 months;
-  street: 10 in 36 months; building: 5 in all history; all configurable). Below the page gate
+  street: 5 in 36 months; building: 5 in all history; all configurable). Below the page gate
   only counts may appear.
 - Every published price (median, R$/m², ranges, area bands, monthly points, comparable groups,
   changes) needs ``market_min_price_group`` (10) sales without quality flags behind it; below

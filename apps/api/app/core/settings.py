@@ -150,7 +150,7 @@ class Settings(BaseSettings):
     # complete payment month.
     market_window_lag_months: int = 1
     market_min_neighborhood_12m: int = 30
-    market_min_street_36m: int = 10
+    market_min_street_36m: int = 5
     market_min_building_all: int = 5
     # Every published median (any page, band, month or comparable group) needs this many sales.
     market_min_price_group: int = 10
