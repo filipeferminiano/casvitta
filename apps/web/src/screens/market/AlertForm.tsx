@@ -6,7 +6,6 @@ import { useTranslations } from 'next-intl';
 import type { ReactNode } from 'react';
 
 import { api } from '@/lib/api';
-import { isLive } from '@/lib/live';
 
 type AlertPayload =
   paths['/v1/public/property-alerts']['post']['requestBody']['content']['application/json'];
@@ -30,7 +29,6 @@ export type AlertVariant =
   | 'listingsRent'
   | 'listingsSale';
 
-const USE_API = isLive('market');
 const FIELD_NAMES: Record<string, string> = {
   name: 'name',
   phone: 'whatsapp',
@@ -39,8 +37,9 @@ const FIELD_NAMES: Record<string, string> = {
 };
 
 /**
- * Lead form on price pages and tools. Stores the alert with consent per purpose (LGPD).
- * No message is sent yet, and the success copy does not promise one.
+ * Lead form on price pages and tools. Always posts to the API (also when the page shows demo
+ * price data): a lead is never reported as saved unless the API stored it. Consent per purpose
+ * (LGPD); no message is sent yet, and the success copy does not promise one.
  */
 export function AlertForm({
   target,
@@ -81,7 +80,6 @@ export function AlertForm({
       valuation_snapshot:
         valuationSnapshot ?? (values.extra != null ? { budget_cents: values.extra } : null),
     };
-    if (!USE_API) return { ok: true };
     const { data, error } = await api.POST('/v1/public/property-alerts', { body: payload });
     if (data) return { ok: true };
     if (isApiError(error)) {
