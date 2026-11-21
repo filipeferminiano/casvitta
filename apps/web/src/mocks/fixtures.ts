@@ -15,6 +15,7 @@ import type {
   BrokerProfile,
   Campaign,
   Conversation,
+  HighlightCampaign,
   Lead,
   LeadSource,
   Message,
@@ -1473,3 +1474,38 @@ export const rentEstimates: Record<string, RentEstimate> = {
   'mk-6': { monthlyCents: 300_000, comparables: 6 },
   'mk-9': { monthlyCents: 520_000, comparables: 4 },
 };
+
+/**
+ * Destaques demo campaigns (docs/mockups/destaques/00-scenarios-states). Only an active delivery
+ * makes a property sponsored; the scheduled one shows that paid ≠ delivering.
+ */
+export const highlightCampaigns: HighlightCampaign[] = [
+  {
+    id: 'DST-2611-0042',
+    propertyId: 'prop-vm',
+    advertiserWorkspaceId: WS,
+    packageDays: 7,
+    priceCents: 3_900,
+    payment: 'paid',
+    review: 'approved',
+    delivery: 'active',
+    plannedStartsOn: '2026-11-18',
+    plannedEndsOn: '2026-11-24',
+    deliveredDays: 3,
+    isDemo: true,
+  },
+  {
+    id: 'DST-2611-0051',
+    propertyId: 'mk-3',
+    advertiserWorkspaceId: 'ws-bruno',
+    packageDays: 30,
+    priceCents: 11_900,
+    payment: 'paid',
+    review: 'approved',
+    delivery: 'scheduled',
+    plannedStartsOn: '2026-12-02',
+    plannedEndsOn: '2026-12-31',
+    deliveredDays: 0,
+    isDemo: true,
+  },
+];

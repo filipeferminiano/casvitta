@@ -15,20 +15,25 @@ Later modules (do NOT build unless a task says so; show them as "Em breve" in th
 
 ### Offers (hypotheses, nov/2026; keep in config, not hard-coded)
 
-One catalog: `OFFERS` in `apps/web/src/config/site.ts`, mirrored by `offer_*` in the API settings. Never shown as a promotion, discount or trial.
+One catalog: `offer_*` in the API settings, read by `OFFERS` in `apps/web/src/config/site.ts` (moving to one API-served catalog); plan entitlements in `apps/api/app/core/entitlements.py`. Never shown as a promotion, discount or trial.
 
 | Offer | Audience | Price | Limits / what the audience pages sell |
 |---|---|---|---|
 | Anúncio avulso · 30 dias | owners | R$ 59, single payment | 1 property on the portal, no software; ends at the end of the period, renewed only by the owner's choice |
 | Anúncio avulso · 90 dias | owners | R$ 149, single payment | same, 90 days |
-| Plano Corretor (`corretor`) | independent brokers | R$ 99/month | 1 user, up to 50 active properties; software (properties, contacts, opportunities) + portal publishing within the limit |
+| Bio (`bio`) | independent brokers (Casvitta Social) | free | 1 page, up to 10 active properties, QR code; portal publishing of authorized properties |
+| Social (`social`) | brokers (Casvitta Social) | R$ 49/month | 50 active properties, collections, finder and owner forms, Interessados, custom domain |
+| Automação (`automacao`) | brokers (Casvitta Social) | R$ 149/month | Social + Instagram comment-to-DM and inbox (SOC-2; gated until Meta approval) |
+| Plano Corretor (`corretor`) | independent brokers | R$ 99/month | 1 user, up to 50 active properties; software (properties, contacts, opportunities) + portal publishing within the limit; includes every Social entitlement |
 | Essencial | agencies | R$ 299/month | 5 users, up to 200 active properties |
-| Equipe | agencies | R$ 499/month | 15 users, up to 500 active properties |
+| Equipe | agencies | R$ 499/month | 15 users, up to 500 active properties; also the Casvitta Social "Imobiliária" plan (10 pages, agency domain) |
 | Operação maior | agencies | Sob consulta | limits as needed |
-| Destaque (highlight) | everyone | not defined | optional, per property and period; never rendered as a number until set |
+| Destaque (highlight) | everyone | R$ 39 / 7 days · R$ 119 / 30 days, single payment (effective 21/11/2026) | optional, per property and period, sold apart from publishing; label "Patrocinado"; no position, contact or sale guaranteed |
 | Migração assistida | agencies | quoted apart | optional service |
 
 Active-property limits exclude sold, rented and paused properties. Portal publishing included in a plan never means a better search position, nor Google/Meta campaigns. Cancelling ends software access and plan-linked publishing at the end of the paid period. Packaging of the WhatsApp AI assistant and Anúncios (Door 1) into these offers is still to be defined; the audience pages do not sell them. Legacy plans `essencial`/`profissional` (R$ 197/397) stay valid on existing workspaces only.
+
+**Destaques** (internal name Casvitta Ads) is paid sponsored placement inside the Casvitta portal only, labeled "Patrocinado" and shown only in searches the property matches. It is never derived from an Anúncios (Ads Studio, Meta/Google) campaign, and buying it never replaces publishing.
 
 Media runs in the broker's own Meta and Google Ads accounts: the broker connects them, keeps the card on file at Meta/Google and is billed directly by them; Casvitta never charges, holds or resells media and only creates and manages the campaigns. Minimum budget R$ 20/day per property (config: `MIN_DAILY_BUDGET_CENTS=2000`); the customer chooses any amount at or above it. Charged only on what is spent, up to a cap the customer sets.
 

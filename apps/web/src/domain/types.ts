@@ -281,6 +281,33 @@ export type CampaignStats = {
   visits: number;
 };
 
+/**
+ * Destaques (internal name Casvitta Ads): a fixed-price, per-period sponsored placement inside the
+ * Casvitta portal only. Three independent statuses; days count only while delivery is active.
+ * Never derived from an Ads Studio (Meta/Google) campaign.
+ */
+export type HighlightPaymentStatus =
+  'pix_pending' | 'processing' | 'paid' | 'declined' | 'refund_requested' | 'refunded';
+export type HighlightReviewStatus = 'in_review' | 'approved' | 'needs_correction' | 'rejected';
+export type HighlightDeliveryStatus =
+  'not_started' | 'scheduled' | 'active' | 'paused' | 'interrupted' | 'ended';
+export type HighlightCampaign = {
+  /** DST-YYMM-NNNN */
+  id: string;
+  propertyId: ID;
+  advertiserWorkspaceId: ID;
+  packageDays: 7 | 30;
+  /** Price snapshot at purchase. */
+  priceCents: Cents;
+  payment: HighlightPaymentStatus;
+  review: HighlightReviewStatus;
+  delivery: HighlightDeliveryStatus;
+  plannedStartsOn: string;
+  plannedEndsOn: string;
+  deliveredDays: number;
+  isDemo: boolean;
+};
+
 export type Campaign = {
   id: ID;
   propertyId: ID;

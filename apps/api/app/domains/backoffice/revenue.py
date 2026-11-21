@@ -73,10 +73,17 @@ def revenue(settings: Settings) -> RevenueOut:
             per="listing",
         ),
         RevenueLine(
-            key="highlight",
+            key="highlight_7d",
             nature="per_listing",
             status=waits,
-            price_cents=settings.offer_highlight_price_cents,
+            price_cents=settings.offer_highlight_7d_price_cents,
+            per="listing",
+        ),
+        RevenueLine(
+            key="highlight_30d",
+            nature="per_listing",
+            status=waits,
+            price_cents=settings.offer_highlight_30d_price_cents,
             per="listing",
         ),
         RevenueLine(

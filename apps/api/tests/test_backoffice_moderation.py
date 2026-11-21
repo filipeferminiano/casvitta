@@ -130,7 +130,8 @@ def test_revenue_shows_catalog_lines_without_amounts() -> None:
     lines = {line.key: line for line in out.lines}
     assert lines["saas_broker"].price_cents == 9_900
     assert lines["saas_agency_larger"].price_cents is None  # "sob consulta"
-    assert lines["highlight"].price_cents is None  # not defined yet
+    assert lines["highlight_7d"].price_cents == 3_900
+    assert lines["highlight_30d"].price_cents == 11_900
     assert {lines[k].status for k in ("commission_rent", "commission_sale", "insurance")} == {
         "soon"
     }

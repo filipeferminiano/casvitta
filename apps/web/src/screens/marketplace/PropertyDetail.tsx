@@ -3,7 +3,7 @@ import { ChevronLeft } from 'lucide-react';
 import Link from 'next/link';
 import { getTranslations } from 'next-intl/server';
 
-import { CreciBadge, DemoBadge, SimulationBadge, SponsoredBadge } from '@/components/badges';
+import { CreciBadge, DemoBadge, SimulationBadge } from '@/components/badges';
 import { TrackOnMount } from '@/components/TrackOnMount';
 import { toValue } from '@/lib/analytics';
 import type { PublicListing } from '@/lib/data/marketplace';
@@ -73,13 +73,7 @@ export async function PropertyDetail({ listing }: { listing: PublicListing }) {
         <PhotoPlaceholder
           caption={t('photoOf', { n: 1, total: p.photoCount })}
           className="h-[250px] w-full"
-        >
-          {listing.sponsored ? (
-            <span className="absolute top-3 left-3">
-              <SponsoredBadge />
-            </span>
-          ) : null}
-        </PhotoPlaceholder>
+        />
         <div className="flex flex-col gap-3 px-4 pt-4">
           <p className="type-body-s text-fg-muted">{`${kind} · ${p.neighborhood}`}</p>
           <p className="-mt-2 font-mono text-[26px] leading-8 font-semibold tabular">{priceText}</p>
@@ -215,7 +209,7 @@ export async function PropertyDetail({ listing }: { listing: PublicListing }) {
           <aside className="flex flex-col gap-5">
             <section className="rounded-card border border-line bg-panel p-5">
               <div className="flex justify-between">
-                {listing.sponsored ? <SponsoredBadge /> : <span />}
+                <span />
                 {p.isDemo ? <DemoBadge /> : null}
               </div>
               <p className="mt-3 type-body-s text-fg-strong">

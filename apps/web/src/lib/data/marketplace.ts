@@ -9,7 +9,9 @@ import type {
   Campaign,
   Property,
 } from '@/domain/types';
+import { HIGHLIGHT_SERVING } from '@/config/site';
 import { simulateSac } from '@/lib/finance';
+import { placeSponsored, type Placed } from '@/lib/highlights/serving';
 import type { SearchFilters } from '@/lib/search-params';
 import { now } from '@/mocks/clock';
 import { marketBrokers, marketProperties, rentEstimates } from '@/mocks/fixtures';
@@ -21,7 +23,7 @@ import { byId } from './views';
 export type PublicListing = {
   property: Property;
   broker: BrokerProfile;
-  sponsored: boolean;
+  /** Ads Studio (Meta/Google) campaign: attribution only; it never makes a listing sponsored. */
   campaign: Campaign | null;
   /** Approved ad copy (AI-written, shown with "Feito por IA"). */
   creative: AdCreative | null;
@@ -51,7 +53,6 @@ export function getListingBySlug(slug: string): PublicListing | null {
   return {
     property,
     broker: brokerFor(property),
-    sponsored: Boolean(campaign),
     campaign,
     creative,
   };
@@ -225,7 +226,7 @@ export type InvestmentEstimate = {
   grossYield: number;
 };
 
-export type SearchResult = PublicListing & {
+export type SearchResult = Placed<PublicListing> & {
   /** First SAC installment with 20% down, 360 months, illustrative rate (sales only). */
   installmentCents: number | null;
   /** Only in "Para investir" mode, and only with ≥ 5 comparables (CLAUDE.md rule 12). */
@@ -248,6 +249,9 @@ export function investmentEstimate(property: Property): InvestmentEstimate | nul
   };
 }
 
+const saoPauloDay = (date: Date) =>
+  new Intl.DateTimeFormat('en-CA', { timeZone: 'America/Sao_Paulo' }).format(date);
+
 export function searchListings(filters: SearchFilters): SearchResult[] {
   const place = filters.where ? fold(filters.where.split(',')[0] ?? '') : null;
   const listings = listPublicListings().filter(({ property: p }) => {
@@ -268,11 +272,18 @@ export function searchListings(filters: SearchFilters): SearchResult[] {
     price_asc: (a, b) => a.property.priceCents - b.property.priceCents,
     price_desc: (a, b) => b.property.priceCents - a.property.priceCents,
   };
-  // Sponsored listings always come first and are labeled; the rest follow the chosen order.
-  const sorted = [...listings].sort(
-    (a, b) => Number(b.sponsored) - Number(a.sponsored) || order[filters.sort](a, b),
+  const organic = [...listings].sort(order[filters.sort]);
+  // Destaques only: up to 2 labeled slots among results that already match the filters, rotated
+  // per search and per São Paulo day (mockup 45).
+  const seed = `${saoPauloDay(now())}|${JSON.stringify(filters)}`;
+  const placed = placeSponsored(
+    organic,
+    (l) => ({ propertyId: l.property.id, advertiserId: l.property.workspaceId }),
+    db().highlightCampaigns,
+    HIGHLIGHT_SERVING,
+    seed,
   );
-  return sorted.map((listing) => ({
+  return placed.map((listing) => ({
     ...listing,
     installmentCents:
       listing.property.transaction === 'sale'

@@ -130,7 +130,7 @@ describe('modules (CLAUDE.md §4.9)', () => {
 describe('marketplace (CLAUDE.md §4.2, §4.4)', () => {
   it('never exposes a property without authorization', () => {
     expect(marketplace.getListingBySlug('apto-perdizes')).toBeNull();
-    expect(marketplace.getListingBySlug('apto-vila-mariana')?.sponsored).toBe(true);
+    expect(marketplace.getListingBySlug('apto-vila-mariana')).not.toBeNull();
   });
 
   it('answers only from the record and hands off the rest', () => {
@@ -161,9 +161,13 @@ describe('marketplace (CLAUDE.md §4.2, §4.4)', () => {
 describe('search (mockup 53, CLAUDE.md rules 2 and 12)', () => {
   const base = parseFilters(new URLSearchParams(), 'sale');
 
-  it('puts sponsored listings first and never shows unauthorized properties', () => {
+  it('sponsored slots come only from a delivering Destaque, and never unauthorized properties', () => {
     const results = marketplace.searchListings(base);
-    expect(results[0]?.sponsored).toBe(true);
+    const sponsored = results.filter((r) => r.sponsored);
+    // DST-2611-0042 is active; DST-2611-0051 (mk-3) is only scheduled; Ads Studio campaigns never count.
+    expect(sponsored.map((r) => r.highlightCampaignId)).toEqual(['DST-2611-0042']);
+    expect(results[0]?.property.id).toBe('prop-vm');
+    expect(results.filter((r) => r.property.id === 'mk-3')[0]?.sponsored).toBe(false);
     expect(results.some((r) => r.property.id === 'prop-perdizes')).toBe(false);
     expect(results.every((r) => r.property.transaction === 'sale')).toBe(true);
   });

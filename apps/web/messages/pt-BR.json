@@ -17,7 +17,7 @@
     "ai": "Feito por IA",
     "simulation": "Simulação · não é aprovação",
     "soon": "Em breve",
-    "sponsored": "Destaque pago",
+    "sponsored": "Patrocinado",
     "creci": "CRECI-{state} {number}"
   },
   "nav": {
@@ -1267,7 +1267,7 @@
     "emptyTitle": "Nenhum imóvel com esses filtros",
     "emptyDescription": "Tire um filtro ou aumente o valor máximo para ver mais opções.",
     "clear": "Limpar filtros",
-    "sponsoredNote": "Destaque pago aparece primeiro e sempre marcado. Os demais seguem a ordem escolhida.",
+    "sponsoredNote": "Patrocinado: imóveis com destaque pago, no máximo 2 por página e sempre marcados. A posição varia a cada busca. Os demais seguem a ordem escolhida.",
     "mapLabel": "Mapa{place, select, other { · {place}}}",
     "card": {
       "photo": "Foto",
@@ -3160,7 +3160,8 @@
         "saas_agency_larger": "Imobiliária Operação maior",
         "owner_30d": "Anúncio do proprietário · 30 dias",
         "owner_90d": "Anúncio do proprietário · 90 dias",
-        "highlight": "Destaque pago no marketplace",
+        "highlight_7d": "Destaque · 7 dias",
+        "highlight_30d": "Destaque · 30 dias",
         "commission_rent": "Comissão de aluguel",
         "commission_sale": "Comissão de venda",
         "insurance": "Seguros"

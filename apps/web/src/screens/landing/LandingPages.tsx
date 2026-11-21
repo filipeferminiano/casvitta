@@ -2,13 +2,7 @@ import { Avatar, Button, Chip, PhotoPlaceholder } from '@casvitta/ui';
 import Link from 'next/link';
 import { getTranslations } from 'next-intl/server';
 
-import {
-  AiBadge,
-  CreciBadge,
-  DemoBadge,
-  SimulationBadge,
-  SponsoredBadge,
-} from '@/components/badges';
+import { AiBadge, CreciBadge, DemoBadge, SimulationBadge } from '@/components/badges';
 import type { BrokerProfile } from '@/domain/types';
 import { listPublicListings, type PublicListing } from '@/lib/data/marketplace';
 import { simulateSac } from '@/lib/finance';
@@ -85,11 +79,6 @@ export async function PropertyLanding({ listing }: { listing: PublicListing }) {
     <div className="mx-auto grid max-w-6xl gap-6 px-4 py-8 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)]">
       <div className="grid h-[320px] grid-cols-[2fr_1fr] grid-rows-2 gap-2 sm:h-[430px]">
         <PhotoPlaceholder caption={tListing('mainPhoto')} className="row-span-2 rounded-card">
-          {listing.sponsored ? (
-            <span className="absolute top-3 left-3">
-              <SponsoredBadge />
-            </span>
-          ) : null}
           <span className="absolute right-3 bottom-3">
             <CreciBadge broker={broker} className="bg-panel" />
           </span>

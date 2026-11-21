@@ -24,6 +24,7 @@ export type Db = {
   proposals: typeof fx.proposals;
   creatives: typeof fx.creatives;
   campaigns: typeof fx.campaigns;
+  highlightCampaigns: typeof fx.highlightCampaigns;
   reports: typeof fx.reports;
   socialPosts: typeof fx.socialPosts;
   modules: typeof fx.modules;
@@ -39,7 +40,7 @@ export type Db = {
   signups: Record<string, SignupDraft>;
 };
 
-const STORAGE_KEY = 'casvitta.mockdb.v4';
+const STORAGE_KEY = 'casvitta.mockdb.v5';
 
 export const DEFAULT_AD_DRAFT: AdDraft = {
   propertyId: null,
@@ -69,6 +70,7 @@ function seed(): Db {
     proposals: fx.proposals,
     creatives: fx.creatives,
     campaigns: fx.campaigns,
+    highlightCampaigns: fx.highlightCampaigns,
     reports: fx.reports,
     socialPosts: fx.socialPosts,
     modules: fx.modules,

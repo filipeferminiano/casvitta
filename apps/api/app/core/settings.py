@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from datetime import date
 from functools import lru_cache
 from pathlib import Path
 from typing import Annotated, Literal
@@ -141,8 +142,11 @@ class Settings(BaseSettings):
     offer_agency_equipe_price_cents: int = 49_900
     offer_agency_equipe_max_active_properties: int = 500
     offer_agency_equipe_max_users: int = 15
-    # Highlight (destaque) price is not defined yet; never shown as a number while None.
-    offer_highlight_price_cents: int | None = None
+    # Destaque (highlight): fixed price per property and period, sold apart from publishing.
+    # Hypotheses confirmed by the owner on 2026-11-21 (effective date kept with the prices).
+    offer_highlight_effective_from: date = date(2026, 11, 21)
+    offer_highlight_7d_price_cents: int = 3_900
+    offer_highlight_30d_price_cents: int = 11_900
     min_daily_budget_cents: int = 2_000
     financing_illustrative_annual_rate_bps: int = 1_150
 

@@ -28,10 +28,9 @@ const TRUST = [
 export async function HomeScreen() {
   const t = await getTranslations('home');
   const tTools = await getTranslations('marketplace.tools');
-  // Featured: published listings only (rule 2), sponsored first.
-  const featured = listPublicListings()
-    .sort((a, b) => Number(b.sponsored) - Number(a.sponsored))
-    .slice(0, 4);
+  // Featured: published listings only (rule 2). Not a search, so no sponsored slots here:
+  // "Patrocinado" only appears in searches the property matches (Destaques §4).
+  const featured = listPublicListings().slice(0, 4);
   const sample = featured[0]?.property.priceCents ?? 69_000_000;
 
   return (

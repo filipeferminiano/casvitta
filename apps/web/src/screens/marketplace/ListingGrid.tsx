@@ -3,7 +3,7 @@ import { House } from 'lucide-react';
 import Link from 'next/link';
 import { getTranslations } from 'next-intl/server';
 
-import { CreciBadge, DemoBadge, SponsoredBadge } from '@/components/badges';
+import { CreciBadge, DemoBadge } from '@/components/badges';
 import type { PublicListing } from '@/lib/data/marketplace';
 import { formatBRL } from '@/lib/format';
 
@@ -48,12 +48,7 @@ export async function ListingGrid({
             <ListingJsonLd listing={listing} url={hrefFor(listing)} />
             <PropertyCard
               photoCaption={t('mainPhoto')}
-              badges={
-                <>
-                  {listing.sponsored ? <SponsoredBadge /> : null}
-                  {p.isDemo ? <DemoBadge /> : null}
-                </>
-              }
+              badges={<>{p.isDemo ? <DemoBadge /> : null}</>}
               title={
                 <Link href={hrefFor(listing)} className={cardLinkClass}>
                   {`${t(`kinds.${p.kind}`)} · ${p.neighborhood}`}
