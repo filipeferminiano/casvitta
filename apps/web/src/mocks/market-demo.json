@@ -62,7 +62,7 @@
           "p75_built_area_m2": 90,
           "p75_price_m2_cents": 1253000,
           "priced": true,
-          "refreshed_at": "2026-11-21T12:15:40.120624Z",
+          "refreshed_at": "2026-11-21T12:32:18.682634Z",
           "sales": 36,
           "sales_change_12m_pct": null,
           "top_financing_type_code": 1,
@@ -116,7 +116,7 @@
           "p75_built_area_m2": 90,
           "p75_price_m2_cents": 1270000,
           "priced": true,
-          "refreshed_at": "2026-11-21T12:15:40.120624Z",
+          "refreshed_at": "2026-11-21T12:32:18.682634Z",
           "sales": 56,
           "sales_change_12m_pct": null,
           "top_financing_type_code": 1,
@@ -131,7 +131,7 @@
     "source": {
       "data_through": "2026-09-01",
       "is_demo": true,
-      "refreshed_at": "2026-11-21T12:15:40.146432Z",
+      "refreshed_at": "2026-11-21T12:32:18.710654Z",
       "window_end": "2026-08-31"
     },
     "stats": {
@@ -148,7 +148,7 @@
       "p75_built_area_m2": 90,
       "p75_price_m2_cents": 1267000,
       "priced": true,
-      "refreshed_at": "2026-11-21T12:15:40.120624Z",
+      "refreshed_at": "2026-11-21T12:32:18.682634Z",
       "sales": 96,
       "sales_change_12m_pct": null,
       "top_financing_type_code": 1,
@@ -214,7 +214,7 @@
           "p75_built_area_m2": 90,
           "p75_price_m2_cents": 1270000,
           "priced": true,
-          "refreshed_at": "2026-11-21T12:15:40.120624Z",
+          "refreshed_at": "2026-11-21T12:32:18.682634Z",
           "sales": 56,
           "sales_change_12m_pct": null,
           "top_financing_type_code": 1,
@@ -230,7 +230,7 @@
     "source": {
       "data_through": "2026-09-01",
       "is_demo": true,
-      "refreshed_at": "2026-11-21T12:15:40.146432Z",
+      "refreshed_at": "2026-11-21T12:32:18.710654Z",
       "window_end": "2026-08-31"
     },
     "stats": null,
@@ -272,7 +272,7 @@
     "source": {
       "data_through": "2026-09-01",
       "is_demo": true,
-      "refreshed_at": "2026-11-21T12:15:40.146432Z",
+      "refreshed_at": "2026-11-21T12:32:18.710654Z",
       "window_end": "2026-08-31"
     },
     "stats": null,
@@ -318,7 +318,7 @@
     "source": {
       "data_through": "2026-09-01",
       "is_demo": true,
-      "refreshed_at": "2026-11-21T12:15:40.146432Z",
+      "refreshed_at": "2026-11-21T12:32:18.710654Z",
       "window_end": "2026-08-31"
     },
     "term_months": 360
@@ -351,7 +351,7 @@
     "source": {
       "data_through": "2026-09-01",
       "is_demo": true,
-      "refreshed_at": "2026-11-21T12:15:40.146432Z",
+      "refreshed_at": "2026-11-21T12:32:18.710654Z",
       "window_end": "2026-08-31"
     },
     "stats": null,
@@ -391,7 +391,7 @@
     "source": {
       "data_through": "2026-09-01",
       "is_demo": true,
-      "refreshed_at": "2026-11-21T12:15:40.146432Z",
+      "refreshed_at": "2026-11-21T12:32:18.710654Z",
       "window_end": "2026-08-31"
     },
     "stats": null,
@@ -431,7 +431,7 @@
     "source": {
       "data_through": "2026-09-01",
       "is_demo": true,
-      "refreshed_at": "2026-11-21T12:15:40.146432Z",
+      "refreshed_at": "2026-11-21T12:32:18.710654Z",
       "window_end": "2026-08-31"
     },
     "term_months": 360
@@ -482,7 +482,7 @@
           "p75_built_area_m2": 90,
           "p75_price_m2_cents": 1253000,
           "priced": true,
-          "refreshed_at": "2026-11-21T12:15:40.120624Z",
+          "refreshed_at": "2026-11-21T12:32:18.682634Z",
           "sales": 36,
           "sales_change_12m_pct": null,
           "top_financing_type_code": 1,
@@ -498,7 +498,7 @@
     "source": {
       "data_through": "2026-09-01",
       "is_demo": true,
-      "refreshed_at": "2026-11-21T12:15:40.146432Z",
+      "refreshed_at": "2026-11-21T12:32:18.710654Z",
       "window_end": "2026-08-31"
     },
     "stats": null,
@@ -538,7 +538,7 @@
     "source": {
       "data_through": "2026-09-01",
       "is_demo": true,
-      "refreshed_at": "2026-11-21T12:15:40.146432Z",
+      "refreshed_at": "2026-11-21T12:32:18.710654Z",
       "window_end": "2026-08-31"
     },
     "term_months": 360
@@ -572,7 +572,7 @@
     "source": {
       "data_through": "2026-09-01",
       "is_demo": true,
-      "refreshed_at": "2026-11-21T12:15:40.146432Z",
+      "refreshed_at": "2026-11-21T12:32:18.710654Z",
       "window_end": "2026-08-31"
     },
     "stats": null,
@@ -612,7 +612,7 @@
     "source": {
       "data_through": "2026-09-01",
       "is_demo": true,
-      "refreshed_at": "2026-11-21T12:15:40.146432Z",
+      "refreshed_at": "2026-11-21T12:32:18.710654Z",
       "window_end": "2026-08-31"
     },
     "term_months": 360
@@ -669,7 +669,7 @@
     "source": {
       "data_through": "2026-09-01",
       "is_demo": true,
-      "refreshed_at": "2026-11-21T12:15:40.146432Z",
+      "refreshed_at": "2026-11-21T12:32:18.710654Z",
       "window_end": "2026-08-31"
     },
     "stats": null,
@@ -709,10 +709,123 @@
     "source": {
       "data_through": "2026-09-01",
       "is_demo": true,
-      "refreshed_at": "2026-11-21T12:15:40.146432Z",
+      "refreshed_at": "2026-11-21T12:32:18.710654Z",
       "window_end": "2026-08-31"
     },
     "term_months": 360
+  },
+  "sao-paulo/itbi": {
+    "city": {
+      "in_name": null,
+      "name": "São Paulo",
+      "path": "/itbi/sao-paulo",
+      "slug": "sao-paulo"
+    },
+    "city_row": {
+      "median_itbi_cents": 1400000,
+      "median_value_cents": 83200000,
+      "place": {
+        "in_name": null,
+        "name": "São Paulo",
+        "path": "/preco-m2/sao-paulo",
+        "slug": "sao-paulo"
+      },
+      "sales": 96
+    },
+    "neighborhoods": [
+      {
+        "median_itbi_cents": null,
+        "median_value_cents": null,
+        "place": {
+          "in_name": "na Aclimação",
+          "name": "Aclimação",
+          "path": "/preco-m2/sao-paulo/aclimacao",
+          "slug": "aclimacao"
+        },
+        "sales": 4
+      },
+      {
+        "median_itbi_cents": null,
+        "median_value_cents": null,
+        "place": {
+          "in_name": "no Campo Belo",
+          "name": "Campo Belo",
+          "path": "/preco-m2/sao-paulo/campo-belo",
+          "slug": "campo-belo"
+        },
+        "sales": 0
+      },
+      {
+        "median_itbi_cents": null,
+        "median_value_cents": null,
+        "place": {
+          "in_name": "no Ipiranga",
+          "name": "Ipiranga",
+          "path": "/preco-m2/sao-paulo/ipiranga",
+          "slug": "ipiranga"
+        },
+        "sales": 0
+      },
+      {
+        "median_itbi_cents": 1690000,
+        "median_value_cents": 83900000,
+        "place": {
+          "in_name": "em Moema",
+          "name": "Moema",
+          "path": "/preco-m2/sao-paulo/moema",
+          "slug": "moema"
+        },
+        "sales": 36
+      },
+      {
+        "median_itbi_cents": null,
+        "median_value_cents": null,
+        "place": {
+          "in_name": "na Saúde",
+          "name": "Saúde",
+          "path": "/preco-m2/sao-paulo/saude",
+          "slug": "saude"
+        },
+        "sales": 0
+      },
+      {
+        "median_itbi_cents": null,
+        "median_value_cents": null,
+        "place": {
+          "in_name": "na Vila Clementino",
+          "name": "Vila Clementino",
+          "path": "/preco-m2/sao-paulo/vila-clementino",
+          "slug": "vila-clementino"
+        },
+        "sales": 0
+      },
+      {
+        "median_itbi_cents": 1310000,
+        "median_value_cents": 82500000,
+        "place": {
+          "in_name": "na Vila Mariana",
+          "name": "Vila Mariana",
+          "path": "/preco-m2/sao-paulo/vila-mariana",
+          "slug": "vila-mariana"
+        },
+        "sales": 56
+      }
+    ],
+    "rules": {
+      "effective_from": "2026-01-01",
+      "rate_bps": 300,
+      "registry_high_cents": null,
+      "registry_low_cents": null,
+      "reviewed": false,
+      "sfh_limit_cents": null,
+      "sfh_rate_bps": 50
+    },
+    "source": {
+      "data_through": "2026-09-01",
+      "is_demo": true,
+      "refreshed_at": "2026-11-21T12:32:18.710654Z",
+      "window_end": "2026-08-31"
+    }
   },
   "sao-paulo/jardim-da-saude": {
     "area_bands": [],
@@ -743,7 +856,7 @@
     "source": {
       "data_through": "2026-09-01",
       "is_demo": true,
-      "refreshed_at": "2026-11-21T12:15:40.146432Z",
+      "refreshed_at": "2026-11-21T12:32:18.710654Z",
       "window_end": "2026-08-31"
     },
     "stats": null,
@@ -783,7 +896,7 @@
     "source": {
       "data_through": "2026-09-01",
       "is_demo": true,
-      "refreshed_at": "2026-11-21T12:15:40.146432Z",
+      "refreshed_at": "2026-11-21T12:32:18.710654Z",
       "window_end": "2026-08-31"
     },
     "term_months": 360
@@ -817,7 +930,7 @@
     "source": {
       "data_through": "2026-09-01",
       "is_demo": true,
-      "refreshed_at": "2026-11-21T12:15:40.146432Z",
+      "refreshed_at": "2026-11-21T12:32:18.710654Z",
       "window_end": "2026-08-31"
     },
     "stats": null,
@@ -857,7 +970,7 @@
     "source": {
       "data_through": "2026-09-01",
       "is_demo": true,
-      "refreshed_at": "2026-11-21T12:15:40.146432Z",
+      "refreshed_at": "2026-11-21T12:32:18.710654Z",
       "window_end": "2026-08-31"
     },
     "term_months": 360
@@ -998,7 +1111,7 @@
           "p75_built_area_m2": 90,
           "p75_price_m2_cents": 1270000,
           "priced": true,
-          "refreshed_at": "2026-11-21T12:15:40.120624Z",
+          "refreshed_at": "2026-11-21T12:32:18.682634Z",
           "sales": 56,
           "sales_change_12m_pct": null,
           "top_financing_type_code": 1,
@@ -1014,7 +1127,7 @@
     "source": {
       "data_through": "2026-09-01",
       "is_demo": true,
-      "refreshed_at": "2026-11-21T12:15:40.146432Z",
+      "refreshed_at": "2026-11-21T12:32:18.710654Z",
       "window_end": "2026-08-31"
     },
     "stats": {
@@ -1031,7 +1144,7 @@
       "p75_built_area_m2": 90,
       "p75_price_m2_cents": 1253000,
       "priced": true,
-      "refreshed_at": "2026-11-21T12:15:40.120624Z",
+      "refreshed_at": "2026-11-21T12:32:18.682634Z",
       "sales": 36,
       "sales_change_12m_pct": null,
       "top_financing_type_code": 1,
@@ -1062,7 +1175,7 @@
           "p75_built_area_m2": 90,
           "p75_price_m2_cents": 1253000,
           "priced": true,
-          "refreshed_at": "2026-11-21T12:15:40.120624Z",
+          "refreshed_at": "2026-11-21T12:32:18.682634Z",
           "sales": 36,
           "sales_change_12m_pct": null,
           "top_financing_type_code": 1,
@@ -1096,7 +1209,7 @@
           "p75_built_area_m2": 90,
           "p75_price_m2_cents": 1253000,
           "priced": true,
-          "refreshed_at": "2026-11-21T12:15:40.120624Z",
+          "refreshed_at": "2026-11-21T12:32:18.682634Z",
           "sales": 36,
           "sales_change_12m_pct": null,
           "top_financing_type_code": 1,
@@ -1148,7 +1261,7 @@
       "p75_built_area_m2": 90,
       "p75_price_m2_cents": 1253000,
       "priced": true,
-      "refreshed_at": "2026-11-21T12:15:40.120624Z",
+      "refreshed_at": "2026-11-21T12:32:18.682634Z",
       "sales": 36,
       "sales_change_12m_pct": null,
       "top_financing_type_code": 1,
@@ -1209,7 +1322,7 @@
     "source": {
       "data_through": "2026-09-01",
       "is_demo": true,
-      "refreshed_at": "2026-11-21T12:15:40.146432Z",
+      "refreshed_at": "2026-11-21T12:32:18.710654Z",
       "window_end": "2026-08-31"
     },
     "stats": {
@@ -1226,7 +1339,7 @@
       "p75_built_area_m2": 90,
       "p75_price_m2_cents": 1253000,
       "priced": true,
-      "refreshed_at": "2026-11-21T12:15:40.120624Z",
+      "refreshed_at": "2026-11-21T12:32:18.682634Z",
       "sales": 36,
       "sales_change_12m_pct": null,
       "top_financing_type_code": 1,
@@ -1255,7 +1368,7 @@
       "p75_built_area_m2": 90,
       "p75_price_m2_cents": 1253000,
       "priced": true,
-      "refreshed_at": "2026-11-21T12:15:40.120624Z",
+      "refreshed_at": "2026-11-21T12:32:18.682634Z",
       "sales": 36,
       "sales_change_12m_pct": null,
       "top_financing_type_code": 1,
@@ -1335,7 +1448,7 @@
     "source": {
       "data_through": "2026-09-01",
       "is_demo": true,
-      "refreshed_at": "2026-11-21T12:15:40.146432Z",
+      "refreshed_at": "2026-11-21T12:32:18.710654Z",
       "window_end": "2026-08-31"
     },
     "term_months": 360
@@ -1364,7 +1477,7 @@
           "p75_built_area_m2": 90,
           "p75_price_m2_cents": 1253000,
           "priced": true,
-          "refreshed_at": "2026-11-21T12:15:40.120624Z",
+          "refreshed_at": "2026-11-21T12:32:18.682634Z",
           "sales": 36,
           "sales_change_12m_pct": null,
           "top_financing_type_code": 1,
@@ -1403,7 +1516,7 @@
       "p75_built_area_m2": 90,
       "p75_price_m2_cents": 1253000,
       "priced": true,
-      "refreshed_at": "2026-11-21T12:15:40.120624Z",
+      "refreshed_at": "2026-11-21T12:32:18.682634Z",
       "sales": 36,
       "sales_change_12m_pct": null,
       "top_financing_type_code": 1,
@@ -1464,7 +1577,7 @@
     "source": {
       "data_through": "2026-09-01",
       "is_demo": true,
-      "refreshed_at": "2026-11-21T12:15:40.146432Z",
+      "refreshed_at": "2026-11-21T12:32:18.710654Z",
       "window_end": "2026-08-31"
     },
     "stats": {
@@ -1481,7 +1594,7 @@
       "p75_built_area_m2": 90,
       "p75_price_m2_cents": 1253000,
       "priced": true,
-      "refreshed_at": "2026-11-21T12:15:40.120624Z",
+      "refreshed_at": "2026-11-21T12:32:18.682634Z",
       "sales": 36,
       "sales_change_12m_pct": null,
       "top_financing_type_code": 1,
@@ -1564,7 +1677,7 @@
           "p75_built_area_m2": 90,
           "p75_price_m2_cents": 1270000,
           "priced": true,
-          "refreshed_at": "2026-11-21T12:15:40.120624Z",
+          "refreshed_at": "2026-11-21T12:32:18.682634Z",
           "sales": 56,
           "sales_change_12m_pct": null,
           "top_financing_type_code": 1,
@@ -1580,7 +1693,7 @@
     "source": {
       "data_through": "2026-09-01",
       "is_demo": true,
-      "refreshed_at": "2026-11-21T12:15:40.146432Z",
+      "refreshed_at": "2026-11-21T12:32:18.710654Z",
       "window_end": "2026-08-31"
     },
     "stats": null,
@@ -1620,23 +1733,40 @@
     "source": {
       "data_through": "2026-09-01",
       "is_demo": true,
-      "refreshed_at": "2026-11-21T12:15:40.146432Z",
+      "refreshed_at": "2026-11-21T12:32:18.710654Z",
       "window_end": "2026-08-31"
     },
     "term_months": 360
   },
+  "sao-paulo/sitemaps/avaliacao": {
+    "entries": [
+      {
+        "last_modified": "2026-11-21T12:32:18.710654Z",
+        "path": "/quanto-vale-meu-imovel"
+      },
+      {
+        "last_modified": "2026-11-21T12:32:18.682634Z",
+        "path": "/quanto-vale-meu-imovel/sao-paulo/moema"
+      },
+      {
+        "last_modified": "2026-11-21T12:32:18.682634Z",
+        "path": "/quanto-vale-meu-imovel/sao-paulo/vila-mariana"
+      }
+    ],
+    "template": "avaliacao"
+  },
   "sao-paulo/sitemaps/bairros": {
     "entries": [
       {
-        "last_modified": "2026-11-21T12:15:40.146432Z",
+        "last_modified": "2026-11-21T12:32:18.710654Z",
         "path": "/preco-m2/sao-paulo"
       },
       {
-        "last_modified": "2026-11-21T12:15:40.120624Z",
+        "last_modified": "2026-11-21T12:32:18.682634Z",
         "path": "/preco-m2/sao-paulo/moema"
       },
       {
-        "last_modified": "2026-11-21T12:15:40.120624Z",
+        "last_modified": "2026-11-21T12:32:18.682634Z",
         "path": "/preco-m2/sao-paulo/vila-mariana"
       }
     ],
@@ -1645,23 +1775,23 @@
   "sao-paulo/sitemaps/condominios": {
     "entries": [
       {
-        "last_modified": "2026-11-21T12:15:40.120624Z",
+        "last_modified": "2026-11-21T12:32:18.682634Z",
         "path": "/condominio/sao-paulo/moema/condominio-moema-exemplo"
       },
       {
-        "last_modified": "2026-11-21T12:15:40.120624Z",
+        "last_modified": "2026-11-21T12:32:18.682634Z",
         "path": "/condominio/sao-paulo/vila-mariana/condominio-jardim-exemplo"
       },
       {
-        "last_modified": "2026-11-21T12:15:40.120624Z",
+        "last_modified": "2026-11-21T12:32:18.682634Z",
         "path": "/condominio/sao-paulo/vila-mariana/condominio-reserva-demonstrativa"
       },
       {
-        "last_modified": "2026-11-21T12:15:40.120624Z",
+        "last_modified": "2026-11-21T12:32:18.682634Z",
         "path": "/condominio/sao-paulo/vila-mariana/edificio-na-avenida-dos-ipes-ficticios-200"
       },
       {
-        "last_modified": "2026-11-21T12:15:40.120624Z",
+        "last_modified": "2026-11-21T12:32:18.682634Z",
         "path": "/condominio/sao-paulo/vila-mariana/edificio-torre-exemplo"
       }
     ],
@@ -1670,28 +1800,36 @@
   "sao-paulo/sitemaps/financiamento": {
     "entries": [
       {
-        "last_modified": "2026-11-21T12:15:40.120624Z",
+        "last_modified": "2026-11-21T12:32:18.682634Z",
         "path": "/financiamento/sao-paulo/moema"
       },
       {
-        "last_modified": "2026-11-21T12:15:40.120624Z",
+        "last_modified": "2026-11-21T12:32:18.682634Z",
         "path": "/financiamento/sao-paulo/vila-mariana"
       }
     ],
     "template": "financiamento"
   },
+  "sao-paulo/sitemaps/imoveis": {
+    "entries": [],
+    "template": "imoveis"
+  },
+  "sao-paulo/sitemaps/itbi": {
+    "entries": [],
+    "template": "itbi"
+  },
   "sao-paulo/sitemaps/ruas": {
     "entries": [
       {
-        "last_modified": "2026-11-21T12:15:40.120624Z",
+        "last_modified": "2026-11-21T12:32:18.682634Z",
         "path": "/rua/sao-paulo/moema/alameda-das-palmeiras-ficticias"
       },
       {
-        "last_modified": "2026-11-21T12:15:40.120624Z",
+        "last_modified": "2026-11-21T12:32:18.682634Z",
         "path": "/rua/sao-paulo/vila-mariana/avenida-dos-ipes-ficticios"
       },
       {
-        "last_modified": "2026-11-21T12:15:40.120624Z",
+        "last_modified": "2026-11-21T12:32:18.682634Z",
         "path": "/rua/sao-paulo/vila-mariana/rua-das-acacias-ficticias"
       }
     ],
@@ -1743,7 +1881,7 @@
           "p75_built_area_m2": 90,
           "p75_price_m2_cents": 1253000,
           "priced": true,
-          "refreshed_at": "2026-11-21T12:15:40.120624Z",
+          "refreshed_at": "2026-11-21T12:32:18.682634Z",
           "sales": 36,
           "sales_change_12m_pct": null,
           "top_financing_type_code": 1,
@@ -1786,7 +1924,7 @@
           "p75_built_area_m2": 90,
           "p75_price_m2_cents": 1270000,
           "priced": true,
-          "refreshed_at": "2026-11-21T12:15:40.120624Z",
+          "refreshed_at": "2026-11-21T12:32:18.682634Z",
           "sales": 56,
           "sales_change_12m_pct": null,
           "top_financing_type_code": 1,
@@ -1802,7 +1940,7 @@
     "source": {
       "data_through": "2026-09-01",
       "is_demo": true,
-      "refreshed_at": "2026-11-21T12:15:40.146432Z",
+      "refreshed_at": "2026-11-21T12:32:18.710654Z",
       "window_end": "2026-08-31"
     },
     "stats": null,
@@ -1842,7 +1980,7 @@
     "source": {
       "data_through": "2026-09-01",
       "is_demo": true,
-      "refreshed_at": "2026-11-21T12:15:40.146432Z",
+      "refreshed_at": "2026-11-21T12:32:18.710654Z",
       "window_end": "2026-08-31"
     },
     "term_months": 360
@@ -1876,7 +2014,7 @@
     "source": {
       "data_through": "2026-09-01",
       "is_demo": true,
-      "refreshed_at": "2026-11-21T12:15:40.146432Z",
+      "refreshed_at": "2026-11-21T12:32:18.710654Z",
       "window_end": "2026-08-31"
     },
     "stats": null,
@@ -1916,7 +2054,7 @@
     "source": {
       "data_through": "2026-09-01",
       "is_demo": true,
-      "refreshed_at": "2026-11-21T12:15:40.146432Z",
+      "refreshed_at": "2026-11-21T12:32:18.710654Z",
       "window_end": "2026-08-31"
     },
     "term_months": 360
@@ -2051,7 +2189,7 @@
           "p75_built_area_m2": 90,
           "p75_price_m2_cents": 1253000,
           "priced": true,
-          "refreshed_at": "2026-11-21T12:15:40.120624Z",
+          "refreshed_at": "2026-11-21T12:32:18.682634Z",
           "sales": 36,
           "sales_change_12m_pct": null,
           "top_financing_type_code": 1,
@@ -2089,7 +2227,7 @@
     "source": {
       "data_through": "2026-09-01",
       "is_demo": true,
-      "refreshed_at": "2026-11-21T12:15:40.146432Z",
+      "refreshed_at": "2026-11-21T12:32:18.710654Z",
       "window_end": "2026-08-31"
     },
     "stats": {
@@ -2106,7 +2244,7 @@
       "p75_built_area_m2": 90,
       "p75_price_m2_cents": 1270000,
       "priced": true,
-      "refreshed_at": "2026-11-21T12:15:40.120624Z",
+      "refreshed_at": "2026-11-21T12:32:18.682634Z",
       "sales": 56,
       "sales_change_12m_pct": null,
       "top_financing_type_code": 1,
@@ -2137,7 +2275,7 @@
           "p75_built_area_m2": 90,
           "p75_price_m2_cents": 1317000,
           "priced": true,
-          "refreshed_at": "2026-11-21T12:15:40.120624Z",
+          "refreshed_at": "2026-11-21T12:32:18.682634Z",
           "sales": 26,
           "sales_change_12m_pct": null,
           "top_financing_type_code": 1,
@@ -2170,7 +2308,7 @@
           "p75_built_area_m2": 75,
           "p75_price_m2_cents": 1237000,
           "priced": true,
-          "refreshed_at": "2026-11-21T12:15:40.120624Z",
+          "refreshed_at": "2026-11-21T12:32:18.682634Z",
           "sales": 14,
           "sales_change_12m_pct": null,
           "top_financing_type_code": 1,
@@ -2203,7 +2341,7 @@
           "p75_built_area_m2": null,
           "p75_price_m2_cents": null,
           "priced": false,
-          "refreshed_at": "2026-11-21T12:15:40.120624Z",
+          "refreshed_at": "2026-11-21T12:32:18.682634Z",
           "sales": 8,
           "sales_change_12m_pct": null,
           "top_financing_type_code": null,
@@ -2236,7 +2374,7 @@
           "p75_built_area_m2": null,
           "p75_price_m2_cents": null,
           "priced": false,
-          "refreshed_at": "2026-11-21T12:15:40.120624Z",
+          "refreshed_at": "2026-11-21T12:32:18.682634Z",
           "sales": 6,
           "sales_change_12m_pct": null,
           "top_financing_type_code": null,
@@ -2270,7 +2408,7 @@
           "p75_built_area_m2": 86,
           "p75_price_m2_cents": 1267000,
           "priced": true,
-          "refreshed_at": "2026-11-21T12:15:40.120624Z",
+          "refreshed_at": "2026-11-21T12:32:18.682634Z",
           "sales": 42,
           "sales_change_12m_pct": null,
           "top_financing_type_code": 1,
@@ -2300,7 +2438,7 @@
           "p75_built_area_m2": 90,
           "p75_price_m2_cents": 1271000,
           "priced": true,
-          "refreshed_at": "2026-11-21T12:15:40.120624Z",
+          "refreshed_at": "2026-11-21T12:32:18.682634Z",
           "sales": 14,
           "sales_change_12m_pct": null,
           "top_financing_type_code": 1,
@@ -2352,7 +2490,7 @@
       "p75_built_area_m2": 75,
       "p75_price_m2_cents": 1237000,
       "priced": true,
-      "refreshed_at": "2026-11-21T12:15:40.120624Z",
+      "refreshed_at": "2026-11-21T12:32:18.682634Z",
       "sales": 14,
       "sales_change_12m_pct": null,
       "top_financing_type_code": 1,
@@ -2389,7 +2527,7 @@
           "p75_built_area_m2": 90,
           "p75_price_m2_cents": 1317000,
           "priced": true,
-          "refreshed_at": "2026-11-21T12:15:40.120624Z",
+          "refreshed_at": "2026-11-21T12:32:18.682634Z",
           "sales": 26,
           "sales_change_12m_pct": null,
           "top_financing_type_code": 1,
@@ -2447,7 +2585,7 @@
     "source": {
       "data_through": "2026-09-01",
       "is_demo": true,
-      "refreshed_at": "2026-11-21T12:15:40.146432Z",
+      "refreshed_at": "2026-11-21T12:32:18.710654Z",
       "window_end": "2026-08-31"
     },
     "stats": {
@@ -2464,7 +2602,7 @@
       "p75_built_area_m2": 75,
       "p75_price_m2_cents": 1237000,
       "priced": true,
-      "refreshed_at": "2026-11-21T12:15:40.120624Z",
+      "refreshed_at": "2026-11-21T12:32:18.682634Z",
       "sales": 14,
       "sales_change_12m_pct": null,
       "top_financing_type_code": 1,
@@ -2493,7 +2631,7 @@
       "p75_built_area_m2": 86,
       "p75_price_m2_cents": 1267000,
       "priced": true,
-      "refreshed_at": "2026-11-21T12:15:40.120624Z",
+      "refreshed_at": "2026-11-21T12:32:18.682634Z",
       "sales": 42,
       "sales_change_12m_pct": null,
       "top_financing_type_code": 1,
@@ -2538,7 +2676,7 @@
       "p75_built_area_m2": null,
       "p75_price_m2_cents": null,
       "priced": false,
-      "refreshed_at": "2026-11-21T12:15:40.120624Z",
+      "refreshed_at": "2026-11-21T12:32:18.682634Z",
       "sales": 8,
       "sales_change_12m_pct": null,
       "top_financing_type_code": null,
@@ -2575,7 +2713,7 @@
           "p75_built_area_m2": null,
           "p75_price_m2_cents": null,
           "priced": false,
-          "refreshed_at": "2026-11-21T12:15:40.120624Z",
+          "refreshed_at": "2026-11-21T12:32:18.682634Z",
           "sales": 6,
           "sales_change_12m_pct": null,
           "top_financing_type_code": null,
@@ -2633,7 +2771,7 @@
     "source": {
       "data_through": "2026-09-01",
       "is_demo": true,
-      "refreshed_at": "2026-11-21T12:15:40.146432Z",
+      "refreshed_at": "2026-11-21T12:32:18.710654Z",
       "window_end": "2026-08-31"
     },
     "stats": {
@@ -2650,7 +2788,7 @@
       "p75_built_area_m2": null,
       "p75_price_m2_cents": null,
       "priced": false,
-      "refreshed_at": "2026-11-21T12:15:40.120624Z",
+      "refreshed_at": "2026-11-21T12:32:18.682634Z",
       "sales": 8,
       "sales_change_12m_pct": null,
       "top_financing_type_code": null,
@@ -2679,7 +2817,7 @@
       "p75_built_area_m2": 90,
       "p75_price_m2_cents": 1271000,
       "priced": true,
-      "refreshed_at": "2026-11-21T12:15:40.120624Z",
+      "refreshed_at": "2026-11-21T12:32:18.682634Z",
       "sales": 14,
       "sales_change_12m_pct": null,
       "top_financing_type_code": 1,
@@ -2729,7 +2867,7 @@
       "p75_built_area_m2": 90,
       "p75_price_m2_cents": 1317000,
       "priced": true,
-      "refreshed_at": "2026-11-21T12:15:40.120624Z",
+      "refreshed_at": "2026-11-21T12:32:18.682634Z",
       "sales": 26,
       "sales_change_12m_pct": null,
       "top_financing_type_code": 1,
@@ -2766,7 +2904,7 @@
           "p75_built_area_m2": 75,
           "p75_price_m2_cents": 1237000,
           "priced": true,
-          "refreshed_at": "2026-11-21T12:15:40.120624Z",
+          "refreshed_at": "2026-11-21T12:32:18.682634Z",
           "sales": 14,
           "sales_change_12m_pct": null,
           "top_financing_type_code": 1,
@@ -2824,7 +2962,7 @@
     "source": {
       "data_through": "2026-09-01",
       "is_demo": true,
-      "refreshed_at": "2026-11-21T12:15:40.146432Z",
+      "refreshed_at": "2026-11-21T12:32:18.710654Z",
       "window_end": "2026-08-31"
     },
     "stats": {
@@ -2841,7 +2979,7 @@
       "p75_built_area_m2": 90,
       "p75_price_m2_cents": 1317000,
       "priced": true,
-      "refreshed_at": "2026-11-21T12:15:40.120624Z",
+      "refreshed_at": "2026-11-21T12:32:18.682634Z",
       "sales": 26,
       "sales_change_12m_pct": null,
       "top_financing_type_code": 1,
@@ -2870,7 +3008,7 @@
       "p75_built_area_m2": 86,
       "p75_price_m2_cents": 1267000,
       "priced": true,
-      "refreshed_at": "2026-11-21T12:15:40.120624Z",
+      "refreshed_at": "2026-11-21T12:32:18.682634Z",
       "sales": 42,
       "sales_change_12m_pct": null,
       "top_financing_type_code": 1,
@@ -2931,7 +3069,7 @@
           "p75_built_area_m2": 90,
           "p75_price_m2_cents": 1317000,
           "priced": true,
-          "refreshed_at": "2026-11-21T12:15:40.120624Z",
+          "refreshed_at": "2026-11-21T12:32:18.682634Z",
           "sales": 26,
           "sales_change_12m_pct": null,
           "top_financing_type_code": 1,
@@ -2964,7 +3102,7 @@
           "p75_built_area_m2": 75,
           "p75_price_m2_cents": 1237000,
           "priced": true,
-          "refreshed_at": "2026-11-21T12:15:40.120624Z",
+          "refreshed_at": "2026-11-21T12:32:18.682634Z",
           "sales": 14,
           "sales_change_12m_pct": null,
           "top_financing_type_code": 1,
@@ -2981,7 +3119,7 @@
     "source": {
       "data_through": "2026-09-01",
       "is_demo": true,
-      "refreshed_at": "2026-11-21T12:15:40.146432Z",
+      "refreshed_at": "2026-11-21T12:32:18.710654Z",
       "window_end": "2026-08-31"
     },
     "stats": null,
@@ -3006,7 +3144,7 @@
       "p75_built_area_m2": 86,
       "p75_price_m2_cents": 1267000,
       "priced": true,
-      "refreshed_at": "2026-11-21T12:15:40.120624Z",
+      "refreshed_at": "2026-11-21T12:32:18.682634Z",
       "sales": 42,
       "sales_change_12m_pct": null,
       "top_financing_type_code": 1,
@@ -3051,7 +3189,7 @@
       "p75_built_area_m2": null,
       "p75_price_m2_cents": null,
       "priced": false,
-      "refreshed_at": "2026-11-21T12:15:40.120624Z",
+      "refreshed_at": "2026-11-21T12:32:18.682634Z",
       "sales": 6,
       "sales_change_12m_pct": null,
       "top_financing_type_code": null,
@@ -3088,7 +3226,7 @@
           "p75_built_area_m2": null,
           "p75_price_m2_cents": null,
           "priced": false,
-          "refreshed_at": "2026-11-21T12:15:40.120624Z",
+          "refreshed_at": "2026-11-21T12:32:18.682634Z",
           "sales": 8,
           "sales_change_12m_pct": null,
           "top_financing_type_code": null,
@@ -3146,7 +3284,7 @@
     "source": {
       "data_through": "2026-09-01",
       "is_demo": true,
-      "refreshed_at": "2026-11-21T12:15:40.146432Z",
+      "refreshed_at": "2026-11-21T12:32:18.710654Z",
       "window_end": "2026-08-31"
     },
     "stats": {
@@ -3163,7 +3301,7 @@
       "p75_built_area_m2": null,
       "p75_price_m2_cents": null,
       "priced": false,
-      "refreshed_at": "2026-11-21T12:15:40.120624Z",
+      "refreshed_at": "2026-11-21T12:32:18.682634Z",
       "sales": 6,
       "sales_change_12m_pct": null,
       "top_financing_type_code": null,
@@ -3192,7 +3330,7 @@
       "p75_built_area_m2": 90,
       "p75_price_m2_cents": 1271000,
       "priced": true,
-      "refreshed_at": "2026-11-21T12:15:40.120624Z",
+      "refreshed_at": "2026-11-21T12:32:18.682634Z",
       "sales": 14,
       "sales_change_12m_pct": null,
       "top_financing_type_code": 1,
@@ -3283,7 +3421,7 @@
     "source": {
       "data_through": "2026-09-01",
       "is_demo": true,
-      "refreshed_at": "2026-11-21T12:15:40.146432Z",
+      "refreshed_at": "2026-11-21T12:32:18.710654Z",
       "window_end": "2026-08-31"
     },
     "term_months": 360
@@ -3312,7 +3450,7 @@
           "p75_built_area_m2": 90,
           "p75_price_m2_cents": 1317000,
           "priced": true,
-          "refreshed_at": "2026-11-21T12:15:40.120624Z",
+          "refreshed_at": "2026-11-21T12:32:18.682634Z",
           "sales": 26,
           "sales_change_12m_pct": null,
           "top_financing_type_code": 1,
@@ -3345,7 +3483,7 @@
           "p75_built_area_m2": 75,
           "p75_price_m2_cents": 1237000,
           "priced": true,
-          "refreshed_at": "2026-11-21T12:15:40.120624Z",
+          "refreshed_at": "2026-11-21T12:32:18.682634Z",
           "sales": 14,
           "sales_change_12m_pct": null,
           "top_financing_type_code": 1,
@@ -3384,7 +3522,7 @@
       "p75_built_area_m2": 86,
       "p75_price_m2_cents": 1267000,
       "priced": true,
-      "refreshed_at": "2026-11-21T12:15:40.120624Z",
+      "refreshed_at": "2026-11-21T12:32:18.682634Z",
       "sales": 42,
       "sales_change_12m_pct": null,
       "top_financing_type_code": 1,
@@ -3463,7 +3601,7 @@
           "p75_built_area_m2": 90,
           "p75_price_m2_cents": 1271000,
           "priced": true,
-          "refreshed_at": "2026-11-21T12:15:40.120624Z",
+          "refreshed_at": "2026-11-21T12:32:18.682634Z",
           "sales": 14,
           "sales_change_12m_pct": null,
           "top_financing_type_code": 1,
@@ -3476,7 +3614,7 @@
     "source": {
       "data_through": "2026-09-01",
       "is_demo": true,
-      "refreshed_at": "2026-11-21T12:15:40.146432Z",
+      "refreshed_at": "2026-11-21T12:32:18.710654Z",
       "window_end": "2026-08-31"
     },
     "stats": {
@@ -3493,7 +3631,7 @@
       "p75_built_area_m2": 86,
       "p75_price_m2_cents": 1267000,
       "priced": true,
-      "refreshed_at": "2026-11-21T12:15:40.120624Z",
+      "refreshed_at": "2026-11-21T12:32:18.682634Z",
       "sales": 42,
       "sales_change_12m_pct": null,
       "top_financing_type_code": 1,
@@ -3532,7 +3670,7 @@
           "p75_built_area_m2": null,
           "p75_price_m2_cents": null,
           "priced": false,
-          "refreshed_at": "2026-11-21T12:15:40.120624Z",
+          "refreshed_at": "2026-11-21T12:32:18.682634Z",
           "sales": 8,
           "sales_change_12m_pct": null,
           "top_financing_type_code": null,
@@ -3565,7 +3703,7 @@
           "p75_built_area_m2": null,
           "p75_price_m2_cents": null,
           "priced": false,
-          "refreshed_at": "2026-11-21T12:15:40.120624Z",
+          "refreshed_at": "2026-11-21T12:32:18.682634Z",
           "sales": 6,
           "sales_change_12m_pct": null,
           "top_financing_type_code": null,
@@ -3604,7 +3742,7 @@
       "p75_built_area_m2": 90,
       "p75_price_m2_cents": 1271000,
       "priced": true,
-      "refreshed_at": "2026-11-21T12:15:40.120624Z",
+      "refreshed_at": "2026-11-21T12:32:18.682634Z",
       "sales": 14,
       "sales_change_12m_pct": null,
       "top_financing_type_code": 1,
@@ -3683,7 +3821,7 @@
           "p75_built_area_m2": 86,
           "p75_price_m2_cents": 1267000,
           "priced": true,
-          "refreshed_at": "2026-11-21T12:15:40.120624Z",
+          "refreshed_at": "2026-11-21T12:32:18.682634Z",
           "sales": 42,
           "sales_change_12m_pct": null,
           "top_financing_type_code": 1,
@@ -3696,7 +3834,7 @@
     "source": {
       "data_through": "2026-09-01",
       "is_demo": true,
-      "refreshed_at": "2026-11-21T12:15:40.146432Z",
+      "refreshed_at": "2026-11-21T12:32:18.710654Z",
       "window_end": "2026-08-31"
     },
     "stats": {
@@ -3713,7 +3851,7 @@
       "p75_built_area_m2": 90,
       "p75_price_m2_cents": 1271000,
       "priced": true,
-      "refreshed_at": "2026-11-21T12:15:40.120624Z",
+      "refreshed_at": "2026-11-21T12:32:18.682634Z",
       "sales": 14,
       "sales_change_12m_pct": null,
       "top_financing_type_code": 1,

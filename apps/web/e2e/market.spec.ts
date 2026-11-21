@@ -14,26 +14,28 @@ test.skip(({ isMobile }) => isMobile, 'desktop flow');
 test('price pages → building → alert stored with consent', async ({ page, request }) => {
   await page.goto(site('/preco-m2/sao-paulo/vila-mariana'));
   await expect(
-    page.getByRole('heading', { level: 1, name: 'Vila Mariana: quanto se pagou por imóveis' }),
+    page.getByRole('heading', { level: 1, name: /^Preço do m² na Vila Mariana/ }),
   ).toBeVisible();
   await expect(page.getByText('Demonstrativo').first()).toBeVisible();
   await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', 'index, follow');
 
   await page.getByRole('link', { name: 'Avenida dos Ipes Ficticios' }).first().click();
-  await expect(page).toHaveURL(/\/preco-m2\/sao-paulo\/vila-mariana\/avenida-dos-ipes-ficticios$/);
+  await expect(page).toHaveURL(/\/rua\/sao-paulo\/vila-mariana\/avenida-dos-ipes-ficticios$/);
 
   await page.getByRole('link', { name: 'Condomínio Jardim Exemplo' }).first().click();
   await expect(page).toHaveURL(/\/condominio\/sao-paulo\/vila-mariana\/condominio-jardim-exemplo$/);
   await page.waitForLoadState('networkidle'); // controlled inputs: fill after hydration
 
-  const form = page.getByRole('region', { name: 'Avise-me quando houver unidade à venda' });
+  const form = page
+    .locator('section')
+    .filter({ hasText: 'Avise-me quando houver apartamento neste prédio' });
   await form.getByLabel('Nome').fill('Pessoa Fictícia E2E');
   await form.getByRole('textbox', { name: 'WhatsApp' }).fill('(11) 90000-0001');
-  await form.getByRole('button', { name: 'Quero ser avisado' }).click();
-  await expect(form.getByText('Para continuar, marque que aceita ser contatado.')).toBeVisible();
-  await form.getByLabel(/Aceito que a Casvitta e corretores parceiros/).check();
-  await form.getByRole('button', { name: 'Quero ser avisado' }).click();
-  await expect(form.getByText('Pedido registrado')).toBeVisible();
+  await form.getByRole('button', { name: 'Criar alerta' }).click();
+  await expect(form.getByText('Marque para continuar.')).toBeVisible();
+  await form.getByLabel('Aceito ser contatado sobre imóveis').check();
+  await form.getByRole('button', { name: 'Criar alerta' }).click();
+  await expect(page.getByText('Pronto. Seu pedido foi registrado.').first()).toBeVisible();
 
   const response = await request.get(`http://127.0.0.1:${apiPort}/v1/admin/property-alerts`, {
     headers: ADMIN,

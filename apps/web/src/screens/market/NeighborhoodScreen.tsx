@@ -105,7 +105,7 @@ export async function NeighborhoodScreen({ page }: { page: NeighborhoodPage }) {
         />
       ) : (
         <>
-          <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+          <div className="grid grid-cols-1 gap-3 min-[420px]:grid-cols-2 lg:grid-cols-4">
             <StatTile
               highlighted
               label={t('tiles.medianValue')}

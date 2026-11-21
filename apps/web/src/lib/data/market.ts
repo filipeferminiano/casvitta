@@ -28,10 +28,19 @@ export type StreetRow = Schemas['StreetRow'];
 export type BuildingRow = Schemas['BuildingRow'];
 export type Sitemap = Schemas['Sitemap'];
 export type SitemapTemplate = Sitemap['template'];
+export type ItbiPage = Schemas['ItbiPage'];
+export type ItbiNeighborhoodRow = Schemas['ItbiNeighborhoodRow'];
+export type ValuationOut = Schemas['ValuationOut'];
+export type AddressSuggestionOut = Schemas['AddressSuggestion'];
 
 /** Cities with price pages. Adding one is configuration plus an ingestion run. */
 export const MARKET_CITIES = ['sao-paulo'] as const;
 export const MARKET_TAG = 'market';
+/**
+ * Part of every cached request URL. Bump it whenever the API payload shape changes: Next's data
+ * cache outlives deploys, and an old payload would otherwise be served to new code.
+ */
+export const MARKET_PAYLOAD_VERSION = 'seo3-1';
 /** Pages re-render at most daily; a refresh revalidates MARKET_TAG right away. */
 export const MARKET_REVALIDATE_SECONDS = 86_400;
 export const SITEMAP_TEMPLATES: SitemapTemplate[] = [
@@ -39,6 +48,9 @@ export const SITEMAP_TEMPLATES: SitemapTemplate[] = [
   'ruas',
   'condominios',
   'financiamento',
+  'avaliacao',
+  'itbi',
+  'imoveis',
 ];
 
 const USE_API = isLive('market');
@@ -58,9 +70,12 @@ async function read<T>(path: string): Promise<T | null> {
     // Demo keys drop the "/neighborhoods" segment: "sao-paulo/vila-mariana/streets/…".
     return (DEMO[path.replace('/neighborhoods/', '/')] as T | undefined) ?? null;
   }
-  const response = await fetch(`${API_INTERNAL_URL}/v1/public/market/${path}`, {
-    next: { tags: [MARKET_TAG], revalidate: MARKET_REVALIDATE_SECONDS },
-  });
+  const response = await fetch(
+    `${API_INTERNAL_URL}/v1/public/market/${path}?v=${MARKET_PAYLOAD_VERSION}`,
+    {
+      next: { tags: [MARKET_TAG], revalidate: MARKET_REVALIDATE_SECONDS },
+    },
+  );
   if (response.status === 404) return null;
   if (!response.ok) throw new Error(`market API ${response.status} for ${path}`);
   return (await response.json()) as T;
@@ -101,4 +116,8 @@ export function getFinancing(city: string, neighborhood: string) {
 export function getSitemap(city: string, template: SitemapTemplate) {
   if (!isMarketCity(city)) return Promise.resolve(null);
   return read<Sitemap>(`${seg(city)}/sitemaps/${template}`);
+}
+
+export function getItbi(city: string) {
+  return isMarketCity(city) ? read<ItbiPage>(`${seg(city)}/itbi`) : Promise.resolve(null);
 }

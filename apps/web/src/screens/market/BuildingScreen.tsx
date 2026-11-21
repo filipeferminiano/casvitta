@@ -103,7 +103,7 @@ export async function BuildingScreen({ page }: { page: BuildingPage }) {
             </h2>
             <p className="type-body-s text-fg-muted">{t('sales.privacy')}</p>
           </div>
-          <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+          <div className="grid grid-cols-1 gap-3 min-[420px]:grid-cols-2 lg:grid-cols-4">
             <StatTile
               label={t('sales.count')}
               value={String(page.sales)}
@@ -189,7 +189,11 @@ export async function BuildingScreen({ page }: { page: BuildingPage }) {
               {comparison.vs_neighborhood_pct != null ? (
                 <p className="type-body-s">
                   {t('comparison.sentence', {
-                    change: formatChange(comparison.vs_neighborhood_pct),
+                    // The sentence says above/below; the number is unsigned.
+                    change: formatChange(Math.abs(Number(comparison.vs_neighborhood_pct))).replace(
+                      '+',
+                      '',
+                    ),
                     direction: Number(comparison.vs_neighborhood_pct) >= 0 ? 'above' : 'below',
                     inName,
                   })}

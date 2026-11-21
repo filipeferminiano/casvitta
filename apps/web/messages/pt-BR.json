@@ -2310,6 +2310,241 @@
     "method": {
       "title": "Como calculamos",
       "text": "Usamos o valor declarado nas guias de ITBI de compras residenciais. Excluímos doações, permutas, frações de imóvel e valores fora do padrão. O R$/m² divide o valor pela área construída do cadastro do IPTU, que inclui áreas comuns. Grupos com menos de 10 vendas não mostram preço."
+    },
+    "valuation": {
+      "crumb": "Quanto vale meu imóvel",
+      "eyebrow": "Avaliação de imóvel grátis",
+      "titleCity": "Quanto vale seu imóvel em {city}?",
+      "titleNeighborhood": "Quanto vale seu apartamento {inName}?",
+      "metaTitleCity": "Quanto vale meu imóvel em {city}? Avaliação grátis com vendas reais",
+      "metaTitleNeighborhood": "Quanto vale meu apartamento {inName}? Avaliação grátis com vendas reais",
+      "leadNeighborhood": "Calculamos com base em {sales} vendas reais registradas na Prefeitura {inName} nos últimos 12 meses, não em preços de anúncio.",
+      "leadCity": "Calculamos com base em vendas reais registradas na Prefeitura, não em preços de anúncio.",
+      "bullets": {
+        "paid": "Preços pagos, das guias de ITBI",
+        "groups": "Grupos de vendas parecidas, nunca vendas isoladas",
+        "free": "Sem cadastro para ver a estimativa"
+      },
+      "appName": "Quanto vale meu imóvel",
+      "appDescription": "Estimativa de valor de imóveis em São Paulo a partir de preços pagos registrados nas guias de ITBI.",
+      "context": {
+        "question": "Quanto valem os imóveis {inName}?",
+        "median": "Preço mediano",
+        "change": "{change} em 12 meses",
+        "sales": "Vendas registradas em 12 meses",
+        "financed": "Compras com financiamento",
+        "chart": "R$/m² mediano e vendas por mês",
+        "valueKind": "média móvel de 12 meses",
+        "count": "Vendas por mês",
+        "value": "R$/m² mediano",
+        "month": "Mês"
+      },
+      "how": {
+        "title": "Como calculamos",
+        "one": "Juntamos as vendas reais dos últimos 24 meses parecidas com o seu imóvel: mesmo tipo e tamanho parecido, na mesma rua, no mesmo bairro e em bairros vizinhos.",
+        "two": "Usamos só grupos com 10 vendas ou mais. Os grupos mais próximos do seu imóvel pesam mais.",
+        "three": "Multiplicamos o R$/m² desses grupos pela área construída do seu imóvel no IPTU. A faixa fica mais larga quando há poucas vendas parecidas."
+      },
+      "why": {
+        "title": "Por que preço pago, e não preço de anúncio?",
+        "text": "Anúncios mostram o preço pedido, que costuma ser negociado. As guias de ITBI registram o valor declarado na compra, então mostram quanto se pagou de fato."
+      },
+      "disclaimer": "Estimativa estatística a partir de preços pagos. Não é laudo de avaliação.",
+      "continue": {
+        "neighbors": "Bairros vizinhos",
+        "neighborValuation": "Quanto vale meu imóvel {inName}",
+        "prices": "Preços",
+        "neighborhoodPrice": "Preço do m² {inName}",
+        "cityIndex": "Preço do m² por bairro",
+        "tools": "Ferramentas",
+        "itbi": "Calcular ITBI"
+      },
+      "tool": {
+        "address": "Endereço (rua e número)",
+        "addressPlaceholder": "Ex.: Rua Joaquim Távora, 1240",
+        "addressHelp": "Escolha uma das sugestões.",
+        "coverage": "Endereços com vendas registradas · cobertura: capital de São Paulo",
+        "searching": "Procurando endereços…",
+        "notFound": "Não achamos esse endereço. Confira o nome da rua.",
+        "outsideCoverage": "Ainda não cobrimos este endereço.",
+        "kind": "Tipo",
+        "apartment": "Apartamento",
+        "house": "Casa",
+        "area": "Área construída (m²)",
+        "areaHelp": "A área do carnê do IPTU, que inclui áreas comuns.",
+        "areaPlaceholder": "Ex.: 85",
+        "year": "Ano de construção",
+        "bedrooms": "Quartos",
+        "parking": "Vagas",
+        "optional": "(opcional)",
+        "submit": "Ver estimativa",
+        "calculating": "Procurando vendas comparáveis…",
+        "noName": "Não pedimos seu nome para mostrar a estimativa.",
+        "errors": {
+          "summary": "{count, plural, one {Falta 1 informação para calcular.} other {Faltam # informações para calcular.}}",
+          "address": "Informe rua e número e escolha uma sugestão.",
+          "area": "Informe a área em m²."
+        },
+        "failed": "Não conseguimos calcular agora. Tente de novo em alguns minutos.",
+        "resultTitle": "Estimativa de valor",
+        "range": "{low} – {high}",
+        "center": "Valor central: {value}",
+        "priceM2": "R$/m² de área construída (IPTU) estimado: {price}",
+        "confidence": {
+          "alta": "Confiança alta",
+          "media": "Confiança média",
+          "baixa": "Confiança baixa"
+        },
+        "basis": {
+          "street_band": "baseado em {count} vendas comparáveis na {street}",
+          "neighborhood_band": "baseado em {count} vendas comparáveis no mesmo bairro",
+          "neighborhood_year": "baseado em {count} vendas comparáveis no mesmo bairro",
+          "neighbors_band": "baseado em {count} vendas comparáveis em bairros vizinhos"
+        },
+        "lowConfidence": "Poucas vendas parecidas por perto. Use como referência inicial.",
+        "groupsTitle": "Vendas usadas no cálculo",
+        "fewSales": "Abaixo de 10 vendas: sem preço",
+        "groups": {
+          "street_band": "Mesmo tipo, {band}, na {street}",
+          "neighborhood_band": "Mesmo tipo, {band}, no mesmo bairro",
+          "neighborhood_year": "Mesmo tipo, construídos {year}, no mesmo bairro",
+          "neighbors_band": "Mesmo tipo, {band}, em bairros vizinhos"
+        },
+        "bands": {
+          "ate-50": "até 50 m²",
+          "50-80": "de 50 a 80 m²",
+          "80-120": "de 80 a 120 m²",
+          "120-mais": "mais de 120 m²"
+        },
+        "years": {
+          "ate-1979": "até 1979",
+          "1980-1999": "entre 1980 e 1999",
+          "2000-2009": "entre 2000 e 2009",
+          "2010-mais": "a partir de 2010"
+        },
+        "disclaimer": "Estimativa estatística a partir de preços pagos. Não é laudo de avaliação.",
+        "leadTitle": "Quer um valor exato?",
+        "outsideTitle": "Ainda não cobrimos este endereço",
+        "outsideDescription": "Não há vendas parecidas suficientes por perto para uma estimativa honesta."
+      }
+    },
+    "itbi": {
+      "crumb": "Calcular ITBI",
+      "eyebrow": "Imposto de transmissão",
+      "title": "Calcule o ITBI do seu imóvel em {city}",
+      "metaTitle": "Calcular ITBI em {city} {year}: simulador e regras",
+      "lead": "O ITBI é pago pelo comprador na transferência do imóvel. A alíquota geral é de {rate}% sobre o maior valor entre o preço e o valor venal de referência; no SFH, a parte financiada paga {sfhRate}%, dentro do limite da lei.",
+      "review": "Texto a revisar: regras em conferência com a legislação vigente.",
+      "effective": "Regras configuradas a partir de {date}.",
+      "summary": {
+        "rate": "Alíquota geral: {rate}%",
+        "sfh": "Parte financiada no SFH: {sfhRate}%",
+        "base": "Base: o maior entre preço e valor venal de referência",
+        "payer": "Quem paga: o comprador"
+      },
+      "appName": "Calculadora de ITBI",
+      "calculator": {
+        "title": "Simulador de ITBI",
+        "rateChip": "Alíquota geral {rate}%",
+        "resultLabel": "ITBI estimado",
+        "emptyHint": "Preencha o preço de compra para calcular.",
+        "basePrice": "Base de cálculo: {base} (o preço de compra)",
+        "baseVenal": "Base de cálculo: {base} (o valor venal de referência, maior que o preço)",
+        "breakdownCaption": "Como o ITBI foi calculado",
+        "parts": {
+          "financed_sfh": "Parte financiada (SFH)",
+          "general": "Restante"
+        },
+        "total": "Total",
+        "disclaimer": "Valor estimado. Confirme na guia oficial da Prefeitura.",
+        "registry": "Registro em cartório: estimativa de {low} a {high}.",
+        "price": "Preço de compra",
+        "priceRequired": "Informe o preço de compra.",
+        "venal": "Valor venal de referência",
+        "venalHelp": "Está na consulta de valor venal de referência da Prefeitura.",
+        "optional": "(opcional)",
+        "financing": "Vai financiar?",
+        "no": "Não",
+        "yes": "Sim",
+        "financed": "Valor financiado",
+        "system": "Sistema",
+        "sfh": "SFH",
+        "other": "Outro",
+        "seeDetails": "Ver detalhes"
+      },
+      "table": {
+        "title": "Quanto se pagou de ITBI no seu bairro",
+        "caption": "Preço mediano e ITBI mediano estimado nos últimos 12 meses em {city}",
+        "neighborhood": "Bairro",
+        "medianValue": "Preço mediano",
+        "medianItbi": "ITBI mediano estimado",
+        "note": "ITBI estimado aplicando as regras acima a cada compra registrada (base de cálculo declarada e financiamento). Grupos com menos de 10 vendas não mostram valores."
+      },
+      "faq": {
+        "title": "Perguntas sobre o ITBI",
+        "who": {
+          "question": "Quem paga o ITBI?",
+          "answer": "O comprador, na transferência do imóvel."
+        },
+        "when": {
+          "question": "Quando pagar?",
+          "answer": "Antes do registro da escritura ou do contrato no cartório de registro de imóveis."
+        },
+        "base": {
+          "question": "Base de cálculo: preço ou valor venal?",
+          "answer": "O maior dos dois: o preço declarado na compra ou o valor venal de referência da Prefeitura."
+        },
+        "financing": {
+          "question": "ITBI com financiamento",
+          "answer": "No SFH, a parte financiada paga {sfhRate}%, dentro do limite da lei; o restante paga {rate}%."
+        },
+        "guide": {
+          "question": "Como emitir a guia",
+          "answer": "A guia é emitida no site da Prefeitura, com os dados da transação e do imóvel."
+        }
+      },
+      "official": "Página oficial do ITBI na Prefeitura de São Paulo",
+      "continue": {
+        "tools": "Ferramentas",
+        "valuation": "Quanto vale meu imóvel",
+        "cityIndex": "Preço do m² por bairro"
+      }
+    },
+    "listings": {
+      "crumbRent": "Para alugar",
+      "crumbSale": "À venda",
+      "whereStreet": "na {street}",
+      "titleRent": "Apartamentos para alugar {where}",
+      "titleSale": "Apartamentos à venda {where}",
+      "metaTitleRent": "Apartamentos para alugar {where} ({count, plural, =0 {nenhum anúncio agora} one {# anúncio} other {# anúncios}})",
+      "metaTitleSale": "Apartamentos à venda {where} ({count, plural, =0 {nenhum anúncio agora} one {# anúncio} other {# anúncios}})",
+      "count": "{count, plural, =0 {nenhum anúncio} one {# anúncio} other {# anúncios}}",
+      "resultsCount": "{count, plural, =0 {Nenhum anúncio agora · só anúncios autorizados, com CRECI} one {# anúncio · só anúncios autorizados, com CRECI} other {# anúncios · só anúncios autorizados, com CRECI}}",
+      "leadSalePrice": "Preço mediano de venda registrado {where}: {value}.",
+      "zeroRent": "Ainda não há apartamentos para alugar {where}.",
+      "zeroSale": "Ainda não há apartamentos à venda {where}.",
+      "zeroDescription": "Mostramos só anúncios autorizados pelo proprietário, de corretores com CRECI. Deixe seu contato para quando houver.",
+      "zeroLinks": "Enquanto isso",
+      "sameInNeighborhood": "Mesma busca em {name}",
+      "pricesLink": "Preços pagos {where}",
+      "stripRent": "Antes de alugar, veja os prédios {where}",
+      "stripSale": "Preço real pago {where}",
+      "builtIn": "construído em {year}",
+      "paidMedian": "Preço mediano pago",
+      "paidSales": "Vendas registradas",
+      "noPrices": "Poucas vendas registradas para mostrar preços.",
+      "ownerTitle": "Tem imóvel aqui?",
+      "ownerDescription": "Veja quanto vale com base em vendas reais e, se quiser, fale com um corretor parceiro.",
+      "ownerAction": "Quanto vale meu imóvel",
+      "continue": {
+        "neighbors": "Bairros vizinhos",
+        "rentIn": "Para alugar {inName}",
+        "saleIn": "À venda {inName}",
+        "here": "Aqui",
+        "otherSale": "Imóveis à venda {where}",
+        "otherRent": "Imóveis para alugar {where}",
+        "prices": "Preço do m² do bairro"
+      }
     }
   }
 }

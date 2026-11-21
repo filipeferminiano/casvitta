@@ -53,6 +53,9 @@ describe('sitemap index', () => {
       '/sitemaps/sao-paulo/ruas.xml',
       '/sitemaps/sao-paulo/condominios.xml',
       '/sitemaps/sao-paulo/financiamento.xml',
+      '/sitemaps/sao-paulo/avaliacao.xml',
+      '/sitemaps/sao-paulo/itbi.xml',
+      '/sitemaps/sao-paulo/imoveis.xml',
     ]);
     const xml = sitemapIndex(ORIGIN);
     expect(xml).toContain('<sitemapindex');

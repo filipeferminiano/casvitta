@@ -100,3 +100,27 @@ export function place({
     ...(containedIn ? { containedInPlace: { '@type': 'Place', name: containedIn } } : {}),
   };
 }
+
+/** Valuation and ITBI tools. */
+export function webApplication({
+  name,
+  path,
+  description,
+}: {
+  name: string;
+  path: string;
+  description: string;
+}): Json {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'WebApplication',
+    name,
+    url: absolute(path),
+    description,
+    applicationCategory: 'FinanceApplication',
+    operatingSystem: 'Web',
+    inLanguage: 'pt-BR',
+    isAccessibleForFree: true,
+    offers: { '@type': 'Offer', price: 0, priceCurrency: 'BRL' },
+  };
+}
