@@ -99,6 +99,27 @@ export { EstimateBox, type EstimateBoxProps } from './components/EstimateBox.tsx
 export { MapPins, type MapPin, type MapPinsProps } from './components/MapPins.tsx';
 export { NumberedSteps, type NumberedStepsProps } from './components/NumberedSteps.tsx';
 export { PlanCard, type PlanCardProps } from './components/PlanCard.tsx';
+export { AudienceTag, AudienceTagLegend, type AudienceTagKind } from './components/AudienceTag.tsx';
+export { CheckList, FeatureCard, OfferCard, type OfferCardProps } from './components/OfferCard.tsx';
+export {
+  PlanComparisonTable,
+  type ComparisonPlan,
+  type ComparisonRow,
+  type ComparisonValue,
+  type PlanComparisonTableProps,
+} from './components/PlanComparisonTable.tsx';
+export { FaqList, type FaqItem } from './components/FaqList.tsx';
+export {
+  AudienceSwitch,
+  type AudienceSwitchItem,
+  type AudienceSwitchProps,
+} from './components/AudienceSwitch.tsx';
+export {
+  AppPreviewFrame,
+  UsageMeter,
+  type AppPreviewFrameProps,
+  type AppPreviewNavItem,
+} from './components/AppPreviewFrame.tsx';
 export {
   Breadcrumbs,
   type BreadcrumbItem,
