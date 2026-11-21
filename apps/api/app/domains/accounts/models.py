@@ -140,9 +140,16 @@ class AuditLog(UUIDPrimaryKey, Base):
 
     __tablename__ = "audit_log"
 
-    actor: Mapped[str] = mapped_column(String(120))  # "staff:admin-token" until staff accounts
-    action: Mapped[str] = mapped_column(String(80))  # e.g. "broker_profile.creci_verified"
+    # "staff:<uuid>", "system:admin-token" (scripts/CI) or "system" (automatic jobs). Rows written
+    # before staff accounts carry "staff:admin-token". Append-only: never updated or deleted.
+    actor: Mapped[str] = mapped_column(String(120), index=True)
+    actor_staff_id: Mapped[uuid.UUID | None] = mapped_column(
+        ForeignKey("staff_users.id", ondelete="SET NULL"), index=True
+    )
+    action: Mapped[str] = mapped_column(String(80), index=True)  # e.g. "creci.verified"
     entity: Mapped[str] = mapped_column(String(60))
     entity_id: Mapped[str | None] = mapped_column(String(64))
+    # Why the person did it; required for reveals, view-as, pauses, refusals.
+    reason: Mapped[str | None] = mapped_column(String(500))
     details: Mapped[dict[str, Any]] = mapped_column(JSONB(), default=dict)
     occurred_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), index=True)

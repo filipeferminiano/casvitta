@@ -29,5 +29,15 @@
   "email.sign_up.subject": "Confirme seu e-mail para criar sua conta na Casvitta",
   "email.sign_up.text": "Olá, {name}.\n\nPara confirmar seu e-mail e continuar o cadastro, abra este link:\n{link}\n\nEle vale por {minutes} minutos e só funciona uma vez. Se não foi você que pediu, ignore este e-mail.\n\nCasvitta",
   "email.no_account.subject": "Você ainda não tem conta na Casvitta",
-  "email.no_account.text": "Olá.\n\nAlguém pediu um link para entrar na Casvitta com este e-mail, mas não há conta com ele.\n\nPara criar sua conta de corretor, abra:\n{signup}\n\nSe não foi você, ignore este e-mail.\n\nCasvitta"
+  "email.no_account.text": "Olá.\n\nAlguém pediu um link para entrar na Casvitta com este e-mail, mas não há conta com ele.\n\nPara criar sua conta de corretor, abra:\n{signup}\n\nSe não foi você, ignore este e-mail.\n\nCasvitta",
+  "reauth_required": "Para fazer isso, confirme que é você: enviamos um código de 6 números para o seu e-mail.",
+  "reauth_code_invalid": "Código errado ou vencido. Confira o último e-mail ou peça um código novo.",
+  "staff_exists": "Esta pessoa já está na equipe. Edite o papel dela na lista.",
+  "last_admin": "A equipe precisa de pelo menos um Admin ativo. Promova outra pessoa antes de mudar esta.",
+  "staff_already_bootstrapped": "A equipe já tem um Admin. Novos acessos são convites feitos por ele no backoffice.",
+  "reason_required": "Escreva o motivo: ele fica registrado na auditoria.",
+  "email.staff_sign_in.subject": "Seu link para entrar no backoffice da Casvitta",
+  "email.staff_sign_in.text": "Olá, {name}.\n\nPara entrar no backoffice da Casvitta, abra este link:\n{link}\n\nEle vale por {minutes} minutos e só funciona uma vez. Se não foi você que pediu, avise o Admin da equipe.\n\nCasvitta",
+  "email.staff_reauth.subject": "Código {code} para confirmar uma ação no backoffice",
+  "email.staff_reauth.text": "Olá, {name}.\n\nSeu código é {code}. Ele vale por {minutes} minutos.\n\nSe não foi você que pediu, avise o Admin da equipe agora.\n\nCasvitta"
 }

@@ -43,7 +43,9 @@ AUCTION: dict[str, Any] = {
 
 @pytest.fixture
 async def api(session: AsyncSession, integrations: Integrations) -> AsyncIterator[AsyncClient]:
-    settings = Settings(admin_token=ADMIN_TOKEN, interest_rate_limit_per_minute=5)
+    settings = Settings(
+        admin_token=ADMIN_TOKEN, admin_token_enabled=True, interest_rate_limit_per_minute=5
+    )
     app = create_app(
         settings=settings, integrations=integrations, rate_limiter=InMemoryRateLimiter()
     )

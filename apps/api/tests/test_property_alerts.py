@@ -25,7 +25,11 @@ URL = "/v1/public/property-alerts"
 @pytest.fixture
 async def api(session: AsyncSession, integrations: Integrations) -> AsyncIterator[AsyncClient]:
     await seed_demo(session)
-    settings = Settings(admin_token=ADMIN["X-Admin-Token"], interest_rate_limit_per_minute=3)
+    settings = Settings(
+        admin_token=ADMIN["X-Admin-Token"],
+        admin_token_enabled=True,
+        interest_rate_limit_per_minute=3,
+    )
     app = create_app(
         settings=settings, integrations=integrations, rate_limiter=InMemoryRateLimiter()
     )

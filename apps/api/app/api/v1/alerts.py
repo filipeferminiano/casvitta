@@ -7,13 +7,16 @@ from fastapi import APIRouter, Depends, Query, Request, Response, status
 from fastapi.responses import PlainTextResponse
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.api.v1.deps import client_key, get_rate_limiter, get_settings_dep, require_admin
+from app.api.v1.deps import client_key, get_rate_limiter, get_settings_dep
+from app.api.v1.staff_deps import require_permission
 from app.core.db import get_session
 from app.core.errors import AppError
 from app.core.rate_limit import RateLimiter
 from app.core.settings import Settings
 from app.domains.alerts import service
 from app.domains.alerts.schemas import PropertyAlertAccepted, PropertyAlertIn, PropertyAlertOut
+from app.domains.staff.audit import Actor, record
+from app.domains.staff.permissions import Permission
 
 public_router = APIRouter(prefix="/public", tags=["public"])
 admin_router = APIRouter(prefix="/admin", tags=["admin"])
@@ -48,14 +51,17 @@ async def create_property_alert(
     "/property-alerts",
     response_model=list[PropertyAlertOut],
     operation_id="listPropertyAlerts",
-    dependencies=[Depends(require_admin)],
     responses={200: {"content": {"text/csv": {}}}},
 )
 async def list_property_alerts(
+    actor: Annotated[Actor, Depends(require_permission(Permission.EXPORT_CONTACTS))],
     session: Annotated[AsyncSession, Depends(get_session)],
     format: Annotated[str, Query(pattern="^(json|csv)$")] = "json",
 ) -> list[PropertyAlertOut] | PlainTextResponse:
+    """Scripts: full contacts, so it needs the export permission and is audited."""
     rows = await service.list_alerts(session)
+    record(session, actor, "property_alert.exported", "property_alerts", None, count=len(rows))
+    await session.commit()
     if format == "csv":
         return PlainTextResponse(
             service.to_csv(rows),
@@ -69,13 +75,15 @@ async def list_property_alerts(
     "/property-alerts/{alert_id}",
     status_code=status.HTTP_204_NO_CONTENT,
     operation_id="deletePropertyAlert",
-    dependencies=[Depends(require_admin)],
 )
 async def delete_property_alert(
-    alert_id: uuid.UUID, session: Annotated[AsyncSession, Depends(get_session)]
+    alert_id: uuid.UUID,
+    actor: Annotated[Actor, Depends(require_permission(Permission.HANDLE_CAPTURES))],
+    session: Annotated[AsyncSession, Depends(get_session)],
 ) -> Response:
     """LGPD: delete a person's alert on request."""
     if not await service.delete_alert(session, alert_id):
         raise AppError("not_found", status_code=404)
+    record(session, actor, "property_alert.deleted", "property_alerts", alert_id)
     await session.commit()
     return Response(status_code=status.HTTP_204_NO_CONTENT)

@@ -30,7 +30,12 @@ TOKEN_IN_LINK = re.compile(r"/entrar/confirmar#t=([\w-]+)")
 @pytest.fixture
 def settings() -> Settings:
     # Cookies at /v1 (no /api prefix): the test client talks to the API directly.
-    return Settings(admin_token=ADMIN, cookie_path_prefix="", auth_rate_limit_per_minute=50)
+    return Settings(
+        admin_token=ADMIN,
+        admin_token_enabled=True,
+        cookie_path_prefix="",
+        auth_rate_limit_per_minute=50,
+    )
 
 
 @pytest.fixture

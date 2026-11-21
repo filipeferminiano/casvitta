@@ -66,6 +66,9 @@ GCP_REGION ?= southamerica-east1
 WEB_URL ?= https://casvitta.com.br
 APP_URL ?= $(subst https://,https://app.,$(WEB_URL))
 API_URL ?= $(subst https://,https://api.,$(WEB_URL))
+ADMIN_URL ?= $(subst https://,https://admin.,$(WEB_URL))
+# Scripts only; turn on for a deploy that needs /v1/staff/bootstrap, then off again.
+ADMIN_TOKEN_ENABLED ?= false
 # Areas the web build reads from the API (apps/web/src/lib/live.ts), '+'-separated.
 WEB_LIVE ?= interest+accounts
 GOOGLE_SITE_VERIFICATION ?=
@@ -94,4 +97,4 @@ deploy-api: ## Build apps/api, run migrations (Cloud Run job) and deploy casvitt
 	$(eval EMAIL_SECRET := $(shell gcloud secrets describe casvitta-email-api-key --project $(GCP_PROJECT) --format='value(name)' >/dev/null 2>&1 && echo casvitta-email-api-key))
 	gcloud builds submit --project $(GCP_PROJECT) --region $(GCP_REGION) --config infra/cloudbuild/api.yaml --substitutions=_TAG=$(TAG) apps/api
 	gcloud run jobs deploy casvitta-migrate --project $(GCP_PROJECT) --region $(API_REGION) --image $(API_IMAGE) --command alembic --args upgrade,head --set-secrets DATABASE_URL=casvitta-database-url:latest,JWT_SECRET=casvitta-jwt-secret:latest --set-env-vars DATABASE_SSL_REQUIRE=true --max-retries 0 --execute-now --wait
-	gcloud run deploy casvitta-api --project $(GCP_PROJECT) --region $(API_REGION) --image $(API_IMAGE) --port 8080 --memory 512Mi --cpu 1 --min-instances 0 --max-instances 2 --allow-unauthenticated --ingress internal-and-cloud-load-balancing --set-secrets DATABASE_URL=casvitta-database-url:latest,JWT_SECRET=casvitta-jwt-secret:latest,ADMIN_TOKEN=casvitta-admin-token:latest$(if $(EMAIL_SECRET),$(comma)EMAIL_API_KEY=$(EMAIL_SECRET):latest) --set-env-vars "^@^APP_ENV=production@DATABASE_SSL_REQUIRE=true@CORS_ORIGINS=$(API_CORS)@SITE_URL=$(WEB_URL)@APP_URL=$(APP_URL)@COOKIE_SECURE=true"
+	gcloud run deploy casvitta-api --project $(GCP_PROJECT) --region $(API_REGION) --image $(API_IMAGE) --port 8080 --memory 512Mi --cpu 1 --min-instances 0 --max-instances 2 --allow-unauthenticated --ingress internal-and-cloud-load-balancing --set-secrets DATABASE_URL=casvitta-database-url:latest,JWT_SECRET=casvitta-jwt-secret:latest,ADMIN_TOKEN=casvitta-admin-token:latest$(if $(EMAIL_SECRET),$(comma)EMAIL_API_KEY=$(EMAIL_SECRET):latest) --set-env-vars "^@^APP_ENV=production@DATABASE_SSL_REQUIRE=true@CORS_ORIGINS=$(API_CORS)@SITE_URL=$(WEB_URL)@APP_URL=$(APP_URL)@ADMIN_URL=$(ADMIN_URL)@BACKOFFICE_ENVIRONMENT=production@ADMIN_TOKEN_ENABLED=$(ADMIN_TOKEN_ENABLED)@COOKIE_SECURE=true"

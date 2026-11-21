@@ -27,6 +27,7 @@ from app.domains.market_data.models import (
     MarketStats,
     MarketStreet,
 )
+from app.domains.staff.models import StaffLoginToken, StaffSession, StaffUser
 
 __all__ = [
     "AuditLog",
@@ -52,6 +53,9 @@ __all__ = [
     "Membership",
     "PropertyAlert",
     "PropertyAlertConsent",
+    "StaffLoginToken",
+    "StaffSession",
+    "StaffUser",
     "User",
     "Workspace",
 ]

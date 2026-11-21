@@ -2,14 +2,12 @@
 
 from __future__ import annotations
 
-import secrets
 from typing import Annotated
 
-from fastapi import Depends, Header, Request, Response
+from fastapi import Depends, Request, Response
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.db import get_session
-from app.core.errors import AppError
 from app.core.rate_limit import RateLimiter
 from app.core.security import AccessClaims, InvalidAccessToken, decode_access_token
 from app.core.settings import Settings
@@ -37,15 +35,6 @@ def client_key(request: Request) -> str:
     if forwarded:
         return forwarded.split(",")[0].strip()
     return request.client.host if request.client else "unknown"
-
-
-def require_admin(
-    settings: Annotated[Settings, Depends(get_settings_dep)],
-    x_admin_token: Annotated[str | None, Header()] = None,
-) -> None:
-    expected = settings.admin_token.get_secret_value() if settings.admin_token else None
-    if not expected or not x_admin_token or not secrets.compare_digest(expected, x_admin_token):
-        raise AppError("unauthorized", status_code=401)
 
 
 def get_claims(

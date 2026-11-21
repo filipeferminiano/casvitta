@@ -17,11 +17,11 @@ from app.core.i18n import translate
 from app.core.settings import Settings
 
 _SAFE_METHODS = frozenset({"GET", "HEAD", "OPTIONS"})
-_SESSION_COOKIES = ("cv_at", "cv_rt")
+_SESSION_COOKIES = ("cv_at", "cv_rt", "cv_st_at", "cv_st_rt")
 
 
 def allowed_origins(settings: Settings) -> frozenset[str]:
-    origins = {settings.site_url, settings.app_url, *settings.cors_origins}
+    origins = {settings.site_url, settings.app_url, settings.admin_url, *settings.cors_origins}
     site = urlsplit(settings.site_url)
     origins.add(f"{site.scheme}://www.{site.netloc}")
     return frozenset(o.rstrip("/") for o in origins)

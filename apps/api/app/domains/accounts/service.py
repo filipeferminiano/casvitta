@@ -25,7 +25,6 @@ from app.core.settings import Settings
 from app.core.tenancy import bind_workspace, cross_tenant, current_workspace
 from app.core.time import utcnow
 from app.domains.accounts.models import (
-    AuditLog,
     AuthSession,
     BrokerProfile,
     LoginToken,
@@ -47,6 +46,7 @@ from app.domains.accounts.schemas import (
     UserOut,
     WorkspaceOut,
 )
+from app.domains.staff.audit import Actor, record
 from app.integrations.messaging.port import Email, EmailPort
 
 log = get_logger(__name__)
@@ -465,23 +465,8 @@ async def set_plan(session: AsyncSession, plan: Plan) -> WorkspaceOut:
 # ------------------------------------------------------------------ staff
 
 
-def _audit(
-    session: AsyncSession, action: str, entity: str, entity_id: str | None, **details: Any
-) -> None:
-    session.add(
-        AuditLog(
-            actor="staff:admin-token",
-            action=action,
-            entity=entity,
-            entity_id=entity_id,
-            details=details,
-            occurred_at=utcnow(),
-        )
-    )
-
-
 async def list_brokers_for_staff(
-    session: AsyncSession, status: CreciStatus | None
+    session: AsyncSession, status: CreciStatus | None, actor: Actor
 ) -> list[AdminBrokerOut]:
     with cross_tenant(session):
         rows = (
@@ -501,22 +486,31 @@ async def list_brokers_for_staff(
         for profile, email in rows
         if status is None or creci_status(profile) == status
     ]
-    _audit(
-        session, "broker_profile.listed", "broker_profiles", None, status=status, count=len(result)
+    record(
+        session,
+        actor,
+        "broker_profile.listed",
+        "broker_profiles",
+        None,
+        status=status,
+        count=len(result),
     )
     await session.flush()
     return result
 
 
-async def verify_creci(session: AsyncSession, profile_id: uuid.UUID) -> BrokerProfileOut:
+async def verify_creci(
+    session: AsyncSession, profile_id: uuid.UUID, actor: Actor
+) -> BrokerProfileOut:
     """Staff checked the number at the regional council (manual for now, CLAUDE.md rule 1)."""
     with cross_tenant(session):
         profile = await session.get(BrokerProfile, profile_id)
         if profile is None or not profile.creci_number:
             raise AppError("not_found", status_code=404)
         profile.creci_verified_at = utcnow()
-        _audit(
+        record(
             session,
+            actor,
             "broker_profile.creci_verified",
             "broker_profiles",
             str(profile.id),

@@ -15,6 +15,8 @@ from app.core.time import utcnow
 
 _ALGORITHM = "HS256"
 _AUDIENCE = "casvitta-app"
+# Backoffice tokens: a different audience, so neither kind of token is accepted for the other.
+_STAFF_AUDIENCE = "casvitta-staff"
 
 
 def new_token() -> str:
@@ -66,4 +68,51 @@ def decode_access_token(settings: Settings, token: str) -> AccessClaims:
             expires_at=datetime.fromtimestamp(payload["exp"], tz=utcnow().tzinfo),
         )
     except (jwt.PyJWTError, KeyError, ValueError) as exc:
+        raise InvalidAccessToken from exc
+
+
+@dataclass(frozen=True, slots=True)
+class StaffClaims:
+    staff_id: uuid.UUID
+    family_id: uuid.UUID
+    authenticated_at: datetime
+    expires_at: datetime
+
+
+def encode_staff_token(
+    settings: Settings,
+    staff_id: uuid.UUID,
+    family_id: uuid.UUID,
+    authenticated_at: datetime,
+    now: datetime | None = None,
+) -> str:
+    issued = now or utcnow()
+    payload = {
+        "sub": str(staff_id),
+        "fam": str(family_id),
+        "auth": int(authenticated_at.timestamp()),
+        "aud": _STAFF_AUDIENCE,
+        "iat": issued,
+        "exp": issued + timedelta(minutes=settings.staff_access_token_ttl_minutes),
+    }
+    return jwt.encode(payload, settings.jwt_secret.get_secret_value(), algorithm=_ALGORITHM)
+
+
+def decode_staff_token(settings: Settings, token: str) -> StaffClaims:
+    try:
+        payload = jwt.decode(
+            token,
+            settings.jwt_secret.get_secret_value(),
+            algorithms=[_ALGORITHM],
+            audience=_STAFF_AUDIENCE,
+            options={"require": ["sub", "fam", "auth", "exp"]},
+        )
+        tz = utcnow().tzinfo
+        return StaffClaims(
+            staff_id=uuid.UUID(payload["sub"]),
+            family_id=uuid.UUID(payload["fam"]),
+            authenticated_at=datetime.fromtimestamp(int(payload["auth"]), tz=tz),
+            expires_at=datetime.fromtimestamp(payload["exp"], tz=tz),
+        )
+    except (jwt.PyJWTError, KeyError, ValueError, TypeError) as exc:
         raise InvalidAccessToken from exc

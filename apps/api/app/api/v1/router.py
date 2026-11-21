@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 
-from app.api.v1 import admin_brokers, alerts, auth, health, interest, market, me
+from app.api.v1 import admin_brokers, alerts, auth, health, interest, market, me, staff
 
 api_router = APIRouter(prefix="/v1")
 api_router.include_router(health.router)
@@ -12,3 +12,4 @@ api_router.include_router(admin_brokers.router)
 api_router.include_router(market.router)
 api_router.include_router(alerts.public_router)
 api_router.include_router(alerts.admin_router)
+api_router.include_router(staff.router)

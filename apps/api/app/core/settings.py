@@ -84,8 +84,29 @@ class Settings(BaseSettings):
     indexnow_key: str | None = Field(default=None, pattern=r"^[A-Za-z0-9-]{8,128}$")
     indexnow_root_domain: str = "casvitta.com.br"
 
-    # Admin endpoints until real auth exists (Milestone 1). Unset = admin endpoints disabled.
+    # Backoffice (staff). Its own host, token audience, cookies and short sessions.
+    admin_url: str = "http://admin.localhost:3000"
+    staff_access_token_ttl_minutes: int = 10
+    staff_idle_minutes: int = 60  # a refresh token unused this long is dead
+    staff_session_max_hours: int = 8  # absolute: sign in again after this
+    staff_reauth_minutes: int = 15  # sensitive actions need a proof of identity this recent
+    staff_reauth_code_ttl_minutes: int = 10
+    staff_reauth_max_attempts: int = 5
+    backoffice_environment: Literal["production", "staging", "development"] = "development"
+    # Modules switched on in the backoffice. A module without data stays off (honest empty
+    # state); "moderation" waits for listings, "revenue" for billing.
+    backoffice_modules: Annotated[list[str], NoDecode] = Field(
+        default_factory=lambda: ["overview", "creci", "captures", "accounts", "team"]
+    )
+    # Owner requests go back to the queue when the broker does not accept within this time.
+    capture_assignment_timeout_hours: int = 24
+    # CRECI review promise shown at sign-up ("1 dia útil"): older requests get the SLA badge.
+    creci_review_sla_hours: int = 24
+
+    # Shared token for scripts and CI only (staff use their own accounts). Accepted only while
+    # admin_token_enabled is on; audited as "system:admin-token".
     admin_token: SecretStr | None = None
+    admin_token_enabled: bool = False
     # Public interest form: requests per IP and kind per minute.
     interest_rate_limit_per_minute: int = 5
 
@@ -170,7 +191,7 @@ class Settings(BaseSettings):
                     return "postgresql+asyncpg://" + value.removeprefix(prefix)
         return value
 
-    @field_validator("cors_origins", "itbi_source_urls", mode="before")
+    @field_validator("cors_origins", "itbi_source_urls", "backoffice_modules", mode="before")
     @classmethod
     def _split_csv(cls, value: object) -> object:
         if isinstance(value, str):
