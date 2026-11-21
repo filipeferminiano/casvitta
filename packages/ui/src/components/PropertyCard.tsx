@@ -18,6 +18,12 @@ export type PropertyCardProps = {
   extra?: ReactNode;
   /** Small line above the title ("Apartamento à venda"). */
   kicker?: ReactNode;
+  /**
+   * Rentals: what the month costs besides the rent, in mono ("+ cond. R$ 980", "+ IPTU R$ 160"),
+   * and the total ("Total R$ 4.940/mês", emphasized).
+   */
+  costLines?: { key: string; label: ReactNode }[];
+  costTotal?: ReactNode;
   /** Horizontal for result lists (mockup 53); vertical for grids. */
   layout?: 'vertical' | 'horizontal';
   className?: string;
@@ -33,6 +39,8 @@ export function PropertyCard({
   broker,
   extra,
   kicker,
+  costLines,
+  costTotal,
   layout = 'vertical',
   className,
 }: PropertyCardProps) {
@@ -66,6 +74,14 @@ export function PropertyCard({
             {title}
           </h3>
           <p className="type-value text-[22px]">{price}</p>
+          {costLines?.length || costTotal ? (
+            <p className="flex flex-wrap gap-x-2 font-mono type-body-s tabular text-fg-strong">
+              {costLines?.map((line) => (
+                <span key={line.key}>{line.label}</span>
+              ))}
+              {costTotal ? <span className="font-semibold text-fg">{costTotal}</span> : null}
+            </p>
+          ) : null}
           <p className="type-body-s text-fg-strong">{specs}</p>
           {extra}
         </div>

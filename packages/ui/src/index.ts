@@ -124,3 +124,6 @@ export {
   type LeadAlertResult,
   type LeadAlertValues,
 } from './components/LeadAlertForm.tsx';
+
+export * from './seo-a.ts';
+export * from './seo-b.ts';
