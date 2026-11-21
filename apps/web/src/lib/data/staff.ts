@@ -26,6 +26,17 @@ export type InterestKind = components['schemas']['InterestKind'];
 export type CreciItem = components['schemas']['CreciItem'];
 export type CreciTab = 'pending' | 'correction_requested' | 'verified' | 'rejected';
 export type CreciChecklist = components['schemas']['CreciChecklist'];
+export type CaptureItem = components['schemas']['CaptureItem'];
+export type BrokerCandidate = components['schemas']['BrokerCandidate'];
+export type AlertGroup = components['schemas']['AlertGroup'];
+export type CaptureState = 'no_broker' | 'referred' | 'accepted' | 'open' | 'handled';
+export type CaptureFilters = {
+  kind: InterestKind;
+  state?: CaptureState;
+  optIn?: 'confirmed' | 'pending';
+  region?: string;
+  origin?: string;
+};
 
 export const STAFF_ROLES: StaffRole[] = [
   'admin',
@@ -71,6 +82,10 @@ export const staffKeys = {
   overview: [ROOT, 'overview'] as const,
   search: (q: string) => [ROOT, 'search', q] as const,
   creci: (tab: CreciTab) => [ROOT, 'creci', tab] as const,
+  captures: (f: CaptureFilters) => [ROOT, 'captures', f] as const,
+  capture: (id: string) => [ROOT, 'capture', id] as const,
+  candidates: (id: string) => [ROOT, 'candidates', id] as const,
+  alertGroups: [ROOT, 'alert-groups'] as const,
   team: [ROOT, 'team'] as const,
   audit: (filters: AuditFilters) => [ROOT, 'audit', filters] as const,
 };
@@ -272,5 +287,113 @@ export function useDecideCreci() {
       );
     },
     onSettled: () => invalidateAll(client),
+  });
+}
+
+// ------------------------------------------------------------------ captures (BO3)
+
+function captureQuery(f: CaptureFilters) {
+  return {
+    kind: f.kind,
+    ...(f.state ? { state: f.state } : {}),
+    ...(f.optIn ? { opt_in: f.optIn } : {}),
+    ...(f.region ? { region: f.region } : {}),
+    ...(f.origin ? { origin: f.origin } : {}),
+  };
+}
+
+export function useCaptures(filters: CaptureFilters) {
+  return useQuery({
+    queryKey: staffKeys.captures(filters),
+    queryFn: async () =>
+      unwrap(
+        await staffApi.GET('/v1/staff/captures', { params: { query: captureQuery(filters) } }),
+      ),
+  });
+}
+
+/** Opening a request is audited server-side (a read of personal data). */
+export function useCapture(id: string | null) {
+  return useQuery({
+    queryKey: staffKeys.capture(id ?? ''),
+    enabled: id !== null,
+    queryFn: async () =>
+      unwrap(
+        await staffApi.GET('/v1/staff/captures/{signup_id}', {
+          params: { path: { signup_id: id ?? '' } },
+        }),
+      ),
+  });
+}
+
+export function useCandidates(id: string | null, enabled: boolean) {
+  return useQuery({
+    queryKey: staffKeys.candidates(id ?? ''),
+    enabled: enabled && id !== null,
+    queryFn: async () =>
+      unwrap(
+        await staffApi.GET('/v1/staff/captures/{signup_id}/candidates', {
+          params: { path: { signup_id: id ?? '' } },
+        }),
+      ),
+  });
+}
+
+export async function revealContact(id: string, field: 'phone' | 'email', reason: string) {
+  return unwrap(
+    await staffApi.POST('/v1/staff/captures/{signup_id}/reveal', {
+      params: { path: { signup_id: id } },
+      body: { field, reason },
+    }),
+  );
+}
+
+export function useAssignCapture() {
+  const client = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ id, brokerId }: { id: string; brokerId: string }) =>
+      unwrap(
+        await staffApi.POST('/v1/staff/captures/{signup_id}/assign', {
+          params: { path: { signup_id: id } },
+          body: { broker_profile_id: brokerId },
+        }),
+      ),
+    onSettled: () => invalidateAll(client),
+  });
+}
+
+export function useMarkHandled() {
+  const client = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ id, handled }: { id: string; handled: boolean }) =>
+      unwrap(
+        await staffApi.POST('/v1/staff/captures/{signup_id}/handled', {
+          params: { path: { signup_id: id } },
+          body: { handled },
+        }),
+      ),
+    onSettled: () => invalidateAll(client),
+  });
+}
+
+/** Only opted-in contacts; needs the export permission and is audited. */
+export function useExportCaptures() {
+  const client = useQueryClient();
+  return useMutation({
+    mutationFn: (f: CaptureFilters) => {
+      const q: Record<string, string> = { kind: f.kind };
+      if (f.region) q.region = f.region;
+      if (f.origin) q.origin = f.origin;
+      return downloadCsv('/v1/staff/captures/export', q);
+    },
+    onSettled: () => invalidateAll(client),
+  });
+}
+
+export function useAlertGroups(enabled: boolean) {
+  return useQuery({
+    queryKey: staffKeys.alertGroups,
+    enabled,
+    queryFn: async () => unwrap(await staffApi.GET('/v1/staff/property-alerts/groups')),
   });
 }

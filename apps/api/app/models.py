@@ -10,7 +10,11 @@ from app.domains.accounts.models import (
     Workspace,
 )
 from app.domains.alerts.models import PropertyAlert, PropertyAlertConsent
-from app.domains.interest.models import InterestSignup, InterestSignupConsent
+from app.domains.interest.models import (
+    InterestAssignment,
+    InterestSignup,
+    InterestSignupConsent,
+)
 from app.domains.market_data.models import (
     IptuStandardCode,
     IptuUseCode,
@@ -33,6 +37,7 @@ __all__ = [
     "AuditLog",
     "AuthSession",
     "BrokerProfile",
+    "InterestAssignment",
     "InterestSignup",
     "InterestSignupConsent",
     "IptuStandardCode",

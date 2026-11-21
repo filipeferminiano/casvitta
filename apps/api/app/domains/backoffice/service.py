@@ -24,6 +24,7 @@ from app.domains.accounts.models import (
     User,
     Workspace,
 )
+from app.domains.backoffice.captures import release_expired
 from app.domains.backoffice.schemas import (
     ActivityItem,
     CaptureKindRow,
@@ -69,6 +70,7 @@ async def _count(session: AsyncSession, query: Select[int]) -> int:
 
 
 async def overview(session: AsyncSession, actor: Actor, settings: Settings) -> OverviewOut:
+    await release_expired(session)  # unanswered referrals are back in the queue
     now = utcnow()
     week_ago = now - timedelta(days=7)
     sla_cutoff = now - timedelta(hours=settings.creci_review_sla_hours)
@@ -103,6 +105,7 @@ async def overview(session: AsyncSession, actor: Actor, settings: Settings) -> O
             InterestSignup.kind.in_(OWNER_REQUEST_KINDS),
             InterestSignup.assigned_broker_id.is_(None),
             InterestSignup.status != InterestStatus.UNSUBSCRIBED,
+            InterestSignup.is_demo.is_(False),
         ),
     )
     investors_waiting = await _count(
@@ -112,6 +115,8 @@ async def overview(session: AsyncSession, actor: Actor, settings: Settings) -> O
         .where(
             InterestSignup.kind == InterestKind.INVESTOR_INSTITUTIONAL,
             InterestSignup.status == InterestStatus.CONFIRMED,
+            InterestSignup.handled_at.is_(None),
+            InterestSignup.is_demo.is_(False),
         ),
     )
     by_kind = {row.kind: row for row in captures}
@@ -150,7 +155,7 @@ async def _captures(session: AsyncSession, since: datetime) -> list[CaptureKindR
                 func.count(),
                 func.count().filter(InterestSignup.status == InterestStatus.CONFIRMED),
             )
-            .where(InterestSignup.created_at >= since)
+            .where(InterestSignup.created_at >= since, InterestSignup.is_demo.is_(False))
             .group_by(InterestSignup.kind)
         )
     ).all()

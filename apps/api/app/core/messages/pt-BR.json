@@ -47,5 +47,14 @@
   "email.creci_correction.subject": "Precisamos de uma correção no seu CRECI",
   "email.creci_correction.text": "Olá, {name}.\n\nAo conferir seu CRECI {creci}, encontramos isto:\n\n{reason}\n\nCorrija em Configurações e envie de novo; respondemos em até 1 dia útil:\n{link}\n\nCasvitta",
   "email.creci_rejected.subject": "Não conseguimos verificar seu CRECI",
-  "email.creci_rejected.text": "Olá, {name}.\n\nNão conseguimos verificar o CRECI {creci}. Motivo:\n\n{reason}\n\nSem um CRECI verificado não é possível publicar imóveis na Casvitta. Se acha que é um engano, responda a este e-mail.\n\nCasvitta"
+  "email.creci_rejected.text": "Olá, {name}.\n\nNão conseguimos verificar o CRECI {creci}. Motivo:\n\n{reason}\n\nSem um CRECI verificado não é possível publicar imóveis na Casvitta. Se acha que é um engano, responda a este e-mail.\n\nCasvitta",
+  "owner_requests_are_referred": "Pedidos de proprietário se resolvem indicando um corretor.",
+  "not_an_owner_request": "Só pedidos de proprietário são indicados a corretores.",
+  "already_accepted": "Este pedido já foi aceito por um corretor.",
+  "no_contact_consent": "Esta pessoa não autorizou contato. O pedido não pode ir para um corretor.",
+  "broker_not_verified": "Escolha um corretor com CRECI verificado.",
+  "email.capture_offer.subject": "Pedido de proprietário para você na Casvitta",
+  "email.capture_offer.text": "Olá, {name}.\n\nTemos um pedido de proprietário para você:\n{what}\n{region}\n\nSe puder atender, aceite em até {hours} horas:\n{link}\n\nDepois de aceitar, enviamos o contato do proprietário. Sem resposta nesse prazo, o pedido vai para outro corretor.\n\nCasvitta",
+  "email.capture_contact.subject": "Contato do proprietário que você aceitou",
+  "email.capture_contact.text": "Olá, {name}.\n\nObrigado por aceitar. O proprietário autorizou o contato sobre o imóvel:\n\n{owner}\nWhatsApp: {phone}\nE-mail: {email}\n{what}\n{region}\n\nCasvitta"
 }

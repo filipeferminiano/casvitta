@@ -2467,10 +2467,682 @@
           }
         }
       }
+    },
+    "/v1/staff/captures": {
+      "get": {
+        "tags": [
+          "staff"
+        ],
+        "summary": "List Captures",
+        "operationId": "listCaptures",
+        "parameters": [
+          {
+            "name": "kind",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/InterestKind"
+            }
+          },
+          {
+            "name": "state",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "enum": [
+                "no_broker",
+                "referred",
+                "accepted",
+                "open",
+                "handled",
+                "all"
+              ],
+              "type": "string",
+              "default": "all",
+              "title": "State"
+            }
+          },
+          {
+            "name": "opt_in",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "enum": [
+                "confirmed",
+                "pending",
+                "all"
+              ],
+              "type": "string",
+              "default": "all",
+              "title": "Opt In"
+            }
+          },
+          {
+            "name": "region",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "maxLength": 80
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Region"
+            }
+          },
+          {
+            "name": "origin",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "maxLength": 80
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Origin"
+            }
+          },
+          {
+            "name": "x-admin-token",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Admin-Token"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CaptureListOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/staff/captures/export": {
+      "get": {
+        "tags": [
+          "staff"
+        ],
+        "summary": "Export Captures",
+        "operationId": "exportCaptures",
+        "parameters": [
+          {
+            "name": "kind",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/InterestKind"
+            }
+          },
+          {
+            "name": "region",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "maxLength": 80
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Region"
+            }
+          },
+          {
+            "name": "origin",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "maxLength": 80
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Origin"
+            }
+          },
+          {
+            "name": "x-admin-token",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Admin-Token"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/csv": {}
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/staff/captures/{signup_id}": {
+      "get": {
+        "tags": [
+          "staff"
+        ],
+        "summary": "Get Capture",
+        "operationId": "getCapture",
+        "parameters": [
+          {
+            "name": "signup_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Signup Id"
+            }
+          },
+          {
+            "name": "x-admin-token",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Admin-Token"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CaptureItem"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/staff/captures/{signup_id}/reveal": {
+      "post": {
+        "tags": [
+          "staff"
+        ],
+        "summary": "Reveal Capture Contact",
+        "operationId": "revealCaptureContact",
+        "parameters": [
+          {
+            "name": "signup_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Signup Id"
+            }
+          },
+          {
+            "name": "x-admin-token",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Admin-Token"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RevealIn"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RevealOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/staff/captures/{signup_id}/candidates": {
+      "get": {
+        "tags": [
+          "staff"
+        ],
+        "summary": "Capture Candidates",
+        "operationId": "listCaptureCandidates",
+        "parameters": [
+          {
+            "name": "signup_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Signup Id"
+            }
+          },
+          {
+            "name": "x-admin-token",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Admin-Token"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/BrokerCandidate"
+                  },
+                  "title": "Response Listcapturecandidates"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/staff/captures/{signup_id}/assign": {
+      "post": {
+        "tags": [
+          "staff"
+        ],
+        "summary": "Assign Capture",
+        "operationId": "assignCapture",
+        "parameters": [
+          {
+            "name": "signup_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Signup Id"
+            }
+          },
+          {
+            "name": "x-admin-token",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Admin-Token"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AssignIn"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CaptureItem"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/staff/captures/{signup_id}/handled": {
+      "post": {
+        "tags": [
+          "staff"
+        ],
+        "summary": "Mark Capture Handled",
+        "operationId": "markCaptureHandled",
+        "parameters": [
+          {
+            "name": "signup_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Signup Id"
+            }
+          },
+          {
+            "name": "x-admin-token",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Admin-Token"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/HandledIn"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CaptureItem"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/staff/property-alerts/groups": {
+      "get": {
+        "tags": [
+          "staff"
+        ],
+        "summary": "Alert Groups",
+        "operationId": "listAlertGroups",
+        "parameters": [
+          {
+            "name": "x-admin-token",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Admin-Token"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AlertGroup"
+                  },
+                  "title": "Response Listalertgroups"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/public/capture-assignments/accept": {
+      "post": {
+        "tags": [
+          "public"
+        ],
+        "summary": "Accept Capture",
+        "description": "The emailed \"Aceitar pedido\" link: the token is the proof (no session needed).",
+        "operationId": "acceptCapture",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AcceptIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AcceptOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
     "schemas": {
+      "AcceptIn": {
+        "properties": {
+          "token": {
+            "type": "string",
+            "maxLength": 200,
+            "minLength": 20,
+            "title": "Token"
+          }
+        },
+        "type": "object",
+        "required": [
+          "token"
+        ],
+        "title": "AcceptIn"
+      },
+      "AcceptOut": {
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": [
+              "accepted",
+              "expired"
+            ],
+            "title": "Status"
+          }
+        },
+        "type": "object",
+        "required": [
+          "status"
+        ],
+        "title": "AcceptOut"
+      },
       "ActivePropertiesRange": {
         "type": "string",
         "enum": [
@@ -2942,6 +3614,43 @@
         ],
         "title": "AgencySignup"
       },
+      "AlertGroup": {
+        "properties": {
+          "scope": {
+            "$ref": "#/components/schemas/AlertScope"
+          },
+          "scope_name": {
+            "type": "string",
+            "title": "Scope Name"
+          },
+          "scope_path": {
+            "type": "string",
+            "title": "Scope Path"
+          },
+          "intent": {
+            "$ref": "#/components/schemas/AlertIntent"
+          },
+          "active": {
+            "type": "integer",
+            "title": "Active"
+          },
+          "last_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Last At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "scope",
+          "scope_name",
+          "scope_path",
+          "intent",
+          "active",
+          "last_at"
+        ],
+        "title": "AlertGroup"
+      },
       "AlertIntent": {
         "type": "string",
         "enum": [
@@ -3035,6 +3744,20 @@
           "median_value_cents"
         ],
         "title": "AreaBand"
+      },
+      "AssignIn": {
+        "properties": {
+          "broker_profile_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Broker Profile Id"
+          }
+        },
+        "type": "object",
+        "required": [
+          "broker_profile_id"
+        ],
+        "title": "AssignIn"
       },
       "AuctionCriteria": {
         "properties": {
@@ -3291,6 +4014,48 @@
           "actions"
         ],
         "title": "AuditPage"
+      },
+      "BrokerCandidate": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "creci": {
+            "type": "string",
+            "title": "Creci"
+          },
+          "regions": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Regions"
+          },
+          "open_requests": {
+            "type": "integer",
+            "title": "Open Requests"
+          },
+          "region_match": {
+            "type": "boolean",
+            "title": "Region Match"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "creci",
+          "regions",
+          "open_requests",
+          "region_match"
+        ],
+        "title": "BrokerCandidate"
       },
       "BrokerProfileOut": {
         "properties": {
@@ -3672,6 +4437,169 @@
         ],
         "title": "BuildingRow"
       },
+      "CaptureItem": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "kind": {
+            "$ref": "#/components/schemas/InterestKind"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "phone": {
+            "type": "string",
+            "title": "Phone"
+          },
+          "email": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Email"
+          },
+          "region": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Region"
+          },
+          "criteria": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Criteria"
+          },
+          "utm_source": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Utm Source"
+          },
+          "utm_medium": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Utm Medium"
+          },
+          "utm_campaign": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Utm Campaign"
+          },
+          "source_page": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source Page"
+          },
+          "opt_in": {
+            "$ref": "#/components/schemas/InterestStatus"
+          },
+          "contact_consent": {
+            "type": "boolean",
+            "title": "Contact Consent"
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "no_broker",
+              "referred",
+              "accepted",
+              "open",
+              "handled"
+            ],
+            "title": "State"
+          },
+          "broker_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Broker Name"
+          },
+          "assignment_expires_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Assignment Expires At"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          },
+          "is_demo": {
+            "type": "boolean",
+            "title": "Is Demo"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "kind",
+          "name",
+          "phone",
+          "email",
+          "region",
+          "criteria",
+          "utm_source",
+          "utm_medium",
+          "utm_campaign",
+          "source_page",
+          "opt_in",
+          "contact_consent",
+          "state",
+          "broker_name",
+          "assignment_expires_at",
+          "created_at",
+          "is_demo"
+        ],
+        "title": "CaptureItem"
+      },
       "CaptureKindRow": {
         "properties": {
           "kind": {
@@ -3705,6 +4633,33 @@
           "open"
         ],
         "title": "CaptureKindRow"
+      },
+      "CaptureListOut": {
+        "properties": {
+          "counts": {
+            "additionalProperties": {
+              "type": "integer"
+            },
+            "propertyNames": {
+              "$ref": "#/components/schemas/InterestKind"
+            },
+            "type": "object",
+            "title": "Counts"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/CaptureItem"
+            },
+            "type": "array",
+            "title": "Items"
+          }
+        },
+        "type": "object",
+        "required": [
+          "counts",
+          "items"
+        ],
+        "title": "CaptureListOut"
       },
       "CityIndexPage": {
         "properties": {
@@ -4500,6 +5455,19 @@
         },
         "type": "object",
         "title": "HTTPValidationError"
+      },
+      "HandledIn": {
+        "properties": {
+          "handled": {
+            "type": "boolean",
+            "title": "Handled"
+          }
+        },
+        "type": "object",
+        "required": [
+          "handled"
+        ],
+        "title": "HandledIn"
       },
       "HandoffOut": {
         "properties": {
@@ -6353,6 +7321,59 @@
           "criteria"
         ],
         "title": "RentalAdminSignup"
+      },
+      "RevealIn": {
+        "properties": {
+          "field": {
+            "type": "string",
+            "enum": [
+              "phone",
+              "email"
+            ],
+            "title": "Field"
+          },
+          "reason": {
+            "type": "string",
+            "maxLength": 300,
+            "minLength": 5,
+            "title": "Reason"
+          }
+        },
+        "type": "object",
+        "required": [
+          "field",
+          "reason"
+        ],
+        "title": "RevealIn"
+      },
+      "RevealOut": {
+        "properties": {
+          "field": {
+            "type": "string",
+            "enum": [
+              "phone",
+              "email"
+            ],
+            "title": "Field"
+          },
+          "value": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Value"
+          }
+        },
+        "type": "object",
+        "required": [
+          "field",
+          "value"
+        ],
+        "title": "RevealOut"
       },
       "SearchHit": {
         "properties": {

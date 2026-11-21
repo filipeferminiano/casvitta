@@ -806,10 +806,179 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/staff/captures": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Captures */
+        get: operations["listCaptures"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/staff/captures/export": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Export Captures */
+        get: operations["exportCaptures"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/staff/captures/{signup_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Capture */
+        get: operations["getCapture"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/staff/captures/{signup_id}/reveal": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Reveal Capture Contact */
+        post: operations["revealCaptureContact"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/staff/captures/{signup_id}/candidates": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Capture Candidates */
+        get: operations["listCaptureCandidates"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/staff/captures/{signup_id}/assign": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Assign Capture */
+        post: operations["assignCapture"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/staff/captures/{signup_id}/handled": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Mark Capture Handled */
+        post: operations["markCaptureHandled"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/staff/property-alerts/groups": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Alert Groups */
+        get: operations["listAlertGroups"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/public/capture-assignments/accept": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Accept Capture
+         * @description The emailed "Aceitar pedido" link: the token is the proof (no session needed).
+         */
+        post: operations["acceptCapture"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        /** AcceptIn */
+        AcceptIn: {
+            /** Token */
+            token: string;
+        };
+        /** AcceptOut */
+        AcceptOut: {
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "accepted" | "expired";
+        };
         /**
          * ActivePropertiesRange
          * @enum {string}
@@ -953,6 +1122,22 @@ export interface components {
             kind: "agency";
             criteria: components["schemas"]["AgencyCriteria"];
         };
+        /** AlertGroup */
+        AlertGroup: {
+            scope: components["schemas"]["AlertScope"];
+            /** Scope Name */
+            scope_name: string;
+            /** Scope Path */
+            scope_path: string;
+            intent: components["schemas"]["AlertIntent"];
+            /** Active */
+            active: number;
+            /**
+             * Last At
+             * Format: date-time
+             */
+            last_at: string;
+        };
         /**
          * AlertIntent
          * @enum {string}
@@ -987,6 +1172,14 @@ export interface components {
             median_value_cents: number | null;
             /** Median Price M2 Cents */
             median_price_m2_cents?: number | null;
+        };
+        /** AssignIn */
+        AssignIn: {
+            /**
+             * Broker Profile Id
+             * Format: uuid
+             */
+            broker_profile_id: string;
         };
         /** AuctionCriteria */
         AuctionCriteria: {
@@ -1073,6 +1266,24 @@ export interface components {
             next_before: string | null;
             /** Actions */
             actions: string[];
+        };
+        /** BrokerCandidate */
+        BrokerCandidate: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Name */
+            name: string;
+            /** Creci */
+            creci: string;
+            /** Regions */
+            regions: string[];
+            /** Open Requests */
+            open_requests: number;
+            /** Region Match */
+            region_match: boolean;
         };
         /** BrokerProfileOut */
         BrokerProfileOut: {
@@ -1166,6 +1377,54 @@ export interface components {
             construction_year?: number | null;
             stats: components["schemas"]["PublicStats"] | null;
         };
+        /** CaptureItem */
+        CaptureItem: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            kind: components["schemas"]["InterestKind"];
+            /** Name */
+            name: string;
+            /** Phone */
+            phone: string;
+            /** Email */
+            email: string | null;
+            /** Region */
+            region: string | null;
+            /** Criteria */
+            criteria: {
+                [key: string]: unknown;
+            };
+            /** Utm Source */
+            utm_source: string | null;
+            /** Utm Medium */
+            utm_medium: string | null;
+            /** Utm Campaign */
+            utm_campaign: string | null;
+            /** Source Page */
+            source_page: string | null;
+            opt_in: components["schemas"]["InterestStatus"];
+            /** Contact Consent */
+            contact_consent: boolean;
+            /**
+             * State
+             * @enum {string}
+             */
+            state: "no_broker" | "referred" | "accepted" | "open" | "handled";
+            /** Broker Name */
+            broker_name: string | null;
+            /** Assignment Expires At */
+            assignment_expires_at: string | null;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /** Is Demo */
+            is_demo: boolean;
+        };
         /** CaptureKindRow */
         CaptureKindRow: {
             kind: components["schemas"]["InterestKind"];
@@ -1175,6 +1434,15 @@ export interface components {
             confirmed_7d: number;
             /** Open */
             open: number | null;
+        };
+        /** CaptureListOut */
+        CaptureListOut: {
+            /** Counts */
+            counts: {
+                [key: string]: number;
+            };
+            /** Items */
+            items: components["schemas"]["CaptureItem"][];
         };
         /** CityIndexPage */
         CityIndexPage: {
@@ -1438,6 +1706,11 @@ export interface components {
         HTTPValidationError: {
             /** Detail */
             detail?: components["schemas"]["ValidationError"][];
+        };
+        /** HandledIn */
+        HandledIn: {
+            /** Handled */
+            handled: boolean;
         };
         /** HandoffOut */
         HandoffOut: {
@@ -2021,6 +2294,26 @@ export interface components {
              */
             kind: "rental_admin";
             criteria: components["schemas"]["RentalAdminCriteria"];
+        };
+        /** RevealIn */
+        RevealIn: {
+            /**
+             * Field
+             * @enum {string}
+             */
+            field: "phone" | "email";
+            /** Reason */
+            reason: string;
+        };
+        /** RevealOut */
+        RevealOut: {
+            /**
+             * Field
+             * @enum {string}
+             */
+            field: "phone" | "email";
+            /** Value */
+            value: string | null;
         };
         /** SearchHit */
         SearchHit: {
@@ -3787,6 +4080,320 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["CreciItem"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    listCaptures: {
+        parameters: {
+            query: {
+                kind: components["schemas"]["InterestKind"];
+                state?: "no_broker" | "referred" | "accepted" | "open" | "handled" | "all";
+                opt_in?: "confirmed" | "pending" | "all";
+                region?: string | null;
+                origin?: string | null;
+            };
+            header?: {
+                "x-admin-token"?: string | null;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CaptureListOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    exportCaptures: {
+        parameters: {
+            query: {
+                kind: components["schemas"]["InterestKind"];
+                region?: string | null;
+                origin?: string | null;
+            };
+            header?: {
+                "x-admin-token"?: string | null;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/plain": string;
+                    "text/csv": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    getCapture: {
+        parameters: {
+            query?: never;
+            header?: {
+                "x-admin-token"?: string | null;
+            };
+            path: {
+                signup_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CaptureItem"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    revealCaptureContact: {
+        parameters: {
+            query?: never;
+            header?: {
+                "x-admin-token"?: string | null;
+            };
+            path: {
+                signup_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RevealIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RevealOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    listCaptureCandidates: {
+        parameters: {
+            query?: never;
+            header?: {
+                "x-admin-token"?: string | null;
+            };
+            path: {
+                signup_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BrokerCandidate"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    assignCapture: {
+        parameters: {
+            query?: never;
+            header?: {
+                "x-admin-token"?: string | null;
+            };
+            path: {
+                signup_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AssignIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CaptureItem"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    markCaptureHandled: {
+        parameters: {
+            query?: never;
+            header?: {
+                "x-admin-token"?: string | null;
+            };
+            path: {
+                signup_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["HandledIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CaptureItem"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    listAlertGroups: {
+        parameters: {
+            query?: never;
+            header?: {
+                "x-admin-token"?: string | null;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AlertGroup"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    acceptCapture: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AcceptIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AcceptOut"];
                 };
             };
             /** @description Validation Error */

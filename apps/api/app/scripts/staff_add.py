@@ -14,6 +14,7 @@ import sys
 
 from sqlalchemy import select
 
+import app.models  # noqa: F401 - every table, for foreign keys across domains
 from app.core.db import get_sessionmaker
 from app.domains.staff.audit import Actor, record
 from app.domains.staff.models import StaffRole, StaffUser

@@ -1,15 +1,20 @@
-"""Backoffice operations: overview (BO1), search, CRECI (BO2). Thin: logic in services."""
+"""Backoffice operations: overview (BO1), search, CRECI (BO2), captures (BO3). Thin."""
 
 from __future__ import annotations
 
 import uuid
-from typing import Annotated
+from typing import Annotated, Literal
 
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Depends, Query, Request
+from fastapi.responses import PlainTextResponse
+from pydantic import BaseModel
 
+from app.api.v1.deps import client_key, get_rate_limiter
 from app.api.v1.staff_deps import ActorDep, SessionDep, SettingsDep, require_permission
-from app.domains.backoffice import creci, service
+from app.core.rate_limit import RateLimited, RateLimiter
+from app.domains.backoffice import captures, creci, service
 from app.domains.backoffice.schemas import OverviewOut, SearchOut
+from app.domains.interest.models import InterestKind
 from app.domains.staff.audit import Actor
 from app.domains.staff.permissions import Permission
 from app.integrations.registry import Integrations, get_integrations
@@ -125,3 +130,164 @@ async def reject_creci(  # noqa: PLR0917
     )
     await session.commit()
     return result
+
+
+# ------------------------------------------------------------------ captures (BO3)
+
+HandleCaptures = Annotated[Actor, Depends(require_permission(Permission.HANDLE_CAPTURES))]
+
+
+@router.get("/captures", response_model=captures.CaptureListOut, operation_id="listCaptures")
+async def list_captures(  # noqa: PLR0917
+    actor: ActorDep,
+    session: SessionDep,
+    kind: InterestKind,
+    state: captures.StateFilter = "all",
+    opt_in: captures.OptInFilter = "all",
+    region: Annotated[str | None, Query(max_length=80)] = None,
+    origin: Annotated[str | None, Query(max_length=80)] = None,
+) -> captures.CaptureListOut:
+    result = await captures.list_captures(
+        session, actor, kind, state=state, opt_in=opt_in, region=region, origin=origin
+    )
+    await session.commit()
+    return result
+
+
+@router.get(
+    "/captures/export",
+    operation_id="exportCaptures",
+    response_class=PlainTextResponse,
+    responses={200: {"content": {"text/csv": {}}}},
+)
+async def export_captures(
+    actor: Annotated[Actor, Depends(require_permission(Permission.EXPORT_CONTACTS))],
+    session: SessionDep,
+    kind: InterestKind,
+    region: Annotated[str | None, Query(max_length=80)] = None,
+    origin: Annotated[str | None, Query(max_length=80)] = None,
+) -> PlainTextResponse:
+    body = await captures.export_csv(session, actor, kind, region=region, origin=origin)
+    await session.commit()
+    return PlainTextResponse(
+        body,
+        media_type="text/csv; charset=utf-8",
+        headers={"Content-Disposition": f'attachment; filename="captacoes-{kind.value}.csv"'},
+    )
+
+
+@router.get("/captures/{signup_id}", response_model=captures.CaptureItem, operation_id="getCapture")
+async def get_capture(
+    signup_id: uuid.UUID, actor: ActorDep, session: SessionDep
+) -> captures.CaptureItem:
+    result = await captures.get_capture(session, actor, signup_id)
+    await session.commit()
+    return result
+
+
+@router.post(
+    "/captures/{signup_id}/reveal",
+    response_model=captures.RevealOut,
+    operation_id="revealCaptureContact",
+)
+async def reveal_capture_contact(
+    signup_id: uuid.UUID,
+    payload: captures.RevealIn,
+    actor: Annotated[Actor, Depends(require_permission(Permission.REVEAL_CONTACTS))],
+    session: SessionDep,
+) -> captures.RevealOut:
+    result = await captures.reveal(session, actor, signup_id, payload)
+    await session.commit()
+    return result
+
+
+@router.get(
+    "/captures/{signup_id}/candidates",
+    response_model=list[captures.BrokerCandidate],
+    operation_id="listCaptureCandidates",
+)
+async def capture_candidates(
+    signup_id: uuid.UUID, _actor: HandleCaptures, session: SessionDep
+) -> list[captures.BrokerCandidate]:
+    return await captures.candidates(session, signup_id)
+
+
+@router.post(
+    "/captures/{signup_id}/assign",
+    response_model=captures.CaptureItem,
+    operation_id="assignCapture",
+)
+async def assign_capture(  # noqa: PLR0917
+    signup_id: uuid.UUID,
+    payload: captures.AssignIn,
+    actor: HandleCaptures,
+    session: SessionDep,
+    settings: SettingsDep,
+    integrations: IntegrationsDep,
+) -> captures.CaptureItem:
+    result = await captures.assign(
+        session,
+        actor,
+        signup_id,
+        payload.broker_profile_id,
+        email_port=integrations.email,
+        settings=settings,
+    )
+    await session.commit()
+    return result
+
+
+class HandledIn(BaseModel):
+    handled: bool
+
+
+@router.post(
+    "/captures/{signup_id}/handled",
+    response_model=captures.CaptureItem,
+    operation_id="markCaptureHandled",
+)
+async def mark_capture_handled(
+    signup_id: uuid.UUID, payload: HandledIn, actor: HandleCaptures, session: SessionDep
+) -> captures.CaptureItem:
+    result = await captures.mark_handled(session, actor, signup_id, payload.handled)
+    await session.commit()
+    return result
+
+
+@router.get(
+    "/property-alerts/groups",
+    response_model=list[captures.AlertGroup],
+    operation_id="listAlertGroups",
+)
+async def alert_groups(actor: ActorDep, session: SessionDep) -> list[captures.AlertGroup]:
+    result = await captures.alert_groups(session, actor)
+    await session.commit()
+    return result
+
+
+# ------------------------------------------------------------------ broker accepts a referral
+
+public_router = APIRouter(prefix="/public", tags=["public"])
+
+
+class AcceptOut(BaseModel):
+    status: Literal["accepted", "expired"]
+
+
+@public_router.post(
+    "/capture-assignments/accept", response_model=AcceptOut, operation_id="acceptCapture"
+)
+async def accept_capture(  # noqa: PLR0917
+    payload: captures.AcceptIn,
+    request: Request,
+    session: SessionDep,
+    settings: SettingsDep,
+    integrations: IntegrationsDep,
+    limiter: Annotated[RateLimiter, Depends(get_rate_limiter)],
+) -> AcceptOut:
+    """The emailed "Aceitar pedido" link: the token is the proof (no session needed)."""
+    if not limiter.hit(f"accept:{client_key(request)}", settings.auth_rate_limit_per_minute, 60):
+        raise RateLimited
+    status = await captures.accept(session, payload.token, email_port=integrations.email)
+    await session.commit()
+    return AcceptOut(status=status)

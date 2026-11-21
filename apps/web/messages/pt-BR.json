@@ -2803,6 +2803,165 @@
         "creci_not_pending": "Este CRECI já foi analisado por outra pessoa. A fila foi atualizada.",
         "generic": "Não conseguimos salvar. Tente de novo."
       }
+    },
+    "captures": {
+      "title": "Captações",
+      "description": "Tudo o que chega pelas páginas de captura, por tipo. Pedidos de proprietário precisam de um corretor indicado.",
+      "subject": "as captações",
+      "alertsTab": "Alertas das páginas de preço",
+      "filters": {
+        "state": "Status",
+        "region": "Região",
+        "regionPlaceholder": "Bairro, cidade ou CEP",
+        "origin": "Origem",
+        "optIn": "Opt-in",
+        "all": "Todos",
+        "direct": "Direto",
+        "states": {
+          "no_broker": "Sem corretor",
+          "referred": "Indicado",
+          "accepted": "Aceito",
+          "open": "Sem tratamento",
+          "handled": "Tratado"
+        },
+        "optIns": {
+          "confirmed": "Confirmado",
+          "pending": "Aguardando SIM"
+        }
+      },
+      "export": "Exportar CSV",
+      "exporting": "Exportando…",
+      "exported": "Exportamos só quem confirmou o opt-in e autorizou contato.",
+      "columns": {
+        "person": "Pessoa",
+        "wants": "O que quer",
+        "origin": "Origem",
+        "whatsapp": "WhatsApp",
+        "status": "Status"
+      },
+      "optIn": {
+        "confirmed": "Confirmado",
+        "pending_opt_in": "Aguardando SIM",
+        "unsubscribed": "Saiu"
+      },
+      "state": {
+        "no_broker": "Sem corretor",
+        "referred": "Indicado: {broker}",
+        "accepted": "Aceito: {broker}",
+        "open": "Sem tratamento",
+        "handled": "Tratado"
+      },
+      "originDirect": "Direto",
+      "originOf": "{source} / {medium}",
+      "footnote": "Telefones mascarados na lista. Ver o número completo fica registrado na auditoria (LGPD).",
+      "empty": "Nada com estes filtros.",
+      "select": "Ver pedido de {name}",
+      "transaction": {
+        "sale": "Vender",
+        "rent": "Alugar"
+      },
+      "propertyKind": {
+        "apartment": "Apto",
+        "house": "Casa",
+        "land": "Terreno",
+        "commercial": "Comercial"
+      },
+      "bedrooms": "{count} qts",
+      "area": "{area} m²",
+      "days": "{days} dias",
+      "detail": {
+        "titleOwner": "{name} quer {verb}",
+        "verb": {
+          "sale": "vender",
+          "rent": "alugar"
+        },
+        "requested": "Pedido em {date} às {time}",
+        "property": "Imóvel",
+        "cep": "CEP",
+        "price": "Valor imaginado",
+        "consent": "Consentimento",
+        "consentYes": "Contato sobre o imóvel",
+        "consentNo": "Não autorizou contato",
+        "phone": "WhatsApp",
+        "email": "E-mail",
+        "reveal": "Ver completo",
+        "revealLabel": "Ver {field} completo de {name}",
+        "origin": "Origem",
+        "page": "Página",
+        "criteria": "O que informou",
+        "region": "Região",
+        "referTitle": "Indicar corretor",
+        "referHelp": "Só corretores com CRECI verificado. Primeiro quem atende a região informada, depois quem tem menos pedidos abertos.",
+        "candidatesLabel": "Corretores para indicar",
+        "openRequests": "{count, plural, =0 {nenhum pedido aberto} one {# pedido aberto} other {# pedidos abertos}}",
+        "regionMatch": "atende a região",
+        "noCandidates": "Nenhum corretor com CRECI verificado ainda. Verifique CRECIs na fila antes de indicar.",
+        "refer": "Indicar {name}",
+        "referring": "Indicando…",
+        "referNote": "A pessoa corretora recebe o pedido por e-mail e tem 24 h para aceitar; só depois recebe o contato do proprietário. Sem resposta, o pedido volta para esta fila.",
+        "referredUntil": "Indicado a {broker}. Aceite até {date} às {time}.",
+        "accepted": "{broker} aceitou o pedido e recebeu o contato.",
+        "noConsent": "Esta pessoa não autorizou contato: o pedido não pode ir para um corretor.",
+        "markHandled": "Marcar como tratado",
+        "reopen": "Reabrir",
+        "handled": "Tratado.",
+        "noPermission": "Seu papel pode ver as captações, mas não indicar nem tratar."
+      },
+      "reveal": {
+        "title": "Ver {field} completo",
+        "description": "Dados pessoais completos ficam registrados na auditoria com o motivo.",
+        "reason": "Motivo",
+        "reasonHelp": "Por exemplo: retorno comercial, pedido da pessoa.",
+        "show": "Mostrar",
+        "showing": "Abrindo…",
+        "cancel": "Cancelar",
+        "close": "Fechar",
+        "fields": {
+          "phone": "telefone",
+          "email": "e-mail"
+        },
+        "none": "Não informado",
+        "copy": "Copiar",
+        "copied": "Copiado."
+      },
+      "done": {
+        "referred": "Pedido indicado a {name}.",
+        "handled": "Marcado como tratado.",
+        "reopened": "Reaberto."
+      },
+      "errors": {
+        "broker_not_verified": "Escolha um corretor com CRECI verificado.",
+        "no_contact_consent": "Esta pessoa não autorizou contato.",
+        "already_accepted": "Este pedido já foi aceito.",
+        "generic": "Não conseguimos salvar. Tente de novo."
+      },
+      "alerts": {
+        "title": "Alertas das páginas de preço",
+        "description": "Pessoas que pediram aviso nas páginas de preço, por lugar e intenção.",
+        "columns": {
+          "place": "Lugar",
+          "scope": "Tipo",
+          "intent": "Intenção",
+          "active": "Ativos",
+          "last": "Último"
+        },
+        "scope": {
+          "city": "Cidade",
+          "neighborhood": "Bairro",
+          "street": "Rua",
+          "street_segment": "Rua",
+          "building": "Prédio"
+        },
+        "intent": {
+          "buy": "Comprar",
+          "rent": "Alugar",
+          "own_sell": "Vender (dono)",
+          "own_rent": "Alugar (dono)",
+          "own_valuation": "Saber o valor",
+          "researching": "Pesquisando"
+        },
+        "empty": "Nenhum alerta ativo."
+      }
     }
   },
   "audience": {
@@ -3358,5 +3517,15 @@
       },
       "offerName": "Plano {name} para imobiliárias: software de gestão com publicação no portal Casvitta"
     }
+  },
+  "brokerAccept": {
+    "title": "Aceitar pedido de proprietário",
+    "checking": "Confirmando seu aceite…",
+    "acceptedTitle": "Pedido aceito",
+    "acceptedBody": "Enviamos o contato do proprietário para o seu e-mail. Fale com ele hoje: quem responde rápido fecha mais.",
+    "expiredTitle": "Este pedido não está mais com você",
+    "expiredBody": "O prazo de 24 horas passou ou o pedido foi para outro corretor. Novos pedidos chegam por e-mail.",
+    "invalidTitle": "Este link não vale",
+    "invalidBody": "Confira se abriu o link inteiro do e-mail. Se continuar, responda ao e-mail que enviamos."
   }
 }
