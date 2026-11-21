@@ -212,7 +212,7 @@ async def _build_derived(  # noqa: PLR0917
         raise ValueError("no monthly tabs in the source")
     end = window_end(report.data_through, get_settings().market_window_lag_months)
     stats = compute_stats(city.id, rows, end, utcnow())
-    monthly = compute_monthly(rows, end)
+    monthly = compute_monthly(rows, end, get_settings().market_min_price_group)
     ids = [n.id for n in neighborhoods.values()]
     await replace_aggregates(session, city.id, ids, stats, monthly)
     return Derived(rows, outliers, review, end, len(stats))

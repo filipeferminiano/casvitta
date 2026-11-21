@@ -506,12 +506,12 @@ export interface components {
          * AlertIntent
          * @enum {string}
          */
-        AlertIntent: "buy" | "owner";
+        AlertIntent: "buy" | "rent" | "own_sell" | "own_rent" | "own_valuation" | "researching";
         /**
          * AlertScope
          * @enum {string}
          */
-        AlertScope: "neighborhood" | "street" | "building";
+        AlertScope: "city" | "neighborhood" | "street" | "street_segment" | "building";
         /**
          * AlertStatus
          * @enum {string}
@@ -527,8 +527,15 @@ export interface components {
             max_m2: number | null;
             /** Sales */
             sales: number;
+            /**
+             * Priced
+             * @default false
+             */
+            priced: boolean;
             /** Median Value Cents */
             median_value_cents: number | null;
+            /** Median Price M2 Cents */
+            median_price_m2_cents?: number | null;
         };
         /** AuctionCriteria */
         AuctionCriteria: {
@@ -644,7 +651,15 @@ export interface components {
             gate: components["schemas"]["GateInfo"];
             source: components["schemas"]["SourceInfo"];
             stats: components["schemas"]["PublicStats"] | null;
+            /** Sales */
+            sales: number;
             last_24m: components["schemas"]["PublicStats"] | null;
+            /** Sales By Year */
+            sales_by_year: components["schemas"]["YearCount"][];
+            comparison: components["schemas"]["PriceComparison"] | null;
+            street_stats: components["schemas"]["PublicStats"] | null;
+            /** Other Buildings */
+            other_buildings: components["schemas"]["BuildingRow"][];
         };
         /** BuildingRow */
         BuildingRow: {
@@ -653,12 +668,17 @@ export interface components {
             street_name: string;
             /** Street Number */
             street_number: number;
+            /** Construction Year */
+            construction_year?: number | null;
             stats: components["schemas"]["PublicStats"] | null;
         };
         /** CityIndexPage */
         CityIndexPage: {
             city: components["schemas"]["PlaceRef"];
             source: components["schemas"]["SourceInfo"];
+            stats: components["schemas"]["PublicStats"] | null;
+            /** Neighborhoods With Price */
+            neighborhoods_with_price: number;
             /** Neighborhoods */
             neighborhoods: components["schemas"]["NeighborhoodRow"][];
         };
@@ -734,6 +754,15 @@ export interface components {
              */
             status: "sent";
         };
+        /** FinancedYear */
+        FinancedYear: {
+            /** Year */
+            year: number;
+            /** Financed Pct */
+            financed_pct: number;
+            /** Partial Until */
+            partial_until: string | null;
+        };
         /** FinancingContext */
         FinancingContext: {
             /** Year */
@@ -772,9 +801,15 @@ export interface components {
             annual_rate_bps: number;
             /** Max Income Commitment Pct */
             max_income_commitment_pct: number;
+            /** Min Down Payment Pct */
+            min_down_payment_pct: number;
             /** Simulations */
             simulations: components["schemas"]["Simulation"][];
             financing: components["schemas"]["FinancingContext"] | null;
+            /** Financed By Year */
+            financed_by_year: components["schemas"]["FinancedYear"][];
+            /** Neighbors */
+            neighbors: components["schemas"]["NeighborIncome"][];
         };
         /** GateInfo */
         GateInfo: {
@@ -923,6 +958,16 @@ export interface components {
             sales: number;
             /** Median Price M2 Cents */
             median_price_m2_cents: number | null;
+            /** Rolling Median Price M2 Cents */
+            rolling_median_price_m2_cents?: number | null;
+        };
+        /** NeighborIncome */
+        NeighborIncome: {
+            place: components["schemas"]["PlaceRef"];
+            /** Median Value Cents */
+            median_value_cents: number;
+            /** Min Income Cents */
+            min_income_cents: number;
         };
         /** NeighborhoodPage */
         NeighborhoodPage: {
@@ -937,10 +982,10 @@ export interface components {
             gate: components["schemas"]["GateInfo"];
             source: components["schemas"]["SourceInfo"];
             stats: components["schemas"]["PublicStats"] | null;
-            apartments: components["schemas"]["PublicStats"] | null;
-            houses: components["schemas"]["PublicStats"] | null;
-            /** Years */
-            years: components["schemas"]["YearRow"][];
+            /** Sales 12M */
+            sales_12m: number;
+            /** Price M2 Change 5Y Pct */
+            price_m2_change_5y_pct: string | null;
             /** Monthly */
             monthly: components["schemas"]["MonthlyPoint"][];
             /** Area Bands */
@@ -1008,6 +1053,8 @@ export interface components {
             name: string;
             /** Path */
             path: string;
+            /** In Name */
+            in_name?: string | null;
         };
         /**
          * Plan
@@ -1019,6 +1066,20 @@ export interface components {
          * @enum {string}
          */
         PortfolioSize: "up_to_10" | "11_to_50" | "51_to_200" | "over_200";
+        /**
+         * PriceComparison
+         * @description R$/m² (IPTU) over all history; each side only when it passes the price group.
+         */
+        PriceComparison: {
+            /** Building Price M2 Cents */
+            building_price_m2_cents: number | null;
+            /** Street Price M2 Cents */
+            street_price_m2_cents: number | null;
+            /** Neighborhood Price M2 Cents */
+            neighborhood_price_m2_cents: number | null;
+            /** Vs Neighborhood Pct */
+            vs_neighborhood_pct: string | null;
+        };
         /** PropertyAlertAccepted */
         PropertyAlertAccepted: {
             /**
@@ -1037,7 +1098,7 @@ export interface components {
             /** City */
             city: string;
             /** Neighborhood */
-            neighborhood: string;
+            neighborhood?: string | null;
             /** Street */
             street?: string | null;
             /** Building */
@@ -1053,6 +1114,10 @@ export interface components {
             utm?: components["schemas"]["Utm"];
             /** Source Page */
             source_page?: string | null;
+            /** Valuation Snapshot */
+            valuation_snapshot?: {
+                [key: string]: unknown;
+            } | null;
             /** Website */
             website?: string | null;
         };
@@ -1076,6 +1141,13 @@ export interface components {
             /** Email */
             email: string | null;
             status: components["schemas"]["AlertStatus"];
+            /** Source Path */
+            source_path?: string | null;
+            /**
+             * Has Valuation
+             * @default false
+             */
+            has_valuation: boolean;
             /** Contact Consent */
             contact_consent: boolean;
             /** Marketing Consent */
@@ -1093,7 +1165,10 @@ export interface components {
          * @enum {string}
          */
         PropertyKind: "apartment" | "house" | "land" | "commercial";
-        /** PublicStats */
+        /**
+         * PublicStats
+         * @description ``priced`` false: the group is below MARKET_MIN_PRICE_GROUP, only the count is public.
+         */
         PublicStats: {
             /** Sales */
             sales: number;
@@ -1106,32 +1181,39 @@ export interface components {
              * Format: date
              */
             window_end: string;
+            /**
+             * Priced
+             * @default true
+             */
+            priced: boolean;
             /** Median Value Cents */
-            median_value_cents: number | null;
+            median_value_cents?: number | null;
             /** Median Price M2 Cents */
-            median_price_m2_cents: number | null;
+            median_price_m2_cents?: number | null;
             /** P25 Price M2 Cents */
-            p25_price_m2_cents: number | null;
+            p25_price_m2_cents?: number | null;
             /** P75 Price M2 Cents */
-            p75_price_m2_cents: number | null;
+            p75_price_m2_cents?: number | null;
             /** Median Built Area M2 */
-            median_built_area_m2: number | null;
+            median_built_area_m2?: number | null;
             /** P25 Built Area M2 */
-            p25_built_area_m2: number | null;
+            p25_built_area_m2?: number | null;
             /** P75 Built Area M2 */
-            p75_built_area_m2: number | null;
+            p75_built_area_m2?: number | null;
             /** Financed Pct */
-            financed_pct: number | null;
+            financed_pct?: number | null;
             /** Median Financed Pct */
-            median_financed_pct: number | null;
+            median_financed_pct?: number | null;
             /** Top Financing Type Code */
-            top_financing_type_code: number | null;
+            top_financing_type_code?: number | null;
             /** Median Construction Year */
-            median_construction_year: number | null;
-            /** Last Sale Month */
-            last_sale_month: string | null;
+            median_construction_year?: number | null;
             /** Last Sale Year */
-            last_sale_year: number | null;
+            last_sale_year?: number | null;
+            /** Median Price M2 Change 12M Pct */
+            median_price_m2_change_12m_pct?: string | null;
+            /** Sales Change 12M Pct */
+            sales_change_12m_pct?: string | null;
             /**
              * Refreshed At
              * Format: date-time
@@ -1221,6 +1303,8 @@ export interface components {
             first_payment_cents: number;
             /** Last Payment Cents */
             last_payment_cents: number;
+            /** Total Interest Cents */
+            total_interest_cents: number;
             /** Min Income Cents */
             min_income_cents: number;
         };
@@ -1272,10 +1356,15 @@ export interface components {
             gate: components["schemas"]["GateInfo"];
             source: components["schemas"]["SourceInfo"];
             stats: components["schemas"]["PublicStats"] | null;
+            /** Sales 36M */
+            sales_36m: number;
             last_12m: components["schemas"]["PublicStats"] | null;
-            apartments: components["schemas"]["PublicStats"] | null;
+            /** Sales By Year */
+            sales_by_year: components["schemas"]["YearCount"][];
             /** Buildings */
             buildings: components["schemas"]["BuildingRow"][];
+            /** Similar Streets */
+            similar_streets: components["schemas"]["StreetRow"][];
         };
         /** StreetRow */
         StreetRow: {
@@ -1338,13 +1427,17 @@ export interface components {
         WorkspaceUpdate: {
             plan: components["schemas"]["Plan"];
         };
-        /** YearRow */
-        YearRow: {
+        /**
+         * YearCount
+         * @description Sales in a calendar year: a count, never prices or dates.
+         */
+        YearCount: {
             /** Year */
             year: number;
+            /** Sales */
+            sales: number;
             /** Partial Until */
             partial_until: string | null;
-            stats: components["schemas"]["PublicStats"] | null;
         };
     };
     responses: never;

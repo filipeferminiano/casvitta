@@ -18,6 +18,7 @@ class NeighborhoodSeed:
     aliases: tuple[str, ...]
     wave: int | None = None
     neighbors: tuple[str, ...] = field(default_factory=tuple)
+    preposition: str | None = None  # "na" / "no" / "em"; None: guessed from the name
 
 
 SAO_PAULO: tuple[NeighborhoodSeed, ...] = (
@@ -28,6 +29,7 @@ SAO_PAULO: tuple[NeighborhoodSeed, ...] = (
         ("VILA MARIANA", "JARDIM VILA MARIANA"),
         wave=1,
         neighbors=("moema", "vila-clementino", "aclimacao", "saude"),
+        preposition="na",
     ),
     NeighborhoodSeed(
         "moema",
@@ -36,6 +38,7 @@ SAO_PAULO: tuple[NeighborhoodSeed, ...] = (
         ("MOEMA", "INDIANOPOLIS"),
         wave=1,
         neighbors=("vila-mariana", "vila-clementino", "campo-belo"),
+        preposition="em",
     ),
     NeighborhoodSeed(
         "aclimacao",
@@ -44,6 +47,7 @@ SAO_PAULO: tuple[NeighborhoodSeed, ...] = (
         ("ACLIMACAO",),
         wave=1,
         neighbors=("vila-mariana", "ipiranga"),
+        preposition="na",
     ),
     NeighborhoodSeed(
         "vila-clementino",
@@ -52,6 +56,7 @@ SAO_PAULO: tuple[NeighborhoodSeed, ...] = (
         ("VILA CLEMENTINO",),
         wave=1,
         neighbors=("vila-mariana", "moema", "saude"),
+        preposition="na",
     ),
     # Bosque, Jardim and Vila da Saúde are separate neighborhoods, not aliases of Saúde.
     NeighborhoodSeed(
@@ -61,6 +66,7 @@ SAO_PAULO: tuple[NeighborhoodSeed, ...] = (
         ("SAUDE",),
         wave=1,
         neighbors=("vila-mariana", "vila-clementino", "ipiranga"),
+        preposition="na",
     ),
     NeighborhoodSeed(
         "campo-belo",
@@ -69,6 +75,7 @@ SAO_PAULO: tuple[NeighborhoodSeed, ...] = (
         ("CAMPO BELO", "VILA CAMPO BELO"),
         wave=1,
         neighbors=("moema",),
+        preposition="no",
     ),
     NeighborhoodSeed(
         "ipiranga",
@@ -77,13 +84,44 @@ SAO_PAULO: tuple[NeighborhoodSeed, ...] = (
         ("IPIRANGA",),
         wave=1,
         neighbors=("aclimacao", "saude"),
+        preposition="no",
     ),
     # Separate neighborhoods ("Jardins" is only a display grouping).
-    NeighborhoodSeed("jardim-paulista", "Jardim Paulista", "oeste", ("JARDIM PAULISTA",)),
-    NeighborhoodSeed("cerqueira-cesar", "Cerqueira César", "oeste", ("CERQUEIRA CESAR",)),
-    NeighborhoodSeed("bosque-da-saude", "Bosque da Saúde", "sul", ("BOSQUE DA SAUDE",)),
-    NeighborhoodSeed("jardim-da-saude", "Jardim da Saúde", "sul", ("JARDIM DA SAUDE",)),
-    NeighborhoodSeed("vila-da-saude", "Vila da Saúde", "sul", ("VILA DA SAUDE",)),
+    NeighborhoodSeed(
+        "jardim-paulista", "Jardim Paulista", "oeste", ("JARDIM PAULISTA",), preposition="no"
+    ),
+    NeighborhoodSeed(
+        "cerqueira-cesar", "Cerqueira César", "oeste", ("CERQUEIRA CESAR",), preposition="em"
+    ),
+    NeighborhoodSeed(
+        "bosque-da-saude", "Bosque da Saúde", "sul", ("BOSQUE DA SAUDE",), preposition="no"
+    ),
+    NeighborhoodSeed(
+        "jardim-da-saude", "Jardim da Saúde", "sul", ("JARDIM DA SAUDE",), preposition="no"
+    ),
+    NeighborhoodSeed("vila-da-saude", "Vila da Saúde", "sul", ("VILA DA SAUDE",), preposition="na"),
 )
 
 SEEDS: dict[str, tuple[NeighborhoodSeed, ...]] = {"sao-paulo": SAO_PAULO}
+
+
+FEMININE_STARTS = (
+    "Vila ",
+    "Chácara ",
+    "Chacara ",
+    "Cidade ",
+    "Água ",
+    "Agua ",
+    "Fazenda ",
+    "Granja ",
+)
+MASCULINE_STARTS = ("Jardim ", "Parque ", "Conjunto ", "Sítio ", "Sitio ", "Alto ", "Bairro ")
+
+
+def guess_preposition(name: str) -> str:
+    """Conservative: "na"/"no" only for unambiguous first words, otherwise "em"."""
+    if name.startswith(FEMININE_STARTS):
+        return "na"
+    if name.startswith(MASCULINE_STARTS):
+        return "no"
+    return "em"

@@ -111,8 +111,11 @@ def test_summarize_excludes_flagged_rows_from_medians_only() -> None:
 def test_area_bands() -> None:
     rows = [clean_row(area="45"), clean_row(area="65"), clean_row(area="65"), clean_row(area="200")]
     bands = {b["band"]: b for b in area_bands(rows)}
-    assert [bands[k]["tx_count"] for k in ("ate-50", "50-70", "70-100", "150-mais")] == [1, 2, 0, 1]
-    assert bands["70-100"]["median_value_cents"] is None
+    assert [bands[k]["tx_count"] for k in ("ate-50", "50-80", "80-120", "120-mais")] == [1, 2, 0, 1]
+    assert bands["80-120"]["median_value_cents"] is None
+    assert (
+        bands["50-80"]["median_price_m2_cents"] == 769_230
+    )  # R$ 500.000 / 65 m² (helper truncates)
 
 
 def test_compute_stats_windows_and_kinds() -> None:
@@ -131,7 +134,8 @@ def test_compute_stats_windows_and_kinds() -> None:
     assert keys[(StatsEntity.NEIGHBORHOOD, "apartment", "last_12m")] == 1
     assert keys[(StatsEntity.NEIGHBORHOOD, "house", "y2021")] == 1
     assert (StatsEntity.STREET, "all", "y2021") not in keys  # streets: rolling windows only
-    assert keys[(StatsEntity.STREET, "all", "last_24m")] == 1
+    assert keys[(StatsEntity.STREET, "all", "last_36m")] == 1
+    assert keys[(StatsEntity.CITY, "all", "last_12m")] == 1  # the whole city, located or not
 
 
 def test_monthly_series_hides_small_months() -> None:

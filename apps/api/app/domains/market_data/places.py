@@ -40,7 +40,7 @@ from app.domains.market_data.normalize import (
     street_slug,
     unique_slug,
 )
-from app.domains.market_data.seeds import NeighborhoodSeed
+from app.domains.market_data.seeds import NeighborhoodSeed, guess_preposition
 
 BUILDING_KINDS = frozenset({PropertyKind.APARTMENT, PropertyKind.FLAT})
 INSERT_BATCH = 1_000
@@ -92,6 +92,8 @@ async def sync_neighborhoods(
                 wave=seed.wave if seed else None,
                 # Wave 1 starts indexable; everything else waits for a person to flip it.
                 is_indexable=bool(seed and seed.wave == 1),
+                preposition=(seed.preposition if seed else None)
+                or guess_preposition(seed.name if seed else resolver.names[slug]),
                 is_auto=seed is None,
                 aliases=[],
             )
@@ -99,6 +101,7 @@ async def sync_neighborhoods(
             existing[slug] = neighborhood
         elif seed:  # keep curated fields current; never touch is_indexable after creation
             neighborhood.name = seed.name
+            neighborhood.preposition = seed.preposition or guess_preposition(seed.name)
             neighborhood.zone = seed.zone
             neighborhood.wave = seed.wave
         neighborhood.aliases = sorted(aliases_by_slug.get(slug, set()))
@@ -276,6 +279,7 @@ async def replace_transactions(
                         "transaction_date": located.row.transaction_date,
                         "payment_month": located.row.payment_month,
                         "value_cents": located.row.value_cents,
+                        "tax_base_cents": located.row.tax_base_cents,
                         "built_area_m2": located.row.built_area_m2,
                         "price_m2_cents": located.row.price_m2_cents,
                         "financing_type_code": located.row.financing_type_code,

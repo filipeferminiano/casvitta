@@ -27,15 +27,25 @@ from app.domains.market_data.stats import median, percentile
 ALL = "all"
 FIRST_YEAR = 2019
 MONTHS_IN_CHART = 60
-MIN_MONTHLY_SAMPLE = 5  # a month's median is published only from this many sales
+MIN_MONTHLY_SAMPLE = 10  # a month's median is stored only from this many sales (price group)
+# Built area of the IPTU (common areas included). Shared with the valuation tool.
 AREA_BANDS: tuple[tuple[str, int, int | None], ...] = (
     ("ate-50", 0, 50),
-    ("50-70", 50, 70),
-    ("70-100", 70, 100),
-    ("100-150", 100, 150),
-    ("150-mais", 150, None),
+    ("50-80", 50, 80),
+    ("80-120", 80, 120),
+    ("120-mais", 120, None),
 )
+
+
+def area_band(area_m2: Decimal) -> str:
+    for key, low, high in AREA_BANDS:
+        if area_m2 >= low and (high is None or area_m2 < high):
+            return key
+    return AREA_BANDS[-1][0]
+
+
 INSERT_BATCH = 1_000
+DAY = timedelta(days=1)
 
 
 @dataclass(frozen=True, slots=True)
@@ -63,10 +73,14 @@ def window_end(data_through: date, lag_months: int) -> date:
 
 
 def windows(end: date) -> list[Window]:
-    first_of_next = end + timedelta(days=1)
+    first_of_next = end + DAY
     result = [
         Window("last_12m", add_months(first_of_next, -12), end),
+        # The 12 months before last_12m, and the same 12 months five years earlier (changes).
+        Window("prev_12m", add_months(first_of_next, -24), add_months(first_of_next, -12) - DAY),
+        Window("y5_12m", add_months(first_of_next, -72), add_months(first_of_next, -60) - DAY),
         Window("last_24m", add_months(first_of_next, -24), end),
+        Window("last_36m", add_months(first_of_next, -36), end),
         Window(ALL, None, end),
     ]
     for year in range(FIRST_YEAR, end.year + 1):
@@ -75,11 +89,13 @@ def windows(end: date) -> list[Window]:
 
 
 ENTITY_WINDOWS: dict[StatsEntity, frozenset[str] | None] = {
+    StatsEntity.CITY: frozenset({"last_12m", "prev_12m", "y5_12m"}),
     StatsEntity.NEIGHBORHOOD: None,  # every window
-    StatsEntity.STREET: frozenset({"last_12m", "last_24m", ALL}),
+    StatsEntity.STREET: frozenset({"last_12m", "last_36m", ALL}),
     StatsEntity.BUILDING: frozenset({"last_24m", ALL}),
 }
 ENTITY_KINDS: dict[StatsEntity, tuple[str, ...]] = {
+    StatsEntity.CITY: (ALL,),
     StatsEntity.NEIGHBORHOOD: (ALL, *(k.value for k in PropertyKind)),
     StatsEntity.STREET: (ALL, PropertyKind.APARTMENT.value, PropertyKind.HOUSE.value),
     StatsEntity.BUILDING: (ALL,),
@@ -168,15 +184,18 @@ def area_bands(rows: Iterable[CleanRow]) -> list[dict[str, Any]]:
     bands = []
     for key, low, high in AREA_BANDS:
         members = groups[key]
-        sample = [m.value_cents for m in members if not m.under_declared and not m.price_outlier]
+        clean = [m for m in members if not m.under_declared and not m.price_outlier]
         bands.append(
             {
                 "band": key,
                 "min_m2": low,
                 "max_m2": high,
                 "tx_count": len(members),
-                "median_sample": len(sample),
-                "median_value_cents": median(sample) if sample else None,
+                "median_sample": len(clean),
+                "median_value_cents": median([m.value_cents for m in clean]) if clean else None,
+                "median_price_m2_cents": median([m.price_m2_cents for m in clean])
+                if clean
+                else None,
             }
         )
     return bands
@@ -188,6 +207,7 @@ def compute_stats(
     """One dict per entity × kind × window with at least one sale."""
     all_windows = windows(end)
     entity_rows: dict[tuple[StatsEntity, uuid.UUID], list[CleanRow]] = defaultdict(list)
+    entity_rows[(StatsEntity.CITY, city_id)] = [located.row for located in rows]
     for located in rows:
         for entity, entity_id in (
             (StatsEntity.NEIGHBORHOOD, located.neighborhood_id),
@@ -236,21 +256,39 @@ def compute_stats(
     return out
 
 
-def compute_monthly(rows: Sequence[LocatedRow], end: date) -> list[dict[str, Any]]:
-    """Last 60 months per neighborhood, for "all" and apartments."""
+def compute_monthly(
+    rows: Sequence[LocatedRow], end: date, rolling_min: int = 10
+) -> list[dict[str, Any]]:
+    """Last 60 months per neighborhood, for "all" and apartments.
+
+    Each month also carries the median R$/m² of the 12 months ending there (the chart's line);
+    it is stored only with ``rolling_min`` sales behind it.
+    """
     first = add_months(month_start(end), -(MONTHS_IN_CHART - 1))
+    lookback = add_months(first, -11)
     groups: dict[tuple[uuid.UUID, str, date], list[CleanRow]] = defaultdict(list)
     for located in rows:
         r = located.row
-        if located.neighborhood_id is None or not (first <= r.transaction_date <= end):
+        if located.neighborhood_id is None or not (lookback <= r.transaction_date <= end):
             continue
         month = month_start(r.transaction_date)
         groups[(located.neighborhood_id, ALL, month)].append(r)
         if r.kind == PropertyKind.APARTMENT:
             groups[(located.neighborhood_id, PropertyKind.APARTMENT.value, month)].append(r)
+    clean: dict[tuple[uuid.UUID, str, date], list[int]] = {
+        key: [m.price_m2_cents for m in members if not m.under_declared and not m.price_outlier]
+        for key, members in groups.items()
+    }
     out = []
     for (neighborhood_id, kind, month), members in groups.items():
-        sample = [m.price_m2_cents for m in members if not m.under_declared and not m.price_outlier]
+        if month < first:
+            continue  # lookback months only feed the rolling median
+        sample = clean[(neighborhood_id, kind, month)]
+        trailing = [
+            v
+            for k in range(12)
+            for v in clean.get((neighborhood_id, kind, add_months(month, -k)), [])
+        ]
         out.append(
             {
                 "neighborhood_id": neighborhood_id,
@@ -260,6 +298,10 @@ def compute_monthly(rows: Sequence[LocatedRow], end: date) -> list[dict[str, Any
                 "median_sample": len(sample),
                 "median_price_m2_cents": median(sample)
                 if len(sample) >= MIN_MONTHLY_SAMPLE
+                else None,
+                "rolling_sample": len(trailing),
+                "rolling_median_price_m2_cents": median(trailing)
+                if len(trailing) >= rolling_min
                 else None,
             }
         )

@@ -108,14 +108,17 @@ class Settings(BaseSettings):
     # complete payment month.
     market_window_lag_months: int = 1
     market_min_neighborhood_12m: int = 30
-    market_min_street_24m: int = 10
+    market_min_street_36m: int = 10
     market_min_building_all: int = 5
+    # Every published median (any page, band, month or comparable group) needs this many sales.
+    market_min_price_group: int = 10
     # Below this many sales, show the median only (no p25/p75, no area range, year not month).
     market_min_for_ranges: int = 10
     market_round_value_cents: int = 100_000  # R$ 1.000
     market_round_price_m2_cents: int = 1_000  # R$ 10
     # Financing page defaults (rate comes from financing_illustrative_annual_rate_bps).
     market_down_payment_pct: int = 20
+    market_min_down_payment_pct: int = 20  # below this the simulator shows a field error
     market_term_months: int = 360
     market_max_income_commitment_pct: int = 30
     # Web cache revalidation after each refresh (empty URL = skip).

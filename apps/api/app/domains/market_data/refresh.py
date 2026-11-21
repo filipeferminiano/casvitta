@@ -85,11 +85,11 @@ async def indexable_paths(
     streets = await session.execute(
         select(MarketStreet.id, MarketStreet.slug, MarketNeighborhood.slug)
         .join(MarketNeighborhood, MarketNeighborhood.id == MarketStreet.neighborhood_id)
-        .join(MarketStats, gate_join(StatsEntity.STREET, MarketStreet.id, "last_24m"))
+        .join(MarketStats, gate_join(StatsEntity.STREET, MarketStreet.id, "last_36m"))
         .where(
             MarketStreet.city_id == city.id,
             MarketNeighborhood.is_indexable,
-            MarketStats.median_sample >= gates.street_24m,
+            MarketStats.median_sample >= gates.street_36m,
         )
     )
     out += [(sid, service.street_path(city.slug, n, s)) for sid, s, n in streets]

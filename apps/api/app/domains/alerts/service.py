@@ -162,7 +162,7 @@ async def _out(session: AsyncSession, alert: PropertyAlert) -> PropertyAlertOut:
     )
 
 
-async def _scope_label(
+async def _scope_label(  # noqa: PLR0911 - one return per scope
     session: AsyncSession, scope: AlertScope, scope_id: uuid.UUID
 ) -> tuple[str, str]:
     if scope is AlertScope.CITY:

@@ -59,6 +59,7 @@ class CleanRow:
     under_declared: bool
     bundled_parking: bool
     price_outlier: bool = False
+    tax_base_cents: int | None = None
 
     @property
     def block(self) -> str:
@@ -125,6 +126,7 @@ def to_clean(row: ItbiRow, kind: PropertyKind, payment_month: date) -> CleanRow:
         construction_year=row.construction_year,
         under_declared=reference > 0 and row.value_cents * 2 < reference,
         bundled_parking=mentions_bundled_parking(row.unit_raw),
+        tax_base_cents=row.tax_base_cents,
     )
 
 

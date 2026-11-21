@@ -1385,15 +1385,21 @@
         "type": "string",
         "enum": [
           "buy",
-          "owner"
+          "rent",
+          "own_sell",
+          "own_rent",
+          "own_valuation",
+          "researching"
         ],
         "title": "AlertIntent"
       },
       "AlertScope": {
         "type": "string",
         "enum": [
+          "city",
           "neighborhood",
           "street",
+          "street_segment",
           "building"
         ],
         "title": "AlertScope"
@@ -1431,6 +1437,11 @@
             "type": "integer",
             "title": "Sales"
           },
+          "priced": {
+            "type": "boolean",
+            "title": "Priced",
+            "default": false
+          },
           "median_value_cents": {
             "anyOf": [
               {
@@ -1441,6 +1452,17 @@
               }
             ],
             "title": "Median Value Cents"
+          },
+          "median_price_m2_cents": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Median Price M2 Cents"
           }
         },
         "type": "object",
@@ -1835,6 +1857,10 @@
               }
             ]
           },
+          "sales": {
+            "type": "integer",
+            "title": "Sales"
+          },
           "last_24m": {
             "anyOf": [
               {
@@ -1844,6 +1870,40 @@
                 "type": "null"
               }
             ]
+          },
+          "sales_by_year": {
+            "items": {
+              "$ref": "#/components/schemas/YearCount"
+            },
+            "type": "array",
+            "title": "Sales By Year"
+          },
+          "comparison": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/PriceComparison"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "street_stats": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/PublicStats"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "other_buildings": {
+            "items": {
+              "$ref": "#/components/schemas/BuildingRow"
+            },
+            "type": "array",
+            "title": "Other Buildings"
           }
         },
         "type": "object",
@@ -1857,7 +1917,12 @@
           "gate",
           "source",
           "stats",
-          "last_24m"
+          "sales",
+          "last_24m",
+          "sales_by_year",
+          "comparison",
+          "street_stats",
+          "other_buildings"
         ],
         "title": "BuildingPage"
       },
@@ -1873,6 +1938,17 @@
           "street_number": {
             "type": "integer",
             "title": "Street Number"
+          },
+          "construction_year": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Construction Year"
           },
           "stats": {
             "anyOf": [
@@ -1902,6 +1978,20 @@
           "source": {
             "$ref": "#/components/schemas/SourceInfo"
           },
+          "stats": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/PublicStats"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "neighborhoods_with_price": {
+            "type": "integer",
+            "title": "Neighborhoods With Price"
+          },
           "neighborhoods": {
             "items": {
               "$ref": "#/components/schemas/NeighborhoodRow"
@@ -1914,6 +2004,8 @@
         "required": [
           "city",
           "source",
+          "stats",
+          "neighborhoods_with_price",
           "neighborhoods"
         ],
         "title": "CityIndexPage"
@@ -2127,6 +2219,37 @@
         "title": "EmailLinkSent",
         "description": "Same body whether or not the address has an account (no account enumeration)."
       },
+      "FinancedYear": {
+        "properties": {
+          "year": {
+            "type": "integer",
+            "title": "Year"
+          },
+          "financed_pct": {
+            "type": "integer",
+            "title": "Financed Pct"
+          },
+          "partial_until": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Partial Until"
+          }
+        },
+        "type": "object",
+        "required": [
+          "year",
+          "financed_pct",
+          "partial_until"
+        ],
+        "title": "FinancedYear"
+      },
       "FinancingContext": {
         "properties": {
           "year": {
@@ -2224,6 +2347,10 @@
             "type": "integer",
             "title": "Max Income Commitment Pct"
           },
+          "min_down_payment_pct": {
+            "type": "integer",
+            "title": "Min Down Payment Pct"
+          },
           "simulations": {
             "items": {
               "$ref": "#/components/schemas/Simulation"
@@ -2240,6 +2367,20 @@
                 "type": "null"
               }
             ]
+          },
+          "financed_by_year": {
+            "items": {
+              "$ref": "#/components/schemas/FinancedYear"
+            },
+            "type": "array",
+            "title": "Financed By Year"
+          },
+          "neighbors": {
+            "items": {
+              "$ref": "#/components/schemas/NeighborIncome"
+            },
+            "type": "array",
+            "title": "Neighbors"
           }
         },
         "type": "object",
@@ -2254,8 +2395,11 @@
           "term_months",
           "annual_rate_bps",
           "max_income_commitment_pct",
+          "min_down_payment_pct",
           "simulations",
-          "financing"
+          "financing",
+          "financed_by_year",
+          "neighbors"
         ],
         "title": "FinancingPage"
       },
@@ -2675,6 +2819,17 @@
               }
             ],
             "title": "Median Price M2 Cents"
+          },
+          "rolling_median_price_m2_cents": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Rolling Median Price M2 Cents"
           }
         },
         "type": "object",
@@ -2684,6 +2839,28 @@
           "median_price_m2_cents"
         ],
         "title": "MonthlyPoint"
+      },
+      "NeighborIncome": {
+        "properties": {
+          "place": {
+            "$ref": "#/components/schemas/PlaceRef"
+          },
+          "median_value_cents": {
+            "type": "integer",
+            "title": "Median Value Cents"
+          },
+          "min_income_cents": {
+            "type": "integer",
+            "title": "Min Income Cents"
+          }
+        },
+        "type": "object",
+        "required": [
+          "place",
+          "median_value_cents",
+          "min_income_cents"
+        ],
+        "title": "NeighborIncome"
       },
       "NeighborhoodPage": {
         "properties": {
@@ -2715,32 +2892,20 @@
               }
             ]
           },
-          "apartments": {
+          "sales_12m": {
+            "type": "integer",
+            "title": "Sales 12M"
+          },
+          "price_m2_change_5y_pct": {
             "anyOf": [
               {
-                "$ref": "#/components/schemas/PublicStats"
+                "type": "string"
               },
               {
                 "type": "null"
               }
-            ]
-          },
-          "houses": {
-            "anyOf": [
-              {
-                "$ref": "#/components/schemas/PublicStats"
-              },
-              {
-                "type": "null"
-              }
-            ]
-          },
-          "years": {
-            "items": {
-              "$ref": "#/components/schemas/YearRow"
-            },
-            "type": "array",
-            "title": "Years"
+            ],
+            "title": "Price M2 Change 5Y Pct"
           },
           "monthly": {
             "items": {
@@ -2795,9 +2960,8 @@
           "gate",
           "source",
           "stats",
-          "apartments",
-          "houses",
-          "years",
+          "sales_12m",
+          "price_m2_change_5y_pct",
           "monthly",
           "area_bands",
           "top_streets",
@@ -2998,6 +3162,17 @@
           "path": {
             "type": "string",
             "title": "Path"
+          },
+          "in_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "In Name"
           }
         },
         "type": "object",
@@ -3026,6 +3201,63 @@
         ],
         "title": "PortfolioSize"
       },
+      "PriceComparison": {
+        "properties": {
+          "building_price_m2_cents": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Building Price M2 Cents"
+          },
+          "street_price_m2_cents": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Street Price M2 Cents"
+          },
+          "neighborhood_price_m2_cents": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Neighborhood Price M2 Cents"
+          },
+          "vs_neighborhood_pct": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Vs Neighborhood Pct"
+          }
+        },
+        "type": "object",
+        "required": [
+          "building_price_m2_cents",
+          "street_price_m2_cents",
+          "neighborhood_price_m2_cents",
+          "vs_neighborhood_pct"
+        ],
+        "title": "PriceComparison",
+        "description": "R$/m² (IPTU) over all history; each side only when it passes the price group."
+      },
       "PropertyAlertAccepted": {
         "properties": {
           "status": {
@@ -3050,9 +3282,16 @@
             "title": "City"
           },
           "neighborhood": {
-            "type": "string",
-            "maxLength": 80,
-            "minLength": 2,
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 80,
+                "minLength": 2
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Neighborhood"
           },
           "street": {
@@ -3122,6 +3361,18 @@
             ],
             "title": "Source Page"
           },
+          "valuation_snapshot": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Valuation Snapshot"
+          },
           "website": {
             "anyOf": [
               {
@@ -3139,7 +3390,6 @@
         "required": [
           "scope",
           "city",
-          "neighborhood",
           "intent",
           "name",
           "phone",
@@ -3190,6 +3440,22 @@
           },
           "status": {
             "$ref": "#/components/schemas/AlertStatus"
+          },
+          "source_path": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source Path"
+          },
+          "has_valuation": {
+            "type": "boolean",
+            "title": "Has Valuation",
+            "default": false
           },
           "contact_consent": {
             "type": "boolean",
@@ -3270,6 +3536,11 @@
             "type": "string",
             "format": "date",
             "title": "Window End"
+          },
+          "priced": {
+            "type": "boolean",
+            "title": "Priced",
+            "default": true
           },
           "median_value_cents": {
             "anyOf": [
@@ -3392,17 +3663,6 @@
             ],
             "title": "Median Construction Year"
           },
-          "last_sale_month": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Last Sale Month"
-          },
           "last_sale_year": {
             "anyOf": [
               {
@@ -3413,6 +3673,28 @@
               }
             ],
             "title": "Last Sale Year"
+          },
+          "median_price_m2_change_12m_pct": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Median Price M2 Change 12M Pct"
+          },
+          "sales_change_12m_pct": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Sales Change 12M Pct"
           },
           "refreshed_at": {
             "type": "string",
@@ -3426,22 +3708,10 @@
           "window",
           "window_start",
           "window_end",
-          "median_value_cents",
-          "median_price_m2_cents",
-          "p25_price_m2_cents",
-          "p75_price_m2_cents",
-          "median_built_area_m2",
-          "p25_built_area_m2",
-          "p75_built_area_m2",
-          "financed_pct",
-          "median_financed_pct",
-          "top_financing_type_code",
-          "median_construction_year",
-          "last_sale_month",
-          "last_sale_year",
           "refreshed_at"
         ],
-        "title": "PublicStats"
+        "title": "PublicStats",
+        "description": "``priced`` false: the group is below MARKET_MIN_PRICE_GROUP, only the count is public."
       },
       "ReadinessOut": {
         "properties": {
@@ -3652,6 +3922,10 @@
             "type": "integer",
             "title": "Last Payment Cents"
           },
+          "total_interest_cents": {
+            "type": "integer",
+            "title": "Total Interest Cents"
+          },
           "min_income_cents": {
             "type": "integer",
             "title": "Min Income Cents"
@@ -3668,6 +3942,7 @@
           "annual_rate_bps",
           "first_payment_cents",
           "last_payment_cents",
+          "total_interest_cents",
           "min_income_cents"
         ],
         "title": "Simulation"
@@ -3811,6 +4086,10 @@
               }
             ]
           },
+          "sales_36m": {
+            "type": "integer",
+            "title": "Sales 36M"
+          },
           "last_12m": {
             "anyOf": [
               {
@@ -3821,15 +4100,12 @@
               }
             ]
           },
-          "apartments": {
-            "anyOf": [
-              {
-                "$ref": "#/components/schemas/PublicStats"
-              },
-              {
-                "type": "null"
-              }
-            ]
+          "sales_by_year": {
+            "items": {
+              "$ref": "#/components/schemas/YearCount"
+            },
+            "type": "array",
+            "title": "Sales By Year"
           },
           "buildings": {
             "items": {
@@ -3837,6 +4113,13 @@
             },
             "type": "array",
             "title": "Buildings"
+          },
+          "similar_streets": {
+            "items": {
+              "$ref": "#/components/schemas/StreetRow"
+            },
+            "type": "array",
+            "title": "Similar Streets"
           }
         },
         "type": "object",
@@ -3847,9 +4130,11 @@
           "gate",
           "source",
           "stats",
+          "sales_36m",
           "last_12m",
-          "apartments",
-          "buildings"
+          "sales_by_year",
+          "buildings",
+          "similar_streets"
         ],
         "title": "StreetPage"
       },
@@ -4038,11 +4323,15 @@
         ],
         "title": "WorkspaceUpdate"
       },
-      "YearRow": {
+      "YearCount": {
         "properties": {
           "year": {
             "type": "integer",
             "title": "Year"
+          },
+          "sales": {
+            "type": "integer",
+            "title": "Sales"
           },
           "partial_until": {
             "anyOf": [
@@ -4055,25 +4344,16 @@
               }
             ],
             "title": "Partial Until"
-          },
-          "stats": {
-            "anyOf": [
-              {
-                "$ref": "#/components/schemas/PublicStats"
-              },
-              {
-                "type": "null"
-              }
-            ]
           }
         },
         "type": "object",
         "required": [
           "year",
-          "partial_until",
-          "stats"
+          "sales",
+          "partial_until"
         ],
-        "title": "YearRow"
+        "title": "YearCount",
+        "description": "Sales in a calendar year: a count, never prices or dates."
       }
     }
   }

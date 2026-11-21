@@ -79,8 +79,9 @@ async def test_neighborhood_page_above_the_gate(client: AsyncClient) -> None:
     assert stats["sales"] == 56  # 30 with Bairro + 26 located by their CEP
     assert stats["median_value_cents"] % 100_000 == 0  # R$ 1.000
     assert stats["median_price_m2_cents"] % 1_000 == 0  # R$ 10
-    assert stats["p25_price_m2_cents"] is not None  # 42 sales: ranges allowed
-    assert stats["last_sale_month"] == "2026-08"
+    assert stats["p25_price_m2_cents"] is not None  # 56 sales: ranges allowed
+    assert "last_sale_month" not in stats  # the month of a sale is never published
+    assert stats["last_sale_year"] == 2026
     streets = [s["place"]["slug"] for s in page["top_streets"]]
     assert streets == ["avenida-dos-ipes-ficticios", "rua-das-acacias-ficticias"]
     buildings = {b["place"]["slug"] for b in page["top_buildings"]}
@@ -98,10 +99,11 @@ async def test_neighborhood_below_the_gate_shows_no_numbers(client: AsyncClient)
     page = await _get(client, "/neighborhoods/aclimacao")
     assert page["gate"]["passes"] is False
     assert page["gate"]["indexable"] is False
-    for key in ("stats", "apartments", "houses", "financing"):
+    for key in ("stats", "financing", "price_m2_change_5y_pct"):
         assert page[key] is None
-    for key in ("years", "monthly", "area_bands", "top_streets", "top_buildings"):
+    for key in ("monthly", "area_bands", "top_streets", "top_buildings"):
         assert page[key] == []
+    assert page["sales_12m"] == 4  # the count is shown ("4 vendas"), never a price
     assert page["neighbors"]  # links to the parent and neighbors still render
 
 
@@ -111,12 +113,16 @@ async def test_small_building_shows_median_only(client: AsyncClient) -> None:
         client, "/neighborhoods/vila-mariana/buildings/condominio-reserva-demonstrativa"
     )
     stats = page["stats"]
+    # 8 sales: the page passes its gate (5) but prices need 10 (MARKET_MIN_PRICE_GROUP).
     assert page["gate"]["passes"] and stats["sales"] == 8
-    assert stats["median_value_cents"] is not None
-    assert stats["p25_price_m2_cents"] is None and stats["p75_price_m2_cents"] is None
-    assert stats["p25_built_area_m2"] is None
-    assert stats["median_built_area_m2"] % 5 == 0  # rounded to 5 m² in small groups
-    assert stats["last_sale_month"] is None and stats["last_sale_year"] == 2026
+    assert stats["priced"] is False
+    for key in ("median_value_cents", "median_price_m2_cents", "p25_price_m2_cents"):
+        assert stats[key] is None
+    assert stats["last_sale_year"] == 2026
+    assert page["comparison"] is None
+    assert page["street_stats"]["priced"] is True  # fallback: the street's numbers
+    assert page["sales_by_year"][0]["year"] == 2019
+    assert sum(y["sales"] for y in page["sales_by_year"]) == 8
 
 
 @pytest.mark.usefixtures("demo")
@@ -182,7 +188,7 @@ async def test_sitemaps_list_only_indexable_pages(client: AsyncClient) -> None:
     assert "/condominio/sao-paulo/vila-mariana/condominio-jardim-exemplo" in predios
     assert not any("poucos-dados" in p for p in predios)
     ruas = [e["path"] for e in (await _get(client, "/sitemaps/ruas"))["entries"]]
-    assert "/preco-m2/sao-paulo/vila-mariana/rua-das-acacias-ficticias" in ruas
+    assert "/rua/sao-paulo/vila-mariana/rua-das-acacias-ficticias" in ruas
     financing = [e["path"] for e in (await _get(client, "/sitemaps/financiamento"))["entries"]]
     assert financing == [
         "/financiamento/sao-paulo/moema",
@@ -257,17 +263,47 @@ def _stats(**overrides: Any) -> MarketStats:
 
 def test_publish_rounds_and_gates() -> None:
     gates = Gates.from_settings(get_settings())
-    public = gates.publish(_stats(), gates.building_all)
-    assert public is not None
-    assert public.median_value_cents == 68_900_000
-    assert public.median_price_m2_cents == 1_235_000
-    assert public.p25_price_m2_cents is None  # 5 sales: no ranges
-    assert public.median_built_area_m2 == 65  # 67.4 m² -> nearest 5 m²
-    assert (public.financed_pct, public.median_financed_pct) == (67, 70)
-    assert public.last_sale_month is None and public.last_sale_year == 2026
-    # Below the gate, and when flagged sales leave too few for a median: nothing.
+    # 5 sales: passes the building page gate, but only the count is public.
+    count_only = gates.publish(_stats(), gates.building_all)
+    assert count_only is not None and count_only.priced is False
+    assert (count_only.sales, count_only.median_value_cents, count_only.financed_pct) == (
+        5,
+        None,
+        None,
+    )
+    assert count_only.last_sale_year == 2026
+    # Below the page gate: nothing.
     assert gates.publish(_stats(tx_count=4, median_sample=4), gates.building_all) is None
-    assert gates.publish(_stats(tx_count=9, median_sample=4), gates.building_all) is None
-    wide = gates.publish(_stats(tx_count=12, median_sample=12), gates.building_all)
-    assert wide is not None and wide.p25_price_m2_cents == 1_000_000
-    assert wide.median_built_area_m2 == 67 and wide.last_sale_month == "2026-07"
+    # 12 sales but flags leave 9 for the median: still count only.
+    flagged = gates.publish(_stats(tx_count=12, median_sample=9), gates.building_all)
+    assert flagged is not None and flagged.priced is False
+    priced = gates.publish(_stats(tx_count=12, median_sample=12), gates.building_all)
+    assert priced is not None and priced.priced
+    assert priced.median_value_cents == 68_900_000  # R$ 1.000
+    assert priced.median_price_m2_cents == 1_235_000  # R$ 10
+    assert priced.p25_price_m2_cents == 1_000_000
+    assert priced.median_built_area_m2 == 67
+    assert (priced.financed_pct, priced.median_financed_pct) == (67, 70)
+
+
+@pytest.mark.usefixtures("demo")
+async def test_seo3_fields(client: AsyncClient) -> None:
+    city = await _get(client, "")
+    assert city["stats"]["sales"] >= 56 and city["neighborhoods_with_price"] >= 2
+    page = await _get(client, "/neighborhoods/vila-mariana")
+    assert page["neighborhood"]["in_name"] == "na Vila Mariana"
+    neighbors = {n["place"]["slug"]: n["place"]["in_name"] for n in page["neighbors"]}
+    assert neighbors["moema"] == "em Moema"
+    assert {"month", "sales", "median_price_m2_cents", "rolling_median_price_m2_cents"} <= set(
+        page["monthly"][0]
+    )
+    for band in page["area_bands"]:
+        assert band["priced"] == (band["median_price_m2_cents"] is not None)
+    financing = await _get(client, "/neighborhoods/vila-mariana/financing")
+    assert financing["min_down_payment_pct"] == 20
+    assert all(s["total_interest_cents"] > 0 for s in financing["simulations"])
+    assert [n["place"]["slug"] for n in financing["neighbors"]] == ["moema"]
+    street = await _get(client, "/neighborhoods/vila-mariana/streets/avenida-dos-ipes-ficticios")
+    assert street["street"]["path"] == "/rua/sao-paulo/vila-mariana/avenida-dos-ipes-ficticios"
+    assert street["sales_36m"] == 42
+    assert "rua-das-acacias-ficticias" in {s["place"]["slug"] for s in street["similar_streets"]}

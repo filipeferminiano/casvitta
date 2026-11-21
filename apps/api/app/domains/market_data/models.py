@@ -140,6 +140,8 @@ class MarketNeighborhood(UUIDPrimaryKey, Timestamps, Base):
     # Canonical spellings seen in the source (no accents, abbreviations expanded).
     aliases: Mapped[list[str]] = mapped_column(JSONType, default=list)
     wave: Mapped[int | None] = mapped_column(SmallInteger)
+    # "na" / "no" / "em": titles say "Preço do m² na Vila Mariana", "em Moema", "no Ipiranga".
+    preposition: Mapped[str] = mapped_column(String(3), default="em", server_default="em")
     is_indexable: Mapped[bool] = mapped_column(default=False)
     # True when created from the data rather than from the curated seed.
     is_auto: Mapped[bool] = mapped_column(default=False)
