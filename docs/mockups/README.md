@@ -82,3 +82,15 @@ How to use them:
 | `59-auction-landing-desktop` | J9 · Leilão (captura) | desktop 1440px |
 | `60-auction-landing-mobile` | J10 · Leilão mobile | mobile 390px |
 | `61-auction-confirmation-mobile` | J11 · Leilão confirmação | mobile 390px |
+
+## Programmatic SEO pages
+
+See `docs/mockups/seo/README.md`: one folder per page type (valuation, ITBI calculator, building, neighborhood price + index, financing, street, listings), each with desktop, mobile and a states-components board. Build prompt: `docs/prompts/PROMPT_SEO_PAGES_BUILD.md`.
+
+## Audience landing pages
+
+See `docs/mockups/landing-pages/README.md` (owners, brokers, agencies; desktop + mobile). Build prompt: `docs/prompts/PROMPT_LANDING_PAGES_BUILD.md`.
+
+## Backoffice
+
+See `docs/mockups/backoffice/README.md` (routines map + BO1–BO8). Build prompt: `docs/prompts/PROMPT_BACKOFFICE_BUILD.md`.
