@@ -21,6 +21,9 @@ export type BrokerProfile = {
   creciNumber: string; // "000.000-F"
   creciState: string; // "SP"
   creciVerifiedAt: ISODateTime | null;
+  /** What staff asked to fix (correction requested or refused); null otherwise. */
+  creciReviewReason?: string | null;
+  creciRejected?: boolean;
   slug: string;
   regions: string[];
   phoneE164: string;

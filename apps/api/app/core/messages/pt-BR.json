@@ -39,5 +39,13 @@
   "email.staff_sign_in.subject": "Seu link para entrar no backoffice da Casvitta",
   "email.staff_sign_in.text": "Olá, {name}.\n\nPara entrar no backoffice da Casvitta, abra este link:\n{link}\n\nEle vale por {minutes} minutos e só funciona uma vez. Se não foi você que pediu, avise o Admin da equipe.\n\nCasvitta",
   "email.staff_reauth.subject": "Código {code} para confirmar uma ação no backoffice",
-  "email.staff_reauth.text": "Olá, {name}.\n\nSeu código é {code}. Ele vale por {minutes} minutos.\n\nSe não foi você que pediu, avise o Admin da equipe agora.\n\nCasvitta"
+  "email.staff_reauth.text": "Olá, {name}.\n\nSeu código é {code}. Ele vale por {minutes} minutos.\n\nSe não foi você que pediu, avise o Admin da equipe agora.\n\nCasvitta",
+  "checklist_incomplete": "Marque os 4 itens da conferência antes de aprovar.",
+  "creci_not_pending": "Este CRECI já foi analisado. Atualize a fila para ver a situação atual.",
+  "email.creci_verified.subject": "Seu CRECI foi verificado na Casvitta",
+  "email.creci_verified.text": "Olá, {name}.\n\nConferimos seu CRECI {creci} na consulta pública do conselho. Agora você já pode publicar imóveis e anúncios na Casvitta.\n\nAbra o app: {link}\n\nCasvitta",
+  "email.creci_correction.subject": "Precisamos de uma correção no seu CRECI",
+  "email.creci_correction.text": "Olá, {name}.\n\nAo conferir seu CRECI {creci}, encontramos isto:\n\n{reason}\n\nCorrija em Configurações e envie de novo; respondemos em até 1 dia útil:\n{link}\n\nCasvitta",
+  "email.creci_rejected.subject": "Não conseguimos verificar seu CRECI",
+  "email.creci_rejected.text": "Olá, {name}.\n\nNão conseguimos verificar o CRECI {creci}. Motivo:\n\n{reason}\n\nSem um CRECI verificado não é possível publicar imóveis na Casvitta. Se acha que é um engano, responda a este e-mail.\n\nCasvitta"
 }

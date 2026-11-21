@@ -18,3 +18,10 @@ export {
   type QueueListItem,
   type QueueListProps,
 } from './Overview.tsx';
+export {
+  QueueTable,
+  Textarea,
+  type QueueColumn,
+  type QueueTableProps,
+  type TextareaProps,
+} from './QueueTable.tsx';

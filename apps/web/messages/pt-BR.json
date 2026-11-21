@@ -977,8 +977,12 @@
     },
     "creciPending": {
       "title": "Seu CRECI está em verificação",
-      "body": "Você pode montar o anúncio agora. Ele só é publicado depois que confirmarmos o CRECI-{state} {number}; avisamos pelo WhatsApp.",
-      "publishBlocked": "Publicação liberada depois da verificação do CRECI"
+      "body": "Você pode montar o anúncio agora. Ele só é publicado depois que confirmarmos o CRECI-{state} {number}; avisamos por e-mail.",
+      "publishBlocked": "Publicação liberada depois da verificação do CRECI",
+      "correctionTitle": "Precisamos de uma correção no seu CRECI",
+      "correctionBody": "{reason} Corrija o número em Configurações e envie de novo; respondemos em até 1 dia útil.",
+      "rejectedTitle": "Não conseguimos verificar seu CRECI",
+      "rejectedBody": "{reason} Se acha que é um engano, responda ao e-mail que enviamos."
     }
   },
   "listing": {
@@ -2706,6 +2710,99 @@
         "person": "Pessoas das captações"
       },
       "error": "A busca falhou. Tente de novo."
+    },
+    "plans": {
+      "corretor": "Corretor",
+      "essencial": "Essencial",
+      "profissional": "Profissional"
+    },
+    "creci": {
+      "title": "Verificação de CRECI",
+      "description": "Nenhum corretor publica antes desta aprovação.",
+      "subject": "a fila de CRECI",
+      "tabs": {
+        "pending": "Pendentes",
+        "correction_requested": "Correção pedida",
+        "verified": "Verificados",
+        "rejected": "Recusados"
+      },
+      "columns": {
+        "broker": "Corretor",
+        "creci": "CRECI informado",
+        "kind": "Tipo",
+        "waiting": "Na fila",
+        "status": "Situação"
+      },
+      "kind": {
+        "F": "Pessoa física",
+        "J": "Imobiliária"
+      },
+      "hours": "há {hours} h",
+      "status": {
+        "first": "Primeira análise",
+        "resubmitted": "Correção enviada",
+        "correction_requested": "Aguardando o corretor",
+        "verified": "Verificado",
+        "rejected": "Recusado"
+      },
+      "footnote": "Ordenado pelo mais antigo. O cadastro promete resposta em até 1 dia útil.",
+      "historyFootnote": "Mais recentes primeiro.",
+      "empty": {
+        "pending": "Nenhum CRECI esperando análise.",
+        "correction_requested": "Nenhum pedido de correção em aberto.",
+        "verified": "Nenhum CRECI verificado ainda.",
+        "rejected": "Nenhum CRECI recusado."
+      },
+      "select": "Ver {name}",
+      "detail": {
+        "label": "Detalhe do CRECI de {name}",
+        "signedUp": "Cadastro em {date} · plano {plan} escolhido",
+        "creciName": "Nome no CRECI",
+        "number": "Número",
+        "state": "UF",
+        "kind": "Tipo",
+        "lookup": "Abrir consulta pública do CRECI-{state}",
+        "lookupMissing": "Procure o número na consulta pública do CRECI-{state}, no site do conselho regional.",
+        "newTab": "(abre em nova aba)",
+        "checklist": "Conferência",
+        "checks": {
+          "number_exists": "Número existe na consulta pública do CRECI-{state}",
+          "name_matches": "Nome no registro confere com o cadastro",
+          "active": "Inscrição ativa, sem suspensão",
+          "kind_matches": "Tipo confere (F pessoa física, J imobiliária)"
+        },
+        "approve": "Aprovar CRECI",
+        "approving": "Aprovando…",
+        "approveHint": "Marque os 4 itens para aprovar.",
+        "correction": "Pedir correção",
+        "reject": "Recusar",
+        "note": "Ao aprovar, a publicação é liberada e a pessoa recebe um aviso por e-mail. Recusar ou pedir correção exige um motivo, que vai para ela. Tudo fica na auditoria.",
+        "reason": "Motivo enviado ao corretor",
+        "reviewed": "Analisado em {date}",
+        "noPermission": "Seu papel pode ver a fila, mas não aprovar ou recusar.",
+        "readOnly": "Já analisado."
+      },
+      "reasonDialog": {
+        "correctionTitle": "Pedir correção a {name}",
+        "rejectTitle": "Recusar o CRECI de {name}",
+        "description": "O motivo vai por e-mail para a pessoa e fica na auditoria.",
+        "label": "Motivo",
+        "help": "Diga o que está errado e como corrigir.",
+        "send": "Enviar",
+        "sending": "Enviando…",
+        "cancel": "Cancelar",
+        "close": "Fechar"
+      },
+      "done": {
+        "verified": "CRECI de {name} aprovado.",
+        "correction_requested": "Correção pedida a {name}.",
+        "rejected": "CRECI de {name} recusado."
+      },
+      "errors": {
+        "checklist_incomplete": "Marque os 4 itens da conferência antes de aprovar.",
+        "creci_not_pending": "Este CRECI já foi analisado por outra pessoa. A fila foi atualizada.",
+        "generic": "Não conseguimos salvar. Tente de novo."
+      }
     }
   },
   "audience": {

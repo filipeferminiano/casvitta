@@ -72,6 +72,15 @@ class CreciKind(StrEnum):
     COMPANY = "J"  # pessoa jurídica
 
 
+class CreciReviewStatus(StrEnum):
+    """Staff review of the CRECI (BO2). Only "verified" lets the broker publish (rule 1)."""
+
+    PENDING = "pending"  # first analysis, or a corrected number sent again
+    CORRECTION_REQUESTED = "correction_requested"  # waiting for the broker; reason was sent
+    VERIFIED = "verified"
+    REJECTED = "rejected"
+
+
 class BrokerProfile(UUIDPrimaryKey, Timestamps, WorkspaceScoped, DemoFlag, Base):
     """Public broker identity. Publishing needs creci_verified_at (CLAUDE.md rule 1)."""
 
@@ -89,6 +98,16 @@ class BrokerProfile(UUIDPrimaryKey, Timestamps, WorkspaceScoped, DemoFlag, Base)
     creci_kind: Mapped[CreciKind | None] = mapped_column(str_enum(CreciKind, length=1))
     creci_submitted_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
     creci_verified_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    # None while no CRECI was sent. The reason of the last correction request stays after the
+    # broker sends a new number, so the queue can show "Correção enviada".
+    creci_review_status: Mapped[CreciReviewStatus | None] = mapped_column(
+        str_enum(CreciReviewStatus)
+    )
+    creci_review_reason: Mapped[str | None] = mapped_column(String(500))
+    creci_reviewed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    creci_reviewed_by_id: Mapped[uuid.UUID | None] = mapped_column(
+        ForeignKey("staff_users.id", ondelete="SET NULL")
+    )
     whatsapp_e164: Mapped[str | None] = mapped_column(String(20))
     bio: Mapped[str | None] = mapped_column(String(600))
     photo_url: Mapped[str | None] = mapped_column(String(500))

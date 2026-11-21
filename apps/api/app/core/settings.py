@@ -102,6 +102,14 @@ class Settings(BaseSettings):
     capture_assignment_timeout_hours: int = 24
     # CRECI review promise shown at sign-up ("1 dia útil"): older requests get the SLA badge.
     creci_review_sla_hours: int = 24
+    # Public lookup of each regional council, opened from BO2. Only addresses someone checked;
+    # a state without one shows the instruction without a link. JSON in the environment.
+    creci_lookup_urls: dict[str, str] = Field(
+        default_factory=lambda: {
+            "SP": "https://www.crecisp.gov.br/",
+            "ES": "https://crecies.gov.br/profissional-regularizado",
+        }
+    )
 
     # Shared token for scripts and CI only (staff use their own accounts). Accepted only while
     # admin_token_enabled is on; audited as "system:admin-token".

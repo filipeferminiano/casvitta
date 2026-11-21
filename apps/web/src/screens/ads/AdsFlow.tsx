@@ -135,6 +135,16 @@ function CreciPendingNotice() {
   const t = useTranslations('ads.creciPending');
   const broker = useBroker().data;
   if (!broker || broker.creciVerifiedAt) return null;
+  if (broker.creciReviewReason) {
+    // Staff asked for a correction or refused it (backoffice BO2): say why and what to do.
+    return (
+      <Callout tone="risk" title={t(broker.creciRejected ? 'rejectedTitle' : 'correctionTitle')}>
+        {t(broker.creciRejected ? 'rejectedBody' : 'correctionBody', {
+          reason: broker.creciReviewReason,
+        })}
+      </Callout>
+    );
+  }
   return (
     <Callout tone="attention" title={t('title')}>
       {t('body', { state: broker.creciState, number: broker.creciNumber })}

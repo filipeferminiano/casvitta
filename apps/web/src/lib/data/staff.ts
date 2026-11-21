@@ -23,6 +23,9 @@ export type AuditEntry = components['schemas']['AuditEntryOut'];
 export type Overview = components['schemas']['OverviewOut'];
 export type SearchHit = components['schemas']['SearchHit'];
 export type InterestKind = components['schemas']['InterestKind'];
+export type CreciItem = components['schemas']['CreciItem'];
+export type CreciTab = 'pending' | 'correction_requested' | 'verified' | 'rejected';
+export type CreciChecklist = components['schemas']['CreciChecklist'];
 
 export const STAFF_ROLES: StaffRole[] = [
   'admin',
@@ -67,6 +70,7 @@ export const staffKeys = {
   me: [ROOT, 'me'] as const,
   overview: [ROOT, 'overview'] as const,
   search: (q: string) => [ROOT, 'search', q] as const,
+  creci: (tab: CreciTab) => [ROOT, 'creci', tab] as const,
   team: [ROOT, 'team'] as const,
   audit: (filters: AuditFilters) => [ROOT, 'audit', filters] as const,
 };
@@ -227,5 +231,46 @@ export function useStaffSearch(q: string) {
     staleTime: 30_000,
     queryFn: async () =>
       unwrap(await staffApi.GET('/v1/staff/search', { params: { query: { q: query } } })),
+  });
+}
+
+// ------------------------------------------------------------------ CRECI (BO2)
+
+export function useCreciQueue(tab: CreciTab) {
+  return useQuery({
+    queryKey: staffKeys.creci(tab),
+    queryFn: async () =>
+      unwrap(await staffApi.GET('/v1/staff/creci', { params: { query: { status: tab } } })),
+  });
+}
+
+type CreciDecision =
+  | { id: string; outcome: 'approve'; checklist: CreciChecklist }
+  | { id: string; outcome: 'request-correction' | 'reject'; reason: string };
+
+export function useDecideCreci() {
+  const client = useQueryClient();
+  return useMutation({
+    mutationFn: async (d: CreciDecision) => {
+      const path = { params: { path: { profile_id: d.id } } };
+      if (d.outcome === 'approve') {
+        return unwrap(
+          await staffApi.POST('/v1/staff/creci/{profile_id}/approve', {
+            ...path,
+            body: { checklist: d.checklist },
+          }),
+        );
+      }
+      const body = { reason: d.reason };
+      return unwrap(
+        d.outcome === 'reject'
+          ? await staffApi.POST('/v1/staff/creci/{profile_id}/reject', { ...path, body })
+          : await staffApi.POST('/v1/staff/creci/{profile_id}/request-correction', {
+              ...path,
+              body,
+            }),
+      );
+    },
+    onSettled: () => invalidateAll(client),
   });
 }

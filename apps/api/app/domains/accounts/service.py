@@ -27,6 +27,7 @@ from app.core.time import utcnow
 from app.domains.accounts.models import (
     AuthSession,
     BrokerProfile,
+    CreciReviewStatus,
     LoginToken,
     LoginTokenPurpose,
     Membership,
@@ -406,6 +407,14 @@ def broker_out(profile: BrokerProfile) -> BrokerProfileOut:
         whatsapp_e164=profile.whatsapp_e164,
         regions=list(profile.regions or []),
         is_demo=profile.is_demo,
+        creci_review_status=profile.creci_review_status,
+        # What staff asked the broker to fix (shown in the app until a new number is sent).
+        creci_review_reason=(
+            profile.creci_review_reason
+            if profile.creci_review_status
+            in (CreciReviewStatus.CORRECTION_REQUESTED, CreciReviewStatus.REJECTED)
+            else None
+        ),
     )
 
 
@@ -444,9 +453,11 @@ async def update_broker_profile(
     for field, value in changes.items():
         setattr(profile, field, value)
     if creci_changed:
-        # A new number needs a new check before publishing (CLAUDE.md rule 1).
+        # A new number needs a new check before publishing (CLAUDE.md rule 1). After a correction
+        # request the reason stays, so staff see "Correção enviada" in the queue.
         profile.creci_verified_at = None
         profile.creci_submitted_at = utcnow() if profile.creci_number else None
+        profile.creci_review_status = CreciReviewStatus.PENDING if profile.creci_number else None
     await session.flush()
     return broker_out(profile)
 
@@ -508,6 +519,9 @@ async def verify_creci(
         if profile is None or not profile.creci_number:
             raise AppError("not_found", status_code=404)
         profile.creci_verified_at = utcnow()
+        profile.creci_review_status = CreciReviewStatus.VERIFIED
+        profile.creci_reviewed_at = profile.creci_verified_at
+        profile.creci_reviewed_by_id = actor.staff_id
         record(
             session,
             actor,

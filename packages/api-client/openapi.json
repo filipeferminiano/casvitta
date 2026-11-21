@@ -2195,6 +2195,278 @@
           }
         }
       }
+    },
+    "/v1/staff/creci": {
+      "get": {
+        "tags": [
+          "staff"
+        ],
+        "summary": "Creci Queue",
+        "operationId": "listCreciQueue",
+        "parameters": [
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "enum": [
+                "pending",
+                "correction_requested",
+                "verified",
+                "rejected"
+              ],
+              "type": "string",
+              "default": "pending",
+              "title": "Status"
+            }
+          },
+          {
+            "name": "x-admin-token",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Admin-Token"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreciQueueOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/staff/creci/{profile_id}/approve": {
+      "post": {
+        "tags": [
+          "staff"
+        ],
+        "summary": "Approve Creci",
+        "operationId": "approveCreci",
+        "parameters": [
+          {
+            "name": "profile_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Profile Id"
+            }
+          },
+          {
+            "name": "x-admin-token",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Admin-Token"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreciApproveIn"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreciItem"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/staff/creci/{profile_id}/request-correction": {
+      "post": {
+        "tags": [
+          "staff"
+        ],
+        "summary": "Request Creci Correction",
+        "operationId": "requestCreciCorrection",
+        "parameters": [
+          {
+            "name": "profile_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Profile Id"
+            }
+          },
+          {
+            "name": "x-admin-token",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Admin-Token"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReasonIn"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreciItem"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/staff/creci/{profile_id}/reject": {
+      "post": {
+        "tags": [
+          "staff"
+        ],
+        "summary": "Reject Creci",
+        "operationId": "rejectCreci",
+        "parameters": [
+          {
+            "name": "profile_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Profile Id"
+            }
+          },
+          {
+            "name": "x-admin-token",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Admin-Token"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReasonIn"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreciItem"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -2399,6 +2671,27 @@
           "is_demo": {
             "type": "boolean",
             "title": "Is Demo"
+          },
+          "creci_review_status": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/CreciReviewStatus"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "creci_review_reason": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Creci Review Reason"
           },
           "workspace_id": {
             "type": "string",
@@ -3099,6 +3392,27 @@
           "is_demo": {
             "type": "boolean",
             "title": "Is Demo"
+          },
+          "creci_review_status": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/CreciReviewStatus"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "creci_review_reason": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Creci Review Reason"
           }
         },
         "type": "object",
@@ -3492,6 +3806,220 @@
         ],
         "title": "ConsentIn"
       },
+      "CreciApproveIn": {
+        "properties": {
+          "checklist": {
+            "$ref": "#/components/schemas/CreciChecklist"
+          }
+        },
+        "type": "object",
+        "required": [
+          "checklist"
+        ],
+        "title": "CreciApproveIn"
+      },
+      "CreciChecklist": {
+        "properties": {
+          "number_exists": {
+            "type": "boolean",
+            "title": "Number Exists"
+          },
+          "name_matches": {
+            "type": "boolean",
+            "title": "Name Matches"
+          },
+          "active": {
+            "type": "boolean",
+            "title": "Active"
+          },
+          "kind_matches": {
+            "type": "boolean",
+            "title": "Kind Matches"
+          }
+        },
+        "type": "object",
+        "required": [
+          "number_exists",
+          "name_matches",
+          "active",
+          "kind_matches"
+        ],
+        "title": "CreciChecklist",
+        "description": "The four checks of the review panel. All must be true to approve."
+      },
+      "CreciItem": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "workspace_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Workspace Id"
+          },
+          "display_name": {
+            "type": "string",
+            "title": "Display Name"
+          },
+          "email": {
+            "type": "string",
+            "title": "Email"
+          },
+          "city": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "City"
+          },
+          "creci_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Creci Name"
+          },
+          "creci_number": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Creci Number"
+          },
+          "creci_state": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Creci State"
+          },
+          "creci_kind": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/CreciKind"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "status": {
+            "$ref": "#/components/schemas/CreciReviewStatus"
+          },
+          "resubmitted": {
+            "type": "boolean",
+            "title": "Resubmitted"
+          },
+          "submitted_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Submitted At"
+          },
+          "waiting_hours": {
+            "type": "integer",
+            "title": "Waiting Hours"
+          },
+          "over_sla": {
+            "type": "boolean",
+            "title": "Over Sla"
+          },
+          "reviewed_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reviewed At"
+          },
+          "reason": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reason"
+          },
+          "plan": {
+            "$ref": "#/components/schemas/Plan"
+          },
+          "signed_up_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Signed Up At"
+          },
+          "lookup_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Lookup Url"
+          },
+          "is_demo": {
+            "type": "boolean",
+            "title": "Is Demo"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "workspace_id",
+          "display_name",
+          "email",
+          "city",
+          "creci_name",
+          "creci_number",
+          "creci_state",
+          "creci_kind",
+          "status",
+          "resubmitted",
+          "submitted_at",
+          "waiting_hours",
+          "over_sla",
+          "reviewed_at",
+          "reason",
+          "plan",
+          "signed_up_at",
+          "lookup_url",
+          "is_demo"
+        ],
+        "title": "CreciItem"
+      },
       "CreciKind": {
         "type": "string",
         "enum": [
@@ -3499,6 +4027,49 @@
           "J"
         ],
         "title": "CreciKind"
+      },
+      "CreciQueueOut": {
+        "properties": {
+          "counts": {
+            "additionalProperties": {
+              "type": "integer"
+            },
+            "propertyNames": {
+              "$ref": "#/components/schemas/CreciReviewStatus"
+            },
+            "type": "object",
+            "title": "Counts"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/CreciItem"
+            },
+            "type": "array",
+            "title": "Items"
+          },
+          "sla_hours": {
+            "type": "integer",
+            "title": "Sla Hours"
+          }
+        },
+        "type": "object",
+        "required": [
+          "counts",
+          "items",
+          "sla_hours"
+        ],
+        "title": "CreciQueueOut"
+      },
+      "CreciReviewStatus": {
+        "type": "string",
+        "enum": [
+          "pending",
+          "correction_requested",
+          "verified",
+          "rejected"
+        ],
+        "title": "CreciReviewStatus",
+        "description": "Staff review of the CRECI (BO2). Only \"verified\" lets the broker publish (rule 1)."
       },
       "DeveloperCriteria": {
         "properties": {
@@ -5629,6 +6200,21 @@
           "database"
         ],
         "title": "ReadinessOut"
+      },
+      "ReasonIn": {
+        "properties": {
+          "reason": {
+            "type": "string",
+            "maxLength": 500,
+            "minLength": 5,
+            "title": "Reason"
+          }
+        },
+        "type": "object",
+        "required": [
+          "reason"
+        ],
+        "title": "ReasonIn"
       },
       "ReauthCodeIn": {
         "properties": {

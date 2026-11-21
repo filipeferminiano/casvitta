@@ -7,7 +7,7 @@ from typing import Literal
 
 from pydantic import BaseModel, Field, field_validator
 
-from app.domains.accounts.models import CreciKind, Plan
+from app.domains.accounts.models import CreciKind, CreciReviewStatus, Plan
 from app.domains.interest.schemas import normalize_br_phone
 
 # Deliberately loose: the email link itself proves the address works.
@@ -119,6 +119,8 @@ class BrokerProfileOut(BaseModel):
     whatsapp_e164: str | None
     regions: list[str]
     is_demo: bool
+    creci_review_status: CreciReviewStatus | None = None
+    creci_review_reason: str | None = None
 
 
 class MeOut(BaseModel):

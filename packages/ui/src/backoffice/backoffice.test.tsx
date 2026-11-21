@@ -7,6 +7,7 @@ import { describe, expect, it } from 'vitest';
 import { Dialog } from '../components/Dialog.tsx';
 import { BackofficeShell, EnvironmentBadge } from './BackofficeShell.tsx';
 import { PermissionMatrix } from './PermissionMatrix.tsx';
+import { QueueTable } from './QueueTable.tsx';
 
 describe('BackofficeShell', () => {
   it('marks the current page and reads queue counts aloud', () => {
@@ -105,5 +106,51 @@ describe('Dialog', () => {
     await user.keyboard('{Escape}');
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
     await waitFor(() => expect(trigger).toHaveFocus());
+  });
+});
+
+describe('QueueTable', () => {
+  const rows = [
+    { id: 'a', name: 'Ana Ribeiro' },
+    { id: 'b', name: 'Rafael Souza' },
+    { id: 'c', name: 'Carla Mendes' },
+  ];
+
+  function Harness() {
+    const [selected, setSelected] = useState('a');
+    return (
+      <>
+        <QueueTable
+          caption="Fila"
+          rows={rows}
+          rowKey={(r) => r.id}
+          selectedKey={selected}
+          onSelect={(r) => setSelected(r.id)}
+          selectLabel={(r) => `Ver ${r.name}`}
+          primary={{ key: 'n', header: 'Corretor', cell: (r) => r.name }}
+          columns={[]}
+        />
+        <p>aberto: {selected}</p>
+      </>
+    );
+  }
+
+  it('works through the queue with the arrow keys and marks the open row', async () => {
+    const user = userEvent.setup();
+    render(<Harness />);
+    const ana = screen.getByRole('button', { name: 'Ver Ana Ribeiro' });
+    expect(ana).toHaveAttribute('aria-current', 'true');
+    ana.focus();
+    await user.keyboard('{ArrowDown}');
+    const rafael = screen.getByRole('button', { name: 'Ver Rafael Souza' });
+    expect(rafael).toHaveFocus();
+    expect(rafael).toHaveAttribute('aria-current', 'true');
+    expect(screen.getByText('aberto: b')).toBeInTheDocument();
+    await user.keyboard('{ArrowDown}{ArrowDown}'); // stops at the last row
+    expect(screen.getByRole('button', { name: 'Ver Carla Mendes' })).toHaveFocus();
+    await user.keyboard('{ArrowUp}');
+    expect(rafael).toHaveFocus();
+    await user.click(screen.getByRole('button', { name: 'Ver Carla Mendes' }));
+    expect(screen.getByText('aberto: c')).toBeInTheDocument();
   });
 });

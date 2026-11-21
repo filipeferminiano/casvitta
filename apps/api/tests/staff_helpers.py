@@ -20,6 +20,7 @@ from app.core.time import utcnow
 from app.domains.accounts.models import (
     BrokerProfile,
     CreciKind,
+    CreciReviewStatus,
     Membership,
     Role,
     User,
@@ -130,6 +131,11 @@ async def add_broker(
             creci_kind=CreciKind.INDIVIDUAL if creci else None,
             creci_submitted_at=(submitted_at or utcnow()) if creci else None,
             creci_verified_at=utcnow() if verified else None,
+            creci_review_status=(
+                (CreciReviewStatus.VERIFIED if verified else CreciReviewStatus.PENDING)
+                if creci
+                else None
+            ),
             regions=regions or [],
             is_demo=is_demo,
         )

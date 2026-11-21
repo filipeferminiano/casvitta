@@ -23,6 +23,8 @@ export async function getBroker(): Promise<BrokerProfile> {
     creciNumber: b?.creci_number ?? '',
     creciState: b?.creci_state ?? '',
     creciVerifiedAt: b?.creci_verified_at ?? null,
+    creciReviewReason: b?.creci_review_reason ?? null,
+    creciRejected: b?.creci_review_status === 'rejected',
     slug: b?.slug ?? '',
     regions: b?.regions ?? [],
     phoneE164: b?.whatsapp_e164 ?? '',

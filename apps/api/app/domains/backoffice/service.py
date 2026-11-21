@@ -17,7 +17,13 @@ from app.core.masking import mask_email, mask_phone
 from app.core.settings import Settings
 from app.core.tenancy import cross_tenant
 from app.core.time import utcnow
-from app.domains.accounts.models import AuditLog, BrokerProfile, User, Workspace
+from app.domains.accounts.models import (
+    AuditLog,
+    BrokerProfile,
+    CreciReviewStatus,
+    User,
+    Workspace,
+)
 from app.domains.backoffice.schemas import (
     ActivityItem,
     CaptureKindRow,
@@ -39,6 +45,7 @@ QUIET_ACTIONS = (
     "staff.reauthenticated",
     "search.performed",
     "broker_profile.listed",
+    "creci.listed",
 )
 
 # Display order (mockup BO1/BO3): auctions first, then owners, investors, agencies, developers.
@@ -72,9 +79,9 @@ async def overview(session: AsyncSession, actor: Actor, settings: Settings) -> O
         brokers_total = await _count(session, brokers)
         brokers_week = await _count(session, brokers.where(BrokerProfile.created_at >= week_ago))
         creci_sent = await _count(session, brokers.where(BrokerProfile.creci_number.is_not(None)))
-        pending = brokers.where(
-            BrokerProfile.creci_number.is_not(None), BrokerProfile.creci_verified_at.is_(None)
-        )
+        # Waiting for the team: first analysis or a corrected number sent again. A correction
+        # request waits for the broker, so it is not in this queue.
+        pending = brokers.where(BrokerProfile.creci_review_status == CreciReviewStatus.PENDING)
         creci_pending = await _count(session, pending)
         creci_over_sla = await _count(
             session,
