@@ -15,7 +15,7 @@ export default async function Image({
   const { cidade, bairro } = await params;
   const page = await getNeighborhood(cidade, bairro);
   const ok = page && !isRedirect(page) ? page : null;
-  const price = ok?.stats?.median_price_m2_cents;
+  const price = ok?.stats?.priced ? ok.stats.median_price_m2_cents : null;
   return marketOgImage({
     eyebrow: messages.market.city.eyebrow,
     title: ok ? `${ok.neighborhood.name}, ${ok.city.name}` : messages.market.city.eyebrow,

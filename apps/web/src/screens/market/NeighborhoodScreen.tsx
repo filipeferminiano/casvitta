@@ -1,32 +1,50 @@
-import { DataTable, FunnelBars, MonthlySeriesChart, Panel } from '@casvitta/ui';
+import {
+  AreaBandTable,
+  DataTable,
+  MonthlySeriesChart,
+  NeighborComparisonTable,
+  StatTile,
+} from '@casvitta/ui';
 import Link from 'next/link';
 import { getTranslations } from 'next-intl/server';
 
 import { SITE_URL } from '@/config/site';
-import type { BuildingRow, NeighborhoodPage, NeighborhoodRow, StreetRow } from '@/lib/data/market';
+import type { BuildingRow, NeighborhoodPage, StreetRow } from '@/lib/data/market';
 import { formatBRL } from '@/lib/format';
-import { formatAreaBand, formatMonth, formatPriceM2 } from '@/lib/market-format';
+import {
+  formatAreaBand,
+  formatChange,
+  formatMonth,
+  formatPriceM2,
+  formatWindowMonth,
+} from '@/lib/market-format';
 
 import { AlertForm } from './AlertForm';
 import { JsonLd, breadcrumbList, dataset, place } from './MarketJsonLd';
 import {
+  ContinueLinks,
   FewData,
   MarketBreadcrumbs,
-  ResaleNote,
+  MethodNote,
+  PriceM2Label,
   SourceLine,
-  StatTiles,
-  WindowLabel,
   linkClass,
   pageClass,
 } from './MarketParts';
 
-/** /preco-m2/{cidade}/{bairro}. */
+/** 04 · /preco-m2/{cidade}/{bairro} (docs/mockups/seo/04-neighborhood-price). */
 export async function NeighborhoodScreen({ page }: { page: NeighborhoodPage }) {
   const t = await getTranslations('market.neighborhood');
   const tMarket = await getTranslations('market');
   const crumbs = [page.city, page.neighborhood];
   const name = page.neighborhood.name;
-  const financingPath = `/financiamento/${page.city.slug}/${page.neighborhood.slug}`;
+  const inName = page.neighborhood.in_name ?? name;
+  const stats = page.stats;
+  const city = page.city.slug;
+  const slug = page.neighborhood.slug;
+  const windowEnd = page.source.window_end ? formatWindowMonth(page.source.window_end) : '';
+  const year = page.source.window_end?.slice(0, 4) ?? '';
+  const priced = Boolean(stats?.priced && stats.median_price_m2_cents != null);
 
   return (
     <div className={pageClass}>
@@ -34,14 +52,14 @@ export async function NeighborhoodScreen({ page }: { page: NeighborhoodPage }) {
         data={[
           breadcrumbList(crumbs),
           place({ name, path: page.neighborhood.path, locality: page.city.name }),
-          ...(page.gate.passes
+          ...(priced
             ? [
                 dataset({
                   name: t('datasetName', { name }),
                   description: t('datasetDescription', { name }),
                   path: page.neighborhood.path,
                   place: `${name}, ${page.city.name}`,
-                  stats: page.stats,
+                  stats,
                   source: page.source,
                   creator: tMarket('creator'),
                   license: `${SITE_URL}/termos`,
@@ -50,275 +68,279 @@ export async function NeighborhoodScreen({ page }: { page: NeighborhoodPage }) {
             : []),
         ]}
       />
-      <MarketBreadcrumbs items={crumbs} label={tMarket('breadcrumbLabel')} />
+      <MarketBreadcrumbs
+        items={crumbs}
+        label={tMarket('breadcrumbLabel')}
+        demo={page.source.is_demo}
+      />
       <header className="flex flex-col gap-3">
         <p className="type-eyebrow">{t('eyebrow')}</p>
-        <h1 className="type-display-l">{t('title', { name })}</h1>
-        <SourceLine
-          source={page.source}
-          extra={page.stats ? <WindowLabel stats={page.stats} /> : undefined}
-        />
+        <h1 className="max-w-[28ch] type-display-l">
+          {priced && stats?.median_price_m2_cents != null
+            ? t('title', { inName, price: formatPriceM2(stats.median_price_m2_cents), year })
+            : t('titleFew', { inName })}
+        </h1>
+        <p className="max-w-[65ch] type-body text-fg-strong" data-testid="lead">
+          {priced && stats?.median_value_cents != null
+            ? t(stats.financed_pct != null ? 'lead' : 'leadNoFinancing', {
+                sales: stats.sales.toLocaleString('pt-BR'),
+                inName,
+                value: formatBRL(stats.median_value_cents),
+                financed: stats.financed_pct ?? 0,
+              })
+            : t('leadFew', {
+                sales: page.sales_12m.toLocaleString('pt-BR'),
+                inName,
+                min: page.gate.min_sales,
+              })}
+        </p>
       </header>
 
-      {!page.gate.passes || !page.stats ? (
-        <FewData gate={page.gate} links={[page.city, ...page.neighbors.map((n) => n.place)]} />
+      {!page.gate.passes || !stats ? (
+        <FewData
+          gate={page.gate}
+          sales={page.sales_12m}
+          links={[page.city, ...page.neighbors.map((n) => n.place)]}
+          neighbors={page.neighbors}
+        />
       ) : (
         <>
-          <StatTiles stats={page.stats} salesLabel={t('sales12m')} />
-          <ResaleNote />
-          {page.apartments || page.houses ? (
-            <section aria-labelledby="by-kind" className="flex flex-col gap-3">
-              <h2 id="by-kind" className="type-title">
-                {t('byKind')}
-              </h2>
-              <div className="grid gap-3 md:grid-cols-2">
-                {page.apartments ? (
-                  <KindPanel title={t('apartments')} stats={page.apartments} />
-                ) : null}
-                {page.houses ? <KindPanel title={t('houses')} stats={page.houses} /> : null}
-              </div>
-            </section>
-          ) : null}
+          <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+            <StatTile
+              highlighted
+              label={t('tiles.medianValue')}
+              value={stats.median_value_cents != null ? formatBRL(stats.median_value_cents) : '—'}
+              caption={t('tiles.window', { end: windowEnd })}
+            />
+            <StatTile
+              label={<PriceM2Label />}
+              value={
+                stats.median_price_m2_cents != null
+                  ? formatPriceM2(stats.median_price_m2_cents)
+                  : '—'
+              }
+              caption={
+                stats.median_price_m2_change_12m_pct != null
+                  ? t('tiles.change', {
+                      change: formatChange(stats.median_price_m2_change_12m_pct),
+                    })
+                  : undefined
+              }
+            />
+            <StatTile
+              label={t('tiles.sales')}
+              value={stats.sales.toLocaleString('pt-BR')}
+              caption={
+                stats.sales_change_12m_pct != null
+                  ? t('tiles.change', { change: formatChange(stats.sales_change_12m_pct) })
+                  : undefined
+              }
+            />
+            {stats.financed_pct != null ? (
+              <StatTile
+                label={t('tiles.financed')}
+                value={`${stats.financed_pct}%`}
+                caption={t('tiles.financedCaption')}
+              />
+            ) : null}
+          </div>
 
-          {page.monthly.length ? (
+          <SourceLine source={page.source} />
+
+          <section aria-labelledby="trend" className="flex flex-col gap-3">
+            <h2 id="trend" className="type-title">
+              {t('trend.question', { inName })}
+            </h2>
+            {stats.median_price_m2_change_12m_pct != null ? (
+              <p className="max-w-[65ch] type-body">
+                {page.price_m2_change_5y_pct != null
+                  ? t('trend.answer', {
+                      change12: formatChange(stats.median_price_m2_change_12m_pct),
+                      change5: formatChange(page.price_m2_change_5y_pct),
+                    })
+                  : t('trend.answer12', {
+                      change12: formatChange(stats.median_price_m2_change_12m_pct),
+                    })}
+              </p>
+            ) : null}
             <MonthlySeriesChart
               points={page.monthly.map((m) => ({
                 month: m.month,
-                value: m.median_price_m2_cents ?? null,
+                value: m.rolling_median_price_m2_cents ?? null,
                 count: m.sales,
               }))}
               formatValue={(v) => formatPriceM2(v)}
               formatMonth={formatMonth}
               title={t('chart.title')}
               description={t('chart.description')}
+              valueKind={t('chart.valueKind')}
               countLabel={t('chart.count')}
               valueLabel={t('chart.value')}
               monthLabel={t('chart.month')}
             />
-          ) : null}
+          </section>
 
           {page.area_bands.some((b) => b.sales > 0) ? (
-            <Panel title={t('bands.title')}>
-              <FunnelBars
-                label={t('bands.title')}
+            <section aria-labelledby="bands" className="flex flex-col gap-3">
+              <h2 id="bands" className="type-title">
+                {t('bands.question', { inName })}
+              </h2>
+              <AreaBandTable
                 caption={t('bands.caption')}
-                items={page.area_bands
+                labels={{
+                  band: t('bands.band'),
+                  sales: t('bands.sales'),
+                  median: t('bands.median'),
+                  priceM2: t('bands.priceM2'),
+                  fewSales: tMarket('fewSales'),
+                }}
+                rows={page.area_bands
                   .filter((b) => b.sales > 0)
                   .map((b) => {
                     const band = formatAreaBand(b.min_m2, b.max_m2);
                     return {
                       key: b.band,
                       label: t(`bands.${band.key}`, band.values),
-                      value: b.sales,
-                      display:
-                        b.median_value_cents != null
-                          ? t('bands.value', {
-                              count: b.sales,
-                              value: formatBRL(b.median_value_cents),
-                            })
-                          : t('bands.count', { count: b.sales }),
+                      sales: b.sales.toLocaleString('pt-BR'),
+                      medianValue:
+                        b.median_value_cents != null ? formatBRL(b.median_value_cents) : null,
+                      medianPriceM2:
+                        b.median_price_m2_cents != null
+                          ? formatPriceM2(b.median_price_m2_cents)
+                          : null,
                     };
                   })}
               />
-            </Panel>
-          ) : null}
-
-          {page.years.some((y) => y.stats) ? (
-            <DataTable
-              caption={t('years.caption', { name })}
-              showCaption
-              rows={page.years.filter((y) => y.stats)}
-              rowKey={(row) => row.year}
-              columns={[
-                {
-                  key: 'year',
-                  header: t('years.year'),
-                  cell: (row) =>
-                    row.partial_until
-                      ? t('years.partial', {
-                          year: row.year,
-                          until: formatMonth(row.partial_until.slice(0, 7)),
-                        })
-                      : String(row.year),
-                },
-                {
-                  key: 'priceM2',
-                  header: t('years.priceM2'),
-                  numeric: true,
-                  cell: (row) => formatPriceM2(row.stats!.median_price_m2_cents ?? 0),
-                },
-                {
-                  key: 'value',
-                  header: t('years.value'),
-                  numeric: true,
-                  cell: (row) => formatBRL(row.stats!.median_value_cents ?? 0),
-                },
-                {
-                  key: 'sales',
-                  header: t('years.sales'),
-                  numeric: true,
-                  cell: (row) => String(row.stats!.sales),
-                },
-              ]}
-            />
+            </section>
           ) : null}
 
           <div className="grid gap-8 lg:grid-cols-2">
-            <PlaceTable<StreetRow>
-              title={t('streets.title')}
-              caption={t('streets.caption', { name })}
-              rows={page.top_streets}
-              nameHeader={t('streets.name')}
-              salesHeader={t('streets.sales')}
-              empty={t('streets.empty')}
-            />
-            <PlaceTable<BuildingRow>
-              title={t('buildings.title')}
-              caption={t('buildings.caption', { name })}
-              rows={page.top_buildings}
-              nameHeader={t('buildings.name')}
-              salesHeader={t('buildings.sales')}
-              empty={t('buildings.empty')}
-            />
+            <StreetTable rows={page.top_streets} inName={inName} />
+            <BuildingRowsTable rows={page.top_buildings} inName={inName} />
           </div>
-
-          {page.financing ? (
-            <Panel title={t('financing.title', { name })}>
-              <div className="flex flex-col gap-3 type-body-s">
-                <p>
-                  {page.financing.median_financed_pct != null
-                    ? t('financing.context', {
-                        year: page.financing.year,
-                        pct: page.financing.financed_pct,
-                        share: page.financing.median_financed_pct,
-                      })
-                    : t('financing.contextNoShare', {
-                        year: page.financing.year,
-                        pct: page.financing.financed_pct,
-                      })}
-                </p>
-                <Link href={financingPath} className={linkClass}>
-                  {t('financing.link')}
-                </Link>
-              </div>
-            </Panel>
-          ) : (
-            <Link href={financingPath} className={linkClass}>
-              {t('financing.link')}
-            </Link>
-          )}
         </>
       )}
 
       {page.neighbors.length ? (
-        <DataTable<NeighborhoodRow>
-          caption={t('neighbors.caption', { name })}
-          showCaption
-          rows={page.neighbors}
-          rowKey={(row) => row.place.slug}
-          columns={[
-            {
-              key: 'name',
-              header: t('neighbors.name'),
-              cell: (row) => (
-                <Link href={row.place.path} className={linkClass}>
-                  {row.place.name}
-                </Link>
-              ),
-            },
-            {
-              key: 'priceM2',
-              header: t('neighbors.priceM2'),
-              numeric: true,
-              cell: (row) =>
-                row.stats?.median_price_m2_cents != null
-                  ? formatPriceM2(row.stats.median_price_m2_cents)
-                  : tMarket('fewDataShort'),
-            },
-            {
-              key: 'sales',
-              header: t('neighbors.sales'),
-              numeric: true,
-              cell: (row) => (row.stats ? String(row.stats.sales) : '—'),
-            },
-          ]}
-        />
+        <section aria-labelledby="neighbors" className="flex flex-col gap-3">
+          <h2 id="neighbors" className="type-title">
+            {t('neighbors.question', { name })}
+          </h2>
+          <NeighborComparisonTable
+            caption={t('neighbors.caption', { name })}
+            labels={{
+              neighborhood: t('neighbors.name'),
+              priceM2: t('neighbors.priceM2'),
+              change: t('neighbors.change'),
+              current: t('neighbors.current'),
+              fewSales: tMarket('fewSales'),
+            }}
+            rows={[
+              ...(stats
+                ? [
+                    {
+                      key: slug,
+                      name,
+                      current: true,
+                      priceM2:
+                        stats.median_price_m2_cents != null
+                          ? formatPriceM2(stats.median_price_m2_cents)
+                          : null,
+                      change:
+                        stats.median_price_m2_change_12m_pct != null
+                          ? formatChange(stats.median_price_m2_change_12m_pct)
+                          : null,
+                    },
+                  ]
+                : []),
+              ...page.neighbors.map((n) => ({
+                key: n.place.slug,
+                name: n.place.name,
+                href: n.place.path,
+                priceM2:
+                  n.stats?.median_price_m2_cents != null
+                    ? formatPriceM2(n.stats.median_price_m2_cents)
+                    : null,
+                change:
+                  n.stats?.median_price_m2_change_12m_pct != null
+                    ? formatChange(n.stats.median_price_m2_change_12m_pct)
+                    : null,
+              })),
+            ]}
+          />
+        </section>
       ) : null}
 
-      <section aria-label={tMarket('alert.default.title')} className="max-w-xl">
+      <div className="grid gap-3 md:grid-cols-2">
+        <CtaCard
+          href={`/financiamento/${city}/${slug}`}
+          title={t('cta.financingTitle')}
+          description={t('cta.financingDescription', { inName })}
+        />
+        <CtaCard
+          href={`/quanto-vale-meu-imovel/${city}/${slug}`}
+          title={t('cta.valuationTitle')}
+          description={t('cta.valuationDescription')}
+        />
+      </div>
+
+      <section aria-label={tMarket('alert.neighborhood.title', { inName })} className="max-w-xl">
         <AlertForm
-          target={{
-            scope: 'neighborhood',
-            city: page.city.slug,
-            neighborhood: page.neighborhood.slug,
-          }}
+          variant="neighborhood"
+          titleValues={{ inName }}
+          intents={['buy', 'rent', 'own_sell']}
+          target={{ scope: 'neighborhood', city, neighborhood: slug }}
         />
       </section>
+
+      <MethodNote source={page.source} />
+
+      <ContinueLinks
+        groups={[
+          {
+            title: t('continue.neighbors'),
+            links: page.neighbors.map((n) => ({
+              href: n.place.path,
+              label: t('continue.neighborPrice', { inName: n.place.in_name ?? n.place.name }),
+            })),
+          },
+          {
+            title: t('continue.here', { inName }),
+            links: [
+              { href: `/financiamento/${city}/${slug}`, label: t('continue.financing') },
+              { href: `/quanto-vale-meu-imovel/${city}/${slug}`, label: t('continue.valuation') },
+            ],
+          },
+          {
+            title: page.city.name,
+            links: [
+              { href: page.city.path, label: t('continue.cityIndex') },
+              { href: `/itbi/${city}`, label: t('continue.itbi') },
+            ],
+          },
+        ]}
+      />
     </div>
   );
 }
 
-async function KindPanel({
-  title,
-  stats,
-}: {
-  title: string;
-  stats: NonNullable<NeighborhoodPage['apartments']>;
-}) {
-  const t = await getTranslations('market.stats');
+async function StreetTable({ rows, inName }: { rows: StreetRow[]; inName: string }) {
+  const t = await getTranslations('market.neighborhood.streets');
+  const tMarket = await getTranslations('market');
   return (
-    <Panel title={title}>
-      <dl className="grid grid-cols-3 gap-3 type-body-s">
-        <div>
-          <dt className="text-fg-muted">{t('medianValue')}</dt>
-          <dd className="type-value">
-            {stats.median_value_cents != null ? formatBRL(stats.median_value_cents) : '—'}
-          </dd>
-        </div>
-        <div>
-          <dt className="text-fg-muted">{t('priceM2Short')}</dt>
-          <dd className="type-value">
-            {stats.median_price_m2_cents != null ? formatPriceM2(stats.median_price_m2_cents) : '—'}
-          </dd>
-        </div>
-        <div>
-          <dt className="text-fg-muted">{t('sales')}</dt>
-          <dd className="type-value">{stats.sales}</dd>
-        </div>
-      </dl>
-    </Panel>
-  );
-}
-
-/** Streets or buildings that pass their own gate, linked. */
-export async function PlaceTable<Row extends StreetRow | BuildingRow>({
-  title,
-  caption,
-  rows,
-  nameHeader,
-  salesHeader,
-  empty,
-}: {
-  title: string;
-  caption: string;
-  rows: Row[];
-  nameHeader: string;
-  salesHeader: string;
-  empty: string;
-}) {
-  const t = await getTranslations('market.stats');
-  return (
-    <section className="flex flex-col gap-3">
-      <h2 className="type-title">{title}</h2>
-      <DataTable<Row>
-        caption={caption}
+    <section aria-labelledby="ruas" className="flex flex-col gap-3">
+      <h2 id="ruas" className="type-title">
+        {t('title')}
+      </h2>
+      <DataTable<StreetRow>
+        caption={t('caption', { inName })}
         rows={rows}
         rowKey={(row) => row.place.slug}
-        empty={<p className="p-4 type-body-s text-fg-muted">{empty}</p>}
+        empty={<p className="p-4 type-body-s text-fg-muted">{t('empty')}</p>}
         columns={[
           {
             key: 'name',
-            header: nameHeader,
+            header: t('name'),
             cell: (row) => (
               <Link href={row.place.path} className={linkClass}>
                 {row.place.name}
@@ -326,22 +348,82 @@ export async function PlaceTable<Row extends StreetRow | BuildingRow>({
             ),
           },
           {
-            key: 'priceM2',
-            header: t('priceM2Short'),
+            key: 'sales',
+            header: t('sales'),
             numeric: true,
-            cell: (row) =>
-              row.stats?.median_price_m2_cents != null
-                ? formatPriceM2(row.stats.median_price_m2_cents)
-                : '—',
+            cell: (row) => (row.stats ? row.stats.sales.toLocaleString('pt-BR') : '—'),
           },
           {
-            key: 'sales',
-            header: salesHeader,
+            key: 'median',
+            header: t('median'),
             numeric: true,
-            cell: (row) => (row.stats ? String(row.stats.sales) : '—'),
+            cell: (row) =>
+              row.stats?.median_value_cents != null
+                ? formatBRL(row.stats.median_value_cents)
+                : tMarket('fewSales'),
           },
         ]}
       />
     </section>
+  );
+}
+
+async function BuildingRowsTable({ rows, inName }: { rows: BuildingRow[]; inName: string }) {
+  const t = await getTranslations('market.neighborhood.buildings');
+  return (
+    <section aria-labelledby="predios" className="flex flex-col gap-3">
+      <h2 id="predios" className="type-title">
+        {t('title')}
+      </h2>
+      <DataTable<BuildingRow>
+        caption={t('caption', { inName })}
+        rows={rows}
+        rowKey={(row) => row.place.slug}
+        empty={<p className="p-4 type-body-s text-fg-muted">{t('empty')}</p>}
+        columns={[
+          {
+            key: 'name',
+            header: t('name'),
+            cell: (row) => (
+              <Link href={row.place.path} className={linkClass}>
+                {row.place.name}
+              </Link>
+            ),
+          },
+          {
+            key: 'street',
+            header: t('street'),
+            className: 'hidden md:table-cell',
+            cell: (row) => row.street_name,
+          },
+          {
+            key: 'sales',
+            header: t('sales'),
+            numeric: true,
+            cell: (row) => (row.stats ? row.stats.sales.toLocaleString('pt-BR') : '—'),
+          },
+        ]}
+      />
+    </section>
+  );
+}
+
+function CtaCard({
+  href,
+  title,
+  description,
+}: {
+  href: string;
+  title: string;
+  description: string;
+}) {
+  return (
+    <Link
+      href={href}
+      className="flex min-h-11 flex-col gap-1 rounded-card border border-line bg-panel p-4 hover:border-action focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"
+    >
+      <span className="type-body font-semibold text-action">{title} →</span>
+      <span className="type-body-s text-fg-muted">{description}</span>
+    </Link>
   );
 }

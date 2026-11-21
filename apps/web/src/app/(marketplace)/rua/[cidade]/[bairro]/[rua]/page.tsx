@@ -4,7 +4,6 @@ import { getTranslations } from 'next-intl/server';
 
 import { getStreet, isRedirect } from '@/lib/data/market';
 import { marketMetadata } from '@/lib/market-metadata';
-import { formatPriceM2 } from '@/lib/market-format';
 import { StreetScreen } from '@/screens/market/StreetScreen';
 
 export const revalidate = 86400;
@@ -15,18 +14,16 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { cidade, bairro, rua } = await params;
   const page = await getStreet(cidade, bairro, rua);
   if (!page || isRedirect(page)) return {};
-  const t = await getTranslations('market.meta');
+  const t = await getTranslations('market.street');
   const name = page.street.name;
   const neighborhood = page.neighborhood.name;
-  const price = page.stats?.median_price_m2_cents;
+  // Keyword map #6: the title carries only the street and neighborhood (no "preço m²").
   return marketMetadata({
-    title:
-      price != null
-        ? t('streetTitle', { name, neighborhood, price: formatPriceM2(price) })
-        : t('streetTitleFew', { name, neighborhood }),
-    description: page.stats
-      ? t('streetDescription', { name, neighborhood, sales: page.stats.sales })
-      : t('streetDescriptionFew', { name, neighborhood }),
+    title: t('metaTitle', { name, neighborhood }),
+    description:
+      page.last_12m && page.last_12m.sales > 0
+        ? t('lead12', { sales: page.last_12m.sales, buildings: page.buildings.length })
+        : t('lead36', { sales: page.sales_36m }),
     path: page.street.path,
     indexable: page.gate.indexable,
   });

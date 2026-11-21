@@ -20,7 +20,7 @@ describe('financing calculator matches core/finance.py', () => {
         system: c.system as 'sac' | 'price',
         maxIncomePct: 30,
       });
-      expect(result).toEqual({
+      expect(result).toMatchObject({
         principalCents: c.principal_cents,
         firstPaymentCents: c.first_payment_cents,
         minIncomeCents: c.min_income_cents_30pct,

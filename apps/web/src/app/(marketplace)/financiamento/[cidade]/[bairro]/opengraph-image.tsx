@@ -1,5 +1,5 @@
 import messages from '../../../../../../messages/pt-BR.json';
-import { formatBRL } from '@/lib/format';
+import { formatIncome } from '@/lib/market-format';
 import { getFinancing, isRedirect } from '@/lib/data/market';
 import { OG_CONTENT_TYPE, OG_SIZE, marketOgImage } from '@/lib/market-og';
 
@@ -19,10 +19,13 @@ export default async function Image({
   return marketOgImage({
     eyebrow: messages.market.financing.eyebrow,
     title: ok
-      ? messages.market.financing.title.replace('{name}', ok.neighborhood.name)
+      ? messages.market.financing.title.replace(
+          '{inName}',
+          ok.neighborhood.in_name ?? ok.neighborhood.name,
+        )
       : messages.market.financing.eyebrow,
     label: messages.market.og.minIncome,
-    value: sac ? formatBRL(sac.min_income_cents) : undefined,
+    value: sac ? formatIncome(sac.min_income_cents) : undefined,
     demo: ok?.source.is_demo,
   });
 }

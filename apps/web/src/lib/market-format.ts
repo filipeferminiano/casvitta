@@ -40,3 +40,20 @@ export function formatAreaBand(
   if (max == null) return { key: 'from', values: { min } };
   return { key: 'between', values: { min, max } };
 }
+
+/** "+1,8%" / "−3,4%" / "0,0%" (signed text, never color alone). */
+export function formatChange(pct: number | string): string {
+  const value = typeof pct === 'string' ? Number(pct) : pct;
+  const text = Math.abs(value).toLocaleString('pt-BR', {
+    minimumFractionDigits: 1,
+    maximumFractionDigits: 1,
+  });
+  if (value > 0) return `+${text}%`;
+  if (value < 0) return `\u2212${text}%`;
+  return `${text}%`;
+}
+
+/** Indicated income in whole reais, rounded up ("R$ 23.780"): a simulation, not a quote. */
+export function formatIncome(cents: number): string {
+  return formatBRL(Math.ceil(cents / 100) * 100);
+}

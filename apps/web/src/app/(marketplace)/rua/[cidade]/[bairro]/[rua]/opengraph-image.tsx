@@ -20,7 +20,7 @@ export default async function Image({
     eyebrow: ok ? ok.neighborhood.name : messages.market.city.eyebrow,
     title: ok ? ok.street.name : messages.market.city.eyebrow,
     label: messages.market.og.priceM2,
-    value: price != null ? formatPriceM2(price) : undefined,
+    value: price != null && ok?.stats?.priced ? formatPriceM2(price) : undefined,
     demo: ok?.source.is_demo,
   });
 }

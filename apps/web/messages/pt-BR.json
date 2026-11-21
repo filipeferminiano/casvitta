@@ -1863,7 +1863,7 @@
     "breadcrumbLabel": "Você está em",
     "priceM2Label": "R$/m² de área construída (IPTU)",
     "priceM2Info": "O que é R$/m² de área construída (IPTU)?",
-    "priceM2Tooltip": "Dividimos o valor pago pela área construída que a Prefeitura usa no IPTU. Em condomínios, essa área inclui a parte do apartamento nas áreas comuns, então é maior que a área privativa dos anúncios. Por isso este valor não se compara ao m² de anúncios nem ao índice FipeZAP.",
+    "priceM2Tooltip": "R$/m² de área construída (IPTU): o valor pago dividido pela área do cadastro da Prefeitura, que inclui áreas comuns. Por isso fica abaixo do m² dos anúncios.",
     "fewDataShort": "Poucos dados",
     "financingLink": "Quanto preciso ganhar para comprar em {name}?",
     "stats": {
@@ -1875,152 +1875,328 @@
       "range": "Metade das vendas entre {low} e {high}",
       "medianArea": "Área construída mediana: {area} m²",
       "lastSaleMonth": "Última venda em {month}",
-      "lastSaleYear": "Última venda em {year}"
+      "lastSaleYear": "Última venda em {year}",
+      "change": "{change} vs. 12 meses anteriores"
     },
     "fewData": {
       "title": "Poucos dados para mostrar preços aqui",
       "description": "Só mostramos números com pelo menos {min} vendas {window}, para que nenhuma venda possa ser identificada. Veja a região:",
       "windows": {
         "last_12m": "nos últimos 12 meses",
-        "last_24m": "nos últimos 24 meses",
+        "last_36m": "nos últimos 36 meses",
         "all": "registradas"
       },
-      "link": "Ver {name}"
+      "link": "Ver {name}",
+      "descriptionCount": "Foram {sales} vendas {window}. Mostramos preços só com pelo menos {min} vendas, para que nenhuma venda possa ser identificada. Veja a região:",
+      "neighborsCaption": "Bairros vizinhos",
+      "neighborhood": "Bairro",
+      "change": "12 meses",
+      "current": "(este bairro)"
     },
     "city": {
-      "eyebrow": "Preço do m² · vendas reais",
-      "title": "Quanto se pagou por imóveis em {city}",
+      "eyebrow": "Índice de preços pagos",
+      "title": "Preço do m² em {city} por bairro",
       "subtitle": "Valores declarados nas guias de ITBI de cada compra registrada na Prefeitura. Não são preços pedidos em anúncios.",
       "tableCaption": "Bairros de {city}: vendas nos últimos 12 meses",
       "neighborhood": "Bairro",
       "priceM2": "R$/m² (IPTU)",
       "medianValue": "Preço mediano",
-      "sales": "Vendas em 12 meses",
-      "fewData": "Poucos dados"
+      "sales": "Vendas 12 m",
+      "fewData": "Poucos dados",
+      "lead": "Em 12 meses, {sales} imóveis foram vendidos em {city}, pela mediana de {value} e {price} de área construída.",
+      "tiles": {
+        "sales": "Vendas em {city}",
+        "window": "12 meses até {end}",
+        "medianValue": "Preço mediano",
+        "city": "cidade",
+        "change": "{change} em 12 meses",
+        "withPrice": "Bairros com preço",
+        "withPriceCaption": "com 10 vendas ou mais"
+      },
+      "search": "Buscar bairro",
+      "searchPlaceholder": "Ex.: Pinheiros",
+      "searchSubmit": "Buscar",
+      "zone": "Zona",
+      "zones": {
+        "todas": "Todas",
+        "centro": "Centro",
+        "sul": "Sul",
+        "oeste": "Oeste",
+        "norte": "Norte",
+        "leste": "Leste"
+      },
+      "showing": "Mostrando {shown} de {total} bairros · ordenado por {sort}.",
+      "sort": {
+        "preco": "R$/m²",
+        "vendas": "vendas",
+        "nome": "nome"
+      },
+      "sortBy": {
+        "preco": "Ordenar por R$/m²",
+        "vendas": "Ordenar por vendas",
+        "nome": "Ordenar por nome"
+      },
+      "change": "12 meses",
+      "empty": "Nenhum bairro encontrado com esses filtros.",
+      "showMore": "Mostrar mais bairros",
+      "continue": {
+        "tools": "Ferramentas",
+        "valuation": "Quanto vale meu imóvel",
+        "itbi": "Calcular ITBI"
+      }
     },
     "neighborhood": {
-      "eyebrow": "Preço do m² · vendas reais",
-      "title": "{name}: quanto se pagou por imóveis",
-      "sales12m": "Vendas em 12 meses",
-      "byKind": "Por tipo de imóvel, últimos 12 meses",
-      "apartments": "Apartamentos",
-      "houses": "Casas",
+      "eyebrow": "Preço do m² · vendas registradas",
+      "title": "Preço do m² {inName}: {price} (vendas reais de {year})",
+      "titleFew": "Preço do m² {inName}",
+      "lead": "Em 12 meses, {sales} imóveis foram vendidos {inName}, pela mediana de {value}. {financed}% foram comprados com financiamento.",
+      "leadNoFinancing": "Em 12 meses, {sales} imóveis foram vendidos {inName}, pela mediana de {value}.",
+      "leadFew": "Foram registradas {sales} vendas {inName} nos últimos 12 meses. Mostramos preços só a partir de {min} vendas.",
       "datasetName": "Preços de venda de imóveis em {name} (guias de ITBI)",
-      "datasetDescription": "Mediana do valor pago e do R$/m² de área construída (IPTU) em {name}, a partir das guias de ITBI pagas na Prefeitura de São Paulo. Grupos pequenos não são publicados.",
+      "datasetDescription": "Mediana do valor pago e do R$/m² de área construída (IPTU) em {name}, a partir das guias de ITBI pagas na Prefeitura de São Paulo. Grupos com menos de 10 vendas não são publicados.",
+      "tiles": {
+        "medianValue": "Preço mediano",
+        "window": "12 meses até {end}",
+        "change": "{change} vs. 12 meses anteriores",
+        "sales": "Vendas em 12 meses",
+        "financed": "Com financiamento",
+        "financedCaption": "das compras"
+      },
+      "trend": {
+        "question": "O preço do m² está subindo {inName}?",
+        "answer": "Em 12 meses, o R$/m² variou {change12}; em 5 anos, {change5}.",
+        "answer12": "Em 12 meses, o R$/m² variou {change12}."
+      },
       "chart": {
-        "title": "R$/m² mediano por mês, últimos 5 anos",
-        "description": "Linha: mediana do R$/m² de área construída (IPTU). Barras: vendas no mês. Meses com menos de 5 vendas ficam sem ponto na linha.",
-        "count": "Vendas no mês",
-        "value": "Mediana R$/m²",
+        "title": "R$/m² mediano e vendas por mês, últimos 5 anos",
+        "description": "Linha: mediana do R$/m² de área construída (IPTU) nos 12 meses anteriores a cada mês. Barras: vendas no mês. Sem linha onde há menos de 10 vendas.",
+        "valueKind": "média móvel de 12 meses",
+        "count": "Vendas por mês",
+        "value": "R$/m² mediano",
         "month": "Mês"
       },
       "bands": {
-        "title": "Apartamentos por tamanho, últimos 12 meses",
-        "caption": "Área construída do IPTU, que inclui a parte das áreas comuns.",
-        "upTo": "Até {max} m²",
-        "between": "{min} a {max} m²",
-        "from": "{min} m² ou mais",
-        "value": "{count} vendas · mediana {value}",
-        "count": "{count} vendas"
-      },
-      "years": {
-        "caption": "{name} ano a ano",
-        "year": "Ano",
-        "partial": "{year} (até {until})",
+        "question": "Quanto custa um apartamento {inName} por tamanho?",
+        "caption": "Apartamentos vendidos nos últimos 12 meses, por área construída (IPTU)",
+        "band": "Área",
+        "sales": "Vendas",
+        "median": "Mediana",
         "priceM2": "R$/m² (IPTU)",
-        "value": "Preço mediano",
-        "sales": "Vendas"
+        "upTo": "Até {max} m²",
+        "between": "{min}–{max} m²",
+        "from": "Mais de {min} m²"
       },
       "streets": {
         "title": "Ruas com mais vendas",
-        "caption": "Ruas de {name} com mais vendas nos últimos 24 meses",
+        "caption": "Ruas com mais vendas {inName}",
         "name": "Rua",
-        "sales": "Vendas em 24 meses",
-        "empty": "Nenhuma rua com vendas suficientes para mostrar números."
+        "sales": "Vendas 12 m",
+        "median": "Mediana",
+        "empty": "Nenhuma rua com vendas suficientes."
       },
       "buildings": {
         "title": "Prédios com mais vendas",
-        "caption": "Prédios de {name} com mais vendas registradas",
+        "caption": "Prédios com mais vendas {inName}",
         "name": "Prédio",
-        "sales": "Vendas",
-        "empty": "Nenhum prédio com vendas suficientes para mostrar números."
+        "street": "Rua",
+        "sales": "Vendas desde 2019",
+        "empty": "Nenhum prédio com vendas suficientes."
       },
       "neighbors": {
-        "caption": "Bairros vizinhos de {name}",
+        "question": "Como {name} se compara aos bairros vizinhos?",
+        "caption": "R$/m² de {name} e dos bairros vizinhos",
         "name": "Bairro",
         "priceM2": "R$/m² (IPTU)",
-        "sales": "Vendas em 12 meses"
+        "change": "12 meses",
+        "current": "(este bairro)"
       },
-      "financing": {
-        "title": "Financiamento em {name}",
-        "context": "Nas compras de {year}, {pct}% usaram financiamento, cobrindo em média {share}% do valor.",
-        "contextNoShare": "Nas compras de {year}, {pct}% usaram financiamento.",
-        "link": "Quanto preciso ganhar para comprar aqui?"
+      "cta": {
+        "financingTitle": "Quanto preciso ganhar para comprar aqui?",
+        "financingDescription": "Simulação com o preço mediano {inName}.",
+        "valuationTitle": "Quanto vale o seu imóvel?",
+        "valuationDescription": "Estimativa com vendas reais da sua região."
+      },
+      "continue": {
+        "neighbors": "Bairros vizinhos",
+        "neighborPrice": "Preço do m² {inName}",
+        "here": "Também {inName}",
+        "financing": "Quanto preciso ganhar",
+        "valuation": "Quanto vale meu imóvel aqui",
+        "cityIndex": "Preço do m² por bairro",
+        "itbi": "Calcular ITBI"
       }
     },
     "street": {
-      "eyebrow": "Preço do m² · {neighborhood}",
-      "title": "{name}: quanto se pagou por imóveis",
-      "sales24m": "Vendas em 24 meses",
-      "datasetName": "Preços de venda de imóveis na {name} (guias de ITBI)",
-      "datasetDescription": "Mediana do valor pago e do R$/m² de área construída (IPTU) em {name}, a partir das guias de ITBI pagas na Prefeitura de São Paulo.",
-      "buildings": {
-        "title": "Prédios nesta rua",
-        "caption": "Prédios da {name} com vendas suficientes",
-        "name": "Prédio",
-        "sales": "Vendas",
-        "empty": "Nenhum prédio desta rua tem vendas suficientes para mostrar números."
+      "eyebrow": "Rua · {neighborhood}",
+      "title": "{name}, {neighborhood}",
+      "metaTitle": "{name}, {neighborhood}: prédios, imóveis e vendas reais",
+      "lead12": "{sales} imóveis foram vendidos aqui nos últimos 12 meses, em {buildings} prédios com vendas registradas.",
+      "lead36": "Foram {sales} vendas registradas nesta rua nos últimos 3 anos.",
+      "datasetName": "Vendas de imóveis na {name}, {neighborhood} (guias de ITBI)",
+      "datasetDescription": "Mediana do valor pago e do R$/m² de área construída (IPTU) na {name}, {neighborhood}, a partir das guias de ITBI.",
+      "quick": {
+        "label": "Nesta rua",
+        "sale": "Apartamentos à venda",
+        "rent": "Para alugar",
+        "alert": "Avise-me quando houver",
+        "valuation": "Quanto vale o meu",
+        "valuationCaption": "Estimativa grátis"
       },
-      "backToNeighborhood": "Ver preços de {name}"
+      "sales": {
+        "question": "Por quanto se vende na {name}?",
+        "count36": "Vendas em 3 anos",
+        "perYear": "Vendas por ano",
+        "few": "Poucas vendas registradas ({sales} em 3 anos). Mostramos preços só com {min} vendas ou mais."
+      },
+      "buildings": {
+        "title": "Prédios na {name}",
+        "caption": "Prédios na {name} com vendas registradas",
+        "name": "Prédio",
+        "year": "Construído",
+        "floors": "Andares",
+        "units": "Apartamentos",
+        "sales": "Vendas desde 2019",
+        "empty": "Nenhum prédio com vendas registradas nesta rua."
+      },
+      "similar": {
+        "title": "Outras ruas com muitas vendas {neighborhood}",
+        "sales": "{sales} vendas"
+      },
+      "continue": {
+        "street": "{name}",
+        "sale": "Apartamentos à venda na {name}",
+        "rent": "Para alugar na {name}",
+        "neighborhoodPrice": "Preço do m² {inName}",
+        "valuation": "Quanto vale meu imóvel",
+        "tools": "Ferramentas",
+        "financing": "Quanto preciso ganhar",
+        "itbi": "Calcular ITBI"
+      }
     },
     "building": {
-      "eyebrow": "{address} · {neighborhood}",
-      "sales": "Vendas registradas",
-      "areaLabel": "Área construída (IPTU)",
-      "areaRange": "Metade entre {low} e {high} m²",
-      "builtIn": "Construído em",
+      "eyebrow": "Condomínio residencial",
+      "title": "{name} · {address} — {neighborhood}",
+      "metaTitle": "{name}, {street}, {number} – {neighborhood}: vendas e apartamentos",
+      "facts": {
+        "label": "Dados do prédio",
+        "year": "construído em {year}"
+      },
+      "lead": "Desde 2019, {sales} apartamentos deste prédio foram vendidos. Mediana: {value}.",
+      "leadFew": "Desde 2019, {sales} vendas foram registradas neste prédio.",
+      "leadNone": "Ainda não há vendas registradas deste prédio nos dados da Prefeitura.",
       "datasetName": "Vendas registradas no {name} (guias de ITBI)",
       "datasetDescription": "Mediana do valor pago e do R$/m² de área construída (IPTU) no {name}, {address}, a partir das guias de ITBI. Nenhuma venda individual é publicada.",
-      "backToStreet": "Ver preços da {name}",
-      "backToNeighborhood": "Ver preços de {name}"
+      "sales": {
+        "question": "Quanto foram vendidos os apartamentos deste prédio?",
+        "privacy": "Valores pagos registrados na Prefeitura. Não mostramos unidade, data exata nem venda isolada.",
+        "count": "Vendas desde 2019",
+        "since": "registradas",
+        "median": "Preço mediano",
+        "allSince": "todas as vendas desde 2019",
+        "vsNeighborhood": "{change} vs. {neighborhood}",
+        "financed": "Com financiamento",
+        "financedCaption": "das vendas do prédio",
+        "perYear": "Vendas por ano",
+        "partial": "*{year}: ano incompleto",
+        "fewText": "Foram {sales} vendas registradas. Mostramos preços só com {min} vendas ou mais.",
+        "streetFallback": "Na {street}, a mediana foi {value} em {sales} vendas."
+      },
+      "comparison": {
+        "title": "Comparado ao bairro",
+        "building": "Este prédio",
+        "sentence": "{direction, select, above {Este prédio está {change} acima da mediana do m² {inName}.} other {Este prédio está {change} abaixo da mediana do m² {inName}.}}"
+      },
+      "listings": {
+        "title": "Apartamentos anunciados neste prédio",
+        "emptyTitle": "Nenhum apartamento deste prédio está anunciado agora.",
+        "emptyDescription": "Mostramos só anúncios autorizados, de corretores com CRECI. Deixe seu contato para quando houver."
+      },
+      "owner": {
+        "title": "Você mora neste prédio? Saiba quanto vale seu apartamento",
+        "description": "A estimativa usa vendas reais deste prédio, da rua e do bairro.",
+        "valuation": "Ver quanto vale",
+        "sell": "Quero vender ou alugar"
+      },
+      "others": {
+        "title": "Outros prédios na {street}",
+        "caption": "Outros prédios na {street}",
+        "building": "Prédio",
+        "year": "Construído",
+        "floors": "Andares",
+        "units": "Apartamentos",
+        "sales": "Vendas desde 2019",
+        "seeStreet": "Ver a {street}"
+      },
+      "continue": {
+        "street": "Nesta rua",
+        "neighborhoodPrice": "Preço do m² {inName}",
+        "valuation": "Quanto vale meu imóvel {inName}",
+        "tools": "Ferramentas",
+        "itbi": "Calcular ITBI",
+        "financing": "Quanto preciso ganhar para comprar aqui"
+      }
     },
     "financing": {
-      "eyebrow": "Simulação de financiamento",
+      "eyebrow": "Financiamento · {name}",
       "crumb": "Financiamento",
-      "title": "{name}: quanto preciso ganhar para comprar",
-      "summaryApartment": "O apartamento mediano vendido aqui nos últimos 12 meses custou {value}. Para financiá-lo com as condições abaixo, a renda familiar precisaria ser de pelo menos {income} por mês, comprometendo até {pct}% com a parcela.",
-      "summaryAll": "O imóvel mediano vendido aqui nos últimos 12 meses custou {value}. Para financiá-lo com as condições abaixo, a renda familiar precisaria ser de pelo menos {income} por mês, comprometendo até {pct}% com a parcela.",
-      "contextTitle": "Como as pessoas compraram aqui",
-      "context": "Nas compras de {year}, {pct}% usaram financiamento, cobrindo em média {share}% do valor.",
-      "contextNoShare": "Nas compras de {year}, {pct}% usaram financiamento.",
-      "topType": "O tipo mais comum foi {type}.",
-      "notes": {
-        "simulation": "Simulação · não é aprovação de crédito. O banco analisa renda, idade e histórico.",
-        "fees": "Seguros (MIP e DFI), tarifas, ITBI e cartório não estão incluídos.",
-        "median": "O preço de partida é a mediana das vendas reais no bairro; troque pelo valor do imóvel que você quer."
+      "title": "Quanto você precisa ganhar para comprar {inName}",
+      "metaTitle": "Quanto preciso ganhar para comprar {inName}? Simulação",
+      "metaDescriptionFew": "Simule o financiamento de um imóvel {inName}.",
+      "leadApartment": "Um apartamento típico aqui custou {value}. Com {down}% de entrada e {years} anos, a renda familiar indicada é de cerca de {income} por mês.",
+      "leadAll": "Um imóvel típico aqui custou {value}. Com {down}% de entrada e {years} anos, a renda familiar indicada é de cerca de {income} por mês.",
+      "leadAssumptions": "SAC, taxa ilustrativa de {rate}% a.a.",
+      "who": {
+        "question": "Quantas pessoas financiam {inName}?",
+        "answer": "Nas compras de {year} {inName}, {pct}% usaram financiamento, cobrindo em média {share}% do valor.",
+        "answerNoShare": "Nas compras de {year} {inName}, {pct}% usaram financiamento.",
+        "chart": "Compras com financiamento",
+        "partial": "*{year}: ano incompleto"
       },
-      "backToPrices": "Ver preços de {name}",
+      "neighbors": {
+        "question": "E em bairros vizinhos?",
+        "assumptions": "Mesmas condições: {down}% de entrada, {years} anos, SAC, {rate}% a.a.",
+        "caption": "Renda indicada em {name} e nos bairros vizinhos",
+        "name": "Bairro",
+        "medianValue": "Preço mediano",
+        "income": "Renda indicada",
+        "current": "(este bairro)"
+      },
+      "continue": {
+        "price": "Preço do m² {inName}",
+        "valuation": "Quanto vale meu imóvel aqui",
+        "beforeBuying": "Antes de comprar",
+        "itbi": "Calcular ITBI",
+        "neighbor": "Quanto preciso ganhar {inName}",
+        "cityIndex": "Preço do m² por bairro"
+      },
       "calculator": {
-        "title": "Simule para {name}",
-        "context": "Mude os valores para o seu caso.",
+        "title": "Simulação de financiamento",
         "price": "Valor do imóvel",
+        "priceMedian": "Preço mediano de {name}",
+        "priceEdited": "Valor alterado por você",
         "downPayment": "Entrada",
         "downPaymentHelp": "{pct}% do valor",
+        "downTooLow": "A entrada precisa ser de pelo menos {pct}% do valor.",
         "fgts": "FGTS",
         "optional": "(opcional)",
         "term": "Prazo",
-        "termOption": "{years} anos ({months} meses)",
-        "system": "Tabela de amortização",
+        "termOption": "{years} anos",
+        "system": "Sistema de amortização",
         "sac": "SAC",
         "priceTable": "Price",
-        "minIncome": "Renda mínima para comprometer {pct}%",
-        "nothingToFinance": "Entrada e FGTS cobrem o valor: nada a financiar",
-        "details": "Taxa ilustrativa de {rate}% ao ano · {term} meses · parcela até {pct}% da renda · sem seguros e tarifas",
-        "firstSac": "Primeira parcela (SAC, a maior)",
-        "firstPrice": "Parcela fixa (Price)",
-        "principal": "Valor financiado",
-        "rate": "Taxa",
-        "rateValue": "{rate}% ao ano (ilustrativa)"
+        "minIncome": "Renda familiar mínima indicada",
+        "minIncomeShort": "Renda indicada · simulação",
+        "perMonth": "/mês",
+        "summary": "parcela de até {pct}% da renda · financiamento de {principal}",
+        "firstSac": "Primeira parcela",
+        "lastSac": "Última parcela",
+        "fixedPrice": "Parcela fixa",
+        "totalInterest": "Juros no prazo total",
+        "rate": "Taxa ilustrativa de {rate}% a.a.",
+        "footnote": "Seguros e tarifas não incluídos. Simulação, não é aprovação de crédito.",
+        "details": "Taxa ilustrativa de {rate}% a.a. · {term} anos · parcela até {pct}% da renda · sem seguros e tarifas",
+        "nothingToFinance": "Entrada e FGTS cobrem o valor: nada a financiar.",
+        "seeDetails": "Ver detalhes"
       }
     },
     "financingTypes": {
@@ -2030,42 +2206,81 @@
       "99": "o SFI ou carteira hipotecária"
     },
     "alert": {
-      "default": {
-        "title": "Avise-me sobre imóveis aqui",
-        "description": "Quando houver imóvel à venda nesta região com um corretor credenciado, falamos com você.",
-        "submit": "Quero ser avisado"
+      "neighborhood": {
+        "title": "Avise-me sobre imóveis {inName}",
+        "description": "Só anúncios autorizados, de corretores com CRECI.",
+        "submit": "Criar alerta"
+      },
+      "street": {
+        "title": "Avise-me sobre imóveis na {name}",
+        "description": "Só anúncios autorizados, de corretores com CRECI.",
+        "submit": "Criar alerta"
       },
       "building": {
-        "title": "Avise-me quando houver unidade à venda",
-        "description": "Quando houver unidade à venda neste prédio com um corretor credenciado, falamos com você.",
+        "title": "Avise-me quando houver apartamento neste prédio",
+        "description": "Só anúncios autorizados, de corretores com CRECI.",
+        "submit": "Criar alerta"
+      },
+      "financing": {
+        "title": "Quer ver imóveis dentro do seu orçamento?",
+        "description": "Um corretor parceiro com CRECI pode falar com você sobre imóveis {inName}.",
+        "submit": "Quero receber opções"
+      },
+      "valuation": {
+        "title": "Quer um valor exato?",
+        "description": "Um corretor parceiro com CRECI pode avaliar seu imóvel com visita.",
+        "submit": "Pedir avaliação"
+      },
+      "outsideCoverage": {
+        "title": "Avise-me quando cobrirmos sua região",
+        "description": "Ainda não temos vendas suficientes para estimar este endereço.",
         "submit": "Quero ser avisado"
       },
-      "owner": {
-        "title": "Quanto vale o meu apartamento?",
-        "description": "Mora ou tem um imóvel aqui? Um corretor credenciado da região pode avaliar com base em vendas parecidas.",
-        "submit": "Quero uma avaliação"
+      "itbi": {
+        "title": "Comprando um imóvel?",
+        "description": "Receba imóveis parecidos e uma simulação de financiamento.",
+        "submit": "Quero receber"
+      },
+      "listingsRent": {
+        "title": "Não achou? Avise-me de novos anúncios",
+        "description": "Só anúncios autorizados, de corretores com CRECI.",
+        "submit": "Criar alerta"
+      },
+      "listingsSale": {
+        "title": "Não achou? Avise-me de novos anúncios",
+        "description": "Só anúncios autorizados, de corretores com CRECI.",
+        "submit": "Criar alerta"
+      },
+      "intents": {
+        "buy": "Quero comprar",
+        "rent": "Quero alugar",
+        "own_sell": "Tenho imóvel aqui",
+        "own_rent": "Quero alugar meu imóvel",
+        "own_valuation": "Só quero saber o valor",
+        "researching": "Só pesquisando"
       },
       "name": "Nome",
       "whatsapp": "WhatsApp",
       "whatsappHelp": "Com DDD, como (11) 92740-8912.",
       "email": "E-mail",
       "emailOptional": "(opcional)",
-      "intentLabel": "Você quer",
-      "intentBuy": "Comprar aqui",
-      "intentOwner": "Tenho imóvel aqui",
-      "consentContact": "Aceito que a Casvitta e corretores parceiros falem comigo sobre imóveis desta região.",
+      "intentLabel": "O que você quer?",
+      "budget": "Orçamento máximo",
+      "budgetHelp": "(opcional)",
+      "consentContact": "Aceito ser contatado sobre imóveis",
       "consentMarketing": "Também quero receber novidades da Casvitta (opcional).",
-      "consentRequired": "Para continuar, marque que aceita ser contatado.",
+      "consentRequired": "Marque para continuar.",
       "honeypot": "Não preencha este campo",
       "submitting": "Enviando…",
-      "successTitle": "Pedido registrado",
-      "successDescription": "Guardamos seu contato para esta região. Ainda não enviamos mensagens: quando houver um imóvel ou um corretor disponível, você será procurado pelo WhatsApp.",
+      "successTitle": "Pronto. Seu pedido foi registrado.",
+      "successDescription": "Guardamos seu contato. Ainda não enviamos mensagens automáticas; um corretor parceiro pode falar com você quando houver novidade.",
       "errorTitle": "Não conseguimos registrar agora",
-      "genericError": "Tente de novo em alguns minutos."
+      "genericError": "Tente de novo em alguns minutos.",
+      "privacyLine": "Usamos seus dados só para este contato, conforme a LGPD."
     },
     "meta": {
-      "cityTitle": "Preço do m² em {city}: vendas reais por bairro",
-      "cityDescription": "Quanto as pessoas pagaram de verdade por imóveis em {city}, bairro a bairro, a partir das guias de ITBI da Prefeitura.",
+      "cityTitle": "Preço do m² em {city} por bairro ({year}, vendas reais)",
+      "cityDescription": "Quanto se pagou de verdade por imóveis em {city}, bairro a bairro: preço mediano, R$/m² e vendas dos últimos 12 meses, a partir das guias de ITBI.",
       "neighborhoodTitle": "{name}: {price} em vendas reais ({year})",
       "neighborhoodTitleFew": "{name}: preço do m² em vendas reais",
       "neighborhoodDescription": "{sales} vendas nos últimos 12 meses em {name}, preço mediano de {value}. Dados das guias de ITBI da Prefeitura de São Paulo.",
@@ -2087,6 +2302,14 @@
       "medianValue": "Preço mediano",
       "minIncome": "Renda mínima (simulação)",
       "source": "Vendas reais · guias de ITBI"
+    },
+    "fewSales": "Poucas vendas",
+    "fewSalesExplained": "Preço só com {min} vendas ou mais",
+    "priceM2Short": "R$/m² (IPTU)",
+    "continue": "Continue pesquisando",
+    "method": {
+      "title": "Como calculamos",
+      "text": "Usamos o valor declarado nas guias de ITBI de compras residenciais. Excluímos doações, permutas, frações de imóvel e valores fora do padrão. O R$/m² divide o valor pela área construída do cadastro do IPTU, que inclui áreas comuns. Grupos com menos de 10 vendas não mostram preço."
     }
   }
 }

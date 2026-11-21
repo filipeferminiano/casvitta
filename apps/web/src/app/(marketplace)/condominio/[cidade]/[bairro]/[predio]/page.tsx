@@ -15,18 +15,20 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { cidade, bairro, predio } = await params;
   const page = await getBuilding(cidade, bairro, predio);
   if (!page || isRedirect(page)) return {};
-  const t = await getTranslations('market.meta');
+  const t = await getTranslations('market.building');
   const name = page.building.name;
   const neighborhood = page.neighborhood.name;
-  const value = page.stats?.median_value_cents;
+  const number = page.street_number.toLocaleString('pt-BR');
+  const value = page.stats?.priced ? page.stats.median_value_cents : null;
+  // Keyword map #3: "[Nome do prédio], [Rua], [número] – [Bairro]: vendas e apartamentos".
   return marketMetadata({
-    title:
+    title: t('metaTitle', { name, street: page.street.name, number, neighborhood }),
+    description:
       value != null
-        ? t('buildingTitle', { name, neighborhood, value: formatBRL(value) })
-        : t('buildingTitleFew', { name, neighborhood }),
-    description: page.stats
-      ? t('buildingDescription', { name, neighborhood, sales: page.stats.sales })
-      : t('buildingDescriptionFew', { name, neighborhood }),
+        ? t('lead', { sales: page.sales, value: formatBRL(value) })
+        : page.sales > 0
+          ? t('leadFew', { sales: page.sales })
+          : t('leadNone'),
     path: page.building.path,
     indexable: page.gate.indexable,
   });
