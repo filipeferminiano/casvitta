@@ -3453,6 +3453,106 @@
         }
       }
     },
+    "/v1/staff/moderation": {
+      "get": {
+        "tags": [
+          "staff"
+        ],
+        "summary": "Moderation Queue",
+        "description": "Off (\"liga depois\") until listings exist; then only exceptions and reports.",
+        "operationId": "getModerationQueue",
+        "parameters": [
+          {
+            "name": "x-admin-token",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Admin-Token"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ModerationQueueOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/staff/revenue": {
+      "get": {
+        "tags": [
+          "staff"
+        ],
+        "summary": "Get Revenue",
+        "description": "Lines from the offer catalog; amounts arrive with billing.",
+        "operationId": "getRevenue",
+        "parameters": [
+          {
+            "name": "x-admin-token",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Admin-Token"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RevenueOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/v1/public/capture-assignments/accept": {
       "post": {
         "tags": [
@@ -5278,6 +5378,54 @@
         ],
         "title": "CaptureListOut"
       },
+      "CheckResult": {
+        "properties": {
+          "key": {
+            "type": "string",
+            "enum": [
+              "creci",
+              "authorization",
+              "price",
+              "photo_text",
+              "duplicate"
+            ],
+            "title": "Key"
+          },
+          "outcome": {
+            "type": "string",
+            "enum": [
+              "ok",
+              "review",
+              "fail"
+            ],
+            "title": "Outcome"
+          },
+          "detail": {
+            "additionalProperties": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "number"
+                }
+              ]
+            },
+            "type": "object",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "required": [
+          "key",
+          "outcome",
+          "detail"
+        ],
+        "title": "CheckResult"
+      },
       "CityIndexPage": {
         "properties": {
           "city": {
@@ -6598,6 +6746,27 @@
         ],
         "title": "MeOut"
       },
+      "ModerationQueueOut": {
+        "properties": {
+          "enabled": {
+            "type": "boolean",
+            "title": "Enabled"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/app__domains__backoffice__moderation__QueueItem"
+            },
+            "type": "array",
+            "title": "Items"
+          }
+        },
+        "type": "object",
+        "required": [
+          "enabled",
+          "items"
+        ],
+        "title": "ModerationQueueOut"
+      },
       "MonthlyPoint": {
         "properties": {
           "month": {
@@ -6862,7 +7031,7 @@
           },
           "queue": {
             "items": {
-              "$ref": "#/components/schemas/QueueItem"
+              "$ref": "#/components/schemas/app__domains__backoffice__schemas__QueueItem"
             },
             "type": "array",
             "title": "Queue"
@@ -7787,35 +7956,6 @@
         "title": "PublicStats",
         "description": "``priced`` false: the group is below MARKET_MIN_PRICE_GROUP, only the count is public."
       },
-      "QueueItem": {
-        "properties": {
-          "key": {
-            "type": "string",
-            "enum": [
-              "creci",
-              "owner_requests",
-              "institutional_investors"
-            ],
-            "title": "Key"
-          },
-          "count": {
-            "type": "integer",
-            "title": "Count"
-          },
-          "over_sla": {
-            "type": "integer",
-            "title": "Over Sla",
-            "default": 0
-          }
-        },
-        "type": "object",
-        "required": [
-          "key",
-          "count"
-        ],
-        "title": "QueueItem",
-        "description": "A line of \"Precisa de você\": a queue that waits for someone, with a link target."
-      },
       "ReadinessOut": {
         "properties": {
           "status": {
@@ -8047,6 +8187,88 @@
           "value"
         ],
         "title": "RevealOut"
+      },
+      "RevenueLine": {
+        "properties": {
+          "key": {
+            "type": "string",
+            "title": "Key"
+          },
+          "nature": {
+            "type": "string",
+            "enum": [
+              "recurring",
+              "per_listing",
+              "transaction",
+              "transaction_recurring"
+            ],
+            "title": "Nature"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "waits_billing",
+              "soon"
+            ],
+            "title": "Status"
+          },
+          "price_cents": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Price Cents"
+          },
+          "per": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "month",
+                  "listing"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Per"
+          }
+        },
+        "type": "object",
+        "required": [
+          "key",
+          "nature",
+          "status",
+          "price_cents",
+          "per"
+        ],
+        "title": "RevenueLine"
+      },
+      "RevenueOut": {
+        "properties": {
+          "enabled": {
+            "type": "boolean",
+            "title": "Enabled"
+          },
+          "lines": {
+            "items": {
+              "$ref": "#/components/schemas/RevenueLine"
+            },
+            "type": "array",
+            "title": "Lines"
+          }
+        },
+        "type": "object",
+        "required": [
+          "enabled",
+          "lines"
+        ],
+        "title": "RevenueOut"
       },
       "Role": {
         "type": "string",
@@ -9219,6 +9441,89 @@
         ],
         "title": "YearCount",
         "description": "Sales in a calendar year: a count, never prices or dates."
+      },
+      "app__domains__backoffice__moderation__QueueItem": {
+        "properties": {
+          "listing_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Listing Id"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "broker_name": {
+            "type": "string",
+            "title": "Broker Name"
+          },
+          "price_cents": {
+            "type": "integer",
+            "title": "Price Cents"
+          },
+          "transaction": {
+            "type": "string",
+            "enum": [
+              "sale",
+              "rent"
+            ],
+            "title": "Transaction"
+          },
+          "reports": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Reports"
+          },
+          "checks": {
+            "items": {
+              "$ref": "#/components/schemas/CheckResult"
+            },
+            "type": "array",
+            "title": "Checks"
+          }
+        },
+        "type": "object",
+        "required": [
+          "listing_id",
+          "title",
+          "broker_name",
+          "price_cents",
+          "transaction",
+          "reports",
+          "checks"
+        ],
+        "title": "QueueItem"
+      },
+      "app__domains__backoffice__schemas__QueueItem": {
+        "properties": {
+          "key": {
+            "type": "string",
+            "enum": [
+              "creci",
+              "owner_requests",
+              "institutional_investors"
+            ],
+            "title": "Key"
+          },
+          "count": {
+            "type": "integer",
+            "title": "Count"
+          },
+          "over_sla": {
+            "type": "integer",
+            "title": "Over Sla",
+            "default": 0
+          }
+        },
+        "type": "object",
+        "required": [
+          "key",
+          "count"
+        ],
+        "title": "QueueItem",
+        "description": "A line of \"Precisa de você\": a queue that waits for someone, with a link target."
       }
     }
   }

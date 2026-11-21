@@ -25,3 +25,4 @@ export {
   type QueueTableProps,
   type TextareaProps,
 } from './QueueTable.tsx';
+export { CheckList, type CheckListItem } from './CheckList.tsx';

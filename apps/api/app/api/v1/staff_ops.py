@@ -19,7 +19,8 @@ from app.api.v1.staff_deps import (
 )
 from app.core.errors import AppError
 from app.core.rate_limit import RateLimited, RateLimiter
-from app.domains.backoffice import accounts, captures, creci, service
+from app.core.time import utcnow
+from app.domains.backoffice import accounts, captures, creci, moderation, revenue, service
 from app.domains.backoffice.schemas import OverviewOut, SearchOut
 from app.domains.interest.models import InterestKind
 from app.domains.staff.audit import Actor
@@ -382,3 +383,30 @@ async def view_account_as_customer(
     result = await accounts.view_as(session, actor, workspace_id, payload.reason, settings=settings)
     await session.commit()
     return result
+
+
+# ------------------------------------------------------------------ moderation (BO6)
+
+
+@router.get(
+    "/moderation",
+    response_model=moderation.ModerationQueueOut,
+    operation_id="getModerationQueue",
+)
+async def moderation_queue(
+    _actor: ActorDep, settings: SettingsDep
+) -> moderation.ModerationQueueOut:
+    """Off ("liga depois") until listings exist; then only exceptions and reports."""
+    return await moderation.queue(moderation.NoListingsYet(), settings, utcnow().date())
+
+
+# ------------------------------------------------------------------ revenue (BO7)
+
+
+@router.get("/revenue", response_model=revenue.RevenueOut, operation_id="getRevenue")
+async def get_revenue(
+    _actor: Annotated[Actor, Depends(require_permission(Permission.MANAGE_BILLING))],
+    settings: SettingsDep,
+) -> revenue.RevenueOut:
+    """Lines from the offer catalog; amounts arrive with billing."""
+    return revenue.revenue(settings)

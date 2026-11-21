@@ -91,6 +91,8 @@ export const staffKeys = {
   alertGroups: [ROOT, 'alert-groups'] as const,
   accounts: (view: AccountView) => [ROOT, 'accounts', view] as const,
   account: (id: string) => [ROOT, 'account', id] as const,
+  moderation: [ROOT, 'moderation'] as const,
+  revenue: [ROOT, 'revenue'] as const,
   team: [ROOT, 'team'] as const,
   audit: (filters: AuditFilters) => [ROOT, 'audit', filters] as const,
 };
@@ -476,5 +478,25 @@ export function useAddNote() {
         }),
       ),
     onSettled: () => invalidateAll(client),
+  });
+}
+
+// ------------------------------------------------------------------ moderation (BO6), revenue (BO7)
+
+export type ModerationQueue = components['schemas']['ModerationQueueOut'];
+export type RevenueLine = components['schemas']['RevenueLine'];
+
+export function useModeration() {
+  return useQuery({
+    queryKey: staffKeys.moderation,
+    queryFn: async () => unwrap(await staffApi.GET('/v1/staff/moderation')),
+  });
+}
+
+export function useRevenue(enabled: boolean) {
+  return useQuery({
+    queryKey: staffKeys.revenue,
+    enabled,
+    queryFn: async () => unwrap(await staffApi.GET('/v1/staff/revenue')),
   });
 }

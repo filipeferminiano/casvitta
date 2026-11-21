@@ -3076,6 +3076,87 @@
         "generic": "Não conseguimos fazer isso agora. Tente de novo.",
         "popup": "O navegador bloqueou a nova aba. Permita pop-ups para o backoffice e tente de novo."
       }
+    },
+    "moderation": {
+      "title": "Moderação de anúncios",
+      "description": "O marketplace só mostra imóvel com CRECI verificado e autorização válida. Aqui ficam as exceções e as denúncias.",
+      "subject": "a moderação",
+      "tabs": {
+        "review": "Para revisar",
+        "reports": "Denúncias",
+        "highlights": "Destaques pagos",
+        "paused": "Pausados"
+      },
+      "off": {
+        "title": "Liga quando imóveis e anúncios estiverem no banco",
+        "description": "As checagens automáticas já estão prontas: CRECI do corretor verificado, autorização válida, preço perto dos comparáveis, fotos sem texto e anúncio sem duplicata. Só o que falhar em alguma delas, ou receber denúncia, vai aparecer aqui; o resto publica direto."
+      },
+      "empty": "Nada para revisar agora.",
+      "checks": {
+        "title": "Checagens automáticas",
+        "creci": "CRECI do corretor verificado",
+        "authorization": "Autorização válida até {date}",
+        "authorizationMissing": "Sem autorização do proprietário",
+        "authorizationExpired": "Autorização vencida em {date}",
+        "authorizationWrongKind": "Autorização não é para este tipo de negócio",
+        "price": "Preço {pct}% {direction} da mediana de {count} comparáveis ({median})",
+        "priceFew": "Poucos comparáveis ({count}) para julgar o preço",
+        "above": "acima",
+        "below": "abaixo",
+        "photo_text": "Fotos sem texto excessivo",
+        "photoTextReview": "Texto em alguma foto",
+        "duplicate": "Não duplica outro anúncio ativo",
+        "duplicateReview": "Parece duplicar outro anúncio",
+        "outcome": {
+          "ok": "OK",
+          "review": "Revisar",
+          "fail": "Falhou"
+        }
+      }
+    },
+    "revenue": {
+      "title": "Receita",
+      "description": "Quanto entra por linha: assinaturas, anúncios e, depois, comissões de aluguel e venda.",
+      "notice": "Assinaturas e anúncios passam a ler a Stripe quando a cobrança for ligada; até lá não há valores. Comissões só entram com CRECI-J da Casvitta e o Rental OS. Mídia nunca entra: a Meta e o Google cobram o corretor direto.",
+      "off": "Liga quando a cobrança for ativada.",
+      "linesTitle": "Linhas de receita",
+      "columns": {
+        "line": "Linha de receita",
+        "nature": "Natureza",
+        "price": "Preço de catálogo",
+        "status": "Status"
+      },
+      "lines": {
+        "saas_broker": "Assinatura Corretor",
+        "saas_agency_essencial": "Imobiliária Essencial",
+        "saas_agency_equipe": "Imobiliária Equipe",
+        "saas_agency_larger": "Imobiliária Operação maior",
+        "owner_30d": "Anúncio do proprietário · 30 dias",
+        "owner_90d": "Anúncio do proprietário · 90 dias",
+        "highlight": "Destaque pago no marketplace",
+        "commission_rent": "Comissão de aluguel",
+        "commission_sale": "Comissão de venda",
+        "insurance": "Seguros"
+      },
+      "nature": {
+        "recurring": "Recorrente",
+        "per_listing": "Por anúncio",
+        "transaction": "Transação",
+        "transaction_recurring": "Transação + recorrente"
+      },
+      "status": {
+        "waits_billing": "Liga com a cobrança",
+        "soon": "Em breve"
+      },
+      "soonNote": {
+        "commission_rent": "CRECI-J e Rental OS",
+        "commission_sale": "CRECI-J",
+        "insurance": "via corretora habilitada na SUSEP"
+      },
+      "perMonth": "{price}/mês",
+      "perListing": "{price} por anúncio",
+      "onRequest": "Sob consulta",
+      "undefined": "Preço a definir"
     }
   },
   "audience": {

@@ -125,3 +125,15 @@ def test_every_capture_kind_has_a_place_on_screen() -> None:
     from app.domains.backoffice.service import KIND_ORDER  # noqa: PLC0415
 
     assert sorted(KIND_ORDER) == sorted(InterestKind)
+
+
+async def test_revenue_needs_the_billing_permission(
+    api: AsyncClient, integrations: Integrations, session: AsyncSession
+) -> None:
+    await signed_in_as(api, integrations, session, StaffRole.OPERATIONS)
+    assert (await api.get("/v1/staff/revenue")).status_code == 403
+    await signed_in_as(api, integrations, session, StaffRole.FINANCE)
+    body = (await api.get("/v1/staff/revenue")).json()
+    assert body["enabled"] is False and body["lines"]
+    moderation = (await api.get("/v1/staff/moderation")).json()
+    assert moderation == {"enabled": False, "items": []}

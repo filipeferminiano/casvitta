@@ -1044,6 +1044,46 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/staff/moderation": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Moderation Queue
+         * @description Off ("liga depois") until listings exist; then only exceptions and reports.
+         */
+        get: operations["getModerationQueue"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/staff/revenue": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Revenue
+         * @description Lines from the offer catalog; amounts arrive with billing.
+         */
+        get: operations["getRevenue"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/public/capture-assignments/accept": {
         parameters: {
             query?: never;
@@ -1620,6 +1660,23 @@ export interface components {
             /** Items */
             items: components["schemas"]["CaptureItem"][];
         };
+        /** CheckResult */
+        CheckResult: {
+            /**
+             * Key
+             * @enum {string}
+             */
+            key: "creci" | "authorization" | "price" | "photo_text" | "duplicate";
+            /**
+             * Outcome
+             * @enum {string}
+             */
+            outcome: "ok" | "review" | "fail";
+            /** Detail */
+            detail: {
+                [key: string]: string | number;
+            };
+        };
         /** CityIndexPage */
         CityIndexPage: {
             city: components["schemas"]["PlaceRef"];
@@ -2049,6 +2106,13 @@ export interface components {
             /** Viewing As */
             viewing_as?: string | null;
         };
+        /** ModerationQueueOut */
+        ModerationQueueOut: {
+            /** Enabled */
+            enabled: boolean;
+            /** Items */
+            items: components["schemas"]["app__domains__backoffice__moderation__QueueItem"][];
+        };
         /** MonthlyPoint */
         MonthlyPoint: {
             /** Month */
@@ -2132,7 +2196,7 @@ export interface components {
         OverviewOut: {
             tiles: components["schemas"]["OverviewTiles"];
             /** Queue */
-            queue: components["schemas"]["QueueItem"][];
+            queue: components["schemas"]["app__domains__backoffice__schemas__QueueItem"][];
             /** Captures */
             captures: components["schemas"]["CaptureKindRow"][];
             /** Funnel */
@@ -2415,24 +2479,6 @@ export interface components {
              */
             refreshed_at: string;
         };
-        /**
-         * QueueItem
-         * @description A line of "Precisa de você": a queue that waits for someone, with a link target.
-         */
-        QueueItem: {
-            /**
-             * Key
-             * @enum {string}
-             */
-            key: "creci" | "owner_requests" | "institutional_investors";
-            /** Count */
-            count: number;
-            /**
-             * Over Sla
-             * @default 0
-             */
-            over_sla: number;
-        };
         /** ReadinessOut */
         ReadinessOut: {
             /**
@@ -2514,6 +2560,32 @@ export interface components {
             field: "phone" | "email";
             /** Value */
             value: string | null;
+        };
+        /** RevenueLine */
+        RevenueLine: {
+            /** Key */
+            key: string;
+            /**
+             * Nature
+             * @enum {string}
+             */
+            nature: "recurring" | "per_listing" | "transaction" | "transaction_recurring";
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "waits_billing" | "soon";
+            /** Price Cents */
+            price_cents: number | null;
+            /** Per */
+            per: ("month" | "listing") | null;
+        };
+        /** RevenueOut */
+        RevenueOut: {
+            /** Enabled */
+            enabled: boolean;
+            /** Lines */
+            lines: components["schemas"]["RevenueLine"][];
         };
         /**
          * Role
@@ -2895,6 +2967,47 @@ export interface components {
             sales: number;
             /** Partial Until */
             partial_until: string | null;
+        };
+        /** QueueItem */
+        app__domains__backoffice__moderation__QueueItem: {
+            /**
+             * Listing Id
+             * Format: uuid
+             */
+            listing_id: string;
+            /** Title */
+            title: string;
+            /** Broker Name */
+            broker_name: string;
+            /** Price Cents */
+            price_cents: number;
+            /**
+             * Transaction
+             * @enum {string}
+             */
+            transaction: "sale" | "rent";
+            /** Reports */
+            reports: string[];
+            /** Checks */
+            checks: components["schemas"]["CheckResult"][];
+        };
+        /**
+         * QueueItem
+         * @description A line of "Precisa de você": a queue that waits for someone, with a link target.
+         */
+        app__domains__backoffice__schemas__QueueItem: {
+            /**
+             * Key
+             * @enum {string}
+             */
+            key: "creci" | "owner_requests" | "institutional_investors";
+            /** Count */
+            count: number;
+            /**
+             * Over Sla
+             * @default 0
+             */
+            over_sla: number;
         };
     };
     responses: never;
@@ -4819,6 +4932,68 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ViewAsOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    getModerationQueue: {
+        parameters: {
+            query?: never;
+            header?: {
+                "x-admin-token"?: string | null;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ModerationQueueOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    getRevenue: {
+        parameters: {
+            query?: never;
+            header?: {
+                "x-admin-token"?: string | null;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RevenueOut"];
                 };
             };
             /** @description Validation Error */

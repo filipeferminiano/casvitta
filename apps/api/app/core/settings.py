@@ -98,6 +98,12 @@ class Settings(BaseSettings):
     backoffice_modules: Annotated[list[str], NoDecode] = Field(
         default_factory=lambda: ["overview", "creci", "captures", "accounts", "team"]
     )
+    # Listing moderation (BO6) thresholds: price this far (%) from the comparables' median goes to
+    # a person; fewer comparables than this and price is not judged (as with estimates, rule 12);
+    # photos with more than this share of text go to a person.
+    moderation_price_deviation_pct: int = 25
+    moderation_min_comparables: int = 5
+    moderation_max_photo_text_ratio: float = 0.15
     # Owner requests go back to the queue when the broker does not accept within this time.
     capture_assignment_timeout_hours: int = 24
     # CRECI review promise shown at sign-up ("1 dia útil"): older requests get the SLA badge.
