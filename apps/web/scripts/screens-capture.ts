@@ -5,8 +5,10 @@
  *   pnpm screens:capture                 # against a running dev server on localhost:3000
  *   ROOT_DOMAIN=localhost:3100 pnpm screens:capture
  *   pnpm screens:capture 31 32           # only mockups starting with these numbers
+ *   pnpm screens:capture landing-pages   # one sub-folder
  */
 import { mkdirSync } from 'node:fs';
+import { dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { chromium } from '@playwright/test';
@@ -38,7 +40,9 @@ for (const entry of SCREENS) {
     const response = await page.goto(url, { waitUntil: 'networkidle' });
     await page.evaluate(() => document.fonts.ready);
     await page.waitForTimeout(300);
-    await page.screenshot({ path: `${outDir}${entry.mockup}.png`, fullPage: true });
+    const path = `${outDir}${entry.mockup}.png`;
+    mkdirSync(dirname(path), { recursive: true }); // mockups in sub-folders (landing-pages/…)
+    await page.screenshot({ path, fullPage: true });
     console.log(`${response?.status() ?? '???'}  ${entry.mockup}  ${url}`);
   } catch (error) {
     failures += 1;

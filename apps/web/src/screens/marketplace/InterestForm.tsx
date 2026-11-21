@@ -7,6 +7,7 @@ import { useState, type ReactNode } from 'react';
 
 import { track } from '@/lib/analytics';
 import { submitInterest, type InterestPayload, type OptIn } from '@/lib/data/interest';
+import { EMAIL } from '@/lib/data/signup';
 
 type Kind = InterestPayload['kind'];
 
@@ -31,6 +32,7 @@ export function InterestForm({
   nameLabel,
   phoneLabel,
   arrange,
+  email: emailField,
   footer,
   className,
 }: {
@@ -55,7 +57,9 @@ export function InterestForm({
    * Custom order of the fields. Receives the shared name and WhatsApp inputs; defaults to
    * name, page fields, WhatsApp.
    */
-  arrange?: (contact: { name: ReactNode; phone: ReactNode }) => ReactNode;
+  arrange?: (contact: { name: ReactNode; phone: ReactNode; email: ReactNode }) => ReactNode;
+  /** Adds a required e-mail input (placed by `arrange`, or after WhatsApp by default). */
+  email?: { label: string; placeholder?: string; error: string };
   /** Small print under the submit button. */
   footer?: ReactNode;
   className?: string;
@@ -63,6 +67,7 @@ export function InterestForm({
   const t = useTranslations('interest');
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
+  const [email, setEmail] = useState('');
   const [website, setWebsite] = useState('');
   const [contact, setContact] = useState(false);
   const [marketing, setMarketing] = useState(false);
@@ -108,6 +113,18 @@ export function InterestForm({
     />
   );
 
+  const emailInput = emailField ? (
+    <Input
+      label={emailField.label}
+      type="email"
+      autoComplete="email"
+      placeholder={emailField.placeholder}
+      value={email}
+      onChange={(e) => setEmail(e.target.value)}
+      error={errors.email}
+    />
+  ) : null;
+
   return (
     <Panel title={title} className={className}>
       {description ? <p className="mb-4 -mt-1 type-body-s text-fg-strong">{description}</p> : null}
@@ -119,6 +136,7 @@ export function InterestForm({
           const next: Record<string, string> = {};
           if (name.trim().length < 2) next.name = t('nameError');
           if (phone.replace(/\D/g, '').length < 10) next.phone = t('phoneError');
+          if (emailField && !EMAIL.test(email.trim())) next.email = emailField.error;
           if (!contact) next.consent = t('consentError');
           const criteria = buildCriteria();
           setErrors(next);
@@ -130,6 +148,7 @@ export function InterestForm({
             kind,
             name: name.trim(),
             phone,
+            email: emailField ? email.trim() : undefined,
             website: website || undefined,
             consents: { contact_about_properties: contact, marketing },
             utm: {
@@ -156,12 +175,13 @@ export function InterestForm({
         }}
       >
         {arrange ? (
-          arrange({ name: nameInput, phone: phoneInput })
+          arrange({ name: nameInput, phone: phoneInput, email: emailInput })
         ) : (
           <>
             {nameInput}
             {fields}
             {phoneInput}
+            {emailInput}
           </>
         )}
         {/* Honeypot: hidden from people, filled by bots. */}

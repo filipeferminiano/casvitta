@@ -36,7 +36,11 @@ export default async function DevScreensPage() {
             const url = screenUrl(s, root);
             return (
               <tr key={s.mockup} className="border-b border-line">
-                <td className="px-3 py-2 font-mono">{s.mockup.slice(0, 2)}</td>
+                <td className="px-3 py-2 font-mono">
+                  {s.mockup.startsWith('landing-pages/')
+                    ? `LP${s.mockup.slice(14, 16)}`
+                    : s.mockup.slice(0, 2)}
+                </td>
                 <td className="px-3 py-2">{s.title}</td>
                 <td className="px-3 py-2">{t(`viewports.${s.viewport}`)}</td>
                 <td className="px-3 py-2">

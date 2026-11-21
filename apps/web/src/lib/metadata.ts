@@ -8,14 +8,17 @@ export function publicMetadata({
   description,
   path,
   noindex = false,
+  absoluteTitle = false,
 }: {
   title: string;
   description: string;
   path: string;
   noindex?: boolean;
+  /** The title already carries the brand ("… | Casvitta"): skip the layout template. */
+  absoluteTitle?: boolean;
 }): Metadata {
   return {
-    title,
+    title: absoluteTitle ? { absolute: title } : title,
     description,
     alternates: { canonical: path },
     openGraph: { title, description, url: path, images: [OG_IMAGE] },

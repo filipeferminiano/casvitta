@@ -93,6 +93,17 @@ Approved: option A, "Casa aberta". The roof and floor draw a C with the right wa
 | `Simulação · não é aprovação` | `ink-100` bg, `ink-500` text | every financing number |
 | `Em breve` | `ink-100` pill, dashed `ink-300` border on its card | future modules |
 | `Destaque pago` | `ink-900` bg, white text | sponsored marketplace listings |
+| `Anúncio do proprietário` | `ink-100` bg, `ink-700` text, 11px semibold, radius 4 | owner self-listings (no CRECI, rule 15) |
+
+**Audience-page tags** (`AudienceTag`, used the same way on the owners, brokers and agencies pages):
+
+| Tag | Look | Meaning |
+|---|---|---|
+| `Software de gestão` | `blue-50` bg, `blue-700` text, grid icon | the management tool, by subscription |
+| `Publicação no portal` | 1px `ink-900` border, megaphone icon | the property is visible on the portal, in the normal search order |
+| `Destaque · opcional` | `yellow-400` bg, `ink-900` text, filled star | more exposure inside the portal, optional and paid apart |
+
+`Destaque · opcional` is a documented exception to "yellow is only for attention": it was asked for explicitly so the highlight stands apart from what a plan includes. Never pair it with a price until the highlight price is set in config.
 
 ## 6. Components (build in `packages/ui`, each with Storybook stories and all states)
 

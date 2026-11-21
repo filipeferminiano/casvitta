@@ -13,12 +13,22 @@ Every module reads and writes the same core. A lead created by an ad is the same
 
 Later modules (do NOT build unless a task says so; show them as "Em breve" in the module store): Rental OS, Contracts, Billing/Collections, Insurance, Property Finance, Network OS (partner brokers), Developer OS, FII Suite, Risk & Pricing Engine, Command Center, Home Hub.
 
-### Plans (reference prices, keep in config, not hard-coded)
+### Offers (hypotheses, nov/2026; keep in config, not hard-coded)
 
-| Plan | Price | Limits / features |
-|---|---|---|
-| Essencial | R$ 197/month | up to 3 active properties; broker landing page + one per property; CRM, inbox, calendar, proposals; WhatsApp AI assistant |
-| Profissional | R$ 397/month | up to 15 active properties; everything in Essencial; Facebook & Instagram page management; weekly report by channel |
+One catalog: `OFFERS` in `apps/web/src/config/site.ts`, mirrored by `offer_*` in the API settings. Never shown as a promotion, discount or trial.
+
+| Offer | Audience | Price | Limits / what the audience pages sell |
+|---|---|---|---|
+| Anúncio avulso · 30 dias | owners | R$ 59, single payment | 1 property on the portal, no software; ends at the end of the period, renewed only by the owner's choice |
+| Anúncio avulso · 90 dias | owners | R$ 149, single payment | same, 90 days |
+| Plano Corretor (`corretor`) | independent brokers | R$ 99/month | 1 user, up to 50 active properties; software (properties, contacts, opportunities) + portal publishing within the limit |
+| Essencial | agencies | R$ 299/month | 5 users, up to 200 active properties |
+| Equipe | agencies | R$ 499/month | 15 users, up to 500 active properties |
+| Operação maior | agencies | Sob consulta | limits as needed |
+| Destaque (highlight) | everyone | not defined | optional, per property and period; never rendered as a number until set |
+| Migração assistida | agencies | quoted apart | optional service |
+
+Active-property limits exclude sold, rented and paused properties. Portal publishing included in a plan never means a better search position, nor Google/Meta campaigns. Cancelling ends software access and plan-linked publishing at the end of the paid period. Packaging of the WhatsApp AI assistant and Anúncios (Door 1) into these offers is still to be defined; the audience pages do not sell them. Legacy plans `essencial`/`profissional` (R$ 197/397) stay valid on existing workspaces only.
 
 Media runs in the broker's own Meta and Google Ads accounts: the broker connects them, keeps the card on file at Meta/Google and is billed directly by them; Casvitta never charges, holds or resells media and only creates and manages the campaigns. Minimum budget R$ 20/day per property (config: `MIN_DAILY_BUDGET_CENTS=2000`); the customer chooses any amount at or above it. Charged only on what is spent, up to a cap the customer sets.
 
@@ -81,7 +91,7 @@ casvitta/
 
 These come from Brazilian regulation and from the brand's trust promise. Treat them as invariants with tests.
 
-1. **CRECI everywhere.** Every published listing, ad creative, landing page and broker card shows the responsible broker's CRECI. A broker cannot publish without a validated CRECI number on their profile. Validation is manual for now: format check on input, then staff set `creci_verified_at`; an automated lookup comes later.
+1. **CRECI everywhere.** Every listing *intermediated by a broker*, every ad creative, landing page and broker card shows the responsible broker's CRECI. A broker cannot publish without a validated CRECI number on their profile (exception: rule 15). Validation is manual for now: format check on input, then staff set `creci_verified_at`; an automated lookup comes later.
 2. **Sale/rental authorization gate.** A property cannot be published (marketplace, landing page or ads) without an owner authorization record (type: sale/rental, exclusivity yes/no, signed date, expiry). Expired authorization unpublishes the listing.
 3. **AI is always identified.** Every AI-generated text in the UI carries the "Feito por IA" badge; the WhatsApp assistant introduces itself as the broker's virtual assistant in its first message.
 4. **AI never negotiates price or conditions, never promises credit approval, never invents property facts.** Ad copy may only use facts from the property record; the generator returns the source field of each claim and the UI shows it. Price negotiation or anger → hand off to the human with a reason.
@@ -95,6 +105,7 @@ These come from Brazilian regulation and from the brand's trust promise. Treat t
 12. **Estimates are labeled.** Rental income and yield estimates show "Estimativa · não é garantia" and the comparables count; hide them when there are fewer than 5 comparables.
 13. **Regulated activities.** Casvitta is not an auctioneer and does not offer fund quotas, CRIs or other securities; those pages carry the disclaimers in the mockups. Owner requests are assigned to a CRECI-registered broker (manually by staff at first).
 14. **Ad accounts belong to the broker.** Meta via Facebook Login for Business (ad account, Facebook Page, Instagram professional account) and Google Ads via OAuth on the broker's own customer account, each broker connecting directly (no shared Casvitta ad account, no proxy). Casvitta never stores card data; when an account has no payment method or is restricted, show the reason and the platform's own billing link. The marketplace and the property landing page work without any ad account. Disconnecting keeps campaign and report history.
+15. **Owner self-listing.** An owner may list their own property (kind `owner_self_listing`) without intermediation: no broker, no CRECI shown, no commission. The listing carries the "Anúncio do proprietário" badge, contacts go straight to the owner, and Casvitta does not negotiate, qualify or schedule on the owner's behalf (no AI assistant). Rule 2 still applies: the owner declares ownership/authority and the listing ends at the paid period's end. Owner requests that ask for help still go to a CRECI broker (rule 13). Not live yet: owner listings do not ship to the marketplace until the data model (no workspace, ownership declaration) and payment exist; today `/anunciar-imovel` only stores an `owner_listing_start` interest signup.
 
 ## 5. Core data model (starting point — refine with migrations, keep names)
 

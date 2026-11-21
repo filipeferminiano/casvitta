@@ -9,6 +9,12 @@ import { useState } from 'react';
 
 import { COMPANY, whatsappLink } from '@/config/site';
 import { formatPhoneIntl } from '@/lib/format';
+import {
+  AudienceHeaderCta,
+  AudienceHeaderNav,
+  AudienceTabs,
+  audienceFor,
+} from '@/screens/audience/AudienceNav';
 
 const ITEMS = [
   { href: '/comprar', key: 'buy', match: ['/comprar', '/imovel'] },
@@ -29,6 +35,8 @@ export function MarketplaceHeader() {
   const [openOn, setOpenOn] = useState<string | null>(null);
   const open = openOn === pathname;
   const minimal = MINIMAL.some((p) => pathname.startsWith(p));
+  // Audience pages (owners, brokers, agencies) swap the nav and CTA for the audience switch.
+  const audience = audienceFor(pathname);
   const phone = formatPhoneIntl(COMPANY.whatsappE164);
 
   return (
@@ -47,34 +55,42 @@ export function MarketplaceHeader() {
           </a>
         ) : (
           <>
-            <nav aria-label={t('label')} className="hidden lg:block">
-              <ul className="flex gap-1">
-                {ITEMS.map((item) => {
-                  const current = item.match.some((m) => pathname.startsWith(m));
-                  return (
-                    <li key={item.key}>
-                      <Link
-                        href={item.href}
-                        aria-current={current ? 'page' : undefined}
-                        className={cn(
-                          'flex min-h-11 items-center rounded-control px-3 type-body-s font-medium text-fg hover:bg-subtle',
-                          current && 'bg-action-subtle font-semibold',
-                        )}
-                      >
-                        {t(item.key)}
-                      </Link>
-                    </li>
-                  );
-                })}
-              </ul>
-            </nav>
+            {audience ? (
+              <AudienceHeaderNav current={audience} />
+            ) : (
+              <nav aria-label={t('label')} className="hidden lg:block">
+                <ul className="flex gap-1">
+                  {ITEMS.map((item) => {
+                    const current = item.match.some((m) => pathname.startsWith(m));
+                    return (
+                      <li key={item.key}>
+                        <Link
+                          href={item.href}
+                          aria-current={current ? 'page' : undefined}
+                          className={cn(
+                            'flex min-h-11 items-center rounded-control px-3 type-body-s font-medium text-fg hover:bg-subtle',
+                            current && 'bg-action-subtle font-semibold',
+                          )}
+                        >
+                          {t(item.key)}
+                        </Link>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </nav>
+            )}
             <div className="ml-auto hidden items-center gap-4 lg:flex">
               <Link href="/entrar" className="type-body-s font-medium text-fg hover:underline">
                 {t('signIn')}
               </Link>
-              <Button asChild size="sm">
-                <Link href="/cadastro/conta">{t('startAsBroker')}</Link>
-              </Button>
+              {audience ? (
+                <AudienceHeaderCta current={audience} />
+              ) : (
+                <Button asChild size="sm">
+                  <Link href="/cadastro/conta">{t('startAsBroker')}</Link>
+                </Button>
+              )}
             </div>
             <button
               type="button"
@@ -93,6 +109,7 @@ export function MarketplaceHeader() {
           </>
         )}
       </div>
+      {audience ? <AudienceTabs current={audience} /> : null}
       {!minimal && open ? (
         <nav
           id="site-menu"

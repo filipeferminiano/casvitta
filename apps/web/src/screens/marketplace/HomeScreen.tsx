@@ -13,7 +13,7 @@ import { FinancingSimulator } from './ListingIslands';
 const AUDIENCES = [
   { key: 'owner', href: '/anunciar-imovel', soon: false },
   { key: 'broker', href: '/para-corretores', soon: false },
-  { key: 'agency', href: '/para-corretores#imobiliarias', soon: false },
+  { key: 'agency', href: '/para-imobiliarias', soon: false },
   { key: 'developer', href: '/incorporadoras', soon: true },
 ] as const;
 

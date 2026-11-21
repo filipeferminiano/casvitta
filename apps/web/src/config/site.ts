@@ -106,23 +106,5 @@ export const OFFERS: Offers = {
 export type PlanKey = 'corretor';
 export type WorkspacePlan = PlanKey | 'essencial' | 'profissional';
 
-/**
- * @deprecated Old Essencial/Profissional table, read only by the mockup-54 screen until it is
- * replaced by the new /para-corretores page.
- */
-export const LEGACY_PLANS = {
-  essencial: { priceCents: 19_700, maxActiveProperties: 3 },
-  profissional: { priceCents: 39_700, maxActiveProperties: 15 },
-} as const;
-
-/** "Contratando separado" comparison (54): public reference prices, nov/2026. */
-export const SEPARATE_TOOLS_CENTS = {
-  crm: 19_900,
-  site: 3_900,
-  aiService: 25_900,
-  socialMedia: 50_000,
-  trafficManager: 50_000,
-} as const;
-
 export const whatsappLink = (text?: string) =>
   `https://wa.me/${COMPANY.whatsappE164.replace('+', '')}${text ? `?text=${encodeURIComponent(text)}` : ''}`;

@@ -16,6 +16,8 @@ export async function GET() {
   if (site.kind !== 'marketplace') return new Response('Not found', { status: 404 });
 
   const t = await getTranslations({ locale: DEFAULT_LOCALE, namespace: 'llms' });
+  const packs = OFFERS.ownerPacks;
+  const [shortPack, longPack] = [packs[0]!, packs[packs.length - 1]!];
   const copy: LlmsCopy = {
     summary: t('summary'),
     intro: t('intro'),
@@ -40,6 +42,26 @@ export async function GET() {
               max: OFFERS.brokerPlan.maxActiveProperties,
             }),
           },
+          {
+            path: '/para-imobiliarias',
+            label: t('nav.forAgencies'),
+            description: t('sections.brokers.forAgencies', {
+              plans: OFFERS.agencyPlans
+                .flatMap((plan) =>
+                  plan.priceCents === null
+                    ? []
+                    : [
+                        t('sections.brokers.agencyPlan', {
+                          name: t(`agencyPlans.${plan.key}`),
+                          price: formatBRL(plan.priceCents),
+                          max: plan.maxActiveProperties ?? 0,
+                          users: plan.maxUsers ?? 0,
+                        }),
+                      ],
+                )
+                .join('; '),
+            }),
+          },
         ],
         notes: [t('sections.brokers.media', { minBudget: formatBRL(MIN_DAILY_BUDGET_CENTS) })],
       },
@@ -49,7 +71,17 @@ export async function GET() {
           {
             path: '/anunciar-imovel',
             label: t('nav.list'),
-            description: t('sections.owners.list'),
+            description: t('sections.owners.list', {
+              shortDays: shortPack.days,
+              shortPrice: formatBRL(shortPack.priceCents),
+              longDays: longPack.days,
+              longPrice: formatBRL(longPack.priceCents),
+            }),
+          },
+          {
+            path: '/anunciar-imovel/corretor',
+            label: t('nav.ownerBroker'),
+            description: t('sections.owners.withBroker'),
           },
         ],
       },

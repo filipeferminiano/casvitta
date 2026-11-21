@@ -1,0 +1,351 @@
+import {
+  AppPreviewFrame,
+  AudienceTag,
+  Avatar,
+  CheckList,
+  FeatureCard,
+  NumberedSteps,
+  PlanComparisonTable,
+  UsageMeter,
+  type AppPreviewNavItem,
+  type ComparisonValue,
+  type FaqItem,
+} from '@casvitta/ui';
+import { Contact, House, LayoutGrid, Megaphone, Target, UserCheck, Users } from 'lucide-react';
+import { useTranslations } from 'next-intl';
+
+import { OFFERS, type AgencyPlan } from '@/config/site';
+import { formatBRL } from '@/lib/format';
+
+import { AgencyDemoForm } from './AgencyDemoForm';
+import {
+  AGENCY_ACTIVITY,
+  AGENCY_FILTERS,
+  AGENCY_PORTAL_LISTINGS,
+  AGENCY_PROPERTIES,
+  AGENCY_USAGE,
+  DEMO_AGENCY,
+} from './preview-data';
+import {
+  CreciFooter,
+  ListingMini,
+  PreviewFigure,
+  PreviewStatusPill,
+  formatPreviewPrice,
+} from './previews';
+import {
+  AudienceJsonLd,
+  CONTAINER,
+  FaqSection,
+  PreviewNote,
+  Section,
+  SectionHeading,
+  TagLegend,
+  linkButtonClass,
+} from './shared';
+
+const FAQ_KEYS = ['choose', 'limit', 'users', 'highlight', 'migration', 'guarantee'] as const;
+
+const planOf = (key: AgencyPlan['key']) => OFFERS.agencyPlans.find((p) => p.key === key);
+
+export function useAgenciesFaq(): FaqItem[] {
+  const t = useTranslations('audience.agencies.faq');
+  const essencial = planOf('essencial');
+  const equipe = planOf('equipe');
+  const values = {
+    essencialMax: essencial?.maxActiveProperties ?? 0,
+    essencialUsers: essencial?.maxUsers ?? 0,
+    equipeMax: equipe?.maxActiveProperties ?? 0,
+    equipeUsers: equipe?.maxUsers ?? 0,
+  };
+  return FAQ_KEYS.map((key) => ({
+    key,
+    question: t(`${key}.q`),
+    answer: t(`${key}.a`, values),
+  }));
+}
+
+/** Landing page for agencies (mockup landing-pages/03): team plans + demo form. */
+export function AgenciesScreen() {
+  const t = useTranslations('audience.agencies');
+  const tTags = useTranslations('audience.tags');
+  const tCommon = useTranslations('audience.common');
+  const tPreview = useTranslations('audience.preview');
+  const tNav = useTranslations('audience.preview.nav');
+  const faq = useAgenciesFaq();
+  const plans = OFFERS.agencyPlans;
+  // The picture's meter uses the smallest priced plan's limit ("148 de 200").
+  const meterMax = planOf('essencial')?.maxActiveProperties ?? AGENCY_USAGE.max;
+
+  const nav = (active: string): AppPreviewNavItem[] =>
+    [
+      { key: 'properties', label: tNav('properties'), icon: <House strokeWidth={1.6} /> },
+      { key: 'contacts', label: tNav('contacts'), icon: <Contact strokeWidth={1.6} /> },
+      { key: 'opportunities', label: tNav('opportunities'), icon: <Target strokeWidth={1.6} /> },
+      { key: 'team', label: tNav('team'), icon: <Users strokeWidth={1.6} /> },
+      { key: 'portal', label: tNav('portal'), icon: <Megaphone strokeWidth={1.6} /> },
+    ].map((item) => ({ ...item, active: item.key === active }));
+  const usage = (
+    <UsageMeter
+      label={tPreview('usage')}
+      value={AGENCY_USAGE.value}
+      max={meterMax}
+      valueLabel={tPreview('usageValue', { value: AGENCY_USAGE.value, max: meterMax })}
+    />
+  );
+  const limit = (n: number | null) =>
+    n === null ? tCommon('asNeeded') : tCommon('upTo', { count: n });
+  const count = (n: number | null) => (n === null ? tCommon('asNeeded') : String(n));
+  const row = (key: string, values: ComparisonValue[]) => ({
+    key,
+    label: t(`plans.rows.${key}`),
+    values,
+  });
+  const all = (value: ComparisonValue) => plans.map(() => value);
+  const demoLink = (variant: 'primary' | 'secondary', label = t('plans.cta')) => (
+    <a href="#demonstracao" className={linkButtonClass(variant)}>
+      {label}
+    </a>
+  );
+
+  return (
+    <>
+      <AudienceJsonLd
+        path="/para-imobiliarias"
+        homeLabel={tCommon('home')}
+        pageLabel={t('meta.breadcrumb')}
+        faq={faq}
+        offers={plans.flatMap((plan) =>
+          plan.priceCents === null
+            ? []
+            : [
+                {
+                  name: t('offerName', { name: t(`plans.names.${plan.key}`) }),
+                  priceCents: plan.priceCents,
+                  monthly: true,
+                },
+              ],
+        )}
+      />
+
+      <div
+        className={`${CONTAINER} grid grid-cols-1 gap-10 py-10 md:py-16 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)] lg:items-center`}
+      >
+        <div className="flex flex-col gap-5">
+          <span className="inline-flex self-start rounded-pill bg-fg px-2.5 py-1 type-caption font-semibold text-white">
+            {t('tag')}
+          </span>
+          <h1 className="type-display-xl text-balance">{t('title')}</h1>
+          <p className="max-w-[60ch] type-body text-fg-strong">{t('subtitle')}</p>
+          <div className="flex flex-wrap gap-3">
+            {demoLink('primary', t('ctaDemo'))}
+            <a href="#planos" className={linkButtonClass('secondary')}>
+              {t('ctaPlans')}
+            </a>
+          </div>
+        </div>
+        <AppPreviewFrame
+          label={t('hero.label')}
+          url={tPreview('url')}
+          title={t('hero.title')}
+          userName={DEMO_AGENCY.coordinator}
+          nav={nav('properties')}
+          note={<PreviewNote />}
+        >
+          {usage}
+          <ul className="flex flex-wrap gap-1">
+            <li className="rounded-pill border border-action bg-action-subtle px-2 py-0.5 font-semibold text-action-hover">
+              {t('hero.all', { count: AGENCY_USAGE.value })}
+            </li>
+            {AGENCY_FILTERS.map((f) => (
+              <li key={f.key} className="rounded-pill border border-line px-2 py-0.5">
+                {f.label}
+              </li>
+            ))}
+          </ul>
+          <ul className="flex flex-col divide-y divide-line rounded-control border border-line">
+            {AGENCY_PROPERTIES.map((p) => (
+              <li key={p.key} className="flex items-center gap-2 p-2">
+                <span className="size-8 shrink-0 rounded-chip bg-ink-100" />
+                <span className="min-w-0 flex-1">
+                  <span className="block truncate font-semibold">{p.title}</span>
+                  <span className="block truncate text-fg-muted">
+                    {p.transaction} · {t('hero.opportunities', { count: p.opportunities })}
+                  </span>
+                </span>
+                <span className="font-mono font-semibold tabular">
+                  {formatPreviewPrice(p.priceCents)}
+                </span>
+                <PreviewStatusPill status={p.status} />
+                <Avatar name={p.owner} size={32} className="size-6 text-[10px]" />
+              </li>
+            ))}
+          </ul>
+        </AppPreviewFrame>
+      </div>
+
+      <Section tone="panel" labelledBy="ops-title" className="flex flex-col gap-8">
+        <SectionHeading id="ops-title" eyebrow={t('ops.eyebrow')} title={t('ops.title')} />
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+          {(
+            [
+              ['centralized', LayoutGrid],
+              ['owner', UserCheck],
+              ['tracked', Target],
+            ] as const
+          ).map(([key, Icon]) => (
+            <FeatureCard
+              key={key}
+              icon={<Icon strokeWidth={1.6} />}
+              title={t(`ops.${key}.title`)}
+              description={t(`ops.${key}.description`)}
+            />
+          ))}
+        </div>
+      </Section>
+
+      <Section
+        labelledBy="team-title"
+        className="grid grid-cols-1 gap-8 lg:grid-cols-2 lg:items-center"
+      >
+        <div className="flex flex-col gap-6">
+          <SectionHeading id="team-title" eyebrow={t('team.eyebrow')} title={t('team.title')} />
+          <CheckList items={[0, 1, 2, 3].map((i) => t(`team.points.${i}`))} />
+        </div>
+        <AppPreviewFrame
+          label={t('team.label')}
+          url={tPreview('url')}
+          title={t('team.screen')}
+          userName={DEMO_AGENCY.coordinator}
+          nav={nav('team')}
+          note={<PreviewNote />}
+        >
+          <ol className="flex flex-col divide-y divide-line">
+            {AGENCY_ACTIVITY.map((item) => (
+              <li key={item.key} className="flex gap-3 py-2">
+                <span className="w-20 shrink-0 font-mono text-fg-muted tabular">{item.when}</span>
+                <span>
+                  <span className="font-semibold">{item.who}</span> {item.text}
+                </span>
+              </li>
+            ))}
+          </ol>
+        </AppPreviewFrame>
+      </Section>
+
+      <Section tone="panel" labelledBy="portal-title" className="flex flex-col gap-8">
+        <div className="grid grid-cols-1 gap-8 lg:grid-cols-2 lg:items-center">
+          <div className="flex flex-col gap-4">
+            <AudienceTag kind="portal" className="self-start">
+              {tTags('portal')}
+            </AudienceTag>
+            <h2 id="portal-title" className="type-display-l text-balance">
+              {t('portal.title')}
+            </h2>
+            <p className="type-body text-fg-strong">{t('portal.body')}</p>
+            <p className="type-caption">{t('portal.note')}</p>
+          </div>
+          <PreviewFigure label={t('portal.label')} note={<PreviewNote />}>
+            <div className="flex flex-col gap-3">
+              <div className="grid grid-cols-2 gap-3">
+                {AGENCY_PORTAL_LISTINGS.map((l) => (
+                  <ListingMini
+                    key={l.key}
+                    highlight={l.highlight}
+                    kicker={l.kicker}
+                    price={formatBRL(l.priceCents)}
+                    specs={l.specs}
+                    footer={<CreciFooter name={DEMO_AGENCY.name} creci={DEMO_AGENCY.creci} />}
+                  />
+                ))}
+              </div>
+              {usage}
+            </div>
+          </PreviewFigure>
+        </div>
+        <TagLegend />
+      </Section>
+
+      <Section id="planos" labelledBy="plans-title" className="flex flex-col gap-8">
+        <SectionHeading
+          id="plans-title"
+          eyebrow={t('plans.eyebrow')}
+          title={t('plans.title')}
+          subtitle={t('plans.subtitle')}
+        />
+        <PlanComparisonTable
+          caption={t('plans.caption')}
+          featureHeader={tCommon('feature')}
+          includedLabel={tCommon('included')}
+          plans={plans.map((plan) => ({
+            key: plan.key,
+            name: t(`plans.names.${plan.key}`),
+            price: plan.priceCents === null ? tCommon('onQuote') : formatBRL(plan.priceCents),
+            period: plan.priceCents === null ? undefined : tCommon('perMonth'),
+            highlighted: plan.key === 'equipe',
+            action:
+              plan.priceCents === null
+                ? demoLink('secondary', t('plans.ctaTalk'))
+                : demoLink(plan.key === 'equipe' ? 'primary' : 'secondary'),
+          }))}
+          rows={[
+            row(
+              'properties',
+              plans.map((p) => limit(p.maxActiveProperties)),
+            ),
+            row(
+              'users',
+              plans.map((p) => count(p.maxUsers)),
+            ),
+            row('portfolio', all(true)),
+            row('contacts', all(true)),
+            row('team', all(true)),
+            row('portal', all(true)),
+            row('highlight', all(tCommon('apart'))),
+            row('migration', all(tCommon('quoted'))),
+          ]}
+        />
+      </Section>
+
+      <Section tone="panel" labelledBy="migration-title" className="flex flex-col gap-8">
+        <div className="flex flex-col gap-3">
+          <span className="self-start rounded-chip border border-line px-1.5 py-0.5 font-mono text-[12px] tracking-[0.08em] text-fg-muted uppercase">
+            {t('migration.eyebrow')}
+          </span>
+          <SectionHeading
+            id="migration-title"
+            title={t('migration.title')}
+            subtitle={t('migration.body')}
+          />
+        </div>
+        <NumberedSteps
+          steps={(['assess', 'quote', 'import'] as const).map((key) => ({
+            key,
+            title: t(`migration.${key}.title`),
+            description: t(`migration.${key}.description`),
+          }))}
+        />
+        <p className="type-caption">{t('migration.note')}</p>
+      </Section>
+
+      <FaqSection items={faq} />
+
+      <Section
+        id="demonstracao"
+        labelledBy="demo-title"
+        className="grid grid-cols-1 gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)] lg:items-start"
+      >
+        <div className="flex flex-col gap-6">
+          <SectionHeading
+            id="demo-title"
+            eyebrow={t('demo.eyebrow')}
+            title={t('demo.title')}
+            subtitle={t('demo.subtitle')}
+          />
+          <CheckList items={[0, 1, 2].map((i) => t(`demo.points.${i}`))} />
+        </div>
+        <AgencyDemoForm />
+      </Section>
+    </>
+  );
+}

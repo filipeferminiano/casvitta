@@ -51,3 +51,16 @@ Compared in `docs/mockups/_impl/51-*.png` … `61-*.png`.
 - **Sign-up and sign-in by email link (55, /entrar).** The mockups ask for a phone number and a 6-digit SMS code. The account step now asks for name and email and sends a single-use link (15 minutes) through Resend's free tier; SMS needs a paid provider. The phone stays in the signup as the WhatsApp step. Demo mode shows "Abrir o link (demonstração)" instead of sending an email. Product decision, 20/11/2026.
 - **Link confirmation page.** `/entrar/confirmar` has no mockup: it confirms the link from the URL fragment, then continues the signup (`/cadastro/creci`) or opens the app (`app.` host, via a one-time handoff code).
 - **"Sair".** The side nav and Configurações gain a sign-out button (not in the mockups).
+
+## Audience landing pages (landing-pages/01–03, Nov 2026)
+
+Compared in `docs/mockups/_impl/landing-pages/` (`pnpm screens:capture landing-pages`).
+
+- **"Demonstrativo" moves from the header to the pictures.** The mockups show the badge in the header to mark the whole board; the pages instead put it under every product picture and listing example ("Demonstrativo · Exemplo ilustrativo"), because those carry example numbers (DESIGN_SYSTEM §5). Each picture is one `role="img"` with an "Exemplo ilustrativo: …" label.
+- **Owner start form has a second step.** The mockup form only asks finalidade, tipo and cidade; an interest signup needs a name, a WhatsApp and the contact consent (CLAUDE.md §4.8), so "Anunciar meu imóvel" opens a second step in the same card. Pack buttons ("Anunciar por 30/90 dias") open the same form with the period chosen. Nothing is charged or published; the confirmation says "Recebemos. Vamos te chamar no WhatsApp para concluir o anúncio." The broker-matching request (mockup 56) moved to `/anunciar-imovel/corretor`, linked as "Prefiro a ajuda de um corretor".
+- **Forms start empty.** "São Paulo, SP" (owner city), "6–15" (team size) and the other sample values become placeholders or no selection, as on 56–59.
+- **Header.** Only these three pages swap the global nav for the audience switch and the page's own CTA ("Anunciar meu imóvel" → `#comece`, "Conhecer o plano" → `#plano`, "Agendar demonstração" → `#demonstracao`); on phones the menu button stays and the 3-tab row sits under the header. The footer is the existing `SiteFooter` (its "Imobiliárias" link now opens `/para-imobiliarias`), not the mockups' three-column footer.
+- **Numbered steps.** Owners "Como funciona" and agencies "Migração" use the shared `NumberedSteps` ("1", "2", "3" in the display face) instead of "01" in mono; the brokers flow keeps "01–04" with its small pictures.
+- **"Falar com a equipe" (Operação maior)** scrolls to the demo form instead of a separate contact path.
+- **Replaced pages.** `/para-corretores` (mockup 54: AI ads, the R$ 1.497 comparison and the Agency OS waitlist) is replaced by the brokers page; its `_impl/54` screenshot is removed. The old Agency OS waitlist (`agency` signups) is gone; existing rows stay.
+
