@@ -14,8 +14,10 @@ import { useEffect, useRef, useState, type FormEvent } from 'react';
 
 import type { AddressSuggestionOut, ValuationOut } from '@/lib/data/market';
 import { api } from '@/lib/api';
-import { formatBRLShort } from '@/lib/format';
+import { formatBRL, formatBRLShort } from '@/lib/format';
 import { formatPriceM2 } from '@/lib/market-format';
+
+import { FinancingSimulator } from '@/screens/marketplace/ListingIslands';
 
 import { AlertForm } from './AlertForm';
 
@@ -28,6 +30,7 @@ type Status = 'idle' | 'loading' | 'suggestions' | 'not_found' | 'outside_covera
  */
 export function ValuationTool({ city, initial }: { city: string; initial?: Selected | null }) {
   const t = useTranslations('market.valuation.tool');
+  const tSim = useTranslations('market.simulator');
   const [query, setQuery] = useState(initial?.label ?? '');
   const [suggestions, setSuggestions] = useState<AddressSuggestionOut[]>([]);
   const [status, setStatus] = useState<Status>('idle');
@@ -264,6 +267,21 @@ export function ValuationTool({ city, initial }: { city: string; initial?: Selec
               }
               disclaimer={t('disclaimer')}
             />
+            {result.center_cents ? (
+              <section className="flex max-w-3xl flex-col gap-2">
+                {/* Keyed by the estimate so a new valuation restarts the simulation. */}
+                <FinancingSimulator
+                  key={result.center_cents}
+                  priceCents={result.center_cents}
+                  editablePrice
+                  itemId="valuation"
+                  title={tSim('valuationTitle')}
+                />
+                <p className="type-caption">
+                  {tSim('valuationStartsAt', { value: formatBRL(result.center_cents) })}
+                </p>
+              </section>
+            ) : null}
             <section id="avaliacao-corretor" aria-label={t('leadTitle')} className="max-w-xl">
               <AlertForm
                 variant="valuation"

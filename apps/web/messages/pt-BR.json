@@ -2567,6 +2567,15 @@
         "otherRent": "Imóveis para alugar {where}",
         "prices": "Preço do m² do bairro"
       }
+    },
+    "simulator": {
+      "title": "Simule o financiamento de um imóvel {where}",
+      "startsAt": "Começa no valor mediano das vendas {where} ({value}). Troque pelo valor do imóvel que você quer.",
+      "valuationTitle": "Simule o financiamento com este valor",
+      "valuationStartsAt": "Começa no meio da faixa estimada ({value}). Troque pelo valor que você quer.",
+      "thisStreet": "nesta rua",
+      "thisBuilding": "neste prédio",
+      "inCity": "em {city}"
     }
   },
   "backoffice": {

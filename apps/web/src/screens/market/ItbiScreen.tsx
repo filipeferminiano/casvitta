@@ -8,6 +8,7 @@ import { formatBRL } from '@/lib/format';
 import { AlertForm } from './AlertForm';
 import { ItbiCalculator } from './ItbiCalculator';
 import { JsonLd, breadcrumbList, webApplication } from './MarketJsonLd';
+import { MarketSimulator } from './MarketSimulator';
 import { ContinueLinks, MarketBreadcrumbs, SourceLine, linkClass, pageClass } from './MarketParts';
 
 export const PREFEITURA_ITBI_URL =
@@ -132,6 +133,11 @@ export async function ItbiScreen({ page }: { page: ItbiPage }) {
         </section>
       ) : null}
 
+      <MarketSimulator
+        medianValueCents={page.city_row?.median_value_cents}
+        where={tMarket('simulator.inCity', { city: page.city.name })}
+        itemId={`itbi-${page.city.slug}`}
+      />
       <section aria-labelledby="perguntas" className="flex max-w-[65ch] flex-col gap-5">
         <h2 id="perguntas" className="sr-only">
           {t('faq.title')}

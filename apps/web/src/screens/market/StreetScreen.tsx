@@ -8,6 +8,7 @@ import { formatPriceM2 } from '@/lib/market-format';
 
 import { AlertForm } from './AlertForm';
 import { JsonLd, breadcrumbList, dataset, place } from './MarketJsonLd';
+import { MarketSimulator } from './MarketSimulator';
 import {
   ContinueLinks,
   MarketBreadcrumbs,
@@ -190,6 +191,13 @@ export async function StreetScreen({ page }: { page: StreetPage }) {
         </section>
       ) : null}
 
+      {priced && page.gate.passes ? (
+        <MarketSimulator
+          medianValueCents={page.stats?.median_value_cents}
+          where={tMarket('simulator.thisStreet')}
+          itemId={`rua-${page.street.slug}`}
+        />
+      ) : null}
       <section aria-label={tMarket('alert.street.title', { name })} className="max-w-xl">
         <AlertForm
           variant="street"

@@ -21,6 +21,7 @@ import {
 
 import { AlertForm } from './AlertForm';
 import { JsonLd, breadcrumbList, dataset, place } from './MarketJsonLd';
+import { MarketSimulator } from './MarketSimulator';
 import {
   ContinueLinks,
   FewData,
@@ -284,6 +285,13 @@ export async function NeighborhoodScreen({ page }: { page: NeighborhoodPage }) {
         />
       </div>
 
+      {priced ? (
+        <MarketSimulator
+          medianValueCents={stats?.median_value_cents}
+          where={inName}
+          itemId={`preco-m2-${page.neighborhood.slug}`}
+        />
+      ) : null}
       <section aria-label={tMarket('alert.neighborhood.title', { inName })} className="max-w-xl">
         <AlertForm
           variant="neighborhood"
