@@ -36,6 +36,7 @@ export {
 } from './components/States.tsx';
 export { StatusPill, type StatusPillProps } from './components/StatusPill.tsx';
 export { Switch, type SwitchProps } from './components/Switch.tsx';
+export { NavigationMenu } from './components/NavigationMenu.tsx';
 export { Tabs, TabsContent, TabsList, TabsTrigger } from './components/Tabs.tsx';
 export { FunnelBars, type FunnelBarsProps, type FunnelItem } from './components/FunnelBars.tsx';
 export { Panel, PanelList, type PanelProps } from './components/Panel.tsx';

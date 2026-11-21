@@ -4,6 +4,7 @@ import { getTranslations } from 'next-intl/server';
 
 import { COMPANY, whatsappLink } from '@/config/site';
 import { formatPhoneIntl } from '@/lib/format';
+import { SITE_MAP_PATH } from '@/lib/site-nav';
 
 import { TOOL_LINKS } from './tool-links';
 
@@ -36,6 +37,7 @@ const COLUMNS = [
     key: 'casvitta',
     links: [
       { key: 'about', href: '/sobre' },
+      { key: 'siteMap', href: SITE_MAP_PATH },
       { key: 'privacy', href: '/privacidade' },
       { key: 'terms', href: '/termos' },
       { key: 'contact', href: whatsappLink() },

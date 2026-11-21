@@ -33,6 +33,7 @@
     "proposals": "Propostas",
     "modulesGroup": "Módulos",
     "ads": "Anúncios",
+    "tools": "Ferramentas",
     "moduleStore": "Loja de módulos",
     "settings": "Configurações",
     "coreGroup": "Núcleo",
@@ -78,6 +79,11 @@
       "emptyTitle": "Nenhum anúncio ainda",
       "emptyDescription": "Escolha um imóvel, a IA escreve o anúncio com os dados dele e você aprova antes de publicar. O orçamento começa em R$ 20 por dia."
     },
+    "tools": {
+      "title": "Ferramentas",
+      "emptyTitle": "Preços por bairro em preparação",
+      "emptyDescription": "Os preços por bairro aparecem aqui assim que os dados da Prefeitura forem carregados. As calculadoras já funcionam."
+    },
     "moduleStore": {
       "title": "Loja de módulos",
       "emptyTitle": "Seus módulos aparecem aqui",
@@ -117,7 +123,8 @@
           "about": "Sobre",
           "privacy": "Privacidade e LGPD",
           "terms": "Termos de uso",
-          "contact": "Fale com a gente"
+          "contact": "Fale com a gente",
+          "siteMap": "Mapa do site"
         },
         "tools": {
           "title": "Preços e ferramentas"
@@ -197,6 +204,75 @@
       "itbiDescription": "Quanto o comprador paga de imposto na transferência do imóvel.",
       "simulate": "Simular financiamento",
       "simulateDescription": "Parcela pela SAC com entrada e FGTS. Simulação · não é aprovação."
+    },
+    "menus": {
+      "label": "Navegação do site",
+      "soon": "em breve",
+      "menus": {
+        "buy": "Comprar",
+        "rent": "Alugar",
+        "sell": "Vender",
+        "tools": "Ferramentas",
+        "pros": "Para profissionais"
+      },
+      "sections": {
+        "byType": "Por tipo",
+        "byHood": "Por bairro · São Paulo",
+        "beforeBuying": "Antes de comprar",
+        "beforeRenting": "Antes de alugar",
+        "yourProperty": "Seu imóvel",
+        "saleCosts": "Custos da venda",
+        "calculators": "Calculadoras",
+        "priceM2": "Preço do m² · São Paulo",
+        "byAddress": "Por endereço",
+        "forBrokers": "Para corretores",
+        "forCompanies": "Para empresas",
+        "customers": "Já é cliente?"
+      },
+      "notes": {
+        "buy": "Imóveis anunciados por corretores com CRECI. Enquanto não há anúncios reais publicados, a busca mostra anúncios demonstrativos.",
+        "rent": "Imóveis para alugar anunciados por corretores com CRECI.",
+        "sell": "Um corretor com CRECI da sua região cuida do anúncio, das visitas e da negociação.",
+        "tools": "Preços pagos de verdade, das guias de ITBI da Prefeitura de São Paulo. Estimativas não são laudo de avaliação.",
+        "pros": "Anúncio pronto por IA, WhatsApp que responde e agenda visitas."
+      },
+      "links": {
+        "sale": {
+          "apartments": "Apartamentos à venda",
+          "houses": "Casas à venda",
+          "all": "Todos os imóveis à venda"
+        },
+        "rent": {
+          "apartments": "Apartamentos para alugar",
+          "houses": "Casas para alugar",
+          "all": "Todos os imóveis para alugar"
+        },
+        "allHoods": "Ver todos os bairros",
+        "simulate": "Simular financiamento",
+        "income": "Quanto preciso ganhar",
+        "itbi": "Calcular ITBI",
+        "hoodPriceM2": "Preço do m² no bairro",
+        "listMine": "Anunciar meu imóvel",
+        "valuation": "Quanto vale meu imóvel",
+        "streetPrice": "Preço do m² na minha rua",
+        "buildingPrice": "Preço do meu prédio",
+        "itbiBuyerPays": "Calcular ITBI (pago por quem compra)",
+        "cityPriceM2": "Preço do m² em São Paulo",
+        "siteMap": "Mapa do site",
+        "brokerPlans": "Planos para corretores",
+        "agencies": "Imobiliárias",
+        "developers": "Incorporadoras",
+        "investors": "Investidores",
+        "signIn": "Entrar no Casvitta",
+        "popular": {
+          "twoBedrooms": "Apartamentos com 2 quartos {where}",
+          "fgts": "Aceita FGTS {where}",
+          "metro": "Perto do metrô {where}",
+          "pet": "Aceita pet para alugar {where}",
+          "rentApartments": "Apartamentos para alugar {where}",
+          "houses": "Casas à venda {where}"
+        }
+      }
     }
   },
   "landing": {
@@ -1233,6 +1309,26 @@
         "title": "Seus dados protegidos",
         "description": "Contato só com seu consentimento, conforme a LGPD."
       }
+    },
+    "links": {
+      "hoodsTitle": "Explore São Paulo por bairro",
+      "hoodsSubtitle": "Imóveis e preços pagos de verdade, bairro a bairro.",
+      "tabs": {
+        "sale": "Comprar",
+        "rent": "Alugar"
+      },
+      "card": {
+        "saleApartments": "Apartamentos à venda {where}",
+        "saleHouses": "Casas à venda {where}",
+        "rentApartments": "Apartamentos para alugar {where}",
+        "rentHouses": "Casas para alugar {where}",
+        "priceM2": "Preço do m² {where}",
+        "valuation": "Quanto vale um imóvel {where}"
+      },
+      "allHoods": "Ver todos os bairros",
+      "popularTitle": "Buscas populares",
+      "popularSubtitle": "Atalhos para os filtros mais usados.",
+      "allTools": "Todas as ferramentas"
     }
   },
   "search": {
@@ -3751,5 +3847,95 @@
     "expiredBody": "O prazo de 24 horas passou ou o pedido foi para outro corretor. Novos pedidos chegam por e-mail.",
     "invalidTitle": "Este link não vale",
     "invalidBody": "Confira se abriu o link inteiro do e-mail. Se continuar, responda ao e-mail que enviamos."
+  },
+  "siteMap": {
+    "metaTitle": "Mapa do site",
+    "metaDescription": "Todas as páginas do Casvitta por assunto: comprar, alugar, vender, preço do m² por bairro em São Paulo, calculadoras de ITBI e financiamento.",
+    "breadcrumb": "Mapa do site",
+    "home": "Início",
+    "title": "Mapa do site",
+    "intro": "Todas as páginas do Casvitta, por assunto. Os bairros aparecem aqui quando têm vendas suficientes para mostrar preço.",
+    "groups": {
+      "buy": "Comprar",
+      "rent": "Alugar",
+      "sell": "Vender",
+      "tools": "Ferramentas e preços",
+      "pros": "Para profissionais e Casvitta"
+    },
+    "cols": {
+      "byType": "Por tipo",
+      "byHood": "Por bairro",
+      "beforeBuying": "Antes de comprar",
+      "beforeRenting": "Antes de alugar",
+      "yourProperty": "Seu imóvel",
+      "valuationByHood": "Quanto vale, por bairro",
+      "calculators": "Calculadoras",
+      "priceM2": "Preço do m²",
+      "income": "Quanto preciso ganhar",
+      "byAddress": "Ruas e prédios",
+      "brokers": "Corretores",
+      "companies": "Empresas",
+      "casvitta": "Casvitta",
+      "legal": "Legal"
+    },
+    "links": {
+      "cityPriceM2": "São Paulo",
+      "streetsAndBuildings": "Ruas e prédios {where}",
+      "auction": "Imóveis de leilão",
+      "about": "Sobre",
+      "contact": "Fale com a gente",
+      "privacy": "Privacidade e LGPD",
+      "terms": "Termos de uso"
+    },
+    "noData": "Os preços por bairro aparecem aqui assim que os dados da Prefeitura forem carregados.",
+    "breadcrumbLabel": "Você está em"
+  },
+  "cityListings": {
+    "metaTitleSale": "Imóveis à venda em São Paulo por bairro",
+    "metaTitleRent": "Imóveis para alugar em São Paulo por bairro",
+    "metaDescription": "Escolha o bairro para ver imóveis anunciados por corretores com CRECI e quanto se pagou de verdade pelo m².",
+    "titleSale": "Imóveis à venda em São Paulo",
+    "titleRent": "Imóveis para alugar em São Paulo",
+    "intro": "Escolha o bairro. Cada um mostra os anúncios de corretores com CRECI e quanto se pagou de verdade pelo m².",
+    "home": "Início",
+    "see": "Ver imóveis {where}",
+    "priceM2": "Preço do m² {where}",
+    "sales": "{count, plural, one {# venda registrada} other {# vendas registradas}} em 12 meses",
+    "searchAll": "Buscar em toda São Paulo",
+    "switchToRent": "Ver imóveis para alugar",
+    "switchToSale": "Ver imóveis à venda",
+    "breadcrumbLabel": "Você está em"
+  },
+  "appTools": {
+    "title": "Ferramentas",
+    "subtitle": "Páginas públicas do Casvitta para você abrir ou mandar para seus clientes. Os números vêm das vendas registradas na Prefeitura de São Paulo.",
+    "open": "Abrir",
+    "share": "Enviar no WhatsApp",
+    "opensNewTab": "abre em nova aba",
+    "tools": {
+      "valuation": {
+        "title": "Quanto vale meu imóvel",
+        "description": "Faixa de valor a partir de vendas reais parecidas. Boa para a primeira conversa com um proprietário.",
+        "shareText": "Veja quanto vale o seu imóvel, com vendas reais registradas na Prefeitura: {url}"
+      },
+      "itbi": {
+        "title": "Calcular ITBI",
+        "description": "Quanto o comprador paga de imposto na transferência, com a parte financiada pelo SFH.",
+        "shareText": "Calcule o ITBI da compra em São Paulo: {url}"
+      },
+      "simulate": {
+        "title": "Simular financiamento",
+        "description": "Parcela pela SAC com entrada e FGTS. Simulação · não é aprovação.",
+        "shareText": "Simule a parcela do financiamento (simulação, não é aprovação): {url}"
+      },
+      "priceM2": {
+        "title": "Preço do m² em São Paulo",
+        "description": "Quanto se pagou de verdade pelo m² em cada bairro, nos últimos 12 meses.",
+        "shareText": "Preço do m² pago de verdade em São Paulo, bairro a bairro: {url}"
+      }
+    },
+    "hoodsTitle": "Preço do m² por bairro",
+    "hoodsSubtitle": "Para mandar junto com um imóvel do bairro.",
+    "hoodShareText": "Preço do m² pago de verdade {where}: {url}"
   }
 }
