@@ -1168,22 +1168,22 @@
       "title": "Você é…",
       "owner": {
         "title": "Proprietário",
-        "description": "Quer vender ou alugar? Um corretor credenciado da sua região cuida do anúncio, das visitas e da negociação.",
+        "description": "Quer vender ou alugar? Anuncie no portal Casvitta pelo período que escolher, sem mensalidade. Se preferir, um corretor credenciado cuida de tudo.",
         "cta": "Anunciar meu imóvel",
         "mobileTitle": "Sou proprietário",
-        "mobileDescription": "Vender ou alugar meu imóvel"
+        "mobileDescription": "Anunciar meu imóvel sem mensalidade"
       },
       "broker": {
         "title": "Corretor",
-        "description": "Anúncio pronto por IA, WhatsApp que responde e agenda as visitas, sua página e a de cada imóvel.",
-        "cta": "Conhecer os planos",
+        "description": "Imóveis, contatos e oportunidades num só lugar, com publicação no portal Casvitta incluída no plano.",
+        "cta": "Conhecer o plano",
         "mobileTitle": "Sou corretor",
-        "mobileDescription": "Anúncios, WhatsApp e agenda"
+        "mobileDescription": "Software com portal incluído"
       },
       "agency": {
         "title": "Imobiliária",
-        "description": "Cada corretor da sua equipe com anúncios, leads e agenda num lugar. Gestão de equipe chega em breve.",
-        "cta": "Falar com a gente",
+        "description": "Carteira, equipe e oportunidades no mesmo lugar, com publicação no portal Casvitta incluída no plano.",
+        "cta": "Agendar demonstração",
         "mobileTitle": "Sou imobiliária",
         "mobileDescription": "Minha equipe num lugar só"
       },
@@ -1259,31 +1259,6 @@
   "plans": {
     "perMonth": "/mês",
     "upTo": "Até {count} imóveis",
-    "media": "Mídia paga por você: a partir de R$ 20 por dia por imóvel, só pelo que for gasto, até o teto que você definir.",
-    "essencial": {
-      "name": "Essencial",
-      "features": {
-        "0": "Sua landing page + uma por imóvel",
-        "1": "CRM, conversas, agenda, propostas e assistente de IA no WhatsApp"
-      },
-      "full": {
-        "0": "Sua landing page + uma por imóvel",
-        "1": "CRM, conversas, agenda, propostas",
-        "2": "Assistente de IA no WhatsApp"
-      }
-    },
-    "profissional": {
-      "name": "Profissional",
-      "features": {
-        "0": "Tudo do Essencial",
-        "1": "Gestão de Facebook e Instagram e relatório semanal por canal"
-      },
-      "full": {
-        "0": "Tudo do Essencial",
-        "1": "Gestão de Facebook e Instagram",
-        "2": "Relatório semanal por canal"
-      }
-    },
     "corretor": {
       "name": "Plano Corretor",
       "users": "{count, plural, one {# usuário} other {# usuários}}",
@@ -1311,8 +1286,6 @@
     "saveError": "Não conseguimos salvar agora. Tente de novo em alguns minutos.",
     "perMonth": "{amount}/mês",
     "plans": {
-      "essencial": "Essencial",
-      "profissional": "Profissional",
       "corretor": "Plano Corretor"
     },
     "startFirstTitle": "Comece pela sua conta",
@@ -1416,100 +1389,6 @@
     "successTitle": "Recebemos seu pedido",
     "successDescription": "Mandamos uma mensagem no seu WhatsApp. Responda SIM para confirmar.",
     "queuedDescription": "Seus dados estão guardados. Em breve mandamos uma mensagem no seu WhatsApp para você confirmar."
-  },
-  "forBrokers": {
-    "meta": {
-      "title": "Para corretores e imobiliárias · Casvitta",
-      "description": "A IA monta o anúncio, publica no marketplace, Instagram, Facebook e Google, atende no WhatsApp e marca a visita na sua agenda. Planos a partir de R$ 197/mês."
-    },
-    "eyebrow": "Para corretores e imobiliárias",
-    "title": "Mais visitas, sem precisar entender de anúncio.",
-    "subtitle": "A IA monta o anúncio, publica no marketplace, no Instagram, no Facebook e no Google, atende no WhatsApp e marca a visita na sua agenda. Você aprova e vê o custo de cada visita em reais.",
-    "ctaStart": "Começar com um imóvel",
-    "ctaWhatsApp": "Falar no WhatsApp",
-    "whatsappText": "Olá! Sou corretor e quero saber mais sobre a Casvitta.",
-    "week": {
-      "title": "Esta semana",
-      "contacts": "Pedidos de contato",
-      "visits": "Visitas agendadas",
-      "perVisit": "Por visita",
-      "assistant": "Assistente com IA",
-      "q": "Você pretende usar FGTS?",
-      "a": "Sim, uns 60 mil.",
-      "offer": "A Ana tem sábado às 10h. Confirmo?"
-    },
-    "how": {
-      "title": "Como funciona",
-      "property": {
-        "title": "Escolha o imóvel",
-        "description": "Com a autorização do proprietário."
-      },
-      "approve": {
-        "title": "Aprove o anúncio",
-        "description": "Escrito pela IA a partir da ficha."
-      },
-      "budget": {
-        "title": "Defina quanto por dia",
-        "description": "A partir de R$ 20, com teto."
-      },
-      "visits": {
-        "title": "Receba visitas",
-        "description": "A IA qualifica e agenda; você atende."
-      }
-    },
-    "included": {
-      "title": "O que vem no plano",
-      "ads": {
-        "title": "Anúncios",
-        "description": "Anúncio por IA no marketplace, Instagram, Facebook e Google."
-      },
-      "whatsapp": {
-        "title": "WhatsApp com IA",
-        "description": "Responde, qualifica e marca visitas."
-      },
-      "crm": {
-        "title": "CRM, agenda e propostas",
-        "description": "O lead chega com a conversa e o custo junto."
-      },
-      "landing": {
-        "title": "Landing pages",
-        "description": "Sua página e uma de cada imóvel, com link próprio."
-      },
-      "social": {
-        "title": "Redes sociais",
-        "description": "Posts de Facebook e Instagram sugeridos, você aprova."
-      }
-    },
-    "choosePlan": "Escolher {plan}",
-    "media": "<b>Mídia paga por você:</b> a partir de R$ 20 por dia por imóvel, só pelo que for gasto, até o teto que você definir.",
-    "separate": {
-      "title": "Contratando separado",
-      "items": "CRM {crm} + site {site} + atendimento com IA {ai} + social media {social} + gestor de tráfego {traffic}",
-      "perMonthMin": "/mês, no mínimo",
-      "savings": "{amount} a menos",
-      "savingsDetail": "por mês no Profissional, {pct}% de economia",
-      "footnote": "Preços públicos de referência, nov/2026. Mídia paga à parte nos dois casos."
-    },
-    "agencies": {
-      "title": "Para imobiliárias",
-      "description": "Hoje cada corretor da sua equipe usa o próprio Broker OS, com anúncios, leads e agenda. A gestão da equipe (distribuição de leads, carteira, repasses e produtividade por corretor) chega no Agency OS.",
-      "talk": "Falar com a gente",
-      "whatsappText": "Olá! Tenho uma imobiliária e quero saber mais sobre a Casvitta.",
-      "form": {
-        "open": "Quero ser avisado do Agency OS",
-        "title": "Aviso do Agency OS",
-        "description": "Avisamos pelo WhatsApp quando a gestão de equipe estiver pronta. Nada é cobrado.",
-        "company": "Imobiliária",
-        "companyError": "Escreva o nome da imobiliária.",
-        "brokers": "Quantos corretores (opcional)",
-        "brokersError": "Use um número entre 1 e 5.000.",
-        "city": "Cidade (opcional)",
-        "consent": "Autorizo a Casvitta a falar comigo pelo WhatsApp sobre o Agency OS.",
-        "submit": "Quero ser avisado",
-        "successTitle": "Pronto, você está na lista",
-        "successDescription": "Mandamos uma mensagem no seu WhatsApp. Responda SIM para confirmar o aviso."
-      }
-    }
   },
   "owner": {
     "meta": {
@@ -1816,11 +1695,13 @@
     "nav": {
       "buy": "Comprar imóvel",
       "rent": "Alugar imóvel",
-      "forBrokers": "Para corretores e imobiliárias",
+      "forBrokers": "Para corretores",
       "list": "Anunciar meu imóvel",
       "investors": "Investidores",
       "developers": "Incorporadoras",
-      "auction": "Imóveis de leilão"
+      "auction": "Imóveis de leilão",
+      "forAgencies": "Para imobiliárias",
+      "ownerBroker": "Anunciar com um corretor"
     },
     "sections": {
       "buyers": {
@@ -1832,11 +1713,14 @@
       "brokers": {
         "title": "Para corretores e imobiliárias",
         "forBrokers": "Software de gestão para corretor autônomo: imóveis, contatos e oportunidades num só lugar, com publicação no portal Casvitta incluída até o limite do plano. Plano Corretor: {price}/mês, {users, plural, one {# usuário} other {# usuários}}, até {max} imóveis ativos",
-        "media": "Mídia paga roda na conta de anúncios do próprio corretor no Meta e no Google, a partir de {minBudget} por dia por imóvel; a Casvitta não cobra nem revende mídia"
+        "media": "Mídia paga roda na conta de anúncios do próprio corretor no Meta e no Google, a partir de {minBudget} por dia por imóvel; a Casvitta não cobra nem revende mídia",
+        "forAgencies": "Sistema para imobiliárias: carteira, equipe, responsáveis e oportunidades, com publicação no portal Casvitta incluída até o limite do plano. Planos {plans} e Operação maior sob consulta; migração assistida com orçamento separado. Demonstração por vídeo",
+        "agencyPlan": "{name} {price}/mês (até {max} imóveis ativos, {users} usuários)"
       },
       "owners": {
         "title": "Para proprietários",
-        "list": "Anunciar um imóvel para venda ou locação: um corretor com CRECI da região faz a avaliação, anuncia e marca as visitas"
+        "list": "Anúncio do próprio proprietário, sem software e sem mensalidade: 1 imóvel no portal Casvitta por {shortDays} dias ({shortPrice}) ou {longDays} dias ({longPrice}), pagamento único, sem renovação automática. Os interessados falam direto com o proprietário",
+        "withBroker": "Para quem prefere ajuda: um corretor com CRECI da região faz a avaliação, anuncia e marca as visitas"
       },
       "interest": {
         "title": "Investidores, incorporadoras e leilão",
@@ -1858,6 +1742,11 @@
       "financing": "Valores de financiamento são sempre simulação (tabelas SAC e Price), não aprovação de crédito; seguros e taxas não estão incluídos.",
       "ai": "A IA não negocia preço nem condições, não promete aprovação de crédito e só usa fatos do cadastro do imóvel.",
       "contact": "Contato: WhatsApp {phone}."
+    },
+    "agencyPlans": {
+      "essencial": "Essencial",
+      "equipe": "Equipe",
+      "operacao": "Operação maior"
     }
   },
   "market": {
@@ -2723,6 +2612,560 @@
       "note": "Registro só de acréscimo: ninguém edita nem apaga. Ver dados pessoais completos pede um motivo.",
       "reason": "motivo: {reason}",
       "exported": "Auditoria exportada."
+    }
+  },
+  "audience": {
+    "switch": {
+      "label": "Páginas por público",
+      "owners": {
+        "label": "Para proprietários",
+        "short": "proprietários",
+        "cta": "Anunciar meu imóvel"
+      },
+      "brokers": {
+        "label": "Para corretores",
+        "short": "corretores",
+        "cta": "Conhecer o plano"
+      },
+      "agencies": {
+        "label": "Para imobiliárias",
+        "short": "imobiliárias",
+        "cta": "Agendar demonstração"
+      }
+    },
+    "tags": {
+      "software": "Software de gestão",
+      "portal": "Publicação no portal",
+      "highlight": "Destaque · opcional",
+      "legendLabel": "Como diferenciamos as três coisas",
+      "softwareMeaning": "ferramenta de trabalho diário, por assinatura",
+      "portalMeaning": "imóvel visível no portal Casvitta, na ordem normal da busca",
+      "highlightMeaning": "maior exposição dentro do portal, cobrada à parte"
+    },
+    "common": {
+      "home": "Início",
+      "perMonth": "por mês",
+      "oneOff": "pagamento único",
+      "faqEyebrow": "Dúvidas",
+      "faqTitle": "Perguntas frequentes",
+      "included": "Incluído",
+      "feature": "Recurso",
+      "onQuote": "Sob consulta",
+      "asNeeded": "conforme a necessidade",
+      "apart": "à parte",
+      "quoted": "orçamento separado",
+      "upTo": "até {count}"
+    },
+    "preview": {
+      "demo": "Demonstrativo",
+      "note": "Exemplo ilustrativo",
+      "url": "app.casvitta.com.br",
+      "nav": {
+        "properties": "Imóveis",
+        "contacts": "Contatos",
+        "opportunities": "Oportunidades",
+        "team": "Equipe",
+        "portal": "Portal"
+      },
+      "usage": "imóveis ativos no plano",
+      "usageValue": "{value} de {max}",
+      "ownerBadge": "Anúncio do proprietário",
+      "highlightBadge": "Destaque",
+      "photo": "Foto do imóvel",
+      "published": "Publicado",
+      "draft": "Rascunho",
+      "paused": "Pausado"
+    },
+    "owners": {
+      "meta": {
+        "title": "Anunciar imóvel sem mensalidade: 30 ou 90 dias | Casvitta",
+        "description": "Anuncie seu imóvel no portal Casvitta pelo período que escolher, com pagamento único e sem assinatura. Os interessados falam direto com você.",
+        "breadcrumb": "Anunciar imóvel"
+      },
+      "tag": "Para proprietários",
+      "title": "Seu imóvel anunciado, sem contratar um software.",
+      "subtitle": "Você escolhe por quanto tempo quer anunciar, publica o imóvel no portal Casvitta e recebe os contatos de quem se interessar. Sem mensalidade.",
+      "form": {
+        "title": "Comece seu anúncio",
+        "transaction": "Finalidade",
+        "sale": "Vender",
+        "rent": "Alugar",
+        "kind": "Tipo de imóvel",
+        "kinds": {
+          "apartment": "Apartamento",
+          "house": "Casa",
+          "land": "Terreno",
+          "commercial": "Comercial"
+        },
+        "city": "Cidade",
+        "cityPlaceholder": "Ex.: São Paulo, SP",
+        "cityError": "Informe a cidade do imóvel, por exemplo São Paulo, SP.",
+        "next": "Anunciar meu imóvel",
+        "priceNote": "A partir de {price} por {days} dias. Sem assinatura. Você revisa tudo antes de pagar.",
+        "period": "Período escolhido: {days} dias por {price}, pagamento único.",
+        "periodClear": "Remover",
+        "contactTitle": "Para quem mandamos a mensagem?",
+        "summary": "{transaction} · {kind} · {city}",
+        "edit": "Alterar",
+        "name": "Seu nome",
+        "whatsapp": "Seu WhatsApp",
+        "consent": "Aceito ser contatado pela Casvitta no WhatsApp sobre este anúncio, conforme a política de privacidade.",
+        "submit": "Continuar no WhatsApp",
+        "successTitle": "Recebemos.",
+        "successDescription": "Vamos te chamar no WhatsApp para concluir o anúncio.",
+        "successNote": "Nada foi cobrado e o anúncio ainda não foi publicado.",
+        "brokerLink": "Prefiro a ajuda de um corretor"
+      },
+      "heroCard": {
+        "label": "Exemplo ilustrativo: card de um anúncio do proprietário no portal Casvitta",
+        "photo": "Foto do imóvel · fachada ou sala",
+        "published": "Publicado no portal Casvitta"
+      },
+      "preview": {
+        "eyebrow": "Prévia",
+        "title": "Assim seu anúncio aparece no portal",
+        "subtitle": "Uma página organizada, com o que o interessado precisa saber antes de chamar você.",
+        "label": "Exemplo ilustrativo: página de um anúncio do proprietário no portal, com fotos, preço, custos mensais e botão de contato",
+        "mainPhoto": "Foto principal",
+        "photo2": "Foto 2",
+        "photo3": "Foto 3 · +9",
+        "sale": "Venda",
+        "condo": "Condomínio {amount}",
+        "iptu": "IPTU {amount}",
+        "contact": "Falar com o proprietário",
+        "until": "Anúncio no ar até {date}",
+        "points": {
+          "0": "Fotos, preço, custos mensais e descrição no mesmo lugar",
+          "1": "Botão de contato que leva o interessado direto até você",
+          "2": "Data de término visível para você, sem renovação automática"
+        },
+        "note": "Exemplo ilustrativo. O anúncio usa as fotos e as informações que você cadastrar."
+      },
+      "how": {
+        "eyebrow": "Como funciona",
+        "title": "Três passos, do cadastro aos contatos",
+        "register": {
+          "title": "Cadastre o imóvel",
+          "description": "Fotos, endereço, preço, metragem e custos mensais. Você salva e volta quando quiser."
+        },
+        "period": {
+          "title": "Escolha o período",
+          "description": "{shortDays} dias por {shortPrice} ou {longDays} dias por {longPrice}. Paga uma vez, sem mensalidade."
+        },
+        "publish": {
+          "title": "Publique e receba contatos",
+          "description": "O anúncio entra no portal Casvitta e os interessados falam direto com você."
+        }
+      },
+      "benefits": {
+        "eyebrow": "Benefícios",
+        "title": "Feito para quem quer anunciar um imóvel, não administrar uma carteira",
+        "simple": {
+          "title": "Contratação simples",
+          "description": "Sem plano, sem software para aprender. Você paga pelo anúncio e pelo período que escolher."
+        },
+        "organized": {
+          "title": "Apresentação organizada",
+          "description": "Fotos, informações e custos mensais em uma página clara, igual para todos os imóveis do portal."
+        },
+        "direct": {
+          "title": "Contato direto",
+          "description": "Quem se interessar fala com você. Nenhum intermediário entre você e o interessado."
+        },
+        "deadline": {
+          "title": "Prazo claro",
+          "description": "Você sabe quando o anúncio começa e quando termina. Renova só se quiser."
+        }
+      },
+      "packs": {
+        "eyebrow": "Pacotes",
+        "title": "Escolha por quanto tempo quer anunciar",
+        "subtitle": "Mesmo anúncio nos dois pacotes. Muda só o período.",
+        "name": "1 imóvel por {days} dias",
+        "items": {
+          "publication": "Publicação de 1 imóvel no portal Casvitta",
+          "transaction": "Venda ou aluguel",
+          "contacts": "Contatos dos interessados direto com você",
+          "noSoftware": "Sem assinatura de software",
+          "ends": "Encerra ao fim dos {days} dias"
+        },
+        "cta": "Anunciar por {days} dias",
+        "note": "Ao fim do período, o anúncio sai do ar. Você recebe um aviso antes e decide se quer renovar. Nada é cobrado sem a sua escolha."
+      },
+      "highlight": {
+        "title": "Destaque: mais exposição dentro do portal",
+        "body": "Com o destaque, seu anúncio aparece em posições de maior visibilidade nas buscas do portal Casvitta, com o selo “Destaque”. É opcional, cobrado à parte e contratado quando você quiser.",
+        "callout": "O destaque aumenta a exposição dentro do portal. Não garante contatos, venda ou locação, e não inclui campanhas no Google ou nas redes sociais.",
+        "label": "Exemplo ilustrativo: um anúncio com o selo Destaque ao lado de um anúncio sem destaque"
+      },
+      "faq": {
+        "software": {
+          "q": "Preciso contratar o software?",
+          "a": "Não. O anúncio avulso é para quem quer divulgar um imóvel sem assinar nada. Você paga pelo período escolhido e pronto."
+        },
+        "transaction": {
+          "q": "Posso anunciar para venda ou aluguel?",
+          "a": "Sim. Você escolhe a finalidade no cadastro. Cada anúncio é de um imóvel e de uma finalidade."
+        },
+        "ends": {
+          "q": "O que acontece quando o prazo termina?",
+          "a": "O anúncio sai do ar no último dia do período. Antes disso, avisamos você. Se quiser continuar, renova por mais 30 ou 90 dias."
+        },
+        "guarantee": {
+          "q": "A venda é garantida?",
+          "a": "Não. O pacote garante a publicação do anúncio pelo período contratado. Contatos, venda ou locação dependem do imóvel, do preço e do mercado."
+        },
+        "highlight": {
+          "q": "O destaque está incluído?",
+          "a": "Não. O destaque é opcional e cobrado à parte. Sem ele, seu imóvel aparece normalmente nas buscas do portal."
+        }
+      },
+      "final": {
+        "title": "Pronto para anunciar seu imóvel?",
+        "subtitle": "Cadastre em poucos minutos e publique por {shortDays} dias ou {longDays} dias.",
+        "cta": "Anunciar meu imóvel"
+      },
+      "offerName": "Anúncio de 1 imóvel por {days} dias no portal Casvitta"
+    },
+    "brokers": {
+      "meta": {
+        "title": "Software para corretor de imóveis com portal incluído | Casvitta",
+        "description": "Imóveis, contatos e oportunidades num só lugar, com publicação no portal Casvitta incluída. Plano Corretor por {price}/mês, até {max} imóveis ativos.",
+        "breadcrumb": "Para corretores"
+      },
+      "tag": "Para corretores autônomos",
+      "title": "Organize sua carteira. Publique seus imóveis. Cuide de cada oportunidade.",
+      "subtitle": "Um software para o seu dia a dia: imóveis, contatos e atendimentos no mesmo lugar. A publicação no portal Casvitta já vem no plano.",
+      "ctaPlan": "Conhecer o plano",
+      "ctaHow": "Ver como funciona",
+      "summary": "{price}/mês · {users, plural, one {# usuário} other {# usuários}} · até {max} imóveis ativos",
+      "hero": {
+        "label": "Exemplo ilustrativo: lista de imóveis no software, com o uso do plano e os retornos do dia",
+        "title": "Meus imóveis",
+        "today": "Retornos de hoje"
+      },
+      "pains": {
+        "eyebrow": "O dia a dia",
+        "title": "Parece familiar?",
+        "scattered": {
+          "title": "Informações espalhadas",
+          "description": "Fotos numa pasta, valores numa planilha, conversas no celular. Cada atualização vira uma caça."
+        },
+        "missed": {
+          "title": "Retornos que escapam",
+          "description": "O interessado pediu uma visita na terça e ninguém lembrou de ligar de volta."
+        },
+        "repeated": {
+          "title": "Trabalho repetido",
+          "description": "Mudou o preço? Lá vai você atualizar o mesmo imóvel em vários lugares."
+        }
+      },
+      "how": {
+        "eyebrow": "Como funciona",
+        "title": "Do cadastro ao atendimento, no mesmo fluxo",
+        "label": "Exemplo ilustrativo",
+        "register": {
+          "title": "Cadastre o imóvel",
+          "description": "Uma ficha com fotos, valores e características."
+        },
+        "publish": {
+          "title": "Publique no portal",
+          "description": "Um botão coloca o imóvel no portal Casvitta.",
+          "toggle": "Publicar no portal Casvitta"
+        },
+        "contacts": {
+          "title": "Organize os contatos",
+          "description": "Cada interessado ligado ao imóvel certo."
+        },
+        "follow": {
+          "title": "Acompanhe o atendimento",
+          "description": "Veja em que etapa está cada oportunidade."
+        },
+        "value": "Valor",
+        "area": "Área",
+        "photos": "Fotos"
+      },
+      "software": {
+        "eyebrow": "O software",
+        "title": "Ferramentas para a sua rotina, não só para anunciar",
+        "record": {
+          "title": "Uma ficha por imóvel, com tudo",
+          "description": "Fotos, valores, custos mensais e características num só lugar, com notas que só você vê.",
+          "example": "Exemplo: atualize o preço uma vez e o anúncio no portal acompanha.",
+          "label": "Exemplo ilustrativo: ficha de um imóvel com fotos, valores e uma nota interna"
+        },
+        "history": {
+          "title": "O histórico de cada contato",
+          "description": "Cada conversa e visita fica registrada, ligada ao imóvel de interesse.",
+          "example": "Exemplo: antes de ligar, você relê o que a Marina perguntou na semana passada.",
+          "label": "Exemplo ilustrativo: histórico de uma interessada, com datas e o imóvel de interesse"
+        },
+        "next": {
+          "title": "Próximos passos com data",
+          "description": "Você anota o que precisa fazer e quando. A lista do dia mostra o que não pode esperar.",
+          "example": "Exemplo: “ligar para Marina hoje às 10h sobre a proposta”.",
+          "label": "Exemplo ilustrativo: lista de próximos passos com dia e horário",
+          "screen": "Próximos passos"
+        },
+        "stages": {
+          "title": "Oportunidades por etapa",
+          "description": "Veja quem está em conversa, quem já visitou e quem está perto de uma proposta.",
+          "example": "Exemplo: arraste a Júlia de “Visita” para “Proposta” quando ela fizer a oferta.",
+          "label": "Exemplo ilustrativo: oportunidades organizadas em colunas por etapa",
+          "screen": "Oportunidades"
+        },
+        "fields": {
+          "value": "Valor",
+          "condo": "Condomínio",
+          "area": "Área",
+          "parking": "Vagas",
+          "photos": "Fotos ({count})"
+        }
+      },
+      "portal": {
+        "title": "Seu plano também inclui publicação no portal Casvitta",
+        "body": "Todo imóvel ativo no seu plano pode ser publicado no portal, sem custo adicional, até o limite de {max} imóveis. Cada anúncio mostra seu nome e seu CRECI.",
+        "points": {
+          "included": "Publicação incluída na assinatura",
+          "limit": "Até {max} imóveis ativos ao mesmo tempo",
+          "organized": "Os contatos chegam organizados no software"
+        },
+        "note": "Publicação incluída não significa posição privilegiada na busca. Destaques são opcionais e cobrados à parte.",
+        "label": "Exemplo ilustrativo: dois anúncios do corretor no portal, com nome e CRECI, e o uso do plano"
+      },
+      "plan": {
+        "eyebrow": "Plano",
+        "title": "Um plano, preço claro",
+        "name": "Plano Corretor",
+        "includes": "Inclui",
+        "excludes": "Não inclui",
+        "included": {
+          "users": "{count, plural, one {# usuário} other {# usuários}}",
+          "properties": "Até {count} imóveis ativos",
+          "register": "Cadastro e organização de imóveis",
+          "contacts": "Organização de contatos e acompanhamento de oportunidades",
+          "portal": "Publicação no portal Casvitta, dentro do limite do plano"
+        },
+        "excluded": {
+          "highlight": "Destaques no portal: opcionais, cobrados à parte",
+          "position": "Posição privilegiada na busca",
+          "campaigns": "Campanhas no Google ou nas redes sociais"
+        },
+        "cta": "Começar com a Casvitta",
+        "note": "Cobrança mensal. Cancele quando quiser: o acesso continua até o fim do período pago."
+      },
+      "compare": {
+        "eyebrow": "Qual é para você?",
+        "title": "Anúncio avulso ou assinatura",
+        "oneOff": {
+          "title": "Anúncio avulso",
+          "subtitle": "Para uma necessidade pontual",
+          "items": {
+            "period": "1 imóvel por {shortDays} ou {longDays} dias",
+            "price": "A partir de {price}, pagamento único",
+            "noSoftware": "Sem software de gestão"
+          },
+          "link": "Ver anúncio avulso"
+        },
+        "subscription": {
+          "title": "Assinatura Corretor",
+          "subtitle": "Para uma rotina profissional",
+          "items": {
+            "properties": "Até {max} imóveis ativos",
+            "software": "Software de gestão de imóveis e contatos",
+            "portal": "Publicação no portal incluída"
+          },
+          "link": "Ver o plano"
+        }
+      },
+      "faq": {
+        "cost": {
+          "q": "A publicação tem custo adicional?",
+          "a": "Não. A publicação no portal Casvitta está incluída na assinatura, até o limite de {max} imóveis ativos."
+        },
+        "limit": {
+          "q": "Quantos imóveis posso manter ativos?",
+          "a": "Até {max} ao mesmo tempo. Imóveis vendidos, alugados ou pausados não contam no limite."
+        },
+        "highlight": {
+          "q": "O destaque está incluído?",
+          "a": "Não. Destaques são opcionais e cobrados à parte, por imóvel e período."
+        },
+        "sources": {
+          "q": "Preciso receber contatos do portal para usar o software?",
+          "a": "Não. Você pode usar o software para organizar imóveis e contatos de qualquer origem: indicação, placa, redes sociais ou o portal."
+        },
+        "cancel": {
+          "q": "O que acontece com as publicações se eu cancelar?",
+          "a": "O acesso ao software e a publicação vinculada ao plano terminam ao fim do período pago. Até lá, tudo continua funcionando."
+        }
+      },
+      "final": {
+        "title": "Sua carteira organizada, seus imóveis no portal.",
+        "subtitle": "{price}/mês, {users, plural, one {# usuário} other {# usuários}}, até {max} imóveis ativos.",
+        "cta": "Começar com a Casvitta"
+      },
+      "offerName": "Plano Corretor: software de gestão com publicação no portal Casvitta"
+    },
+    "agencies": {
+      "meta": {
+        "title": "Sistema para imobiliárias com portal incluído | Casvitta",
+        "description": "Carteira de imóveis, equipe e oportunidades no mesmo lugar, com publicação no portal Casvitta incluída no plano. Agende uma demonstração.",
+        "breadcrumb": "Para imobiliárias"
+      },
+      "tag": "Para imobiliárias",
+      "title": "Sua equipe e sua carteira de imóveis no mesmo lugar.",
+      "subtitle": "Toda a carteira, quem cuida de cada imóvel e cada oportunidade em andamento, visíveis para a equipe. Publicação no portal Casvitta incluída no plano.",
+      "ctaDemo": "Agendar demonstração",
+      "ctaPlans": "Ver planos",
+      "hero": {
+        "label": "Exemplo ilustrativo: carteira da imobiliária com filtro por responsável e o uso do plano",
+        "title": "Carteira da imobiliária",
+        "all": "Toda a carteira · {count}",
+        "opportunities": "{count, plural, =0 {sem oportunidades} one {# oportunidade} other {# oportunidades}}"
+      },
+      "ops": {
+        "eyebrow": "Para a operação",
+        "title": "Menos tempo procurando informação, mais tempo atendendo",
+        "centralized": {
+          "title": "Informações centralizadas",
+          "description": "Imóveis, fotos, valores e contatos num só cadastro, usado por todos. Sem planilhas paralelas."
+        },
+        "owner": {
+          "title": "Responsável claro",
+          "description": "Cada imóvel e cada oportunidade têm um responsável. Todo mundo sabe quem cuida do quê."
+        },
+        "tracked": {
+          "title": "Oportunidades acompanhadas",
+          "description": "Veja em que etapa está cada atendimento e o que está parado há dias."
+        }
+      },
+      "team": {
+        "eyebrow": "Trabalho em equipe",
+        "title": "A equipe muda de turno. O atendimento continua.",
+        "points": {
+          "0": "A mesma carteira para todos, com filtro por responsável",
+          "1": "Histórico do atendimento fica no contato, não no celular de quem atendeu",
+          "2": "Troca de responsável sem perder o que já foi conversado",
+          "3": "Visão por responsável para quem coordena a equipe"
+        },
+        "label": "Exemplo ilustrativo: atividade recente da equipe, com horário e responsável",
+        "screen": "Atividade da equipe"
+      },
+      "portal": {
+        "title": "Publicação no portal Casvitta incluída no plano",
+        "body": "Os imóveis ativos da carteira podem ser publicados no portal sem custo adicional, até o limite do plano. Cada anúncio mostra a imobiliária, o corretor responsável e o CRECI.",
+        "note": "Publicação incluída não significa posição privilegiada na busca. Destaques são opcionais e cobrados à parte.",
+        "label": "Exemplo ilustrativo: dois anúncios da imobiliária no portal, um com o selo Destaque, e o uso do plano"
+      },
+      "plans": {
+        "eyebrow": "Planos",
+        "title": "Escolha pelo tamanho da carteira e da equipe",
+        "subtitle": "Todos os planos têm as mesmas funcionalidades. Mudam os limites.",
+        "caption": "Planos para imobiliárias",
+        "names": {
+          "essencial": "Essencial",
+          "equipe": "Equipe",
+          "operacao": "Operação maior"
+        },
+        "rows": {
+          "properties": "Imóveis ativos",
+          "users": "Usuários incluídos",
+          "portfolio": "Gestão da carteira",
+          "contacts": "Organização de contatos e atendimentos",
+          "team": "Colaboração da equipe e responsáveis",
+          "portal": "Publicação no portal Casvitta, dentro do limite",
+          "highlight": "Destaques no portal",
+          "migration": "Migração assistida"
+        },
+        "cta": "Agendar demonstração",
+        "ctaTalk": "Falar com a equipe"
+      },
+      "migration": {
+        "eyebrow": "Serviço opcional",
+        "title": "Importação e configuração assistida",
+        "body": "Se a sua carteira está em outro sistema ou em planilhas, nossa equipe pode ajudar a trazer os imóveis e configurar usuários e responsáveis. É um serviço à parte, com orçamento separado.",
+        "assess": {
+          "title": "Avaliamos seus dados",
+          "description": "Você envia uma exportação ou planilha e verificamos o que dá para importar."
+        },
+        "quote": {
+          "title": "Enviamos o orçamento",
+          "description": "Com o escopo e o que não poderá ser trazido, se houver."
+        },
+        "import": {
+          "title": "Importamos e configuramos",
+          "description": "Depois da sua aprovação, com conferência junto com a sua equipe."
+        },
+        "note": "A compatibilidade depende do formato dos dados de origem. Não garantimos importação de qualquer sistema."
+      },
+      "faq": {
+        "choose": {
+          "q": "Como escolho o plano?",
+          "a": "Pelo número de imóveis ativos e de pessoas na equipe. Até {essencialMax} imóveis e {essencialUsers} usuários, o Essencial atende. Até {equipeMax} imóveis e {equipeUsers} usuários, o Equipe. Acima disso, falamos sobre a Operação maior."
+        },
+        "limit": {
+          "q": "Como funciona o limite de imóveis ativos?",
+          "a": "Conta quantos imóveis estão ativos na carteira ao mesmo tempo. Imóveis vendidos, alugados ou pausados não entram na conta. Todo imóvel ativo pode ser publicado no portal."
+        },
+        "users": {
+          "q": "Os usuários estão incluídos?",
+          "a": "Sim. O Essencial inclui {essencialUsers} usuários e o Equipe, {equipeUsers}. Na Operação maior, o número é definido conforme a necessidade."
+        },
+        "highlight": {
+          "q": "Posso contratar mais destaque?",
+          "a": "Sim. Destaques são opcionais, cobrados à parte, por imóvel e período, em qualquer plano."
+        },
+        "migration": {
+          "q": "Há ajuda para migrar?",
+          "a": "Sim, como serviço opcional com orçamento separado. Primeiro avaliamos os seus dados e dizemos o que é possível importar."
+        },
+        "guarantee": {
+          "q": "A Casvitta garante contatos ou vendas?",
+          "a": "Não. A Casvitta organiza a operação e publica os imóveis no portal. Contatos, vendas e locações dependem dos imóveis, dos preços e do mercado."
+        }
+      },
+      "demo": {
+        "eyebrow": "Demonstração",
+        "title": "Veja a Casvitta com a sua carteira em mente",
+        "subtitle": "Uma conversa de 30 minutos com a nossa equipe, por vídeo.",
+        "points": {
+          "0": "Mostramos a carteira, a equipe e o portal",
+          "1": "Indicamos o plano para o seu tamanho",
+          "2": "Se fizer sentido, orçamos a migração"
+        }
+      },
+      "form": {
+        "name": "Seu nome",
+        "namePlaceholder": "Nome e sobrenome",
+        "company": "Imobiliária",
+        "companyPlaceholder": "Nome da imobiliária",
+        "companyError": "Informe o nome da imobiliária.",
+        "whatsapp": "WhatsApp",
+        "email": "E-mail",
+        "emailPlaceholder": "voce@imobiliaria.com.br",
+        "emailError": "Confira o e-mail, por exemplo voce@imobiliaria.com.br.",
+        "teamSize": "Tamanho da equipe",
+        "teamSizes": {
+          "1_5": "1–5",
+          "6_15": "6–15",
+          "16_plus": "16+"
+        },
+        "teamSizeError": "Escolha o tamanho da equipe.",
+        "activeProperties": "Imóveis ativos (faixa)",
+        "ranges": {
+          "up_to_200": "Até 200",
+          "201_to_500": "201 a 500",
+          "over_500": "Mais de 500"
+        },
+        "consent": "Aceito ser contatado pela Casvitta sobre a demonstração",
+        "submit": "Agendar demonstração",
+        "privacy": "Usamos seus dados só para este contato, conforme a LGPD.",
+        "privacyLink": "Privacidade",
+        "successTitle": "Pedido de demonstração recebido",
+        "successDescription": "Vamos te chamar no WhatsApp para combinar o melhor horário."
+      },
+      "offerName": "Plano {name} para imobiliárias: software de gestão com publicação no portal Casvitta"
     }
   }
 }
