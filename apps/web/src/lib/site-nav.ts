@@ -49,7 +49,6 @@ export const cityListingsPath = (transaction: Transaction) =>
 export const TOOL_PATHS = {
   valuation: '/quanto-vale-meu-imovel',
   itbi: `/itbi/${NAV_CITY}`,
-  simulate: '/#simulador',
   /** Per neighborhood only; the site map lists them all. */
   income: `${SITE_MAP_PATH}#quanto-preciso-ganhar`,
   priceM2: `/preco-m2/${NAV_CITY}`,
@@ -113,7 +112,6 @@ export function buildMenus(hoods: NavHood[]): NavMenu[] {
         {
           key: 'beforeBuying',
           links: [
-            { id: 'simulate', href: TOOL_PATHS.simulate, label: key('simulate') },
             { id: 'income', href: TOOL_PATHS.income, label: key('income') },
             { id: 'itbi', href: TOOL_PATHS.itbi, label: key('itbi') },
             { id: 'priceM2', href: TOOL_PATHS.priceM2, label: key('hoodPriceM2') },
@@ -161,7 +159,6 @@ export function buildMenus(hoods: NavHood[]): NavMenu[] {
           links: [
             { id: 'valuation', href: TOOL_PATHS.valuation, label: key('valuation') },
             { id: 'itbi', href: TOOL_PATHS.itbi, label: key('itbi') },
-            { id: 'simulate', href: TOOL_PATHS.simulate, label: key('simulate') },
             { id: 'income', href: TOOL_PATHS.income, label: key('income') },
           ],
         },

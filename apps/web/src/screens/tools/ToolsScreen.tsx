@@ -9,7 +9,6 @@ import { priceM2Path, TOOL_PATHS, type NavHood } from '@/lib/site-nav';
 const TOOLS = [
   { key: 'valuation', path: TOOL_PATHS.valuation },
   { key: 'itbi', path: TOOL_PATHS.itbi },
-  { key: 'simulate', path: TOOL_PATHS.simulate },
   { key: 'priceM2', path: TOOL_PATHS.priceM2 },
 ] as const;
 

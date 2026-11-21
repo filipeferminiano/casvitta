@@ -43,7 +43,6 @@ export async function SiteMapScreen({ hoods }: { hoods: NavHood[] }) {
         {
           key: 'beforeBuying',
           items: [
-            { id: 'simulate', href: TOOL_PATHS.simulate, label: tl('simulate') },
             { id: 'itbi', href: TOOL_PATHS.itbi, label: tl('itbi') },
             { id: 'priceM2', href: TOOL_PATHS.priceM2, label: tl('cityPriceM2') },
           ],
@@ -81,7 +80,6 @@ export async function SiteMapScreen({ hoods }: { hoods: NavHood[] }) {
           items: [
             { id: 'valuation', href: TOOL_PATHS.valuation, label: tl('valuation') },
             { id: 'itbi', href: TOOL_PATHS.itbi, label: tl('itbi') },
-            { id: 'simulate', href: TOOL_PATHS.simulate, label: tl('simulate') },
           ],
         },
         {

@@ -201,9 +201,7 @@
       "valuation": "Quanto vale meu imóvel",
       "valuationDescription": "Uma faixa de valor calculada com vendas reais parecidas, registradas na Prefeitura.",
       "itbi": "Calculadora de ITBI",
-      "itbiDescription": "Quanto o comprador paga de imposto na transferência do imóvel.",
-      "simulate": "Simular financiamento",
-      "simulateDescription": "Parcela pela SAC com entrada e FGTS. Simulação · não é aprovação."
+      "itbiDescription": "Quanto o comprador paga de imposto na transferência do imóvel."
     },
     "menus": {
       "label": "Navegação do site",
@@ -248,7 +246,6 @@
           "all": "Todos os imóveis para alugar"
         },
         "allHoods": "Ver todos os bairros",
-        "simulate": "Simular financiamento",
         "income": "Quanto preciso ganhar",
         "itbi": "Calcular ITBI",
         "hoodPriceM2": "Preço do m² no bairro",
@@ -3922,11 +3919,6 @@
         "title": "Calcular ITBI",
         "description": "Quanto o comprador paga de imposto na transferência, com a parte financiada pelo SFH.",
         "shareText": "Calcule o ITBI da compra em São Paulo: {url}"
-      },
-      "simulate": {
-        "title": "Simular financiamento",
-        "description": "Parcela pela SAC com entrada e FGTS. Simulação · não é aprovação.",
-        "shareText": "Simule a parcela do financiamento (simulação, não é aprovação): {url}"
       },
       "priceM2": {
         "title": "Preço do m² em São Paulo",

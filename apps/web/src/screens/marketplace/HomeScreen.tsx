@@ -110,7 +110,7 @@ export async function HomeScreen() {
             <span aria-hidden="true">{' ›'}</span>
           </Link>
         </div>
-        <ul className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        <ul className="grid grid-cols-1 gap-3 sm:grid-cols-3">
           {TOOL_LINKS.map((link) => (
             <li key={link.key}>
               <Link
