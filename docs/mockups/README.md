@@ -102,3 +102,7 @@ See `docs/mockups/social/README.md`. Build prompt: `docs/prompts/PROMPT_SOCIAL_B
 ## Destaques (Casvitta Ads) and AdOps
 
 See `docs/mockups/destaques/README.md`. Build prompt: `docs/prompts/PROMPT_DESTAQUES_BUILD.md`.
+
+## CRM, automations, agents and broker success
+
+See `docs/mockups/crm/README.md` (CRM, automations, conversational agents, saved-search alerts, QR signs, owner reports, network message tests) and `docs/mockups/backoffice/README.md` (09–16). Replaces mockups 31–33. Build prompt: `docs/prompts/PROMPT_CRM_BUILD.md`.

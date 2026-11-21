@@ -15,3 +15,18 @@ Approved designs from the Casvitta design canvas (page "Backoffice"), desktop 14
 | `08-team-audit` | BO8 · Equipe, papéis e auditoria | audit real; staff accounts new |
 
 Build prompt: `docs/prompts/PROMPT_BACKOFFICE_BUILD.md`.
+
+## CRM, agents and broker success (added)
+
+| File | Screen | Data today |
+|---|---|---|
+| `09-crm-messaging-compliance` | BC0 · What changes in the backoffice with CRM + messaging (consent, Meta quality, conversation access) | later |
+| `10-agent-quality` | AG8 · Agent quality per account + global AI rules | later |
+| `11-broker-activation-maturity` | BM1 · Onboarding funnel, maturity levels, weekly cohort retention | later |
+| `12-brokers-list` | BM2 · Brokers: level, score, 8-week activity, signal, suggested next step | later |
+| `13-broker-360` | BM3 · Broker 360: checklist, module usage, signals, next steps, CS contact log | later |
+| `14-activation-playbooks` | BM4 · Activation playbooks with holdout and confidence intervals | later |
+| `15-maturity-method` | BM5 · How level, score and activity are defined | — |
+| `16-network-tests-adoption` | PS9 · Network message tests, guardrails, adoption of alerts/signs/owner reports | later |
+
+Build prompt for these: `docs/prompts/PROMPT_CRM_BUILD.md`.
