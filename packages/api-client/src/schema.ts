@@ -942,6 +942,108 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/staff/accounts": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Accounts */
+        get: operations["listAccounts"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/staff/accounts/{workspace_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Account */
+        get: operations["getAccount"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/staff/accounts/{workspace_id}/pause-publishing": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Pause Publishing */
+        post: operations["pauseAccountPublishing"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/staff/accounts/{workspace_id}/resume-publishing": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Resume Publishing */
+        post: operations["resumeAccountPublishing"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/staff/accounts/{workspace_id}/notes": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Add Account Note */
+        post: operations["addAccountNote"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/staff/accounts/{workspace_id}/view-as": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** View Account As Customer */
+        post: operations["viewAccountAsCustomer"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/public/capture-assignments/accept": {
         parameters: {
             query?: never;
@@ -978,6 +1080,80 @@ export interface components {
              * @enum {string}
              */
             status: "accepted" | "expired";
+        };
+        /** Account360 */
+        Account360: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Name */
+            name: string;
+            kind: components["schemas"]["WorkspaceKind"];
+            /** City */
+            city: string | null;
+            plan: components["schemas"]["Plan"];
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /** Last Access At */
+            last_access_at: string | null;
+            /** Publishing Paused At */
+            publishing_paused_at: string | null;
+            /** Publishing Paused Reason */
+            publishing_paused_reason: string | null;
+            /** Team */
+            team: components["schemas"]["TeamMember"][];
+            /** Timeline */
+            timeline: components["schemas"]["TimelineItem"][];
+            /** Notes */
+            notes: components["schemas"]["Note"][];
+            /** Is Demo */
+            is_demo: boolean;
+        };
+        /** AccountListOut */
+        AccountListOut: {
+            /** Counts */
+            counts: {
+                [key: string]: number;
+            };
+            /** Items */
+            items: components["schemas"]["AccountRow"][];
+        };
+        /** AccountRow */
+        AccountRow: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Name */
+            name: string;
+            kind: components["schemas"]["WorkspaceKind"];
+            /** City */
+            city: string | null;
+            /** Members */
+            members: number;
+            plan: components["schemas"]["Plan"];
+            /**
+             * Creci
+             * @enum {string}
+             */
+            creci: "missing" | "pending" | "correction_requested" | "verified" | "rejected";
+            /** Last Access At */
+            last_access_at: string | null;
+            /** Publishing Paused */
+            publishing_paused: boolean;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /** Is Demo */
+            is_demo: boolean;
         };
         /**
          * ActivePropertiesRange
@@ -1870,6 +2046,8 @@ export interface components {
             user: components["schemas"]["UserOut"];
             workspace: components["schemas"]["WorkspaceOut"];
             broker: components["schemas"]["BrokerProfileOut"] | null;
+            /** Viewing As */
+            viewing_as?: string | null;
         };
         /** MonthlyPoint */
         MonthlyPoint: {
@@ -1927,6 +2105,28 @@ export interface components {
             /** Indexable */
             indexable: boolean;
             stats: components["schemas"]["PublicStats"] | null;
+        };
+        /** Note */
+        Note: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Body */
+            body: string;
+            /** Author */
+            author: string;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+        };
+        /** NoteIn */
+        NoteIn: {
+            /** Body */
+            body: string;
         };
         /** OverviewOut */
         OverviewOut: {
@@ -2315,6 +2515,11 @@ export interface components {
             /** Value */
             value: string | null;
         };
+        /**
+         * Role
+         * @enum {string}
+         */
+        Role: "owner" | "admin" | "broker" | "assistant";
         /** SearchHit */
         SearchHit: {
             /**
@@ -2520,11 +2725,44 @@ export interface components {
             place: components["schemas"]["PlaceRef"];
             stats: components["schemas"]["PublicStats"] | null;
         };
+        /** TeamMember */
+        TeamMember: {
+            /** Name */
+            name: string;
+            role: components["schemas"]["Role"];
+            /**
+             * Creci
+             * @enum {string}
+             */
+            creci: "missing" | "pending" | "correction_requested" | "verified" | "rejected";
+            /** Creci Number */
+            creci_number: string | null;
+            /** Last Access At */
+            last_access_at: string | null;
+        };
         /**
          * TeamSize
          * @enum {string}
          */
         TeamSize: "1_5" | "6_15" | "16_plus";
+        /** TimelineItem */
+        TimelineItem: {
+            /**
+             * Occurred At
+             * Format: date-time
+             */
+            occurred_at: string;
+            /** Actor Name */
+            actor_name: string;
+            /** Action */
+            action: string;
+            /** Details */
+            details: {
+                [key: string]: unknown;
+            };
+            /** Reason */
+            reason: string | null;
+        };
         /** TokenIn */
         TokenIn: {
             /** Token */
@@ -2619,6 +2857,16 @@ export interface components {
             window_end?: string | null;
             source?: components["schemas"]["SourceInfo"] | null;
         };
+        /** ViewAsOut */
+        ViewAsOut: {
+            /** Url */
+            url: string;
+        };
+        /**
+         * WorkspaceKind
+         * @enum {string}
+         */
+        WorkspaceKind: "broker" | "agency";
         /** WorkspaceOut */
         WorkspaceOut: {
             /**
@@ -4361,6 +4609,216 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["AlertGroup"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    listAccounts: {
+        parameters: {
+            query?: {
+                view?: "all" | "agencies" | "creci_pending" | "no_access" | "paused";
+            };
+            header?: {
+                "x-admin-token"?: string | null;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AccountListOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    getAccount: {
+        parameters: {
+            query?: never;
+            header?: {
+                "x-admin-token"?: string | null;
+            };
+            path: {
+                workspace_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Account360"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    pauseAccountPublishing: {
+        parameters: {
+            query?: never;
+            header?: {
+                "x-admin-token"?: string | null;
+            };
+            path: {
+                workspace_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ReasonIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    resumeAccountPublishing: {
+        parameters: {
+            query?: never;
+            header?: {
+                "x-admin-token"?: string | null;
+            };
+            path: {
+                workspace_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ReasonIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    addAccountNote: {
+        parameters: {
+            query?: never;
+            header?: {
+                "x-admin-token"?: string | null;
+            };
+            path: {
+                workspace_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["NoteIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Note"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    viewAccountAsCustomer: {
+        parameters: {
+            query?: never;
+            header?: {
+                "x-admin-token"?: string | null;
+            };
+            path: {
+                workspace_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ReasonIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ViewAsOut"];
                 };
             };
             /** @description Validation Error */

@@ -29,6 +29,9 @@ export type CreciChecklist = components['schemas']['CreciChecklist'];
 export type CaptureItem = components['schemas']['CaptureItem'];
 export type BrokerCandidate = components['schemas']['BrokerCandidate'];
 export type AlertGroup = components['schemas']['AlertGroup'];
+export type AccountRow = components['schemas']['AccountRow'];
+export type Account360 = components['schemas']['Account360'];
+export type AccountView = 'all' | 'agencies' | 'creci_pending' | 'no_access' | 'paused';
 export type CaptureState = 'no_broker' | 'referred' | 'accepted' | 'open' | 'handled';
 export type CaptureFilters = {
   kind: InterestKind;
@@ -86,6 +89,8 @@ export const staffKeys = {
   capture: (id: string) => [ROOT, 'capture', id] as const,
   candidates: (id: string) => [ROOT, 'candidates', id] as const,
   alertGroups: [ROOT, 'alert-groups'] as const,
+  accounts: (view: AccountView) => [ROOT, 'accounts', view] as const,
+  account: (id: string) => [ROOT, 'account', id] as const,
   team: [ROOT, 'team'] as const,
   audit: (filters: AuditFilters) => [ROOT, 'audit', filters] as const,
 };
@@ -395,5 +400,81 @@ export function useAlertGroups(enabled: boolean) {
     queryKey: staffKeys.alertGroups,
     enabled,
     queryFn: async () => unwrap(await staffApi.GET('/v1/staff/property-alerts/groups')),
+  });
+}
+
+// ------------------------------------------------------------------ accounts (BO4, BO5)
+
+export function useAccounts(view: AccountView) {
+  return useQuery({
+    queryKey: staffKeys.accounts(view),
+    queryFn: async () =>
+      unwrap(await staffApi.GET('/v1/staff/accounts', { params: { query: { view } } })),
+  });
+}
+
+/** Opening an account is audited server-side. */
+export function useAccount(id: string) {
+  return useQuery({
+    queryKey: staffKeys.account(id),
+    queryFn: async () =>
+      unwrap(
+        await staffApi.GET('/v1/staff/accounts/{workspace_id}', {
+          params: { path: { workspace_id: id } },
+        }),
+      ),
+  });
+}
+
+export function useAccountAction() {
+  const client = useQueryClient();
+  return useMutation({
+    mutationFn: async ({
+      id,
+      action,
+      reason,
+    }: {
+      id: string;
+      action: 'pause' | 'resume';
+      reason: string;
+    }) => {
+      const params = { path: { workspace_id: id } };
+      const result =
+        action === 'pause'
+          ? await staffApi.POST('/v1/staff/accounts/{workspace_id}/pause-publishing', {
+              params,
+              body: { reason },
+            })
+          : await staffApi.POST('/v1/staff/accounts/{workspace_id}/resume-publishing', {
+              params,
+              body: { reason },
+            });
+      if (!result.response.ok) unwrap(result);
+    },
+    onSettled: () => invalidateAll(client),
+  });
+}
+
+export async function viewAsCustomer(id: string, reason: string): Promise<string> {
+  const out = unwrap(
+    await staffApi.POST('/v1/staff/accounts/{workspace_id}/view-as', {
+      params: { path: { workspace_id: id } },
+      body: { reason },
+    }),
+  );
+  return out.url;
+}
+
+export function useAddNote() {
+  const client = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ id, body }: { id: string; body: string }) =>
+      unwrap(
+        await staffApi.POST('/v1/staff/accounts/{workspace_id}/notes', {
+          params: { path: { workspace_id: id } },
+          body: { body },
+        }),
+      ),
+    onSettled: () => invalidateAll(client),
   });
 }

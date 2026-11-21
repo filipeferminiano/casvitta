@@ -4,6 +4,7 @@ import type { ReactNode } from 'react';
 
 import { BottomTabs } from '@/components/app-shell/BottomTabs';
 import { SideNav } from '@/components/app-shell/SideNav';
+import { ViewingAsBanner } from '@/components/app-shell/ViewingAsBanner';
 
 export const metadata: Metadata = { robots: { index: false, follow: false } };
 
@@ -20,6 +21,7 @@ export default async function AppLayout({ children }: { children: ReactNode }) {
       </a>
       <SideNav />
       <div className="flex min-w-0 flex-1 flex-col">
+        <ViewingAsBanner />
         <main id="content" className="flex-1 px-4 pb-24 md:px-8 md:pt-6 md:pb-10 lg:pt-8">
           <div className="mx-auto max-w-(--layout-content)">{children}</div>
         </main>

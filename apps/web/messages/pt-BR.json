@@ -36,7 +36,9 @@
     "moduleStore": "Loja de módulos",
     "settings": "Configurações",
     "coreGroup": "Núcleo",
-    "countLabel": "{count, plural, one {# novo} other {# novos}}"
+    "countLabel": "{count, plural, one {# novo} other {# novos}}",
+    "viewingAs": "Você está vendo como o cliente, somente leitura ({name}, equipe Casvitta). Nada pode ser alterado.",
+    "viewingAsLeave": "Sair desta visualização"
   },
   "app": {
     "home": {
@@ -2693,7 +2695,14 @@
           "staff_bootstrapped": "criou o primeiro Admin",
           "staff_added_by_script": "adicionou uma pessoa à equipe",
           "audit_exported": "exportou a auditoria ({count} linhas)",
-          "other": "fez {action}"
+          "other": "fez {action}",
+          "account_publishing_paused": "pausou as publicações de {name}",
+          "account_publishing_resumed": "retomou as publicações de {name}",
+          "account_viewed_as": "viu a conta {name} como o cliente",
+          "account_note_added": "anotou na conta {name}",
+          "interest_handled": "tratou o pedido de {person}",
+          "interest_assignment_expired": "devolveu à fila um pedido sem resposta",
+          "interest_accepted": "{broker} aceitou o pedido de {person}"
         }
       }
     },
@@ -2961,6 +2970,111 @@
           "researching": "Pesquisando"
         },
         "empty": "Nenhum alerta ativo."
+      }
+    },
+    "accounts": {
+      "title": "Corretores e imobiliárias",
+      "description": "Todas as contas, com plano escolhido, CRECI e último acesso.",
+      "subject": "as contas",
+      "views": {
+        "all": "Todas",
+        "agencies": "Imobiliárias",
+        "creci_pending": "CRECI em análise",
+        "no_access": "Sem acesso há 7+ dias",
+        "paused": "Publicações pausadas"
+      },
+      "columns": {
+        "account": "Conta",
+        "plan": "Plano",
+        "creci": "CRECI",
+        "access": "Último acesso"
+      },
+      "kind": {
+        "broker": "Autônomo",
+        "agency": "Imobiliária"
+      },
+      "members": "{count, plural, one {# pessoa} other {# pessoas}}",
+      "creci": {
+        "missing": "Sem CRECI",
+        "pending": "Em análise",
+        "correction_requested": "Correção pedida",
+        "verified": "Verificado",
+        "rejected": "Recusado"
+      },
+      "paused": "Publicações pausadas",
+      "never": "nunca",
+      "empty": "Nenhuma conta com este filtro.",
+      "laterNote": "Assinatura, imóveis, leads e o sinal de saúde aparecem quando cobrança e imóveis estiverem no banco.",
+      "open": "Abrir {name}"
+    },
+    "account": {
+      "subject": "a conta",
+      "since": "cliente desde {date}",
+      "kpisLater": "Imóveis no ar, leads, visitas e tempo de resposta aparecem quando imóveis e leads estiverem no banco.",
+      "billing": {
+        "title": "Assinatura e faturas",
+        "plan": "Plano escolhido: {plan}",
+        "empty": "Liga quando a cobrança for ativada. Nenhuma fatura existe ainda."
+      },
+      "timeline": {
+        "title": "Linha do tempo",
+        "empty": "Nada registrado ainda nesta conta.",
+        "reason": "motivo: {reason}"
+      },
+      "actions": {
+        "title": "Ações",
+        "paymentLink": "Enviar link de pagamento",
+        "paymentLater": "Liga quando a cobrança for ativada.",
+        "viewAs": "Ver como o cliente (somente leitura)",
+        "pause": "Pausar publicações",
+        "resume": "Retomar publicações",
+        "note": "Ver como o cliente e pausar ficam na auditoria com o motivo.",
+        "paused": "Publicações pausadas desde {date}. Motivo: {reason}",
+        "pausedLater": "Hoje a pausa fica registrada; ela passa a valer para os anúncios quando eles estiverem no banco.",
+        "noPermission": "Seu papel não permite estas ações."
+      },
+      "reason": {
+        "viewAsTitle": "Ver como {name}",
+        "pauseTitle": "Pausar publicações de {name}",
+        "resumeTitle": "Retomar publicações de {name}",
+        "viewAsDescription": "Abre o app do cliente em uma nova aba, somente leitura, por 15 minutos. O motivo fica na auditoria.",
+        "description": "O motivo fica na auditoria.",
+        "label": "Motivo",
+        "send": "Confirmar",
+        "sending": "Confirmando…",
+        "cancel": "Cancelar",
+        "close": "Fechar"
+      },
+      "team": {
+        "title": "Equipe",
+        "roles": {
+          "owner": "Dono(a)",
+          "admin": "Admin",
+          "broker": "Corretor(a)",
+          "assistant": "Assistente"
+        }
+      },
+      "adAccounts": {
+        "title": "Contas de anúncio",
+        "empty": "Liga quando o cliente conectar a Meta e o Google. A mídia é cobrada pela Meta e pelo Google direto no cartão do cliente."
+      },
+      "notes": {
+        "title": "Nota interna",
+        "label": "Nova nota",
+        "save": "Salvar nota",
+        "saving": "Salvando…",
+        "saved": "Nota salva.",
+        "empty": "Nenhuma nota ainda.",
+        "by": "{author} · {date}"
+      },
+      "done": {
+        "paused": "Publicações pausadas.",
+        "resumed": "Publicações retomadas.",
+        "viewAs": "Abrimos o app do cliente em uma nova aba."
+      },
+      "errors": {
+        "generic": "Não conseguimos fazer isso agora. Tente de novo.",
+        "popup": "O navegador bloqueou a nova aba. Permita pop-ups para o backoffice e tente de novo."
       }
     }
   },

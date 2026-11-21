@@ -244,6 +244,13 @@ const KNOWN = new Set([
   'staff_bootstrapped',
   'staff_added_by_script',
   'audit_exported',
+  'account_publishing_paused',
+  'account_publishing_resumed',
+  'account_viewed_as',
+  'account_note_added',
+  'interest_handled',
+  'interest_assignment_expired',
+  'interest_accepted',
 ]);
 
 function ActivityText({ item }: { item: Activity }) {

@@ -52,6 +52,9 @@ from app.integrations.messaging.port import Email, EmailPort
 
 log = get_logger(__name__)
 
+# Last-seen is written at most this often (on session refresh).
+_SEEN_EVERY = timedelta(minutes=5)
+
 # Subdomains that can never be a broker slug (see apps/web/src/lib/hosts.ts).
 RESERVED_SLUGS = frozenset(
     {
@@ -209,6 +212,7 @@ async def confirm_email_link(
     if user is None:
         raise LinkInvalid
     user.last_login_at = utcnow()
+    user.last_seen_at = user.last_login_at
     issued = await _issue_session(session, user, settings=settings, user_agent=user_agent)
     return issued, created
 
@@ -330,6 +334,8 @@ async def refresh_session(
     user = await session.get(User, current.user_id)
     if user is None:
         raise SessionExpired
+    if user.last_seen_at is None or now - user.last_seen_at >= _SEEN_EVERY:
+        user.last_seen_at = now  # "Último acesso" in the backoffice
     return await _issue_session(
         session, user, settings=settings, user_agent=user_agent, family_id=current.family_id
     )
@@ -374,7 +380,44 @@ async def claim_handoff(
     user = await session.get(User, row.user_id) if row.user_id else None
     if user is None:
         raise LinkInvalid
+    view_as = (row.payload or {}).get("view_as")
+    if view_as:
+        # Staff viewing as the customer: a short read-only access token and no refresh token.
+        workspace_id = uuid.UUID(str(row.payload["workspace_id"]))
+        return IssuedSession(
+            user_id=user.id,
+            workspace_id=workspace_id,
+            access_token=encode_access_token(
+                settings, user.id, workspace_id, acting_staff_id=uuid.UUID(str(view_as))
+            ),
+            refresh_token="",
+        )
     return await _issue_session(session, user, settings=settings, user_agent=user_agent)
+
+
+async def create_view_as_handoff(
+    session: AsyncSession,
+    *,
+    user_id: uuid.UUID,
+    workspace_id: uuid.UUID,
+    staff_id: uuid.UUID,
+    settings: Settings,
+) -> str:
+    """One-time code that opens the customer's app read-only for a staff member (BO5)."""
+    code = new_token()
+    now = utcnow()
+    session.add(
+        LoginToken(
+            token_hash=hash_token(code),
+            purpose=LoginTokenPurpose.HANDOFF,
+            user_id=user_id,
+            payload={"view_as": str(staff_id), "workspace_id": str(workspace_id)},
+            created_at=now,
+            expires_at=now + timedelta(seconds=settings.handoff_ttl_seconds),
+        )
+    )
+    await session.flush()
+    return code
 
 
 # ------------------------------------------------------------------ profile
@@ -418,7 +461,9 @@ def broker_out(profile: BrokerProfile) -> BrokerProfileOut:
     )
 
 
-async def get_me(session: AsyncSession, user_id: uuid.UUID) -> MeOut:
+async def get_me(
+    session: AsyncSession, user_id: uuid.UUID, acting_staff_id: uuid.UUID | None = None
+) -> MeOut:
     """Session must be bound to the user's workspace."""
     user = await session.get(User, user_id)
     if user is None:
@@ -434,7 +479,15 @@ async def get_me(session: AsyncSession, user_id: uuid.UUID) -> MeOut:
             id=workspace.id, name=workspace.name, plan=workspace.plan, is_demo=workspace.is_demo
         ),
         broker=broker_out(profile) if profile else None,
+        viewing_as=await _staff_name(session, acting_staff_id) if acting_staff_id else None,
     )
+
+
+async def _staff_name(session: AsyncSession, staff_id: uuid.UUID) -> str:
+    from app.domains.staff.models import StaffUser  # noqa: PLC0415 - avoids an import cycle
+
+    staff = await session.get(StaffUser, staff_id)
+    return staff.name if staff else "Equipe Casvitta"
 
 
 async def update_broker_profile(

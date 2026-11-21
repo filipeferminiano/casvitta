@@ -127,6 +127,8 @@ class MeOut(BaseModel):
     user: UserOut
     workspace: WorkspaceOut
     broker: BrokerProfileOut | None
+    # Name of the staff member viewing as this customer (read-only session), if any.
+    viewing_as: str | None = None
 
 
 class BrokerProfileUpdate(BaseModel):

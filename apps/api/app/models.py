@@ -1,6 +1,7 @@
 """Import every ORM model so Base.metadata is complete (Alembic autogenerate, tests)."""
 
 from app.domains.accounts.models import (
+    AccountNote,
     AuditLog,
     AuthSession,
     BrokerProfile,
@@ -34,6 +35,7 @@ from app.domains.market_data.models import (
 from app.domains.staff.models import StaffLoginToken, StaffSession, StaffUser
 
 __all__ = [
+    "AccountNote",
     "AuditLog",
     "AuthSession",
     "BrokerProfile",

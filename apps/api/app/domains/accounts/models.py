@@ -38,6 +38,13 @@ class Workspace(UUIDPrimaryKey, Timestamps, DemoFlag, Base):
     plan: Mapped[Plan] = mapped_column(
         str_enum(Plan), default=Plan.CORRETOR, server_default=Plan.CORRETOR.value
     )
+    # Staff paused everything this account publishes (BO5), with the reason. Publishing checks
+    # it once listings exist; the pause is recorded now so it is never lost.
+    publishing_paused_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    publishing_paused_reason: Mapped[str | None] = mapped_column(String(500))
+    publishing_paused_by_id: Mapped[uuid.UUID | None] = mapped_column(
+        ForeignKey("staff_users.id", ondelete="SET NULL")
+    )
 
 
 class User(UUIDPrimaryKey, Timestamps, DemoFlag, Base):
@@ -48,6 +55,8 @@ class User(UUIDPrimaryKey, Timestamps, DemoFlag, Base):
     email: Mapped[str] = mapped_column(String(320), unique=True)  # stored lowercased
     name: Mapped[str] = mapped_column(String(160))
     last_login_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    # Updated when the session refreshes (at most every few minutes): "Último acesso" in BO4.
+    last_seen_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
 
 
 class Role(StrEnum):
@@ -172,3 +181,18 @@ class AuditLog(UUIDPrimaryKey, Base):
     reason: Mapped[str | None] = mapped_column(String(500))
     details: Mapped[dict[str, Any]] = mapped_column(JSONB(), default=dict)
     occurred_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), index=True)
+
+
+class AccountNote(UUIDPrimaryKey, Base):
+    """Internal note on a customer account (BO5). Staff only; append-only."""
+
+    __tablename__ = "account_notes"
+
+    workspace_id: Mapped[uuid.UUID] = mapped_column(
+        ForeignKey("workspaces.id", ondelete="CASCADE"), index=True
+    )
+    staff_user_id: Mapped[uuid.UUID | None] = mapped_column(
+        ForeignKey("staff_users.id", ondelete="SET NULL")
+    )
+    body: Mapped[str] = mapped_column(String(2000))
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))

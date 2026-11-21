@@ -26,7 +26,7 @@ TenantSession = Annotated[AsyncSession, Depends(get_tenant_session)]
 
 @router.get("", response_model=MeOut, operation_id="getMe")
 async def get_me(claims: ClaimsDep, session: TenantSession) -> MeOut:
-    return await service.get_me(session, claims.user_id)
+    return await service.get_me(session, claims.user_id, claims.acting_staff_id)
 
 
 @router.patch(

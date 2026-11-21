@@ -10,9 +10,16 @@ from fastapi.responses import PlainTextResponse
 from pydantic import BaseModel
 
 from app.api.v1.deps import client_key, get_rate_limiter
-from app.api.v1.staff_deps import ActorDep, SessionDep, SettingsDep, require_permission
+from app.api.v1.staff_deps import (
+    ActorDep,
+    SessionDep,
+    SettingsDep,
+    require_permission,
+    require_recent_auth,
+)
+from app.core.errors import AppError
 from app.core.rate_limit import RateLimited, RateLimiter
-from app.domains.backoffice import captures, creci, service
+from app.domains.backoffice import accounts, captures, creci, service
 from app.domains.backoffice.schemas import OverviewOut, SearchOut
 from app.domains.interest.models import InterestKind
 from app.domains.staff.audit import Actor
@@ -291,3 +298,87 @@ async def accept_capture(  # noqa: PLR0917
     status = await captures.accept(session, payload.token, email_port=integrations.email)
     await session.commit()
     return AcceptOut(status=status)
+
+
+# ------------------------------------------------------------------ accounts (BO4, BO5)
+
+
+@router.get("/accounts", response_model=accounts.AccountListOut, operation_id="listAccounts")
+async def list_accounts(
+    actor: ActorDep, session: SessionDep, view: accounts.AccountFilter = "all"
+) -> accounts.AccountListOut:
+    result = await accounts.list_accounts(session, actor, view)
+    await session.commit()
+    return result
+
+
+@router.get(
+    "/accounts/{workspace_id}", response_model=accounts.Account360, operation_id="getAccount"
+)
+async def get_account(
+    workspace_id: uuid.UUID, actor: ActorDep, session: SessionDep
+) -> accounts.Account360:
+    result = await accounts.account_360(session, actor, workspace_id)
+    await session.commit()
+    return result
+
+
+ModerateDep = Annotated[Actor, Depends(require_permission(Permission.MODERATE_LISTINGS))]
+
+
+@router.post(
+    "/accounts/{workspace_id}/pause-publishing",
+    status_code=204,
+    operation_id="pauseAccountPublishing",
+    dependencies=[Depends(require_recent_auth)],
+)
+async def pause_publishing(
+    workspace_id: uuid.UUID, payload: accounts.ReasonIn, actor: ModerateDep, session: SessionDep
+) -> None:
+    await accounts.set_publishing_paused(session, actor, workspace_id, payload.reason, paused=True)
+    await session.commit()
+
+
+@router.post(
+    "/accounts/{workspace_id}/resume-publishing",
+    status_code=204,
+    operation_id="resumeAccountPublishing",
+)
+async def resume_publishing(
+    workspace_id: uuid.UUID, payload: accounts.ReasonIn, actor: ModerateDep, session: SessionDep
+) -> None:
+    await accounts.set_publishing_paused(session, actor, workspace_id, payload.reason, paused=False)
+    await session.commit()
+
+
+@router.post(
+    "/accounts/{workspace_id}/notes",
+    response_model=accounts.Note,
+    status_code=201,
+    operation_id="addAccountNote",
+)
+async def add_account_note(
+    workspace_id: uuid.UUID, payload: accounts.NoteIn, actor: ActorDep, session: SessionDep
+) -> accounts.Note:
+    if not actor.permissions:  # Leitura reads only
+        raise AppError("forbidden", status_code=403)
+    result = await accounts.add_note(session, actor, workspace_id, payload.body)
+    await session.commit()
+    return result
+
+
+@router.post(
+    "/accounts/{workspace_id}/view-as",
+    response_model=accounts.ViewAsOut,
+    operation_id="viewAccountAsCustomer",
+)
+async def view_account_as_customer(
+    workspace_id: uuid.UUID,
+    payload: accounts.ReasonIn,
+    actor: Annotated[Actor, Depends(require_permission(Permission.VIEW_AS_CUSTOMER))],
+    session: SessionDep,
+    settings: SettingsDep,
+) -> accounts.ViewAsOut:
+    result = await accounts.view_as(session, actor, workspace_id, payload.reason, settings=settings)
+    await session.commit()
+    return result

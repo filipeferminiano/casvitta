@@ -56,5 +56,6 @@
   "email.capture_offer.subject": "Pedido de proprietário para você na Casvitta",
   "email.capture_offer.text": "Olá, {name}.\n\nTemos um pedido de proprietário para você:\n{what}\n{region}\n\nSe puder atender, aceite em até {hours} horas:\n{link}\n\nDepois de aceitar, enviamos o contato do proprietário. Sem resposta nesse prazo, o pedido vai para outro corretor.\n\nCasvitta",
   "email.capture_contact.subject": "Contato do proprietário que você aceitou",
-  "email.capture_contact.text": "Olá, {name}.\n\nObrigado por aceitar. O proprietário autorizou o contato sobre o imóvel:\n\n{owner}\nWhatsApp: {phone}\nE-mail: {email}\n{what}\n{region}\n\nCasvitta"
+  "email.capture_contact.text": "Olá, {name}.\n\nObrigado por aceitar. O proprietário autorizou o contato sobre o imóvel:\n\n{owner}\nWhatsApp: {phone}\nE-mail: {email}\n{what}\n{region}\n\nCasvitta",
+  "read_only_session": "Você está vendo como o cliente, somente leitura. Nada pode ser alterado nesta sessão."
 }

@@ -66,12 +66,27 @@ def _paths(settings: Settings) -> tuple[str, str]:
 
 def set_session_cookies(response: Response, issued: IssuedSession, settings: Settings) -> None:
     api_path, auth_path = _paths(settings)
-    refresh_max_age = settings.refresh_token_ttl_days * 86_400
-    for name, value, max_age, path in (
-        (ACCESS_COOKIE, issued.access_token, settings.access_token_ttl_minutes * 60, api_path),
-        (REFRESH_COOKIE, issued.refresh_token, refresh_max_age, auth_path),
+    access_max_age = settings.access_token_ttl_minutes * 60
+    # A read-only "view as" session has no refresh token: it ends with its access token.
+    refresh_max_age = (
+        settings.refresh_token_ttl_days * 86_400 if issued.refresh_token else access_max_age
+    )
+    cookies = [
+        (ACCESS_COOKIE, issued.access_token, access_max_age, api_path),
         (SESSION_HINT_COOKIE, "1", refresh_max_age, "/"),
-    ):
+    ]
+    if issued.refresh_token:
+        cookies.append((REFRESH_COOKIE, issued.refresh_token, refresh_max_age, auth_path))
+    else:
+        # Any earlier session in this browser must not outlive the read-only one.
+        response.delete_cookie(
+            REFRESH_COOKIE,
+            path=auth_path,
+            httponly=True,
+            secure=settings.cookie_secure,
+            samesite="lax",
+        )
+    for name, value, max_age, path in cookies:
         response.set_cookie(
             name,
             value,

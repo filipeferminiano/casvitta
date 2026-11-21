@@ -33,19 +33,33 @@ class AccessClaims:
     user_id: uuid.UUID
     workspace_id: uuid.UUID
     expires_at: datetime
+    # Set when a staff member is viewing as this customer ("Ver como o cliente", BO5): the
+    # session is read-only and writes are refused (app/core/read_only.py).
+    acting_staff_id: uuid.UUID | None = None
+
+    @property
+    def read_only(self) -> bool:
+        return self.acting_staff_id is not None
 
 
 def encode_access_token(
-    settings: Settings, user_id: uuid.UUID, workspace_id: uuid.UUID, now: datetime | None = None
+    settings: Settings,
+    user_id: uuid.UUID,
+    workspace_id: uuid.UUID,
+    now: datetime | None = None,
+    *,
+    acting_staff_id: uuid.UUID | None = None,
 ) -> str:
     issued = now or utcnow()
-    payload = {
+    payload: dict[str, object] = {
         "sub": str(user_id),
         "ws": str(workspace_id),
         "aud": _AUDIENCE,
         "iat": issued,
         "exp": issued + timedelta(minutes=settings.access_token_ttl_minutes),
     }
+    if acting_staff_id is not None:
+        payload["act"] = str(acting_staff_id)
     return jwt.encode(payload, settings.jwt_secret.get_secret_value(), algorithm=_ALGORITHM)
 
 
@@ -66,6 +80,7 @@ def decode_access_token(settings: Settings, token: str) -> AccessClaims:
             user_id=uuid.UUID(payload["sub"]),
             workspace_id=uuid.UUID(payload["ws"]),
             expires_at=datetime.fromtimestamp(payload["exp"], tz=utcnow().tzinfo),
+            acting_staff_id=uuid.UUID(payload["act"]) if payload.get("act") else None,
         )
     except (jwt.PyJWTError, KeyError, ValueError) as exc:
         raise InvalidAccessToken from exc
