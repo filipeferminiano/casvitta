@@ -94,3 +94,11 @@ See `docs/mockups/landing-pages/README.md` (owners, brokers, agencies; desktop +
 ## Backoffice
 
 See `docs/mockups/backoffice/README.md` (routines map + BO1–BO8). Build prompt: `docs/prompts/PROMPT_BACKOFFICE_BUILD.md`.
+
+## Casvitta Social (link na bio)
+
+See `docs/mockups/social/README.md`. Build prompt: `docs/prompts/PROMPT_SOCIAL_BUILD.md`.
+
+## Destaques (Casvitta Ads) and AdOps
+
+See `docs/mockups/destaques/README.md`. Build prompt: `docs/prompts/PROMPT_DESTAQUES_BUILD.md`.
