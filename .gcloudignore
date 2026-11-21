@@ -8,7 +8,11 @@ node_modules/
 storybook-static/
 playwright-report/
 test-results/
-apps/api/
+apps/api/*
+# The web parity tests type-check against the API's shared vectors.
+!apps/api/tests/
+apps/api/tests/*
+!apps/api/tests/fixtures/
 docs/
 infra/postgres/
 .env
