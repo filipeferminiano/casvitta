@@ -155,12 +155,20 @@ export function OwnerStartForm({ packs }: { packs: OwnerPack[] }) {
         <p className="type-caption">
           {t('priceNote', { price: formatBRL(cheapest.priceCents), days: cheapest.days })}
         </p>
-        <Link
-          href="/anunciar-imovel/corretor"
-          className="inline-flex min-h-11 items-center self-start type-body-s font-semibold text-action hover:underline"
-        >
-          {t('brokerLink')}
-        </Link>
+        <div className="flex flex-wrap gap-x-6">
+          <Link
+            href="/anunciar-imovel/corretor"
+            className="inline-flex min-h-11 items-center type-body-s font-semibold text-action hover:underline"
+          >
+            {t('brokerLink')}
+          </Link>
+          <Link
+            href="/quanto-vale-meu-imovel"
+            className="inline-flex min-h-11 items-center type-body-s font-semibold text-action hover:underline"
+          >
+            {t('valuationLink')}
+          </Link>
+        </div>
       </form>
     </Panel>
   );

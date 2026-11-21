@@ -34,6 +34,7 @@ import {
   formatPreviewPrice,
 } from './previews';
 import {
+  AudienceBreadcrumb,
   AudienceJsonLd,
   CONTAINER,
   FaqSection,
@@ -128,8 +129,10 @@ export function AgenciesScreen() {
         )}
       />
 
+      <AudienceBreadcrumb page={t('meta.breadcrumb')} />
+
       <div
-        className={`${CONTAINER} grid grid-cols-1 gap-10 py-10 md:py-16 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)] lg:items-center`}
+        className={`${CONTAINER} grid grid-cols-1 gap-10 pt-4 pb-10 md:pt-6 md:pb-16 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)] lg:items-center`}
       >
         <div className="flex flex-col gap-5">
           <span className="inline-flex self-start rounded-pill bg-fg px-2.5 py-1 type-caption font-semibold text-white">

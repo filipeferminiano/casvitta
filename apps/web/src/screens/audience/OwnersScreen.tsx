@@ -18,6 +18,7 @@ import { OwnerStartForm } from './OwnerStartForm';
 import { BROKER_LISTING_NEARBY, DEMO_BROKER, OWNER_LISTING } from './preview-data';
 import { CreciFooter, ListingMini, OwnerBadge, PreviewFigure } from './previews';
 import {
+  AudienceBreadcrumb,
   AudienceJsonLd,
   CONTAINER,
   FaqSection,
@@ -63,8 +64,10 @@ export function OwnersScreen() {
         }))}
       />
 
+      <AudienceBreadcrumb page={t('meta.breadcrumb')} />
+
       <div
-        className={`${CONTAINER} grid grid-cols-1 gap-10 py-10 md:py-16 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:items-start`}
+        className={`${CONTAINER} grid grid-cols-1 gap-10 pt-4 pb-10 md:pt-6 md:pb-16 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:items-start`}
       >
         <div className="flex flex-col gap-5">
           <span className="inline-flex self-start rounded-pill bg-fg px-2.5 py-1 type-caption font-semibold text-white">

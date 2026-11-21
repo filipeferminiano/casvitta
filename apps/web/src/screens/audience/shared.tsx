@@ -1,4 +1,5 @@
-import { AudienceTagLegend, Badge, FaqList, cn, type FaqItem } from '@casvitta/ui';
+import { AudienceTagLegend, Badge, Breadcrumbs, FaqList, cn, type FaqItem } from '@casvitta/ui';
+import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import type { ReactNode } from 'react';
 
@@ -14,6 +15,20 @@ export const linkButtonClass = (variant: 'primary' | 'secondary' | 'attention' =
     variant === 'secondary' && 'border border-fg bg-panel text-fg hover:bg-subtle',
     variant === 'attention' && 'bg-attention text-fg hover:bg-yellow-200',
   );
+
+/** Visible "Início › page" trail, matching the BreadcrumbList each page declares. */
+export function AudienceBreadcrumb({ page }: { page: string }) {
+  const t = useTranslations('audience.common');
+  return (
+    <div className={cn(CONTAINER, 'pt-2')}>
+      <Breadcrumbs
+        label={t('breadcrumbLabel')}
+        renderLink={(href, children) => <Link href={href}>{children}</Link>}
+        items={[{ label: t('home'), href: '/' }, { label: page }]}
+      />
+    </div>
+  );
+}
 
 /** Full-width band; `tone` sets the background. */
 export function Section({

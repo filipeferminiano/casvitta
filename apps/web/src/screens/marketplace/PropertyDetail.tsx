@@ -1,4 +1,4 @@
-import { Avatar, Button, PhotoPlaceholder } from '@casvitta/ui';
+import { Avatar, Breadcrumbs, Button, PhotoPlaceholder } from '@casvitta/ui';
 import { ChevronLeft } from 'lucide-react';
 import Link from 'next/link';
 import { getTranslations } from 'next-intl/server';
@@ -9,6 +9,7 @@ import { toValue } from '@/lib/analytics';
 import type { PublicListing } from '@/lib/data/marketplace';
 import { simulateSac } from '@/lib/finance';
 import { formatBRL } from '@/lib/format';
+import { seoListingsPath } from '@/lib/listings-canonical';
 
 import { AskBox, FinancingSimulator } from './ListingIslands';
 
@@ -32,6 +33,12 @@ export async function PropertyDetail({ listing }: { listing: PublicListing }) {
   const firstInstallment = formatBRL(Math.round(sim.firstInstallmentCents / 100) * 100);
   const whatsapp = `https://wa.me/${broker.phoneE164.replace('+', '')}`;
   const chatHref = `/imovel/${p.slug}/conversa`;
+  const rent = p.transaction === 'rent';
+  // The neighborhood links to its listings page only when that page is published (data gates);
+  // otherwise to the search filtered by the neighborhood.
+  const neighborhoodHref =
+    (await seoListingsPath(rent ? 'rent' : 'sale', p.neighborhood)) ??
+    `${rent ? '/alugar' : '/comprar'}?onde=${encodeURIComponent(p.neighborhood)}`;
   const priceText =
     p.transaction === 'rent'
       ? t('perMonth', { amount: formatBRL(p.priceCents) })
@@ -136,9 +143,19 @@ export async function PropertyDetail({ listing }: { listing: PublicListing }) {
       {/* Desktop (mockup 13) */}
       <div className="mx-auto hidden max-w-7xl flex-col gap-5 px-8 py-6 md:flex xl:px-20">
         <div className="flex items-center justify-between">
-          <p className="type-body-s text-fg-muted">
-            {[t('breadcrumb.buy'), p.city, p.neighborhood].join(' › ')}
-          </p>
+          <Breadcrumbs
+            label={t('breadcrumb.label')}
+            renderLink={(href, children) => <Link href={href}>{children}</Link>}
+            items={[
+              {
+                label: t(rent ? 'breadcrumb.rent' : 'breadcrumb.buy'),
+                href: rent ? '/alugar' : '/comprar',
+              },
+              { label: p.city },
+              { label: p.neighborhood, href: neighborhoodHref },
+              { label: kind },
+            ]}
+          />
           {p.isDemo ? (
             <p className="flex items-center gap-2 type-body-s text-fg-muted">
               {t('buyerView')}

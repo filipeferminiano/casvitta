@@ -64,3 +64,13 @@ Compared in `docs/mockups/_impl/landing-pages/` (`pnpm screens:capture landing-p
 - **"Falar com a equipe" (Operação maior)** scrolls to the demo form instead of a separate contact path.
 - **Replaced pages.** `/para-corretores` (mockup 54: AI ads, the R$ 1.497 comparison and the Agency OS waitlist) is replaced by the brokers page; its `_impl/54` screenshot is removed. The old Agency OS waitlist (`agency` signups) is gone; existing rows stay.
 
+## Site link structure (Nov 2026)
+
+Every public page type is reachable from the home within a fixed number of clicks (checked by `apps/web/e2e/site-links.spec.ts`): sections at 1 click, neighborhood pages at 2, street, building, valuation and financing pages at 3. Before this the market-data pages were reachable only through the sitemap.
+
+- **Header (51–53).** Adds "Para imobiliárias"; "Começar como corretor" opens `/para-corretores` (plan first, then signup) instead of the signup.
+- **Footer.** New column "Preços e ferramentas" (Preço do m² em São Paulo, Quanto vale meu imóvel, Calculadora de ITBI, Simular financiamento); "Anunciar com um corretor" under "Para você". The simulator link moved from "Para você" to the new column.
+- **Home (51, 52).** A "Preços e ferramentas" link row under the financing simulator; not in the mockups.
+- **Property page (13).** The breadcrumb is a real trail ("Comprar › São Paulo › Vila Mariana › Apartamento"): the neighborhood opens its listings page when one is published (else the search filtered by it), and rentals start with "Alugar".
+- **Audience pages (landing-pages/01–03).** A visible "Início › page" breadcrumb above the hero; the owners form also links to "Quanto vale meu imóvel?".
+

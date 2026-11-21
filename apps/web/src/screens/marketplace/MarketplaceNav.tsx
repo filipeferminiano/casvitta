@@ -21,7 +21,11 @@ const ITEMS = [
   { href: '/alugar', key: 'rent', match: ['/alugar'] },
   { href: '/anunciar-imovel', key: 'list', match: ['/anunciar-imovel'] },
   { href: '/para-corretores', key: 'brokers', match: ['/para-corretores'] },
+  { href: '/para-imobiliarias', key: 'agencies', match: ['/para-imobiliarias'] },
 ] as const;
+
+/** Brokers see the plan before signing up; the page's CTA carries ?plano=corretor. */
+const BROKER_START = '/para-corretores';
 
 /** Focused flows (signup, auction capture) get a minimal header (mockups 55, 59). */
 const MINIMAL = ['/cadastro', '/leilao'];
@@ -88,7 +92,7 @@ export function MarketplaceHeader() {
                 <AudienceHeaderCta current={audience} />
               ) : (
                 <Button asChild size="sm">
-                  <Link href="/cadastro/conta">{t('startAsBroker')}</Link>
+                  <Link href={BROKER_START}>{t('startAsBroker')}</Link>
                 </Button>
               )}
             </div>
@@ -137,7 +141,7 @@ export function MarketplaceHeader() {
             </li>
           </ul>
           <Button asChild className="mt-4 w-full">
-            <Link href="/cadastro/conta">{t('startAsBroker')}</Link>
+            <Link href={BROKER_START}>{t('startAsBroker')}</Link>
           </Button>
         </nav>
       ) : null}

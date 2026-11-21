@@ -102,8 +102,8 @@
           "buy": "Comprar",
           "rent": "Alugar",
           "listMine": "Anunciar meu imóvel",
-          "simulate": "Simular financiamento",
-          "auctions": "Imóveis de leilão"
+          "auctions": "Imóveis de leilão",
+          "listWithBroker": "Anunciar com um corretor"
         },
         "forPros": {
           "title": "Para profissionais",
@@ -118,6 +118,9 @@
           "privacy": "Privacidade e LGPD",
           "terms": "Termos de uso",
           "contact": "Fale com a gente"
+        },
+        "tools": {
+          "title": "Preços e ferramentas"
         }
       },
       "legal": "Casvitta · CRECI-J {creci} · Toda intermediação é feita por corretores inscritos no CRECI. Simulações de financiamento não são aprovação de crédito."
@@ -137,7 +140,8 @@
       "openMenu": "Abrir menu",
       "closeMenu": "Fechar menu",
       "questions": "Dúvidas? WhatsApp {phone}",
-      "questionsShort": "Dúvidas? WhatsApp"
+      "questionsShort": "Dúvidas? WhatsApp",
+      "agencies": "Para imobiliárias"
     },
     "placeholders": {
       "seeListings": "Ver imóveis no ar",
@@ -181,6 +185,18 @@
         "emptyTitle": "Termos de uso em revisão",
         "emptyDescription": "A versão final dos termos está sendo revisada."
       }
+    },
+    "tools": {
+      "title": "Preços e ferramentas",
+      "subtitle": "Vendas reais registradas na Prefeitura de São Paulo, não preços de anúncio.",
+      "priceM2": "Preço do m² em São Paulo",
+      "priceM2Description": "Quanto se pagou de verdade pelo m² em cada bairro, a partir das guias de ITBI.",
+      "valuation": "Quanto vale meu imóvel",
+      "valuationDescription": "Uma faixa de valor calculada com vendas reais parecidas, registradas na Prefeitura.",
+      "itbi": "Calculadora de ITBI",
+      "itbiDescription": "Quanto o comprador paga de imposto na transferência do imóvel.",
+      "simulate": "Simular financiamento",
+      "simulateDescription": "Parcela pela SAC com entrada e FGTS. Simulação · não é aprovação."
     }
   },
   "landing": {
@@ -1008,7 +1024,9 @@
     "headline": "{kind} de {bedrooms, plural, one {1 quarto} other {# quartos}}{features, select, true { com varanda} other {}}{nearby}",
     "address": "{street} · {neighborhood}, {city} · número exato após agendar a visita",
     "breadcrumb": {
-      "buy": "Comprar"
+      "buy": "Comprar",
+      "rent": "Alugar",
+      "label": "Você está em"
     },
     "buyerView": "Visão do comprador",
     "mainPhoto": "Foto principal",
@@ -1707,7 +1725,10 @@
       "developers": "Incorporadoras",
       "auction": "Imóveis de leilão",
       "forAgencies": "Para imobiliárias",
-      "ownerBroker": "Anunciar com um corretor"
+      "ownerBroker": "Anunciar com um corretor",
+      "priceM2": "Preço do m² em São Paulo",
+      "valuation": "Quanto vale meu imóvel",
+      "itbi": "Calculadora de ITBI"
     },
     "sections": {
       "buyers": {
@@ -1740,6 +1761,12 @@
         "about": "Sobre a Casvitta",
         "privacy": "Privacidade e LGPD",
         "terms": "Termos de uso"
+      },
+      "tools": {
+        "title": "Preços e ferramentas (São Paulo)",
+        "priceM2": "Preço do m² por bairro de São Paulo a partir das guias de ITBI da Prefeitura: vendas reais, não preços de anúncio; bairros com poucas vendas não mostram número",
+        "valuation": "Avaliação gratuita: faixa de valor a partir de vendas reais parecidas registradas na Prefeitura; é estimativa, não laudo",
+        "itbi": "Calculadora do ITBI pago pelo comprador na transferência do imóvel em São Paulo"
       }
     },
     "facts": {
@@ -3199,7 +3226,8 @@
       "asNeeded": "conforme a necessidade",
       "apart": "à parte",
       "quoted": "orçamento separado",
-      "upTo": "até {count}"
+      "upTo": "até {count}",
+      "breadcrumbLabel": "Você está em"
     },
     "preview": {
       "demo": "Demonstrativo",
@@ -3259,7 +3287,8 @@
         "successTitle": "Recebemos.",
         "successDescription": "Vamos te chamar no WhatsApp para concluir o anúncio.",
         "successNote": "Nada foi cobrado e o anúncio ainda não foi publicado.",
-        "brokerLink": "Prefiro a ajuda de um corretor"
+        "brokerLink": "Prefiro a ajuda de um corretor",
+        "valuationLink": "Quanto vale meu imóvel?"
       },
       "heroCard": {
         "label": "Exemplo ilustrativo: card de um anúncio do proprietário no portal Casvitta",

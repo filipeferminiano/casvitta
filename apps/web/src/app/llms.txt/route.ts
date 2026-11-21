@@ -6,6 +6,7 @@ import { MIN_DAILY_BUDGET_CENTS } from '@/lib/data/ads';
 import { formatBRL, formatPhoneBR } from '@/lib/format';
 import { requestSite } from '@/lib/request-site';
 import { buildLlmsTxt, type LlmsCopy } from '@/lib/llms';
+import { MARKET_CITY } from '@/screens/marketplace/tool-links';
 
 /**
  * /llms.txt (llmstxt.org): a short map of the public site for AI answer engines (GEO).
@@ -82,6 +83,26 @@ export async function GET() {
             path: '/anunciar-imovel/corretor',
             label: t('nav.ownerBroker'),
             description: t('sections.owners.withBroker'),
+          },
+        ],
+      },
+      {
+        title: t('sections.tools.title'),
+        links: [
+          {
+            path: `/preco-m2/${MARKET_CITY}`,
+            label: t('nav.priceM2'),
+            description: t('sections.tools.priceM2'),
+          },
+          {
+            path: '/quanto-vale-meu-imovel',
+            label: t('nav.valuation'),
+            description: t('sections.tools.valuation'),
+          },
+          {
+            path: `/itbi/${MARKET_CITY}`,
+            label: t('nav.itbi'),
+            description: t('sections.tools.itbi'),
           },
         ],
       },

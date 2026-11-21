@@ -5,6 +5,8 @@ import { getTranslations } from 'next-intl/server';
 import { COMPANY, whatsappLink } from '@/config/site';
 import { formatPhoneIntl } from '@/lib/format';
 
+import { TOOL_LINKS } from './tool-links';
+
 const COLUMNS = [
   {
     key: 'forYou',
@@ -12,9 +14,14 @@ const COLUMNS = [
       { key: 'buy', href: '/comprar' },
       { key: 'rent', href: '/alugar' },
       { key: 'listMine', href: '/anunciar-imovel' },
-      { key: 'simulate', href: '/#simulador' },
+      { key: 'listWithBroker', href: '/anunciar-imovel/corretor' },
       { key: 'auctions', href: '/leilao' },
     ],
+  },
+  {
+    // Entry points into the market-data pages; labels live in marketplace.tools.
+    key: 'tools',
+    links: TOOL_LINKS,
   },
   {
     key: 'forPros',
@@ -39,10 +46,11 @@ const COLUMNS = [
 /** Shared public-site footer (mockups 51, 54–59). */
 export async function SiteFooter() {
   const t = await getTranslations('marketplace.footer');
+  const tTools = await getTranslations('marketplace.tools');
   const phone = formatPhoneIntl(COMPANY.whatsappE164);
   return (
     <footer className="bg-fg text-white">
-      <div className="mx-auto grid max-w-7xl gap-10 px-4 py-12 md:px-8 lg:grid-cols-[1.3fr_1fr_1fr_1fr] xl:px-20">
+      <div className="mx-auto grid max-w-7xl gap-10 px-4 py-12 md:px-8 md:grid-cols-2 lg:grid-cols-[1.3fr_1fr_1fr_1fr_1fr] xl:px-20">
         <div className="flex flex-col gap-3">
           <Logo tone="white" height={20} title={null} />
           <p className="max-w-[36ch] type-body-s text-ink-300">{t('tagline')}</p>
@@ -59,7 +67,9 @@ export async function SiteFooter() {
               {column.links.map((link) => (
                 <li key={link.key}>
                   <Link href={link.href} className="type-body-s hover:underline">
-                    {t(`columns.${column.key}.${link.key}`)}
+                    {column.key === 'tools'
+                      ? tTools(link.key)
+                      : t(`columns.${column.key}.${link.key}`)}
                   </Link>
                 </li>
               ))}

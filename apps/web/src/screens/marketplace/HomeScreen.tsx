@@ -1,5 +1,5 @@
 import { AudienceCard, NumberedSteps } from '@casvitta/ui';
-import { FileText, ShieldCheck, Sparkles } from 'lucide-react';
+import { ChevronRight, FileText, ShieldCheck, Sparkles } from 'lucide-react';
 import Link from 'next/link';
 import { getTranslations } from 'next-intl/server';
 
@@ -9,6 +9,7 @@ import { listPublicListings } from '@/lib/data/marketplace';
 import { HomeSearch } from './HomeSearch';
 import { ListingGrid } from './ListingGrid';
 import { FinancingSimulator } from './ListingIslands';
+import { TOOL_LINKS } from './tool-links';
 
 const AUDIENCES = [
   { key: 'owner', href: '/anunciar-imovel', soon: false },
@@ -26,6 +27,7 @@ const TRUST = [
 /** casvitta.com.br home (mockups 51 desktop, 52 mobile). */
 export async function HomeScreen() {
   const t = await getTranslations('home');
+  const tTools = await getTranslations('marketplace.tools');
   // Featured: published listings only (rule 2), sponsored first.
   const featured = listPublicListings()
     .sort((a, b) => Number(b.sponsored) - Number(a.sponsored))
@@ -81,6 +83,39 @@ export async function HomeScreen() {
           <FinancingSimulator priceCents={sample} editablePrice title={t('simulatorTitle')} />
         </div>
       </section>
+
+      {/* Entry into the market-data pages (site link structure: home → tools → bairro). */}
+      <nav
+        aria-labelledby="tools-title"
+        className="mx-auto flex max-w-7xl flex-col gap-4 px-4 pb-14 md:px-8 xl:px-20"
+      >
+        <div>
+          <h2 id="tools-title" className="type-title">
+            {tTools('title')}
+          </h2>
+          <p className="type-body-s text-fg-muted">{tTools('subtitle')}</p>
+        </div>
+        <ul className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          {TOOL_LINKS.map((link) => (
+            <li key={link.key}>
+              <Link
+                href={link.href}
+                className="flex h-full min-h-11 items-start justify-between gap-3 rounded-card border border-line bg-panel p-4 hover:border-action focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"
+              >
+                <span className="flex flex-col gap-1">
+                  <span className="type-body-s font-semibold text-action">{tTools(link.key)}</span>
+                  <span className="type-caption">{tTools(`${link.key}Description`)}</span>
+                </span>
+                <ChevronRight
+                  aria-hidden="true"
+                  strokeWidth={1.6}
+                  className="mt-0.5 size-4 shrink-0 text-action"
+                />
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </nav>
 
       <section className="mx-4 mb-10 rounded-card border border-line bg-panel md:hidden">
         <h2 className="px-4 pt-4 pb-2 type-title text-[20px]">{t('audiences.mobileTitle')}</h2>
