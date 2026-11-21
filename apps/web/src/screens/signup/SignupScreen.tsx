@@ -1,12 +1,12 @@
 'use client';
 
-import { Button, Callout, Input, Panel, PlanCard, Select, Stepper, cn } from '@casvitta/ui';
+import { Button, Callout, Input, Panel, PlanCard, Select, Stepper } from '@casvitta/ui';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 
-import { PLANS, type PlanKey } from '@/config/site';
+import { OFFERS, type PlanKey } from '@/config/site';
 import type { SignupDraft, SignupStep } from '@/domain/types';
 import { isLive } from '@/lib/live';
 import { track, trackBeforeNavigation } from '@/lib/analytics';
@@ -75,7 +75,7 @@ export function SignupScreen({ step }: { step: SignupStep }) {
       startDemoSignup('Ana Paula Ribeiro', 'ana@exemplo.com.br');
     }
     const plan = params.get('plano');
-    if (plan === 'essencial' || plan === 'profissional') void savePlan(plan);
+    if (plan === OFFERS.brokerPlan.key) void savePlan(plan);
     track({ name: 'signup_step', step });
   }, [params, step]);
 
@@ -132,11 +132,7 @@ export function SignupScreen({ step }: { step: SignupStep }) {
             <WhatsAppStep draft={draft} onDone={() => go('plano')} onBack={() => go('creci')} />
           ) : null}
           {step === 'plano' && draft ? (
-            <PlanStep
-              draft={draft}
-              onDone={() => go('primeiro-imovel')}
-              onBack={() => go('whatsapp')}
-            />
+            <PlanStep onDone={() => go('primeiro-imovel')} onBack={() => go('whatsapp')} />
           ) : null}
           {step === 'primeiro-imovel' && draft ? (
             <FirstPropertyStep draft={draft} onBack={() => go('plano')} />
@@ -145,10 +141,10 @@ export function SignupScreen({ step }: { step: SignupStep }) {
         <aside className="flex flex-col gap-4">
           <Panel>
             <p className="type-caption">{t('aside.plan')}</p>
-            <p className="mt-1 type-title">{t(`plans.${draft?.plan ?? 'profissional'}`)}</p>
+            <p className="mt-1 type-title">{t('plans.corretor')}</p>
             <p className="type-value">
               {t('perMonth', {
-                amount: formatBRL(PLANS[draft?.plan ?? 'profissional'].priceCents),
+                amount: formatBRL(OFFERS.brokerPlan.priceCents),
               })}
             </p>
             <p className="mt-1 type-body-s text-fg-muted">{t('aside.change')}</p>
@@ -321,19 +317,11 @@ function WhatsAppStep({
   );
 }
 
-function PlanStep({
-  draft,
-  onDone,
-  onBack,
-}: {
-  draft: SignupDraft;
-  onDone: () => void;
-  onBack: () => void;
-}) {
+function PlanStep({ onDone, onBack }: { onDone: () => void; onBack: () => void }) {
   const t = useTranslations('signup.plano');
   const tSignup = useTranslations('signup');
   const tPlans = useTranslations('plans');
-  const [plan, setPlan] = useState<PlanKey>(draft.plan);
+  const [plan, setPlan] = useState<PlanKey>(OFFERS.brokerPlan.key);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | undefined>();
   return (
@@ -352,14 +340,12 @@ function PlanStep({
         onDone();
       }}
     >
-      <fieldset className="grid gap-3 sm:grid-cols-2">
+      <fieldset className="grid gap-3">
         <legend className="sr-only">{t('legend')}</legend>
-        {(['essencial', 'profissional'] as const).map((key) => (
+        {[OFFERS.brokerPlan].map(({ key, priceCents, maxUsers, maxActiveProperties }) => (
           <label
             key={key}
-            className={cn(
-              'block cursor-pointer rounded-card has-focus-visible:outline-2 has-focus-visible:outline-focus',
-            )}
+            className="block cursor-pointer rounded-card has-focus-visible:outline-2 has-focus-visible:outline-focus"
           >
             <input
               type="radio"
@@ -371,12 +357,14 @@ function PlanStep({
             />
             <PlanCard
               highlighted={plan === key}
-              name={tPlans(`${key}.name`)}
-              price={formatBRL(PLANS[key].priceCents)}
+              name={tPlans('corretor.name')}
+              price={formatBRL(priceCents)}
               period={tPlans('perMonth')}
               features={[
-                tPlans('upTo', { count: PLANS[key].maxActiveProperties }),
-                ...[0, 1].map((i) => tPlans(`${key}.features.${i}`)),
+                tPlans('corretor.users', { count: maxUsers }),
+                tPlans('upTo', { count: maxActiveProperties }),
+                tPlans('corretor.organize'),
+                tPlans('corretor.portal'),
               ]}
               action={
                 <span className="block text-center type-body-s font-semibold text-action">
@@ -387,7 +375,6 @@ function PlanStep({
           </label>
         ))}
       </fieldset>
-      <p className="type-body-s text-fg-muted">{tPlans('media')}</p>
       {error ? <p className="type-body-s text-danger">{error}</p> : null}
       <StepActions onBack={onBack} submitLabel={tSignup('continue')} busy={busy} />
     </form>

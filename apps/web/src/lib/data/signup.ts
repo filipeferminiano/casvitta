@@ -9,6 +9,7 @@
  */
 import { isApiError, type components } from '@casvitta/api-client';
 
+import type { WorkspacePlan } from '@/config/site';
 import type { SignupDraft, SignupStep } from '@/domain/types';
 import { api } from '@/lib/api';
 import { isLive } from '@/lib/live';
@@ -31,7 +32,7 @@ const CHANGE_EVENT = 'casvitta:signup';
 export const CRECI_NUMBER = /^\d{3}\.?\d{3}$/;
 export const EMAIL = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
 
-type Plan = 'essencial' | 'profissional';
+type Plan = WorkspacePlan;
 type Me = components['schemas']['MeOut'];
 
 const emitChange = () => window.dispatchEvent(new Event(CHANGE_EVENT));
@@ -110,13 +111,14 @@ export function currentSignup(): SignupDraft | null {
   return id ? (db().signups[id] ?? null) : null;
 }
 
-/** Plan picked on /para-corretores before the account exists. */
+/** Plan picked on /para-corretores (?plano=corretor) before the account exists. */
 export function rememberPlan(plan: Plan): void {
   window.sessionStorage.setItem(PLAN_KEY, plan);
 }
 
+/** New sign-ups always get the current broker plan; legacy keys are no longer offered. */
 function rememberedPlan(): Plan {
-  return window.sessionStorage.getItem(PLAN_KEY) === 'essencial' ? 'essencial' : 'profissional';
+  return 'corretor';
 }
 
 // ------------------------------------------------------------------ steps

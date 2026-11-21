@@ -3,6 +3,9 @@
  * docs/mockups/. The demo clock is Monday 16/11/2026 10h13 (America/Sao_Paulo); see mocks/clock.ts.
  * Fixture text (messages, notes) is demo *data*, not UI copy; UI copy lives in messages/pt-BR.json.
  */
+import { formatBRL } from '@casvitta/ui';
+
+import { OFFERS } from '@/config/site';
 import type {
   AdCreative,
   AiDraft,
@@ -42,7 +45,7 @@ export const broker: BrokerProfile = {
   slug: 'anaribeiro',
   regions: ['Vila Mariana', 'Saúde', 'Pinheiros'],
   phoneE164: '+5511927408912',
-  plan: 'profissional',
+  plan: 'corretor',
   isDemo: true,
 };
 
@@ -1174,7 +1177,7 @@ export const modules: ModuleItem[] = [
     name: 'CRM e WhatsApp',
     description: 'Leads, conversas, agenda, propostas e suas landing pages.',
     state: 'active',
-    priceLine: 'Plano Profissional · R$ 397/mês',
+    priceLine: `Plano Corretor · ${formatBRL(OFFERS.brokerPlan.priceCents)}/mês`,
     icon: 'users',
   },
   {

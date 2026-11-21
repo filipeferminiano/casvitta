@@ -90,7 +90,7 @@ export const ModuleCards: Story = {
         pill={<StatusPill tone="success">Ativo</StatusPill>}
         name="CRM e WhatsApp"
         description="Leads, conversas, agenda, propostas e suas landing pages."
-        priceLine="Plano Profissional · R$ 397/mês"
+        priceLine="Plano Corretor · R$ 99/mês"
         action={<Button variant="secondary">Gerenciar</Button>}
       />
       <ModuleCard

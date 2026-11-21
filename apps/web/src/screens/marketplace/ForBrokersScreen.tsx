@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { getTranslations } from 'next-intl/server';
 
 import { DemoBadge, SoonBadge } from '@/components/badges';
-import { PLANS, SEPARATE_TOOLS_CENTS, whatsappLink, type PlanKey } from '@/config/site';
+import { LEGACY_PLANS as PLANS, SEPARATE_TOOLS_CENTS, whatsappLink } from '@/config/site';
 import { formatBRL } from '@/lib/format';
 
 import { AgencyInterest } from './AgencyInterest';
@@ -17,7 +17,7 @@ const INCLUDED = [
   { key: 'landing', icon: House },
   { key: 'social', icon: Sparkles },
 ] as const;
-const PLAN_KEYS: PlanKey[] = ['essencial', 'profissional'];
+const PLAN_KEYS = ['essencial', 'profissional'] as const;
 
 /** Demo numbers for the hero card ("Demonstrativo", rule 7). */
 const DEMO_WEEK = { contacts: 14, visits: 3, costPerVisitCents: 5_800 };

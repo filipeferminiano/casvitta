@@ -24,7 +24,7 @@ export type BrokerProfile = {
   slug: string;
   regions: string[];
   phoneE164: string;
-  plan: 'essencial' | 'profissional';
+  plan: 'corretor' | 'essencial' | 'profissional';
   isDemo: boolean;
 };
 
@@ -380,6 +380,6 @@ export type SignupDraft = {
   /** Pending until staff verify it (CLAUDE.md rule 1); publishing stays blocked. */
   creciStatus: 'missing' | 'pending' | 'verified';
   whatsappE164: string | null;
-  plan: 'essencial' | 'profissional';
+  plan: 'corretor' | 'essencial' | 'profissional';
   createdAt: ISODateTime;
 };

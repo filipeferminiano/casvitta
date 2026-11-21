@@ -1283,6 +1283,12 @@
         "1": "Gestão de Facebook e Instagram",
         "2": "Relatório semanal por canal"
       }
+    },
+    "corretor": {
+      "name": "Plano Corretor",
+      "users": "{count, plural, one {# usuário} other {# usuários}}",
+      "organize": "Cadastro de imóveis e organização de contatos e oportunidades",
+      "portal": "Publicação no portal Casvitta, dentro do limite do plano"
     }
   },
   "signup": {
@@ -1306,7 +1312,8 @@
     "perMonth": "{amount}/mês",
     "plans": {
       "essencial": "Essencial",
-      "profissional": "Profissional"
+      "profissional": "Profissional",
+      "corretor": "Plano Corretor"
     },
     "startFirstTitle": "Comece pela sua conta",
     "startFirstDescription": "Para seguir no cadastro, primeiro confirme seu celular.",
@@ -1824,7 +1831,7 @@
       },
       "brokers": {
         "title": "Para corretores e imobiliárias",
-        "forBrokers": "Broker OS: a IA monta o anúncio a partir do cadastro do imóvel, publica no marketplace, Instagram, Facebook e Google, atende no WhatsApp e marca visitas. Planos Essencial ({essencial}/mês, até {essencialMax} imóveis ativos) e Profissional ({profissional}/mês, até {profissionalMax} imóveis ativos)",
+        "forBrokers": "Software de gestão para corretor autônomo: imóveis, contatos e oportunidades num só lugar, com publicação no portal Casvitta incluída até o limite do plano. Plano Corretor: {price}/mês, {users, plural, one {# usuário} other {# usuários}}, até {max} imóveis ativos",
         "media": "Mídia paga roda na conta de anúncios do próprio corretor no Meta e no Google, a partir de {minBudget} por dia por imóvel; a Casvitta não cobra nem revende mídia"
       },
       "owners": {

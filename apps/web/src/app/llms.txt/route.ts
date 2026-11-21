@@ -1,6 +1,6 @@
 import { getTranslations } from 'next-intl/server';
 
-import { COMPANY, PLANS } from '@/config/site';
+import { COMPANY, OFFERS } from '@/config/site';
 import { DEFAULT_LOCALE } from '@/i18n/request';
 import { MIN_DAILY_BUDGET_CENTS } from '@/lib/data/ads';
 import { formatBRL, formatPhoneBR } from '@/lib/format';
@@ -35,10 +35,9 @@ export async function GET() {
             path: '/para-corretores',
             label: t('nav.forBrokers'),
             description: t('sections.brokers.forBrokers', {
-              essencial: formatBRL(PLANS.essencial.priceCents),
-              essencialMax: PLANS.essencial.maxActiveProperties,
-              profissional: formatBRL(PLANS.profissional.priceCents),
-              profissionalMax: PLANS.profissional.maxActiveProperties,
+              price: formatBRL(OFFERS.brokerPlan.priceCents),
+              users: OFFERS.brokerPlan.maxUsers,
+              max: OFFERS.brokerPlan.maxActiveProperties,
             }),
           },
         ],
