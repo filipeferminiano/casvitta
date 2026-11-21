@@ -36,6 +36,7 @@ describe('Broker OS navigation', () => {
       'Agenda',
       'Propostas',
       'Anúncios',
+      'Ferramentas',
       'Loja de módulos',
       'Configurações',
     ]);
