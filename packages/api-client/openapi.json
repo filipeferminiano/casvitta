@@ -3594,6 +3594,484 @@
           }
         }
       }
+    },
+    "/v1/properties": {
+      "get": {
+        "tags": [
+          "properties"
+        ],
+        "summary": "List Properties",
+        "operationId": "listProperties",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/PropertyOut"
+                  },
+                  "type": "array",
+                  "title": "Response Listproperties"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "properties"
+        ],
+        "summary": "Create Property",
+        "operationId": "createProperty",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PropertyIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PropertyOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/properties/{property_id}": {
+      "get": {
+        "tags": [
+          "properties"
+        ],
+        "summary": "Get Property",
+        "operationId": "getProperty",
+        "parameters": [
+          {
+            "name": "property_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Property Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PropertyOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "properties"
+        ],
+        "summary": "Update Property",
+        "operationId": "updateProperty",
+        "parameters": [
+          {
+            "name": "property_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Property Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PropertyPatch"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PropertyOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/properties/{property_id}/authorizations": {
+      "post": {
+        "tags": [
+          "properties"
+        ],
+        "summary": "Add Authorization",
+        "operationId": "addOwnerAuthorization",
+        "parameters": [
+          {
+            "name": "property_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Property Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_addOwnerAuthorization"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PropertyOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/properties/{property_id}/photos": {
+      "post": {
+        "tags": [
+          "properties"
+        ],
+        "summary": "Add Photo",
+        "operationId": "addPropertyPhoto",
+        "parameters": [
+          {
+            "name": "property_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Property Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_addPropertyPhoto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PropertyOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/properties/{property_id}/listings/{channel}": {
+      "put": {
+        "tags": [
+          "properties"
+        ],
+        "summary": "Publish",
+        "operationId": "publishListing",
+        "parameters": [
+          {
+            "name": "property_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Property Id"
+            }
+          },
+          {
+            "name": "channel",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/Channel"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PropertyOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "properties"
+        ],
+        "summary": "Unpublish",
+        "operationId": "unpublishListing",
+        "parameters": [
+          {
+            "name": "property_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Property Id"
+            }
+          },
+          {
+            "name": "channel",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/Channel"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PropertyOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/public/listings": {
+      "get": {
+        "tags": [
+          "public"
+        ],
+        "summary": "Public Listings",
+        "description": "Published listings that pass the gate now. Place filters are URL slugs.",
+        "operationId": "listPublicListings",
+        "parameters": [
+          {
+            "name": "channel",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/Channel",
+              "default": "marketplace"
+            }
+          },
+          {
+            "name": "transaction",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/Transaction"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Transaction"
+            }
+          },
+          {
+            "name": "city",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "maxLength": 120
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "City"
+            }
+          },
+          {
+            "name": "neighborhood",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "maxLength": 120
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Neighborhood"
+            }
+          },
+          {
+            "name": "street",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "maxLength": 160
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Street"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PublicListingOut"
+                  },
+                  "title": "Response Listpubliclistings"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -4486,7 +4964,7 @@
           },
           "property_kinds": {
             "items": {
-              "$ref": "#/components/schemas/PropertyKind"
+              "$ref": "#/components/schemas/app__domains__interest__schemas__PropertyKind"
             },
             "type": "array",
             "minItems": 1,
@@ -4731,6 +5209,129 @@
           "actions"
         ],
         "title": "AuditPage"
+      },
+      "AuthorizationEvidence": {
+        "type": "string",
+        "enum": [
+          "document",
+          "attestation"
+        ],
+        "title": "AuthorizationEvidence"
+      },
+      "AuthorizationOut": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "kind": {
+            "$ref": "#/components/schemas/Transaction"
+          },
+          "exclusive": {
+            "type": "boolean",
+            "title": "Exclusive"
+          },
+          "evidence": {
+            "$ref": "#/components/schemas/AuthorizationEvidence"
+          },
+          "owner_name": {
+            "type": "string",
+            "title": "Owner Name"
+          },
+          "signed_at": {
+            "type": "string",
+            "format": "date",
+            "title": "Signed At"
+          },
+          "expires_at": {
+            "type": "string",
+            "format": "date",
+            "title": "Expires At"
+          },
+          "has_document": {
+            "type": "boolean",
+            "title": "Has Document"
+          },
+          "revoked_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Revoked At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "kind",
+          "exclusive",
+          "evidence",
+          "owner_name",
+          "signed_at",
+          "expires_at",
+          "has_document",
+          "revoked_at"
+        ],
+        "title": "AuthorizationOut"
+      },
+      "Blocker": {
+        "type": "string",
+        "enum": [
+          "property_not_active",
+          "no_responsible_broker",
+          "creci_unverified",
+          "authorization_missing",
+          "authorization_wrong_kind",
+          "authorization_expired",
+          "publishing_paused"
+        ],
+        "title": "Blocker"
+      },
+      "Body_addOwnerAuthorization": {
+        "properties": {
+          "data": {
+            "type": "string",
+            "title": "Data",
+            "description": "AuthorizationIn as JSON"
+          },
+          "document": {
+            "anyOf": [
+              {
+                "type": "string",
+                "contentMediaType": "application/octet-stream"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Document"
+          }
+        },
+        "type": "object",
+        "required": [
+          "data"
+        ],
+        "title": "Body_addOwnerAuthorization"
+      },
+      "Body_addPropertyPhoto": {
+        "properties": {
+          "photo": {
+            "type": "string",
+            "contentMediaType": "application/octet-stream",
+            "title": "Photo"
+          }
+        },
+        "type": "object",
+        "required": [
+          "photo"
+        ],
+        "title": "Body_addPropertyPhoto"
       },
       "BrokerCandidate": {
         "properties": {
@@ -5377,6 +5978,17 @@
           "items"
         ],
         "title": "CaptureListOut"
+      },
+      "Channel": {
+        "type": "string",
+        "enum": [
+          "marketplace",
+          "bio_page",
+          "landing",
+          "meta",
+          "google"
+        ],
+        "title": "Channel"
       },
       "CheckResult": {
         "properties": {
@@ -6708,6 +7320,69 @@
         ],
         "title": "ItbiRulesOut"
       },
+      "ListingOut": {
+        "properties": {
+          "channel": {
+            "$ref": "#/components/schemas/Channel"
+          },
+          "status": {
+            "$ref": "#/components/schemas/ListingStatus"
+          },
+          "published_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Published At"
+          },
+          "unpublished_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Unpublished At"
+          },
+          "unpublish_reason": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/UnpublishReason"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "channel",
+          "status",
+          "published_at",
+          "unpublished_at",
+          "unpublish_reason"
+        ],
+        "title": "ListingOut"
+      },
+      "ListingStatus": {
+        "type": "string",
+        "enum": [
+          "draft",
+          "published",
+          "unpublished",
+          "suspended"
+        ],
+        "title": "ListingStatus"
+      },
       "MeOut": {
         "properties": {
           "user": {
@@ -6745,6 +7420,35 @@
           "broker"
         ],
         "title": "MeOut"
+      },
+      "MediaOut": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "url": {
+            "type": "string",
+            "title": "Url"
+          },
+          "position": {
+            "type": "integer",
+            "title": "Position"
+          },
+          "is_cover": {
+            "type": "boolean",
+            "title": "Is Cover"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "url",
+          "position",
+          "is_cover"
+        ],
+        "title": "MediaOut"
       },
       "ModerationQueueOut": {
         "properties": {
@@ -7134,7 +7838,7 @@
             "title": "Cep"
           },
           "property_kind": {
-            "$ref": "#/components/schemas/PropertyKind"
+            "$ref": "#/components/schemas/app__domains__interest__schemas__PropertyKind"
           },
           "bedrooms": {
             "anyOf": [
@@ -7268,7 +7972,7 @@
             "title": "Transaction"
           },
           "property_kind": {
-            "$ref": "#/components/schemas/PropertyKind"
+            "$ref": "#/components/schemas/app__domains__interest__schemas__PropertyKind"
           },
           "city": {
             "type": "string",
@@ -7743,15 +8447,931 @@
         ],
         "title": "PropertyAlertOut"
       },
-      "PropertyKind": {
+      "PropertyIn": {
+        "properties": {
+          "kind": {
+            "$ref": "#/components/schemas/app__domains__properties__models__PropertyKind"
+          },
+          "transaction": {
+            "$ref": "#/components/schemas/Transaction"
+          },
+          "title": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 160
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Title"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 5000
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Description"
+          },
+          "street": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 160
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Street"
+          },
+          "show_street": {
+            "type": "boolean",
+            "title": "Show Street",
+            "default": false
+          },
+          "street_number": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 16
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Street Number"
+          },
+          "complement": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 80
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Complement"
+          },
+          "postal_code": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^\\d{5}-?\\d{3}$"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Postal Code"
+          },
+          "neighborhood": {
+            "type": "string",
+            "maxLength": 120,
+            "minLength": 2,
+            "title": "Neighborhood"
+          },
+          "city": {
+            "type": "string",
+            "maxLength": 120,
+            "minLength": 2,
+            "title": "City"
+          },
+          "state": {
+            "type": "string",
+            "pattern": "^[A-Z]{2}$",
+            "title": "State"
+          },
+          "area_m2": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 100000.0,
+                "minimum": 1.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Area M2"
+          },
+          "bedrooms": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 50.0,
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Bedrooms"
+          },
+          "bathrooms": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 50.0,
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Bathrooms"
+          },
+          "parking": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 50.0,
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Parking"
+          },
+          "features": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "maxItems": 40,
+            "title": "Features"
+          },
+          "price_cents": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Price Cents"
+          },
+          "condo_fee_cents": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Condo Fee Cents"
+          },
+          "iptu_monthly_cents": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Iptu Monthly Cents"
+          },
+          "source": {
+            "$ref": "#/components/schemas/PropertySource",
+            "default": "casvitta"
+          },
+          "responsible_broker_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Responsible Broker Id"
+          }
+        },
+        "type": "object",
+        "required": [
+          "kind",
+          "transaction",
+          "neighborhood",
+          "city",
+          "state",
+          "price_cents"
+        ],
+        "title": "PropertyIn"
+      },
+      "PropertyKind-Output": {
         "type": "string",
         "enum": [
           "apartment",
           "house",
-          "land",
-          "commercial"
+          "studio",
+          "commercial",
+          "land"
         ],
         "title": "PropertyKind"
+      },
+      "PropertyOut": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "code": {
+            "type": "string",
+            "title": "Code"
+          },
+          "slug": {
+            "type": "string",
+            "title": "Slug"
+          },
+          "kind": {
+            "$ref": "#/components/schemas/PropertyKind-Output"
+          },
+          "transaction": {
+            "$ref": "#/components/schemas/Transaction"
+          },
+          "status": {
+            "$ref": "#/components/schemas/PropertyStatus"
+          },
+          "source": {
+            "$ref": "#/components/schemas/PropertySource"
+          },
+          "title": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Title"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Description"
+          },
+          "street": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Street"
+          },
+          "show_street": {
+            "type": "boolean",
+            "title": "Show Street"
+          },
+          "street_number": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Street Number"
+          },
+          "complement": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Complement"
+          },
+          "postal_code": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Postal Code"
+          },
+          "neighborhood": {
+            "type": "string",
+            "title": "Neighborhood"
+          },
+          "city": {
+            "type": "string",
+            "title": "City"
+          },
+          "state": {
+            "type": "string",
+            "title": "State"
+          },
+          "area_m2": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Area M2"
+          },
+          "bedrooms": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Bedrooms"
+          },
+          "bathrooms": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Bathrooms"
+          },
+          "parking": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Parking"
+          },
+          "features": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Features"
+          },
+          "price_cents": {
+            "type": "integer",
+            "title": "Price Cents"
+          },
+          "condo_fee_cents": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Condo Fee Cents"
+          },
+          "iptu_monthly_cents": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Iptu Monthly Cents"
+          },
+          "responsible_broker_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Responsible Broker Id"
+          },
+          "sync_status": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/SyncStatus"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "last_synced_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Last Synced At"
+          },
+          "is_demo": {
+            "type": "boolean",
+            "title": "Is Demo"
+          },
+          "authorization": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/AuthorizationOut"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "listings": {
+            "items": {
+              "$ref": "#/components/schemas/ListingOut"
+            },
+            "type": "array",
+            "title": "Listings"
+          },
+          "media": {
+            "items": {
+              "$ref": "#/components/schemas/MediaOut"
+            },
+            "type": "array",
+            "title": "Media"
+          },
+          "blockers": {
+            "items": {
+              "$ref": "#/components/schemas/Blocker"
+            },
+            "type": "array",
+            "title": "Blockers"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "code",
+          "slug",
+          "kind",
+          "transaction",
+          "status",
+          "source",
+          "title",
+          "description",
+          "street",
+          "show_street",
+          "street_number",
+          "complement",
+          "postal_code",
+          "neighborhood",
+          "city",
+          "state",
+          "area_m2",
+          "bedrooms",
+          "bathrooms",
+          "parking",
+          "features",
+          "price_cents",
+          "condo_fee_cents",
+          "iptu_monthly_cents",
+          "responsible_broker_id",
+          "sync_status",
+          "last_synced_at",
+          "is_demo",
+          "authorization",
+          "listings",
+          "media",
+          "blockers"
+        ],
+        "title": "PropertyOut"
+      },
+      "PropertyPatch": {
+        "properties": {
+          "title": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 160
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Title"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 5000
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Description"
+          },
+          "show_street": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Show Street"
+          },
+          "area_m2": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 100000.0,
+                "minimum": 1.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Area M2"
+          },
+          "bedrooms": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 50.0,
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Bedrooms"
+          },
+          "bathrooms": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 50.0,
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Bathrooms"
+          },
+          "parking": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 50.0,
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Parking"
+          },
+          "features": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array",
+                "maxItems": 40
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Features"
+          },
+          "price_cents": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Price Cents"
+          },
+          "condo_fee_cents": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Condo Fee Cents"
+          },
+          "iptu_monthly_cents": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Iptu Monthly Cents"
+          },
+          "status": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/PropertyStatus"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "title": "PropertyPatch"
+      },
+      "PropertySource": {
+        "type": "string",
+        "enum": [
+          "casvitta",
+          "manual",
+          "import"
+        ],
+        "title": "PropertySource"
+      },
+      "PropertyStatus": {
+        "type": "string",
+        "enum": [
+          "draft",
+          "active",
+          "paused",
+          "sold",
+          "rented"
+        ],
+        "title": "PropertyStatus"
+      },
+      "PublicBroker": {
+        "properties": {
+          "display_name": {
+            "type": "string",
+            "title": "Display Name"
+          },
+          "slug": {
+            "type": "string",
+            "title": "Slug"
+          },
+          "creci_state": {
+            "type": "string",
+            "title": "Creci State"
+          },
+          "creci_number": {
+            "type": "string",
+            "title": "Creci Number"
+          },
+          "photo_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Photo Url"
+          }
+        },
+        "type": "object",
+        "required": [
+          "display_name",
+          "slug",
+          "creci_state",
+          "creci_number",
+          "photo_url"
+        ],
+        "title": "PublicBroker"
+      },
+      "PublicListingOut": {
+        "properties": {
+          "code": {
+            "type": "string",
+            "title": "Code"
+          },
+          "slug": {
+            "type": "string",
+            "title": "Slug"
+          },
+          "kind": {
+            "$ref": "#/components/schemas/PropertyKind-Output"
+          },
+          "transaction": {
+            "$ref": "#/components/schemas/Transaction"
+          },
+          "title": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Title"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Description"
+          },
+          "street": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Street"
+          },
+          "neighborhood": {
+            "type": "string",
+            "title": "Neighborhood"
+          },
+          "city": {
+            "type": "string",
+            "title": "City"
+          },
+          "state": {
+            "type": "string",
+            "title": "State"
+          },
+          "area_m2": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Area M2"
+          },
+          "bedrooms": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Bedrooms"
+          },
+          "bathrooms": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Bathrooms"
+          },
+          "parking": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Parking"
+          },
+          "features": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Features"
+          },
+          "price_cents": {
+            "type": "integer",
+            "title": "Price Cents"
+          },
+          "condo_fee_cents": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Condo Fee Cents"
+          },
+          "iptu_monthly_cents": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Iptu Monthly Cents"
+          },
+          "photos": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Photos"
+          },
+          "broker": {
+            "$ref": "#/components/schemas/PublicBroker"
+          },
+          "published_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Published At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "code",
+          "slug",
+          "kind",
+          "transaction",
+          "title",
+          "description",
+          "street",
+          "neighborhood",
+          "city",
+          "state",
+          "area_m2",
+          "bedrooms",
+          "bathrooms",
+          "parking",
+          "features",
+          "price_cents",
+          "condo_fee_cents",
+          "iptu_monthly_cents",
+          "photos",
+          "broker",
+          "published_at"
+        ],
+        "title": "PublicListingOut",
+        "description": "What anyone can see. Neighborhood-level location only; no owner data."
       },
       "PublicStats": {
         "properties": {
@@ -8864,6 +10484,14 @@
         ],
         "title": "StreetRow"
       },
+      "SyncStatus": {
+        "type": "string",
+        "enum": [
+          "ok",
+          "failed"
+        ],
+        "title": "SyncStatus"
+      },
       "TeamMember": {
         "properties": {
           "name": {
@@ -8983,6 +10611,24 @@
           "token"
         ],
         "title": "TokenIn"
+      },
+      "Transaction": {
+        "type": "string",
+        "enum": [
+          "sale",
+          "rent"
+        ],
+        "title": "Transaction"
+      },
+      "UnpublishReason": {
+        "type": "string",
+        "enum": [
+          "broker",
+          "authorization_expired",
+          "property_unavailable",
+          "staff"
+        ],
+        "title": "UnpublishReason"
       },
       "UserOut": {
         "properties": {
@@ -9524,6 +11170,27 @@
         ],
         "title": "QueueItem",
         "description": "A line of \"Precisa de você\": a queue that waits for someone, with a link target."
+      },
+      "app__domains__interest__schemas__PropertyKind": {
+        "type": "string",
+        "enum": [
+          "apartment",
+          "house",
+          "land",
+          "commercial"
+        ],
+        "title": "PropertyKind"
+      },
+      "app__domains__properties__models__PropertyKind": {
+        "type": "string",
+        "enum": [
+          "apartment",
+          "house",
+          "studio",
+          "commercial",
+          "land"
+        ],
+        "title": "PropertyKind"
       }
     }
   }

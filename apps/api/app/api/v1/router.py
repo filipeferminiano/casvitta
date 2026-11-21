@@ -9,6 +9,7 @@ from app.api.v1 import (
     interest,
     market,
     me,
+    properties,
     staff,
     staff_ops,
 )
@@ -26,4 +27,6 @@ api_router.include_router(alerts.admin_router)
 api_router.include_router(staff.router)
 api_router.include_router(staff_ops.router)
 api_router.include_router(staff_ops.public_router)
+api_router.include_router(properties.router)
+api_router.include_router(properties.public_router)
 api_router.include_router(dev.router)

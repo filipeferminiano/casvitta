@@ -125,6 +125,8 @@ class Settings(BaseSettings):
     # End-to-end tests only: GET /v1/dev/outbox shows the emails the fake adapter "sent", so a
     # browser test can open sign-in links. Refused in production.
     dev_outbox_enabled: bool = False
+    # Show is_demo listings on public pages. Local demos only; production refuses it (rule 7).
+    public_listings_include_demo: bool = False
     # Public interest form: requests per IP and kind per minute.
     interest_rate_limit_per_minute: int = 5
 
@@ -202,6 +204,8 @@ class Settings(BaseSettings):
             raise ValueError("JWT_SECRET must be set in production (32+ characters)")
         if self.app_env == "production" and self.dev_outbox_enabled:
             raise ValueError("DEV_OUTBOX_ENABLED is for end-to-end tests, never production")
+        if self.app_env == "production" and self.public_listings_include_demo:
+            raise ValueError("PUBLIC_LISTINGS_INCLUDE_DEMO never runs in production (rule 7)")
         return self
 
     @field_validator("database_url", "test_database_url", mode="before")

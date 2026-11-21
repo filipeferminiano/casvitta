@@ -16,6 +16,7 @@ from app.domains.interest.models import (
     InterestSignup,
     InterestSignupConsent,
 )
+from app.domains.listings.models import Listing
 from app.domains.market_data.models import (
     IptuStandardCode,
     IptuUseCode,
@@ -32,6 +33,7 @@ from app.domains.market_data.models import (
     MarketStats,
     MarketStreet,
 )
+from app.domains.properties.models import OwnerAuthorization, Property, PropertyMedia
 from app.domains.staff.models import StaffLoginToken, StaffSession, StaffUser
 
 __all__ = [
@@ -48,6 +50,7 @@ __all__ = [
     "ItbiLocationReview",
     "ItbiTransaction",
     "ItbiTransactionRaw",
+    "Listing",
     "LoginToken",
     "MarketBuilding",
     "MarketCity",
@@ -58,8 +61,11 @@ __all__ = [
     "MarketStats",
     "MarketStreet",
     "Membership",
+    "OwnerAuthorization",
+    "Property",
     "PropertyAlert",
     "PropertyAlertConsent",
+    "PropertyMedia",
     "StaffLoginToken",
     "StaffSession",
     "StaffUser",

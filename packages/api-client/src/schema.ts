@@ -1104,6 +1104,114 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/properties": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Properties */
+        get: operations["listProperties"];
+        put?: never;
+        /** Create Property */
+        post: operations["createProperty"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/properties/{property_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Property */
+        get: operations["getProperty"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Update Property */
+        patch: operations["updateProperty"];
+        trace?: never;
+    };
+    "/v1/properties/{property_id}/authorizations": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Add Authorization */
+        post: operations["addOwnerAuthorization"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/properties/{property_id}/photos": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Add Photo */
+        post: operations["addPropertyPhoto"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/properties/{property_id}/listings/{channel}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Publish */
+        put: operations["publishListing"];
+        post?: never;
+        /** Unpublish */
+        delete: operations["unpublishListing"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/public/listings": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Public Listings
+         * @description Published listings that pass the gate now. Place filters are URL slugs.
+         */
+        get: operations["listPublicListings"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -1402,7 +1510,7 @@ export interface components {
             /** Regions */
             regions: string;
             /** Property Kinds */
-            property_kinds: components["schemas"]["PropertyKind"][];
+            property_kinds: components["schemas"]["app__domains__interest__schemas__PropertyKind"][];
             price_range: components["schemas"]["AuctionPriceRange"];
             /**
              * Payment
@@ -1482,6 +1590,59 @@ export interface components {
             next_before: string | null;
             /** Actions */
             actions: string[];
+        };
+        /**
+         * AuthorizationEvidence
+         * @enum {string}
+         */
+        AuthorizationEvidence: "document" | "attestation";
+        /** AuthorizationOut */
+        AuthorizationOut: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            kind: components["schemas"]["Transaction"];
+            /** Exclusive */
+            exclusive: boolean;
+            evidence: components["schemas"]["AuthorizationEvidence"];
+            /** Owner Name */
+            owner_name: string;
+            /**
+             * Signed At
+             * Format: date
+             */
+            signed_at: string;
+            /**
+             * Expires At
+             * Format: date
+             */
+            expires_at: string;
+            /** Has Document */
+            has_document: boolean;
+            /** Revoked At */
+            revoked_at: string | null;
+        };
+        /**
+         * Blocker
+         * @enum {string}
+         */
+        Blocker: "property_not_active" | "no_responsible_broker" | "creci_unverified" | "authorization_missing" | "authorization_wrong_kind" | "authorization_expired" | "publishing_paused";
+        /** Body_addOwnerAuthorization */
+        Body_addOwnerAuthorization: {
+            /**
+             * Data
+             * @description AuthorizationIn as JSON
+             */
+            data: string;
+            /** Document */
+            document?: string | null;
+        };
+        /** Body_addPropertyPhoto */
+        Body_addPropertyPhoto: {
+            /** Photo */
+            photo: string;
         };
         /** BrokerCandidate */
         BrokerCandidate: {
@@ -1660,6 +1821,11 @@ export interface components {
             /** Items */
             items: components["schemas"]["CaptureItem"][];
         };
+        /**
+         * Channel
+         * @enum {string}
+         */
+        Channel: "marketplace" | "bio_page" | "landing" | "meta" | "google";
         /** CheckResult */
         CheckResult: {
             /**
@@ -2098,6 +2264,21 @@ export interface components {
             /** Registry High Cents */
             registry_high_cents: number | null;
         };
+        /** ListingOut */
+        ListingOut: {
+            channel: components["schemas"]["Channel"];
+            status: components["schemas"]["ListingStatus"];
+            /** Published At */
+            published_at: string | null;
+            /** Unpublished At */
+            unpublished_at: string | null;
+            unpublish_reason: components["schemas"]["UnpublishReason"] | null;
+        };
+        /**
+         * ListingStatus
+         * @enum {string}
+         */
+        ListingStatus: "draft" | "published" | "unpublished" | "suspended";
         /** MeOut */
         MeOut: {
             user: components["schemas"]["UserOut"];
@@ -2105,6 +2286,20 @@ export interface components {
             broker: components["schemas"]["BrokerProfileOut"] | null;
             /** Viewing As */
             viewing_as?: string | null;
+        };
+        /** MediaOut */
+        MediaOut: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Url */
+            url: string;
+            /** Position */
+            position: number;
+            /** Is Cover */
+            is_cover: boolean;
         };
         /** ModerationQueueOut */
         ModerationQueueOut: {
@@ -2233,7 +2428,7 @@ export interface components {
             transaction: "sale" | "rent";
             /** Cep */
             cep: string;
-            property_kind: components["schemas"]["PropertyKind"];
+            property_kind: components["schemas"]["app__domains__interest__schemas__PropertyKind"];
             /** Bedrooms */
             bedrooms?: number | null;
             /** Area M2 */
@@ -2272,7 +2467,7 @@ export interface components {
              * @enum {string}
              */
             transaction: "sale" | "rent";
-            property_kind: components["schemas"]["PropertyKind"];
+            property_kind: components["schemas"]["app__domains__interest__schemas__PropertyKind"];
             /** City */
             city: string;
             /** Period Days */
@@ -2419,11 +2614,219 @@ export interface components {
              */
             created_at: string;
         };
+        /** PropertyIn */
+        PropertyIn: {
+            kind: components["schemas"]["app__domains__properties__models__PropertyKind"];
+            transaction: components["schemas"]["Transaction"];
+            /** Title */
+            title?: string | null;
+            /** Description */
+            description?: string | null;
+            /** Street */
+            street?: string | null;
+            /**
+             * Show Street
+             * @default false
+             */
+            show_street: boolean;
+            /** Street Number */
+            street_number?: string | null;
+            /** Complement */
+            complement?: string | null;
+            /** Postal Code */
+            postal_code?: string | null;
+            /** Neighborhood */
+            neighborhood: string;
+            /** City */
+            city: string;
+            /** State */
+            state: string;
+            /** Area M2 */
+            area_m2?: number | null;
+            /** Bedrooms */
+            bedrooms?: number | null;
+            /** Bathrooms */
+            bathrooms?: number | null;
+            /** Parking */
+            parking?: number | null;
+            /** Features */
+            features?: string[];
+            /** Price Cents */
+            price_cents: number;
+            /** Condo Fee Cents */
+            condo_fee_cents?: number | null;
+            /** Iptu Monthly Cents */
+            iptu_monthly_cents?: number | null;
+            /** @default casvitta */
+            source: components["schemas"]["PropertySource"];
+            /** Responsible Broker Id */
+            responsible_broker_id?: string | null;
+        };
         /**
          * PropertyKind
          * @enum {string}
          */
-        PropertyKind: "apartment" | "house" | "land" | "commercial";
+        "PropertyKind-Output": "apartment" | "house" | "studio" | "commercial" | "land";
+        /** PropertyOut */
+        PropertyOut: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Code */
+            code: string;
+            /** Slug */
+            slug: string;
+            kind: components["schemas"]["PropertyKind-Output"];
+            transaction: components["schemas"]["Transaction"];
+            status: components["schemas"]["PropertyStatus"];
+            source: components["schemas"]["PropertySource"];
+            /** Title */
+            title: string | null;
+            /** Description */
+            description: string | null;
+            /** Street */
+            street: string | null;
+            /** Show Street */
+            show_street: boolean;
+            /** Street Number */
+            street_number: string | null;
+            /** Complement */
+            complement: string | null;
+            /** Postal Code */
+            postal_code: string | null;
+            /** Neighborhood */
+            neighborhood: string;
+            /** City */
+            city: string;
+            /** State */
+            state: string;
+            /** Area M2 */
+            area_m2: number | null;
+            /** Bedrooms */
+            bedrooms: number | null;
+            /** Bathrooms */
+            bathrooms: number | null;
+            /** Parking */
+            parking: number | null;
+            /** Features */
+            features: string[];
+            /** Price Cents */
+            price_cents: number;
+            /** Condo Fee Cents */
+            condo_fee_cents: number | null;
+            /** Iptu Monthly Cents */
+            iptu_monthly_cents: number | null;
+            /** Responsible Broker Id */
+            responsible_broker_id: string | null;
+            sync_status: components["schemas"]["SyncStatus"] | null;
+            /** Last Synced At */
+            last_synced_at: string | null;
+            /** Is Demo */
+            is_demo: boolean;
+            authorization: components["schemas"]["AuthorizationOut"] | null;
+            /** Listings */
+            listings: components["schemas"]["ListingOut"][];
+            /** Media */
+            media: components["schemas"]["MediaOut"][];
+            /** Blockers */
+            blockers: components["schemas"]["Blocker"][];
+        };
+        /** PropertyPatch */
+        PropertyPatch: {
+            /** Title */
+            title?: string | null;
+            /** Description */
+            description?: string | null;
+            /** Show Street */
+            show_street?: boolean | null;
+            /** Area M2 */
+            area_m2?: number | null;
+            /** Bedrooms */
+            bedrooms?: number | null;
+            /** Bathrooms */
+            bathrooms?: number | null;
+            /** Parking */
+            parking?: number | null;
+            /** Features */
+            features?: string[] | null;
+            /** Price Cents */
+            price_cents?: number | null;
+            /** Condo Fee Cents */
+            condo_fee_cents?: number | null;
+            /** Iptu Monthly Cents */
+            iptu_monthly_cents?: number | null;
+            status?: components["schemas"]["PropertyStatus"] | null;
+        };
+        /**
+         * PropertySource
+         * @enum {string}
+         */
+        PropertySource: "casvitta" | "manual" | "import";
+        /**
+         * PropertyStatus
+         * @enum {string}
+         */
+        PropertyStatus: "draft" | "active" | "paused" | "sold" | "rented";
+        /** PublicBroker */
+        PublicBroker: {
+            /** Display Name */
+            display_name: string;
+            /** Slug */
+            slug: string;
+            /** Creci State */
+            creci_state: string;
+            /** Creci Number */
+            creci_number: string;
+            /** Photo Url */
+            photo_url: string | null;
+        };
+        /**
+         * PublicListingOut
+         * @description What anyone can see. Neighborhood-level location only; no owner data.
+         */
+        PublicListingOut: {
+            /** Code */
+            code: string;
+            /** Slug */
+            slug: string;
+            kind: components["schemas"]["PropertyKind-Output"];
+            transaction: components["schemas"]["Transaction"];
+            /** Title */
+            title: string | null;
+            /** Description */
+            description: string | null;
+            /** Street */
+            street: string | null;
+            /** Neighborhood */
+            neighborhood: string;
+            /** City */
+            city: string;
+            /** State */
+            state: string;
+            /** Area M2 */
+            area_m2: number | null;
+            /** Bedrooms */
+            bedrooms: number | null;
+            /** Bathrooms */
+            bathrooms: number | null;
+            /** Parking */
+            parking: number | null;
+            /** Features */
+            features: string[];
+            /** Price Cents */
+            price_cents: number;
+            /** Condo Fee Cents */
+            condo_fee_cents: number | null;
+            /** Iptu Monthly Cents */
+            iptu_monthly_cents: number | null;
+            /** Photos */
+            photos: string[];
+            broker: components["schemas"]["PublicBroker"];
+            /** Published At */
+            published_at: string | null;
+        };
         /**
          * PublicStats
          * @description ``priced`` false: the group is below MARKET_MIN_PRICE_GROUP, only the count is public.
@@ -2797,6 +3200,11 @@ export interface components {
             place: components["schemas"]["PlaceRef"];
             stats: components["schemas"]["PublicStats"] | null;
         };
+        /**
+         * SyncStatus
+         * @enum {string}
+         */
+        SyncStatus: "ok" | "failed";
         /** TeamMember */
         TeamMember: {
             /** Name */
@@ -2840,6 +3248,16 @@ export interface components {
             /** Token */
             token: string;
         };
+        /**
+         * Transaction
+         * @enum {string}
+         */
+        Transaction: "sale" | "rent";
+        /**
+         * UnpublishReason
+         * @enum {string}
+         */
+        UnpublishReason: "broker" | "authorization_expired" | "property_unavailable" | "staff";
         /** UserOut */
         UserOut: {
             /**
@@ -3009,6 +3427,16 @@ export interface components {
              */
             over_sla: number;
         };
+        /**
+         * PropertyKind
+         * @enum {string}
+         */
+        app__domains__interest__schemas__PropertyKind: "apartment" | "house" | "land" | "commercial";
+        /**
+         * PropertyKind
+         * @enum {string}
+         */
+        app__domains__properties__models__PropertyKind: "apartment" | "house" | "studio" | "commercial" | "land";
     };
     responses: never;
     parameters: never;
@@ -5027,6 +5455,294 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["AcceptOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    listProperties: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PropertyOut"][];
+                };
+            };
+        };
+    };
+    createProperty: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PropertyIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PropertyOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    getProperty: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                property_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PropertyOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    updateProperty: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                property_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PropertyPatch"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PropertyOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    addOwnerAuthorization: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                property_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "multipart/form-data": components["schemas"]["Body_addOwnerAuthorization"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PropertyOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    addPropertyPhoto: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                property_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "multipart/form-data": components["schemas"]["Body_addPropertyPhoto"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PropertyOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    publishListing: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                property_id: string;
+                channel: components["schemas"]["Channel"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PropertyOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    unpublishListing: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                property_id: string;
+                channel: components["schemas"]["Channel"];
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PropertyOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    listPublicListings: {
+        parameters: {
+            query?: {
+                channel?: components["schemas"]["Channel"];
+                transaction?: components["schemas"]["Transaction"] | null;
+                city?: string | null;
+                neighborhood?: string | null;
+                street?: string | null;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PublicListingOut"][];
                 };
             };
             /** @description Validation Error */

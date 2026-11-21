@@ -28,3 +28,8 @@ def format_date(value: date | datetime) -> str:
     """'dd/MM/yyyy' (datetimes are converted to São Paulo time first)."""
     day = to_local(value).date() if isinstance(value, datetime) else value
     return day.strftime("%d/%m/%Y")
+
+
+def today_local() -> date:
+    """Today in São Paulo (authorization expiry, delivery days)."""
+    return utcnow().astimezone(TZ).date()

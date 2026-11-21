@@ -57,5 +57,18 @@
   "email.capture_offer.text": "Olá, {name}.\n\nTemos um pedido de proprietário para você:\n{what}\n{region}\n\nSe puder atender, aceite em até {hours} horas:\n{link}\n\nDepois de aceitar, enviamos o contato do proprietário. Sem resposta nesse prazo, o pedido vai para outro corretor.\n\nCasvitta",
   "email.capture_contact.subject": "Contato do proprietário que você aceitou",
   "email.capture_contact.text": "Olá, {name}.\n\nObrigado por aceitar. O proprietário autorizou o contato sobre o imóvel:\n\n{owner}\nWhatsApp: {phone}\nE-mail: {email}\n{what}\n{region}\n\nCasvitta",
-  "read_only_session": "Você está vendo como o cliente, somente leitura. Nada pode ser alterado nesta sessão."
+  "read_only_session": "Você está vendo como o cliente, somente leitura. Nada pode ser alterado nesta sessão.",
+  "property_not_found": "Não encontramos este imóvel. Ele pode ter sido removido; volte para Imóveis.",
+  "broker_not_found": "Não encontramos este corretor na sua conta. Escolha um corretor da sua equipe.",
+  "publish_blocked.property_not_active": "O imóvel não está ativo. Marque como ativo antes de publicar.",
+  "publish_blocked.no_responsible_broker": "Escolha o corretor responsável pelo imóvel antes de publicar.",
+  "publish_blocked.creci_unverified": "Seu CRECI ainda está em conferência. O imóvel pode ser publicado assim que a conferência terminar; avisamos por e-mail.",
+  "publish_blocked.authorization_missing": "Falta a autorização do proprietário. Envie o documento ou confirme que você tem a autorização para publicar.",
+  "publish_blocked.authorization_wrong_kind": "A autorização do proprietário é para outro tipo de negócio (venda ou aluguel). Envie uma autorização para este anúncio.",
+  "publish_blocked.authorization_expired": "A autorização do proprietário venceu. Envie uma autorização nova para publicar de novo.",
+  "publish_blocked.publishing_paused": "As publicações desta conta estão pausadas pela Casvitta. Fale com o suporte para entender o motivo.",
+  "listing_suspended": "Este anúncio foi suspenso pela equipe da Casvitta. Fale com o suporte para liberar.",
+  "authorization_document_missing": "Anexe o documento de autorização assinado pelo proprietário (PDF ou foto).",
+  "upload_type_not_allowed": "Este tipo de arquivo não é aceito. Envie JPG, PNG, WebP ou PDF.",
+  "upload_too_large": "O arquivo passa de 10 MB. Envie um arquivo menor."
 }
