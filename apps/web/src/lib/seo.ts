@@ -10,6 +10,8 @@ export const MARKETPLACE_PAGES = [
   { path: '/alugar', priority: 0.9 },
   { path: '/para-corretores', priority: 0.8 },
   { path: '/anunciar-imovel', priority: 0.8 },
+  { path: '/para-imobiliarias', priority: 0.8 },
+  { path: '/anunciar-imovel/corretor', priority: 0.5 },
   { path: '/investidores', priority: 0.6 },
   { path: '/incorporadoras', priority: 0.5 },
   { path: '/leilao', priority: 0.5 },
@@ -83,6 +85,7 @@ export function sitemapFor(site: Site, origin: string): MetadataRoute.Sitemap {
       ];
     }
     case 'app':
+    case 'backoffice':
     case 'reserved':
       return [];
   }
@@ -94,7 +97,12 @@ export function robotsFor(
   origin: string,
   isProductionDomain: boolean,
 ): MetadataRoute.Robots {
-  if (!isProductionDomain || site.kind === 'app' || site.kind === 'reserved') {
+  if (
+    !isProductionDomain ||
+    site.kind === 'app' ||
+    site.kind === 'backoffice' ||
+    site.kind === 'reserved'
+  ) {
     return { rules: { userAgent: '*', disallow: '/' } };
   }
   return {

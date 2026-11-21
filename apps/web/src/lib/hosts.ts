@@ -4,19 +4,23 @@
  *   casvitta.com.br, www.casvitta.com.br  -> marketplace, (marketplace) route group
  *   app.casvitta.com.br                   -> Broker OS,   (app) group, served from /app/*
  *   {brokerSlug}.casvitta.com.br          -> landing,     (landing) group, served from /l/{slug}/*
+ *   admin.casvitta.com.br                 -> backoffice,  (backoffice) group, served from /bo/*
  *
  * In development ROOT_DOMAIN is "localhost:3000", so use app.localhost:3000 and
- * anaribeiro.localhost:3000 (browsers resolve *.localhost to 127.0.0.1).
+ * anaribeiro.localhost:3000 and admin.localhost:3000 (browsers resolve *.localhost to 127.0.0.1).
  */
 
 export type Site =
   | { kind: 'marketplace' }
   | { kind: 'app' }
+  | { kind: 'backoffice' }
   | { kind: 'landing'; brokerSlug: string }
   | { kind: 'reserved' };
 
 export const APP_PREFIX = '/app';
 export const LANDING_PREFIX = '/l';
+export const BACKOFFICE_PREFIX = '/bo';
+export const BACKOFFICE_SUBDOMAIN = 'admin';
 
 const RESERVED_SUBDOMAINS = new Set([
   'api',
@@ -38,6 +42,7 @@ export function resolveSite(host: string, rootDomain: string, appSubdomain = 'ap
   if (!normalizedHost.endsWith(`.${root}`)) return { kind: 'marketplace' }; // previews, IPs
   const subdomain = normalizedHost.slice(0, -(root.length + 1));
   if (subdomain === appSubdomain) return { kind: 'app' };
+  if (subdomain === BACKOFFICE_SUBDOMAIN) return { kind: 'backoffice' };
   if (RESERVED_SUBDOMAINS.has(subdomain) || !SLUG.test(subdomain)) return { kind: 'reserved' };
   return { kind: 'landing', brokerSlug: subdomain };
 }
@@ -60,6 +65,11 @@ export function routeRequest(
       return { action: 'not-found' };
     case 'app':
       return { action: 'rewrite', pathname: `${APP_PREFIX}${pathname === '/' ? '' : pathname}` };
+    case 'backoffice':
+      return {
+        action: 'rewrite',
+        pathname: `${BACKOFFICE_PREFIX}${pathname === '/' ? '' : pathname}`,
+      };
     case 'landing':
       return {
         action: 'rewrite',
@@ -70,6 +80,10 @@ export function routeRequest(
       if (pathname === APP_PREFIX || pathname.startsWith(`${APP_PREFIX}/`)) {
         const rest = pathname.slice(APP_PREFIX.length) || '/';
         return { action: 'redirect', host: `${appSubdomain}.${rootDomain}`, pathname: rest };
+      }
+      // The backoffice is never served from the marketplace host, and gives no hint it exists.
+      if (pathname === BACKOFFICE_PREFIX || pathname.startsWith(`${BACKOFFICE_PREFIX}/`)) {
+        return { action: 'not-found' };
       }
       if (pathname.startsWith(`${LANDING_PREFIX}/`)) {
         const [, , slug, ...rest] = pathname.split('/');

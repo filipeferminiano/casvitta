@@ -71,4 +71,17 @@ describe('routeRequest', () => {
   it('404s reserved subdomains', () => {
     expect(routeRequest({ kind: 'reserved' }, '/', ROOT)).toEqual({ action: 'not-found' });
   });
+
+  it('serves the backoffice only on admin.{root}, from /bo', () => {
+    expect(resolveSite('admin.casvitta.com.br', ROOT)).toEqual({ kind: 'backoffice' });
+    expect(resolveSite('admin.localhost:3000', 'localhost:3000')).toEqual({ kind: 'backoffice' });
+    const site = { kind: 'backoffice' } as const;
+    expect(routeRequest(site, '/', ROOT)).toEqual({ action: 'rewrite', pathname: '/bo' });
+    expect(routeRequest(site, '/creci', ROOT)).toEqual({ action: 'rewrite', pathname: '/bo/creci' });
+    // No hint of it on the public host.
+    expect(routeRequest({ kind: 'marketplace' }, '/bo', ROOT)).toEqual({ action: 'not-found' });
+    expect(routeRequest({ kind: 'marketplace' }, '/bo/equipe', ROOT)).toEqual({
+      action: 'not-found',
+    });
+  });
 });

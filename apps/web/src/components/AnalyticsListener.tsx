@@ -14,6 +14,10 @@ function siteOf(host: string): string {
   return sub === 'app' ? 'app' : 'landing';
 }
 
+function isBackoffice(): boolean {
+  return window.location.hostname.startsWith('admin.');
+}
+
 /**
  * - `page_view` on every client navigation (the GA4 tag in GTM must not send its own).
  * - `whatsapp_click` for any wa.me link.
@@ -24,6 +28,7 @@ export function AnalyticsListener() {
   const pathname = usePathname();
 
   useEffect(() => {
+    if (isBackoffice()) return; // staff pages are never tracked
     // Query strings can carry search filters but never PII (see lib/search-params.ts).
     const site = siteOf(window.location.hostname);
     track({
@@ -37,6 +42,7 @@ export function AnalyticsListener() {
   }, [pathname]);
 
   useEffect(() => {
+    if (isBackoffice()) return;
     const onClick = (e: MouseEvent) => {
       const target = e.target instanceof Element ? e.target : null;
       const tagged = target?.closest<HTMLElement>('[data-track]');

@@ -19,6 +19,18 @@ export function proxy(request: NextRequest) {
     return NextResponse.redirect(new URL('/api/session/sign-in', request.url));
   }
 
+  // Backoffice: staff only. Signed-out visitors land on its own sign-in page (same host).
+  if (
+    site.kind === 'backoffice' &&
+    !request.cookies.has('cv_st_session') &&
+    !request.nextUrl.pathname.startsWith('/entrar')
+  ) {
+    const url = request.nextUrl.clone();
+    url.pathname = '/entrar';
+    url.search = '';
+    return NextResponse.redirect(url);
+  }
+
   switch (decision.action) {
     case 'next':
       return NextResponse.next();

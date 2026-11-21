@@ -2553,5 +2553,176 @@
         "prices": "Preço do m² do bairro"
       }
     }
+  },
+  "backoffice": {
+    "meta": {
+      "title": "Backoffice · Casvitta"
+    },
+    "shell": {
+      "brand": "CASVITTA",
+      "badge": "BACKOFFICE",
+      "home": "Visão geral do backoffice",
+      "nav": "Backoffice",
+      "skip": "Pular para o conteúdo",
+      "groups": {
+        "operation": "Operação",
+        "clients": "Clientes",
+        "system": "Sistema"
+      },
+      "items": {
+        "overview": "Visão geral",
+        "creci": "Verificação de CRECI",
+        "captures": "Captações",
+        "moderation": "Moderação de anúncios",
+        "accounts": "Corretores e imobiliárias",
+        "revenue": "Receita e assinaturas",
+        "team": "Equipe e auditoria"
+      },
+      "countLabel": "{count} na fila",
+      "environment": {
+        "production": "Produção",
+        "staging": "Staging",
+        "development": "Local"
+      },
+      "demo": "Demonstrativo",
+      "footerNote": "Toda ação fica registrada",
+      "who": "{name} · {role}",
+      "signOut": "Sair",
+      "signingOut": "Saindo…",
+      "searchLabel": "Buscar",
+      "searchPlaceholder": "Buscar corretor, CRECI, telefone, e-mail ou imóvel"
+    },
+    "roles": {
+      "admin": "Admin",
+      "operations": "Operações",
+      "commercial": "Comercial",
+      "finance": "Financeiro",
+      "read_only": "Leitura"
+    },
+    "signIn": {
+      "title": "Entrar no backoffice",
+      "description": "Só para a equipe Casvitta. Enviamos um link de entrada para e-mails autorizados.",
+      "email": "E-mail da equipe",
+      "submit": "Enviar link",
+      "sending": "Enviando…",
+      "sentTitle": "Confira seu e-mail",
+      "sentDescription": "Se {email} estiver autorizado, o link chega em instantes. Ele vale por 15 minutos e só funciona uma vez.",
+      "again": "Usar outro e-mail",
+      "invalidEmail": "Digite um e-mail válido, como nome@casvitta.com.br.",
+      "error": "Não conseguimos enviar agora. Tente de novo em um minuto.",
+      "sessionExpired": "Sua sessão do backoffice terminou. Entre de novo para continuar."
+    },
+    "confirm": {
+      "checking": "Confirmando seu link…",
+      "failedTitle": "Este link não vale mais",
+      "failedDescription": "Ele expira em 15 minutos e só pode ser usado uma vez. Peça um novo para entrar.",
+      "again": "Pedir novo link"
+    },
+    "reauth": {
+      "title": "Confirme que é você",
+      "description": "Esta ação mostra ou exporta dados pessoais, ou muda acessos. Enviamos um código de 6 números para {email}.",
+      "code": "Código de 6 números",
+      "confirm": "Confirmar",
+      "confirming": "Confirmando…",
+      "resend": "Enviar outro código",
+      "sent": "Código enviado.",
+      "invalid": "Código errado ou vencido. Confira o último e-mail ou peça outro.",
+      "cancel": "Cancelar",
+      "close": "Fechar"
+    },
+    "states": {
+      "loading": "Carregando {subject}…",
+      "errorTitle": "Não conseguimos carregar {subject}",
+      "errorStillWorks": "O resto do backoffice continua funcionando.",
+      "errorHowToFix": "Tente de novo em alguns segundos. Se continuar, avise quem cuida da plataforma.",
+      "retry": "Tentar de novo",
+      "forbidden": "Seu papel não permite ver isto. Peça acesso a um Admin.",
+      "moduleOff": "Este módulo ainda não está ligado."
+    },
+    "team": {
+      "title": "Equipe e auditoria",
+      "description": "Quem acessa o backoffice, o que cada papel pode fazer e tudo o que foi feito.",
+      "panel": "Equipe",
+      "invite": "Convidar pessoa",
+      "columns": {
+        "person": "Pessoa",
+        "role": "Papel",
+        "lastSeen": "Último acesso"
+      },
+      "edit": "Editar",
+      "editLabel": "Editar {name}",
+      "inactive": "Sem acesso",
+      "never": "nunca",
+      "now": "agora",
+      "note": "Entrada com o mesmo link por e-mail do app, só para e-mails autorizados. Substitui o token único de admin.",
+      "subject": "a equipe",
+      "inviteTitle": "Convidar pessoa",
+      "inviteDescription": "Ela entra com um link enviado para este e-mail. O convite fica na auditoria.",
+      "name": "Nome",
+      "email": "E-mail",
+      "role": "Papel",
+      "send": "Convidar",
+      "sending": "Convidando…",
+      "editTitle": "Editar acesso de {name}",
+      "active": "Acesso ativo",
+      "activeHelp": "Desligar encerra as sessões abertas na hora.",
+      "save": "Salvar",
+      "saving": "Salvando…",
+      "cancel": "Cancelar",
+      "saved": "Acesso atualizado.",
+      "invited": "Convite enviado para {name}.",
+      "errors": {
+        "staff_exists": "Esta pessoa já está na equipe.",
+        "last_admin": "A equipe precisa de pelo menos um Admin ativo.",
+        "generic": "Não conseguimos salvar. Confira os campos e tente de novo."
+      }
+    },
+    "permissions": {
+      "title": "O que cada papel pode fazer",
+      "header": "Permissão",
+      "yes": "Pode",
+      "no": "Não pode",
+      "rows": {
+        "creci_verify": "Verificar CRECI",
+        "captures_handle": "Indicar corretor e tratar captações",
+        "contacts_export": "Exportar contatos (CSV)",
+        "listings_moderate": "Moderar e pausar anúncios",
+        "contacts_reveal": "Ver telefone e e-mail completos",
+        "accounts_view_as": "Ver como o cliente",
+        "billing_manage": "Assinaturas, faturas e links de pagamento",
+        "staff_manage": "Convidar equipe e mudar papéis",
+        "audit_view": "Ver a auditoria",
+        "audit_export": "Exportar a auditoria"
+      }
+    },
+    "audit": {
+      "title": "Auditoria",
+      "export": "Exportar",
+      "exporting": "Exportando…",
+      "subject": "a auditoria",
+      "columns": {
+        "when": "Quando",
+        "who": "Quem",
+        "action": "Ação",
+        "detail": "Detalhe"
+      },
+      "filters": {
+        "person": "Pessoa",
+        "action": "Ação",
+        "since": "De",
+        "until": "Até",
+        "all": "Todas",
+        "everyone": "Todos",
+        "system": "Sistema",
+        "script": "Script",
+        "clear": "Limpar filtros"
+      },
+      "empty": "Nada registrado com estes filtros.",
+      "more": "Ver mais antigos",
+      "loadingMore": "Carregando…",
+      "note": "Registro só de acréscimo: ninguém edita nem apaga. Ver dados pessoais completos pede um motivo.",
+      "reason": "motivo: {reason}",
+      "exported": "Auditoria exportada."
+    }
   }
 }
