@@ -8,9 +8,11 @@ from pathlib import Path
 
 import pytest
 from httpx import AsyncClient
+from sqlalchemy import update
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.itbi import ItbiInputError, ItbiRules, compute_itbi
+from app.domains.market_data.models import ItbiTransaction
 from app.domains.market_data.valuation import Group, ValuationRules, estimate
 from app.scripts.seed_market_demo import seed_demo
 
@@ -183,3 +185,17 @@ async def test_itbi_page(client: AsyncClient) -> None:
     rows = {r["place"]["slug"]: r for r in body["neighborhoods"]}
     assert rows["vila-mariana"]["median_itbi_cents"] is not None
     assert rows["aclimacao"]["median_itbi_cents"] is None  # 4 sales: count only
+
+
+@pytest.mark.usefixtures("demo")
+async def test_itbi_page_reads_negative_source_amounts_as_not_reported(
+    client: AsyncClient, session: AsyncSession
+) -> None:
+    await session.execute(
+        update(ItbiTransaction).values(financed_value_cents=-100_000, tax_base_cents=-1)
+    )
+    await session.flush()
+    response = await client.get(f"{BASE}/itbi")
+    assert response.status_code == 200
+    rows = {r["place"]["slug"]: r for r in response.json()["neighborhoods"]}
+    assert rows["vila-mariana"]["median_itbi_cents"] is not None

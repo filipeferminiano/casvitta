@@ -291,11 +291,12 @@ async def itbi_page(
             )
         )
         for nid, value, base, financing, financed in result:
+            # The source has a few negative amounts (data-entry errors): read them as not reported.
             tax = compute_itbi(
                 rules,
                 price_cents=value,
-                venal_cents=base,
-                financed_cents=financed,
+                venal_cents=base if base and base > 0 else None,
+                financed_cents=financed if financed and financed > 0 else None,
                 sfh=financing == SFH_CODE,
             ).total_cents
             city_values.append(value)

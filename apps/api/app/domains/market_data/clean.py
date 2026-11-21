@@ -122,7 +122,9 @@ def to_clean(row: ItbiRow, kind: PropertyKind, payment_month: date) -> CleanRow:
         built_area_m2=row.built_area_m2,
         price_m2_cents=int(price_m2),
         financing_type_code=row.financing_type_code,
-        financed_value_cents=row.financed_value_cents or None,
+        financed_value_cents=row.financed_value_cents
+        if row.financed_value_cents and row.financed_value_cents > 0
+        else None,
         construction_year=row.construction_year,
         under_declared=reference > 0 and row.value_cents * 2 < reference,
         bundled_parking=mentions_bundled_parking(row.unit_raw),
