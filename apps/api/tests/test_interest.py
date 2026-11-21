@@ -115,11 +115,73 @@ ADAPTER: TypeAdapter[Any] = TypeAdapter(InterestSignupIn)
         ),
         ("rental_admin", {"city": "São Paulo", "properties_count": 2}),
         ("auction", AUCTION["criteria"]),
+        (
+            "owner_listing_start",
+            {"transaction": "sale", "property_kind": "apartment", "city": "São Paulo, SP"},
+        ),
+        (
+            "agency_demo",
+            {"company": "Imobiliária Sul", "team_size": "6_15", "active_properties": "up_to_200"},
+        ),
     ],
 )
 def test_criteria_schema_per_kind(kind: str, criteria: dict[str, Any]) -> None:
-    parsed = ADAPTER.validate_python({**AUCTION, "kind": kind, "criteria": criteria})
+    base = {**AUCTION, "email": "contato@exemplo.com.br"}
+    parsed = ADAPTER.validate_python({**base, "kind": kind, "criteria": criteria})
     assert parsed.kind == kind
+
+
+AGENCY_DEMO: dict[str, Any] = {
+    **AUCTION,
+    "kind": "agency_demo",
+    "email": "carla@imobiliariasul.com.br",
+    "source_page": "/para-imobiliarias",
+    "criteria": {
+        "company": "Imobiliária Sul",
+        "team_size": "16_plus",
+        "active_properties": "over_500",
+    },
+}
+
+OWNER_START: dict[str, Any] = {
+    **AUCTION,
+    "kind": "owner_listing_start",
+    "source_page": "/anunciar-imovel",
+    "criteria": {
+        "transaction": "rent",
+        "property_kind": "house",
+        "city": "Campinas, SP",
+        "period_days": 90,
+    },
+}
+
+
+def test_agency_demo_requires_a_valid_email() -> None:
+    assert ADAPTER.validate_python(AGENCY_DEMO).email == "carla@imobiliariasul.com.br"
+    without = {k: v for k, v in AGENCY_DEMO.items() if k != "email"}
+    with pytest.raises(ValidationError):
+        ADAPTER.validate_python(without)
+    with pytest.raises(ValidationError):
+        ADAPTER.validate_python({**AGENCY_DEMO, "email": "carla"})
+
+
+@pytest.mark.parametrize(
+    "criteria",
+    [
+        {"team_size": "100", "active_properties": "up_to_200", "company": "X Imóveis"},
+        {"team_size": "1_5", "active_properties": "1000", "company": "X Imóveis"},
+    ],
+)
+def test_agency_demo_ranges_are_closed(criteria: dict[str, Any]) -> None:
+    with pytest.raises(ValidationError):
+        ADAPTER.validate_python({**AGENCY_DEMO, "criteria": criteria})
+
+
+def test_owner_start_period_is_30_or_90_days() -> None:
+    assert ADAPTER.validate_python(OWNER_START).criteria.period_days == 90
+    bad = {**OWNER_START, "criteria": {**OWNER_START["criteria"], "period_days": 60}}
+    with pytest.raises(ValidationError):
+        ADAPTER.validate_python(bad)
 
 
 def test_criteria_of_another_kind_is_rejected() -> None:
@@ -185,6 +247,29 @@ async def test_without_a_delivering_adapter_the_opt_in_is_queued(
     signup = (await session.scalars(select(InterestSignup))).one()
     assert signup.status is InterestStatus.PENDING_OPT_IN
     assert signup.opt_in_requested_at is None
+
+
+@pytest.mark.parametrize("payload", [OWNER_START, AGENCY_DEMO], ids=["owner_start", "agency"])
+async def test_landing_page_signups_are_stored_with_their_kind(
+    api: AsyncClient, session: AsyncSession, payload: dict[str, Any]
+) -> None:
+    response = await api.post("/v1/public/interest", json=payload)
+    assert response.status_code == 202
+    signup = (await session.scalars(select(InterestSignup))).one()
+    assert signup.kind == payload["kind"]
+    assert signup.criteria == payload["criteria"]
+    assert signup.source_page == payload["source_page"]
+    assert signup.assigned_broker_id is None  # self-service: no broker assignment
+
+
+@pytest.mark.parametrize("payload", [OWNER_START, AGENCY_DEMO], ids=["owner_start", "agency"])
+async def test_landing_page_signups_require_contact_consent(
+    api: AsyncClient, session: AsyncSession, payload: dict[str, Any]
+) -> None:
+    body = {**payload, "consents": {"contact_about_properties": False, "marketing": False}}
+    response = await api.post("/v1/public/interest", json=body)
+    assert response.status_code == 422
+    assert (await session.scalars(select(InterestSignup))).all() == []
 
 
 async def test_contact_consent_is_required(api: AsyncClient, session: AsyncSession) -> None:

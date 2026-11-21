@@ -90,10 +90,21 @@ class Settings(BaseSettings):
     interest_rate_limit_per_minute: int = 5
 
     # Business configuration. Money in integer cents, rates in basis points.
-    plan_essencial_price_cents: int = 19_700
-    plan_essencial_max_active_properties: int = 3
-    plan_profissional_price_cents: int = 39_700
-    plan_profissional_max_active_properties: int = 15
+    # Offer catalog (hypotheses, nov/2026). Mirrors apps/web/src/config/site.ts OFFERS; nothing
+    # in the API charges yet: these are for the ledger and backoffice. None = "sob consulta".
+    offer_owner_30d_price_cents: int = 5_900
+    offer_owner_90d_price_cents: int = 14_900
+    offer_broker_price_cents: int = 9_900
+    offer_broker_max_active_properties: int = 50
+    offer_broker_max_users: int = 1
+    offer_agency_essencial_price_cents: int = 29_900
+    offer_agency_essencial_max_active_properties: int = 200
+    offer_agency_essencial_max_users: int = 5
+    offer_agency_equipe_price_cents: int = 49_900
+    offer_agency_equipe_max_active_properties: int = 500
+    offer_agency_equipe_max_users: int = 15
+    # Highlight (destaque) price is not defined yet; never shown as a number while None.
+    offer_highlight_price_cents: int | None = None
     min_daily_budget_cents: int = 2_000
     financing_illustrative_annual_rate_bps: int = 1_150
 

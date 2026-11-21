@@ -99,7 +99,7 @@ async def test_sign_up_creates_account_workspace_and_profile(
 
     me = (await api.get("/v1/me")).json()
     assert me["user"]["email"] == "ana@exemplo.com.br"
-    assert me["workspace"]["plan"] == "profissional"
+    assert me["workspace"]["plan"] == "corretor"
     assert me["broker"]["slug"] == "anaribeiro"
     assert me["broker"]["creci_status"] == "missing"
 
@@ -278,6 +278,21 @@ async def test_plan_can_be_changed(api: AsyncClient, integrations: Integrations)
     r = await api.patch("/v1/me/workspace", json={"plan": "essencial"})
     assert r.json()["plan"] == "essencial"
     assert (await api.get("/v1/me")).json()["workspace"]["plan"] == "essencial"
+    r = await api.patch("/v1/me/workspace", json={"plan": "corretor"})
+    assert r.json()["plan"] == "corretor"
+
+
+async def test_sign_up_without_a_plan_gets_the_broker_plan(
+    api: AsyncClient, integrations: Integrations
+) -> None:
+    r = await api.post(
+        "/v1/auth/email-link",
+        json={"email": "leo@x.com.br", "intent": "sign_up", "name": "Leo Martins"},
+    )
+    assert r.status_code == 202
+    r = await api.post("/v1/auth/confirm", json={"token": _last_token(integrations)})
+    assert r.status_code == 200, r.text
+    assert (await api.get("/v1/me")).json()["workspace"]["plan"] == "corretor"
 
 
 async def test_each_broker_sees_only_their_own_account(

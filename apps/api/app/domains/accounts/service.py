@@ -142,7 +142,7 @@ async def request_email_link(
                 if user
                 else {
                     "name": payload.name or payload.email.split("@")[0],
-                    "plan": (payload.plan or Plan.PROFISSIONAL).value,
+                    "plan": (payload.plan or Plan.CORRETOR).value,
                 }
             ),
             created_at=now,
@@ -214,7 +214,7 @@ async def confirm_email_link(
 
 async def _create_account(session: AsyncSession, email: str, payload: dict[str, Any]) -> User:
     name = str(payload.get("name") or email.split("@", maxsplit=1)[0])
-    plan = Plan(payload.get("plan", Plan.PROFISSIONAL.value))
+    plan = Plan(payload.get("plan", Plan.CORRETOR.value))
     user = User(email=email, name=name)
     workspace = Workspace(name=name, kind=WorkspaceKind.BROKER, plan=plan)
     session.add_all([user, workspace])

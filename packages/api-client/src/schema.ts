@@ -488,6 +488,11 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        /**
+         * ActivePropertiesRange
+         * @enum {string}
+         */
+        ActivePropertiesRange: "up_to_200" | "201_to_500" | "over_500";
         /** AddressSuggestion */
         AddressSuggestion: {
             /** Id */
@@ -557,6 +562,34 @@ export interface components {
             brokers_count?: number | null;
             /** City */
             city?: string | null;
+        };
+        /** AgencyDemoCriteria */
+        AgencyDemoCriteria: {
+            /** Company */
+            company: string;
+            team_size: components["schemas"]["TeamSize"];
+            active_properties: components["schemas"]["ActivePropertiesRange"];
+        };
+        /** AgencyDemoSignup */
+        AgencyDemoSignup: {
+            /** Name */
+            name: string;
+            /** Phone */
+            phone: string;
+            /** Email */
+            email: string;
+            consents: components["schemas"]["ConsentIn"];
+            utm?: components["schemas"]["Utm"];
+            /** Source Page */
+            source_page?: string | null;
+            /** Website */
+            website?: string | null;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            kind: "agency_demo";
+            criteria: components["schemas"]["AgencyDemoCriteria"];
         };
         /** AgencySignup */
         AgencySignup: {
@@ -945,7 +978,7 @@ export interface components {
          * InterestKind
          * @enum {string}
          */
-        InterestKind: "agency" | "owner_listing" | "developer" | "investor_institutional" | "rental_admin" | "auction";
+        InterestKind: "agency" | "owner_listing" | "developer" | "investor_institutional" | "rental_admin" | "auction" | "owner_listing_start" | "agency_demo";
         /**
          * InterestSignupAccepted
          * @description Same body for stored and honeypot-rejected requests, so bots learn nothing.
@@ -1172,6 +1205,43 @@ export interface components {
             kind: "owner_listing";
             criteria: components["schemas"]["OwnerListingCriteria"];
         };
+        /**
+         * OwnerListingStartCriteria
+         * @description First step of an owner's own listing (/anunciar-imovel). Nothing is charged or published.
+         */
+        OwnerListingStartCriteria: {
+            /**
+             * Transaction
+             * @enum {string}
+             */
+            transaction: "sale" | "rent";
+            property_kind: components["schemas"]["PropertyKind"];
+            /** City */
+            city: string;
+            /** Period Days */
+            period_days?: (30 | 90) | null;
+        };
+        /** OwnerListingStartSignup */
+        OwnerListingStartSignup: {
+            /** Name */
+            name: string;
+            /** Phone */
+            phone: string;
+            /** Email */
+            email?: string | null;
+            consents: components["schemas"]["ConsentIn"];
+            utm?: components["schemas"]["Utm"];
+            /** Source Page */
+            source_page?: string | null;
+            /** Website */
+            website?: string | null;
+            /**
+             * @description discriminator enum property added by openapi-typescript
+             * @enum {string}
+             */
+            kind: "owner_listing_start";
+            criteria: components["schemas"]["OwnerListingStartCriteria"];
+        };
         /** PlaceRef */
         PlaceRef: {
             /** Slug */
@@ -1187,7 +1257,7 @@ export interface components {
          * Plan
          * @enum {string}
          */
-        Plan: "essencial" | "profissional";
+        Plan: "corretor" | "essencial" | "profissional";
         /**
          * PortfolioSize
          * @enum {string}
@@ -1498,6 +1568,11 @@ export interface components {
             place: components["schemas"]["PlaceRef"];
             stats: components["schemas"]["PublicStats"] | null;
         };
+        /**
+         * TeamSize
+         * @enum {string}
+         */
+        TeamSize: "1_5" | "6_15" | "16_plus";
         /** TokenIn */
         TokenIn: {
             /** Token */
@@ -1688,7 +1763,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["AgencySignup"] | components["schemas"]["OwnerListingSignup"] | components["schemas"]["DeveloperSignup"] | components["schemas"]["InvestorInstitutionalSignup"] | components["schemas"]["RentalAdminSignup"] | components["schemas"]["AuctionSignup"];
+                "application/json": components["schemas"]["AgencySignup"] | components["schemas"]["OwnerListingSignup"] | components["schemas"]["DeveloperSignup"] | components["schemas"]["InvestorInstitutionalSignup"] | components["schemas"]["RentalAdminSignup"] | components["schemas"]["AuctionSignup"] | components["schemas"]["OwnerListingStartSignup"] | components["schemas"]["AgencyDemoSignup"];
             };
         };
         responses: {

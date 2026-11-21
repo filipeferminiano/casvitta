@@ -89,6 +89,12 @@
                   },
                   {
                     "$ref": "#/components/schemas/AuctionSignup"
+                  },
+                  {
+                    "$ref": "#/components/schemas/OwnerListingStartSignup"
+                  },
+                  {
+                    "$ref": "#/components/schemas/AgencyDemoSignup"
                   }
                 ],
                 "title": "Payload",
@@ -100,7 +106,9 @@
                     "developer": "#/components/schemas/DeveloperSignup",
                     "investor_institutional": "#/components/schemas/InvestorInstitutionalSignup",
                     "rental_admin": "#/components/schemas/RentalAdminSignup",
-                    "auction": "#/components/schemas/AuctionSignup"
+                    "auction": "#/components/schemas/AuctionSignup",
+                    "owner_listing_start": "#/components/schemas/OwnerListingStartSignup",
+                    "agency_demo": "#/components/schemas/AgencyDemoSignup"
                   }
                 }
               }
@@ -1273,6 +1281,15 @@
   },
   "components": {
     "schemas": {
+      "ActivePropertiesRange": {
+        "type": "string",
+        "enum": [
+          "up_to_200",
+          "201_to_500",
+          "over_500"
+        ],
+        "title": "ActivePropertiesRange"
+      },
       "AddressSuggestion": {
         "properties": {
           "id": {
@@ -1517,6 +1534,99 @@
           "company"
         ],
         "title": "AgencyCriteria"
+      },
+      "AgencyDemoCriteria": {
+        "properties": {
+          "company": {
+            "type": "string",
+            "maxLength": 120,
+            "minLength": 2,
+            "title": "Company"
+          },
+          "team_size": {
+            "$ref": "#/components/schemas/TeamSize"
+          },
+          "active_properties": {
+            "$ref": "#/components/schemas/ActivePropertiesRange"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "company",
+          "team_size",
+          "active_properties"
+        ],
+        "title": "AgencyDemoCriteria"
+      },
+      "AgencyDemoSignup": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 120,
+            "minLength": 2,
+            "title": "Name"
+          },
+          "phone": {
+            "type": "string",
+            "title": "Phone"
+          },
+          "email": {
+            "type": "string",
+            "maxLength": 254,
+            "minLength": 5,
+            "pattern": "^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$",
+            "title": "Email"
+          },
+          "consents": {
+            "$ref": "#/components/schemas/ConsentIn"
+          },
+          "utm": {
+            "$ref": "#/components/schemas/Utm"
+          },
+          "source_page": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 200
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source Page"
+          },
+          "website": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Website"
+          },
+          "kind": {
+            "type": "string",
+            "const": "agency_demo",
+            "title": "Kind"
+          },
+          "criteria": {
+            "$ref": "#/components/schemas/AgencyDemoCriteria"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "name",
+          "phone",
+          "email",
+          "consents",
+          "kind",
+          "criteria"
+        ],
+        "title": "AgencyDemoSignup"
       },
       "AgencySignup": {
         "properties": {
@@ -2752,7 +2862,9 @@
           "developer",
           "investor_institutional",
           "rental_admin",
-          "auction"
+          "auction",
+          "owner_listing_start",
+          "agency_demo"
         ],
         "title": "InterestKind"
       },
@@ -3544,6 +3656,124 @@
         ],
         "title": "OwnerListingSignup"
       },
+      "OwnerListingStartCriteria": {
+        "properties": {
+          "transaction": {
+            "type": "string",
+            "enum": [
+              "sale",
+              "rent"
+            ],
+            "title": "Transaction"
+          },
+          "property_kind": {
+            "$ref": "#/components/schemas/PropertyKind"
+          },
+          "city": {
+            "type": "string",
+            "maxLength": 120,
+            "minLength": 2,
+            "title": "City"
+          },
+          "period_days": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "enum": [
+                  30,
+                  90
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Period Days"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "transaction",
+          "property_kind",
+          "city"
+        ],
+        "title": "OwnerListingStartCriteria",
+        "description": "First step of an owner's own listing (/anunciar-imovel). Nothing is charged or published."
+      },
+      "OwnerListingStartSignup": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 120,
+            "minLength": 2,
+            "title": "Name"
+          },
+          "phone": {
+            "type": "string",
+            "title": "Phone"
+          },
+          "email": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 254
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Email"
+          },
+          "consents": {
+            "$ref": "#/components/schemas/ConsentIn"
+          },
+          "utm": {
+            "$ref": "#/components/schemas/Utm"
+          },
+          "source_page": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 200
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source Page"
+          },
+          "website": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Website"
+          },
+          "kind": {
+            "type": "string",
+            "const": "owner_listing_start",
+            "title": "Kind"
+          },
+          "criteria": {
+            "$ref": "#/components/schemas/OwnerListingStartCriteria"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "name",
+          "phone",
+          "consents",
+          "kind",
+          "criteria"
+        ],
+        "title": "OwnerListingStartSignup"
+      },
       "PlaceRef": {
         "properties": {
           "slug": {
@@ -3581,6 +3811,7 @@
       "Plan": {
         "type": "string",
         "enum": [
+          "corretor",
           "essencial",
           "profissional"
         ],
@@ -4558,6 +4789,15 @@
           "stats"
         ],
         "title": "StreetRow"
+      },
+      "TeamSize": {
+        "type": "string",
+        "enum": [
+          "1_5",
+          "6_15",
+          "16_plus"
+        ],
+        "title": "TeamSize"
       },
       "TokenIn": {
         "properties": {

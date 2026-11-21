@@ -26,6 +26,10 @@ class InterestKind(StrEnum):
     INVESTOR_INSTITUTIONAL = "investor_institutional"
     RENTAL_ADMIN = "rental_admin"
     AUCTION = "auction"
+    # Owner self-listing start (/anunciar-imovel); no payment or publishing yet.
+    OWNER_LISTING_START = "owner_listing_start"
+    # Demo request from /para-imobiliarias.
+    AGENCY_DEMO = "agency_demo"
 
 
 class InterestStatus(StrEnum):

@@ -19,6 +19,9 @@ class WorkspaceKind(StrEnum):
 
 
 class Plan(StrEnum):
+    # Current offer (prices in settings.offer_*).
+    CORRETOR = "corretor"
+    # Legacy plans: kept valid so workspaces created before the new catalog keep working.
     ESSENCIAL = "essencial"
     PROFISSIONAL = "profissional"
 
@@ -33,7 +36,7 @@ class Workspace(UUIDPrimaryKey, Timestamps, DemoFlag, Base):
         str_enum(WorkspaceKind), default=WorkspaceKind.BROKER
     )
     plan: Mapped[Plan] = mapped_column(
-        str_enum(Plan), default=Plan.PROFISSIONAL, server_default=Plan.PROFISSIONAL.value
+        str_enum(Plan), default=Plan.CORRETOR, server_default=Plan.CORRETOR.value
     )
 
 

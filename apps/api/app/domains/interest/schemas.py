@@ -66,6 +66,34 @@ class OwnerListingCriteria(Strict):
         return digits
 
 
+class OwnerListingStartCriteria(Strict):
+    """First step of an owner's own listing (/anunciar-imovel). Nothing is charged or published."""
+
+    transaction: Literal["sale", "rent"]
+    property_kind: PropertyKind
+    city: str = Field(min_length=2, max_length=120)
+    # Pack chosen on the page, if any (30 or 90 days); the period is confirmed on WhatsApp.
+    period_days: Literal[30, 90] | None = None
+
+
+class TeamSize(StrEnum):
+    FROM_1_TO_5 = "1_5"
+    FROM_6_TO_15 = "6_15"
+    OVER_15 = "16_plus"
+
+
+class ActivePropertiesRange(StrEnum):
+    UP_TO_200 = "up_to_200"
+    FROM_201_TO_500 = "201_to_500"
+    OVER_500 = "over_500"
+
+
+class AgencyDemoCriteria(Strict):
+    company: str = Field(min_length=2, max_length=120)
+    team_size: TeamSize
+    active_properties: ActivePropertiesRange
+
+
 class DeveloperCriteria(Strict):
     company: str = Field(min_length=2, max_length=120)
     role: str | None = Field(default=None, max_length=80)
@@ -165,6 +193,18 @@ class OwnerListingSignup(_SignupBase):
     criteria: OwnerListingCriteria
 
 
+class OwnerListingStartSignup(_SignupBase):
+    kind: Literal[InterestKind.OWNER_LISTING_START]
+    criteria: OwnerListingStartCriteria
+
+
+class AgencyDemoSignup(_SignupBase):
+    kind: Literal[InterestKind.AGENCY_DEMO]
+    criteria: AgencyDemoCriteria
+    # The demo invite goes by email, so it is required here.
+    email: str = Field(min_length=5, max_length=254, pattern=r"^[^@\s]+@[^@\s]+\.[^@\s]+$")
+
+
 class DeveloperSignup(_SignupBase):
     kind: Literal[InterestKind.DEVELOPER]
     criteria: DeveloperCriteria
@@ -191,7 +231,9 @@ InterestSignupIn = Annotated[
     | DeveloperSignup
     | InvestorInstitutionalSignup
     | RentalAdminSignup
-    | AuctionSignup,
+    | AuctionSignup
+    | OwnerListingStartSignup
+    | AgencyDemoSignup,
     Field(discriminator="kind"),
 ]
 
