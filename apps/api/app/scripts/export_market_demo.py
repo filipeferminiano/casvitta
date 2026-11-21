@@ -18,7 +18,7 @@ from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 import app.models  # noqa: F401 - registers every table
 from app.core.db import Base, use_schema
 from app.core.settings import REPO_ROOT, get_settings
-from app.domains.market_data import service
+from app.domains.market_data import service, tools
 from app.domains.market_data.gates import Gates
 from app.domains.market_data.models import MarketBuilding, MarketNeighborhood, MarketStreet
 from app.scripts.seed_market_demo import seed_demo
@@ -58,8 +58,9 @@ async def export(session: AsyncSession) -> dict[str, object]:
             f"{CITY}/{parent.slug}/buildings/{building.slug}",
             await service.building_page(session, CITY, parent.slug, building.slug, gates),
         )
-    for template in ("bairros", "ruas", "condominios", "financiamento"):
+    for template in sorted(service.SITEMAP_TEMPLATES):
         put(f"{CITY}/sitemaps/{template}", await service.sitemap(session, CITY, template, gates))
+    put(f"{CITY}/itbi", await tools.itbi_page(session, CITY, gates, settings))
     return pages
 
 

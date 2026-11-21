@@ -83,6 +83,15 @@ def financing_path(city: str, neighborhood: str) -> str:
     return f"/financiamento/{city}/{neighborhood}"
 
 
+def valuation_path(city: str, neighborhood: str) -> str:
+    return f"/quanto-vale-meu-imovel/{city}/{neighborhood}"
+
+
+SITEMAP_TEMPLATES = frozenset(
+    {"bairros", "ruas", "condominios", "financiamento", "avaliacao", "itbi", "imoveis"}
+)
+
+
 # --- lookups ----------------------------------------------------------------------------------
 
 
@@ -748,13 +757,28 @@ def simulations(price_cents: int, settings: Settings, fgts_cents: int = 0) -> li
 
 
 async def sitemap(
-    session: AsyncSession, city_slug: str, template: str, gates: Gates
+    session: AsyncSession,
+    city_slug: str,
+    template: str,
+    gates: Gates,
+    *,
+    itbi_reviewed: bool = False,
 ) -> Sitemap | None:
     city = await _city(session, city_slug)
-    if city is None or template not in {"bairros", "ruas", "condominios", "financiamento"}:
+    if city is None or template not in SITEMAP_TEMPLATES:
         return None
     entries: list[SitemapEntry] = []
-    if template in {"bairros", "financiamento"}:
+    if template == "imoveis":
+        # Listing pages are indexable only with 3+ live authorized listings; none exist yet.
+        return Sitemap(template="imoveis", entries=[])
+    if template == "itbi":
+        source = await source_info(session, city)
+        if itbi_reviewed:  # noindex until a person reviews the legal rules
+            entries.append(
+                SitemapEntry(path=f"/itbi/{city.slug}", last_modified=source.refreshed_at)
+            )
+        return Sitemap(template="itbi", entries=entries)
+    if template in {"bairros", "financiamento", "avaliacao"}:
         rows = await session.execute(
             select(MarketNeighborhood, MarketStats)
             .join(
@@ -773,12 +797,15 @@ async def sitemap(
             )
             .order_by(MarketNeighborhood.slug)
         )
-        path = neighborhood_path if template == "bairros" else financing_path
-        if template == "bairros":
+        path = {
+            "bairros": neighborhood_path,
+            "financiamento": financing_path,
+            "avaliacao": valuation_path,
+        }[template]
+        if template in {"bairros", "avaliacao"}:
             source = await source_info(session, city)
-            entries.append(
-                SitemapEntry(path=city_path(city.slug), last_modified=source.refreshed_at)
-            )
+            top = city_path(city.slug) if template == "bairros" else "/quanto-vale-meu-imovel"
+            entries.append(SitemapEntry(path=top, last_modified=source.refreshed_at))
         entries += [
             SitemapEntry(path=path(city.slug, n.slug), last_modified=s.refreshed_at)
             for n, s in rows

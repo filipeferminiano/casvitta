@@ -71,6 +71,9 @@ def main() -> int:
     os.environ["DATABASE_URL"] = url  # before the app reads its settings
     os.environ.setdefault("ADMIN_TOKEN", "e2e-admin-token")
     os.environ.setdefault("FAKE_INTEGRATIONS", "true")
+    # Many alerts from one IP in a few seconds; the production limit stays as configured.
+    os.environ.setdefault("INTEREST_RATE_LIMIT_PER_MINUTE", "1000")
+    os.environ.setdefault("VALUATION_RATE_LIMIT_PER_MINUTE", "1000")
     from app.core.settings import get_settings  # noqa: PLC0415
 
     get_settings.cache_clear()  # settings were read above with the default database

@@ -307,3 +307,16 @@ async def test_seo3_fields(client: AsyncClient) -> None:
     assert street["street"]["path"] == "/rua/sao-paulo/vila-mariana/avenida-dos-ipes-ficticios"
     assert street["sales_36m"] == 42
     assert "rua-das-acacias-ficticias" in {s["place"]["slug"] for s in street["similar_streets"]}
+
+
+@pytest.mark.usefixtures("demo")
+async def test_seo3_sitemaps(client: AsyncClient) -> None:
+    valuation = [e["path"] for e in (await _get(client, "/sitemaps/avaliacao"))["entries"]]
+    assert valuation[0] == "/quanto-vale-meu-imovel"
+    assert "/quanto-vale-meu-imovel/sao-paulo/vila-mariana" in valuation
+    assert not any("aclimacao" in p for p in valuation)
+    # ITBI rules not reviewed yet: noindex, absent from the sitemap. No listings yet.
+    assert (await _get(client, "/sitemaps/itbi"))["entries"] == []
+    assert (await _get(client, "/sitemaps/imoveis"))["entries"] == []
+    ruas = [e["path"] for e in (await _get(client, "/sitemaps/ruas"))["entries"]]
+    assert all(p.startswith("/rua/") for p in ruas)

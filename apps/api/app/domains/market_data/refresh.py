@@ -82,6 +82,7 @@ async def indexable_paths(
     for nid, slug in neighborhoods:
         out.append((nid, service.neighborhood_path(city.slug, slug)))
         out.append((nid, service.financing_path(city.slug, slug)))
+        out.append((nid, service.valuation_path(city.slug, slug)))
     streets = await session.execute(
         select(MarketStreet.id, MarketStreet.slug, MarketNeighborhood.slug)
         .join(MarketNeighborhood, MarketNeighborhood.id == MarketStreet.neighborhood_id)

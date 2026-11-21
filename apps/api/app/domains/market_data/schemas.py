@@ -236,5 +236,7 @@ class SitemapEntry(BaseModel):
 
 
 class Sitemap(BaseModel):
-    template: Literal["bairros", "ruas", "condominios", "financiamento"]
+    template: Literal[
+        "bairros", "ruas", "condominios", "financiamento", "avaliacao", "itbi", "imoveis"
+    ]
     entries: list[SitemapEntry]

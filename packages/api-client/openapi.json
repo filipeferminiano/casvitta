@@ -961,6 +961,155 @@
         }
       }
     },
+    "/v1/public/market/{city}/addresses": {
+      "get": {
+        "tags": [
+          "market"
+        ],
+        "summary": "Get Addresses",
+        "description": "Up to 3 street (+ number) suggestions for the valuation form. Rate-limited.",
+        "operationId": "getMarketAddresses",
+        "parameters": [
+          {
+            "name": "city",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "City"
+            }
+          },
+          {
+            "name": "q",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 2,
+              "maxLength": 120,
+              "title": "Q"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AddressSuggestions"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/public/market/{city}/valuation": {
+      "post": {
+        "tags": [
+          "market"
+        ],
+        "summary": "Post Valuation",
+        "description": "Statistical estimate from real sales; never stored, never indexed. Rate-limited.",
+        "operationId": "postValuation",
+        "parameters": [
+          {
+            "name": "city",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "City"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ValuationIn"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValuationOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/public/market/{city}/itbi": {
+      "get": {
+        "tags": [
+          "market"
+        ],
+        "summary": "Get Itbi",
+        "operationId": "getMarketItbi",
+        "parameters": [
+          {
+            "name": "city",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "City"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ItbiPage"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/v1/public/property-alerts": {
       "post": {
         "tags": [
@@ -1124,6 +1273,67 @@
   },
   "components": {
     "schemas": {
+      "AddressSuggestion": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label"
+          },
+          "detail": {
+            "type": "string",
+            "title": "Detail"
+          },
+          "neighborhood": {
+            "type": "string",
+            "title": "Neighborhood"
+          },
+          "street": {
+            "type": "string",
+            "title": "Street"
+          },
+          "number": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Number"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "label",
+          "detail",
+          "neighborhood",
+          "street",
+          "number"
+        ],
+        "title": "AddressSuggestion"
+      },
+      "AddressSuggestions": {
+        "properties": {
+          "suggestions": {
+            "items": {
+              "$ref": "#/components/schemas/AddressSuggestion"
+            },
+            "type": "array",
+            "title": "Suggestions"
+          }
+        },
+        "type": "object",
+        "required": [
+          "suggestions"
+        ],
+        "title": "AddressSuggestions"
+      },
       "AdminBrokerOut": {
         "properties": {
           "id": {
@@ -2010,6 +2220,47 @@
         ],
         "title": "CityIndexPage"
       },
+      "ComparableGroupOut": {
+        "properties": {
+          "level": {
+            "type": "string",
+            "enum": [
+              "street_band",
+              "neighborhood_band",
+              "neighborhood_year",
+              "neighbors_band"
+            ],
+            "title": "Level"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label"
+          },
+          "sales": {
+            "type": "integer",
+            "title": "Sales"
+          },
+          "median_price_m2_cents": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Median Price M2 Cents"
+          }
+        },
+        "type": "object",
+        "required": [
+          "level",
+          "label",
+          "sales",
+          "median_price_m2_cents"
+        ],
+        "title": "ComparableGroupOut"
+      },
       "ConsentIn": {
         "properties": {
           "contact_about_properties": {
@@ -2771,6 +3022,150 @@
           "criteria"
         ],
         "title": "InvestorInstitutionalSignup"
+      },
+      "ItbiNeighborhoodRow": {
+        "properties": {
+          "place": {
+            "$ref": "#/components/schemas/PlaceRef"
+          },
+          "sales": {
+            "type": "integer",
+            "title": "Sales"
+          },
+          "median_value_cents": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Median Value Cents"
+          },
+          "median_itbi_cents": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Median Itbi Cents"
+          }
+        },
+        "type": "object",
+        "required": [
+          "place",
+          "sales",
+          "median_value_cents",
+          "median_itbi_cents"
+        ],
+        "title": "ItbiNeighborhoodRow"
+      },
+      "ItbiPage": {
+        "properties": {
+          "city": {
+            "$ref": "#/components/schemas/PlaceRef"
+          },
+          "source": {
+            "$ref": "#/components/schemas/SourceInfo"
+          },
+          "rules": {
+            "$ref": "#/components/schemas/ItbiRulesOut"
+          },
+          "city_row": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ItbiNeighborhoodRow"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "neighborhoods": {
+            "items": {
+              "$ref": "#/components/schemas/ItbiNeighborhoodRow"
+            },
+            "type": "array",
+            "title": "Neighborhoods"
+          }
+        },
+        "type": "object",
+        "required": [
+          "city",
+          "source",
+          "rules",
+          "city_row",
+          "neighborhoods"
+        ],
+        "title": "ItbiPage"
+      },
+      "ItbiRulesOut": {
+        "properties": {
+          "rate_bps": {
+            "type": "integer",
+            "title": "Rate Bps"
+          },
+          "sfh_rate_bps": {
+            "type": "integer",
+            "title": "Sfh Rate Bps"
+          },
+          "sfh_limit_cents": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Sfh Limit Cents"
+          },
+          "effective_from": {
+            "type": "string",
+            "title": "Effective From"
+          },
+          "reviewed": {
+            "type": "boolean",
+            "title": "Reviewed"
+          },
+          "registry_low_cents": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Registry Low Cents"
+          },
+          "registry_high_cents": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Registry High Cents"
+          }
+        },
+        "type": "object",
+        "required": [
+          "rate_bps",
+          "sfh_rate_bps",
+          "sfh_limit_cents",
+          "effective_from",
+          "reviewed",
+          "registry_low_cents",
+          "registry_high_cents"
+        ],
+        "title": "ItbiRulesOut"
       },
       "MeOut": {
         "properties": {
@@ -3955,7 +4350,10 @@
               "bairros",
               "ruas",
               "condominios",
-              "financiamento"
+              "financiamento",
+              "avaliacao",
+              "itbi",
+              "imoveis"
             ],
             "title": "Template"
           },
@@ -4282,6 +4680,264 @@
           "type"
         ],
         "title": "ValidationError"
+      },
+      "ValuationIn": {
+        "properties": {
+          "neighborhood": {
+            "type": "string",
+            "maxLength": 80,
+            "minLength": 2,
+            "title": "Neighborhood"
+          },
+          "street": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 140
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Street"
+          },
+          "number": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 99999.0,
+                "minimum": 1.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Number"
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "apartment",
+              "house"
+            ],
+            "title": "Kind"
+          },
+          "area_m2": {
+            "anyOf": [
+              {
+                "type": "number",
+                "maximum": 2000.0,
+                "exclusiveMinimum": 10.0
+              },
+              {
+                "type": "string"
+              }
+            ],
+            "title": "Area M2"
+          },
+          "year": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 2100.0,
+                "minimum": 1850.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Year"
+          },
+          "bedrooms": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 20.0,
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Bedrooms"
+          },
+          "parking": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 20.0,
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Parking"
+          }
+        },
+        "type": "object",
+        "required": [
+          "neighborhood",
+          "kind",
+          "area_m2"
+        ],
+        "title": "ValuationIn"
+      },
+      "ValuationOut": {
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": [
+              "ok",
+              "outside_coverage"
+            ],
+            "title": "Status"
+          },
+          "neighborhood": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/PlaceRef"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "street_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Street Name"
+          },
+          "center_cents": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Center Cents"
+          },
+          "low_cents": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Low Cents"
+          },
+          "high_cents": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "High Cents"
+          },
+          "price_m2_cents": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Price M2 Cents"
+          },
+          "confidence": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "alta",
+                  "media",
+                  "baixa"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Confidence"
+          },
+          "comparables": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Comparables"
+          },
+          "basis": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "street_band",
+                  "neighborhood_band",
+                  "neighborhood_year",
+                  "neighbors_band"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Basis"
+          },
+          "groups": {
+            "items": {
+              "$ref": "#/components/schemas/ComparableGroupOut"
+            },
+            "type": "array",
+            "title": "Groups",
+            "default": []
+          },
+          "window_end": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Window End"
+          },
+          "source": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/SourceInfo"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "status"
+        ],
+        "title": "ValuationOut"
       },
       "WorkspaceOut": {
         "properties": {

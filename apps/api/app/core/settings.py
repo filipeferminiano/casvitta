@@ -121,6 +121,23 @@ class Settings(BaseSettings):
     market_min_down_payment_pct: int = 20  # below this the simulator shows a field error
     market_term_months: int = 360
     market_max_income_commitment_pct: int = 30
+    # Valuation tool ("Quanto vale meu imóvel"): see app/domains/market_data/valuation.py.
+    valuation_months: int = 24
+    valuation_full_confidence_sales: int = 30
+    valuation_high_spread_pct: int = 25
+    valuation_medium_sales: int = 15
+    valuation_medium_spread_pct: int = 40
+    valuation_rate_limit_per_minute: int = 20
+    # ITBI São Paulo. Rules must be reviewed by a person against current law before the page is
+    # indexed (ITBI_SP_RULES_REVIEWED). The SFH limit has no default on purpose.
+    itbi_sp_rate_bps: int = 300
+    itbi_sp_sfh_rate_bps: int = 50
+    itbi_sp_sfh_limit_cents: int | None = None
+    itbi_sp_rules_effective_from: str = "2026-01-01"
+    itbi_sp_rules_reviewed: bool = False
+    # Registration (cartório) costs shown as an estimate range; hidden while unset.
+    itbi_sp_registry_low_cents: int | None = None
+    itbi_sp_registry_high_cents: int | None = None
     # Web cache revalidation after each refresh (empty URL = skip).
     web_revalidate_url: str = ""
     web_revalidate_secret: SecretStr | None = None

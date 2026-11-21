@@ -370,6 +370,63 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/public/market/{city}/addresses": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Addresses
+         * @description Up to 3 street (+ number) suggestions for the valuation form. Rate-limited.
+         */
+        get: operations["getMarketAddresses"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/public/market/{city}/valuation": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Post Valuation
+         * @description Statistical estimate from real sales; never stored, never indexed. Rate-limited.
+         */
+        post: operations["postValuation"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/public/market/{city}/itbi": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Itbi */
+        get: operations["getMarketItbi"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/public/property-alerts": {
         parameters: {
             query?: never;
@@ -431,6 +488,26 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        /** AddressSuggestion */
+        AddressSuggestion: {
+            /** Id */
+            id: string;
+            /** Label */
+            label: string;
+            /** Detail */
+            detail: string;
+            /** Neighborhood */
+            neighborhood: string;
+            /** Street */
+            street: string;
+            /** Number */
+            number: number | null;
+        };
+        /** AddressSuggestions */
+        AddressSuggestions: {
+            /** Suggestions */
+            suggestions: components["schemas"]["AddressSuggestion"][];
+        };
         /** AdminBrokerOut */
         AdminBrokerOut: {
             /**
@@ -681,6 +758,20 @@ export interface components {
             neighborhoods_with_price: number;
             /** Neighborhoods */
             neighborhoods: components["schemas"]["NeighborhoodRow"][];
+        };
+        /** ComparableGroupOut */
+        ComparableGroupOut: {
+            /**
+             * Level
+             * @enum {string}
+             */
+            level: "street_band" | "neighborhood_band" | "neighborhood_year" | "neighbors_band";
+            /** Label */
+            label: string;
+            /** Sales */
+            sales: number;
+            /** Median Price M2 Cents */
+            median_price_m2_cents: number | null;
         };
         /** ConsentIn */
         ConsentIn: {
@@ -943,6 +1034,42 @@ export interface components {
              */
             kind: "investor_institutional";
             criteria: components["schemas"]["InvestorInstitutionalCriteria"];
+        };
+        /** ItbiNeighborhoodRow */
+        ItbiNeighborhoodRow: {
+            place: components["schemas"]["PlaceRef"];
+            /** Sales */
+            sales: number;
+            /** Median Value Cents */
+            median_value_cents: number | null;
+            /** Median Itbi Cents */
+            median_itbi_cents: number | null;
+        };
+        /** ItbiPage */
+        ItbiPage: {
+            city: components["schemas"]["PlaceRef"];
+            source: components["schemas"]["SourceInfo"];
+            rules: components["schemas"]["ItbiRulesOut"];
+            city_row: components["schemas"]["ItbiNeighborhoodRow"] | null;
+            /** Neighborhoods */
+            neighborhoods: components["schemas"]["ItbiNeighborhoodRow"][];
+        };
+        /** ItbiRulesOut */
+        ItbiRulesOut: {
+            /** Rate Bps */
+            rate_bps: number;
+            /** Sfh Rate Bps */
+            sfh_rate_bps: number;
+            /** Sfh Limit Cents */
+            sfh_limit_cents: number | null;
+            /** Effective From */
+            effective_from: string;
+            /** Reviewed */
+            reviewed: boolean;
+            /** Registry Low Cents */
+            registry_low_cents: number | null;
+            /** Registry High Cents */
+            registry_high_cents: number | null;
         };
         /** MeOut */
         MeOut: {
@@ -1314,7 +1441,7 @@ export interface components {
              * Template
              * @enum {string}
              */
-            template: "bairros" | "ruas" | "condominios" | "financiamento";
+            template: "bairros" | "ruas" | "condominios" | "financiamento" | "avaliacao" | "itbi" | "imoveis";
             /** Entries */
             entries: components["schemas"]["SitemapEntry"][];
         };
@@ -1409,6 +1536,61 @@ export interface components {
             input?: unknown;
             /** Context */
             ctx?: Record<string, never>;
+        };
+        /** ValuationIn */
+        ValuationIn: {
+            /** Neighborhood */
+            neighborhood: string;
+            /** Street */
+            street?: string | null;
+            /** Number */
+            number?: number | null;
+            /**
+             * Kind
+             * @enum {string}
+             */
+            kind: "apartment" | "house";
+            /** Area M2 */
+            area_m2: number | string;
+            /** Year */
+            year?: number | null;
+            /** Bedrooms */
+            bedrooms?: number | null;
+            /** Parking */
+            parking?: number | null;
+        };
+        /** ValuationOut */
+        ValuationOut: {
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "ok" | "outside_coverage";
+            neighborhood?: components["schemas"]["PlaceRef"] | null;
+            /** Street Name */
+            street_name?: string | null;
+            /** Center Cents */
+            center_cents?: number | null;
+            /** Low Cents */
+            low_cents?: number | null;
+            /** High Cents */
+            high_cents?: number | null;
+            /** Price M2 Cents */
+            price_m2_cents?: number | null;
+            /** Confidence */
+            confidence?: ("alta" | "media" | "baixa") | null;
+            /** Comparables */
+            comparables?: number | null;
+            /** Basis */
+            basis?: ("street_band" | "neighborhood_band" | "neighborhood_year" | "neighbors_band") | null;
+            /**
+             * Groups
+             * @default []
+             */
+            groups: components["schemas"]["ComparableGroupOut"][];
+            /** Window End */
+            window_end?: string | null;
+            source?: components["schemas"]["SourceInfo"] | null;
         };
         /** WorkspaceOut */
         WorkspaceOut: {
@@ -2050,6 +2232,105 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["Sitemap"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    getMarketAddresses: {
+        parameters: {
+            query: {
+                q: string;
+            };
+            header?: never;
+            path: {
+                city: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AddressSuggestions"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    postValuation: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                city: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ValuationIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ValuationOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    getMarketItbi: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                city: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItbiPage"];
                 };
             };
             /** @description Validation Error */
