@@ -5,6 +5,8 @@
  * Money is always integer cents. Dates are ISO-8601 strings with offset.
  */
 
+import type { PlanKey, WorkspacePlan } from '@/config/catalog';
+
 export type Cents = number;
 export type ISODateTime = string;
 export type ID = string;
@@ -27,7 +29,7 @@ export type BrokerProfile = {
   slug: string;
   regions: string[];
   phoneE164: string;
-  plan: 'corretor' | 'essencial' | 'profissional';
+  plan: WorkspacePlan;
   isDemo: boolean;
 };
 
@@ -410,6 +412,9 @@ export type SignupDraft = {
   /** Pending until staff verify it (CLAUDE.md rule 1); publishing stays blocked. */
   creciStatus: 'missing' | 'pending' | 'verified';
   whatsappE164: string | null;
-  plan: 'corretor' | 'essencial' | 'profissional';
+  /** The workspace plan (every account starts on Grátis). */
+  plan: WorkspacePlan;
+  /** Paid plan asked for during signup; staff confirm it (no billing yet). */
+  requestedPlan?: PlanKey | null;
   createdAt: ISODateTime;
 };

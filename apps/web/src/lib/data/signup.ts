@@ -9,7 +9,7 @@
  */
 import { isApiError, type components } from '@casvitta/api-client';
 
-import type { WorkspacePlan } from '@/config/site';
+import { isPlanKey, type PlanKey } from '@/config/catalog';
 import type { SignupDraft, SignupStep } from '@/domain/types';
 import { api } from '@/lib/api';
 import { isLive } from '@/lib/live';
@@ -32,7 +32,6 @@ const CHANGE_EVENT = 'casvitta:signup';
 export const CRECI_NUMBER = /^\d{3}\.?\d{3}$/;
 export const EMAIL = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
 
-type Plan = WorkspacePlan;
 type Me = components['schemas']['MeOut'];
 
 const emitChange = () => window.dispatchEvent(new Event(CHANGE_EVENT));
@@ -75,6 +74,11 @@ async function loadLiveDraft(): Promise<void> {
   liveStatus = 'loading';
   const { data } = await api.GET('/v1/me');
   liveDraft = data ? draftFromMe(data) : null;
+  if (liveDraft) {
+    const usage = await api.GET('/v1/me/plan');
+    const requested = usage.data?.open_request?.requested_plan;
+    liveDraft.requestedPlan = isPlanKey(requested) ? requested : null;
+  }
   liveStatus = 'done';
   emitChange();
 }
@@ -111,14 +115,17 @@ export function currentSignup(): SignupDraft | null {
   return id ? (db().signups[id] ?? null) : null;
 }
 
-/** Plan picked on /para-corretores (?plano=corretor) before the account exists. */
-export function rememberPlan(plan: Plan): void {
+/** Plan picked on a landing or prices page (?plano=essential) before the account exists. */
+export function rememberPlan(plan: PlanKey): void {
   window.sessionStorage.setItem(PLAN_KEY, plan);
 }
 
-/** New sign-ups always get the current broker plan; legacy keys are no longer offered. */
-function rememberedPlan(): Plan {
-  return 'corretor';
+/** The plan to ask for at signup; old links (?plano=corretor) mean Essencial. Default Grátis. */
+export function rememberedPlan(): PlanKey {
+  if (typeof window === 'undefined') return 'free';
+  const saved = window.sessionStorage.getItem(PLAN_KEY);
+  if (saved === 'corretor') return 'essential';
+  return isPlanKey(saved) ? saved : 'free';
 }
 
 // ------------------------------------------------------------------ steps
@@ -152,7 +159,8 @@ export function startDemoSignup(name: string, email: string): SignupDraft {
     creciKind: 'F',
     creciStatus: 'missing',
     whatsappE164: null,
-    plan: rememberedPlan(),
+    plan: 'free',
+    requestedPlan: rememberedPlan() === 'free' ? null : rememberedPlan(),
     createdAt: now().toISOString(),
   };
   mutate((data) => {
@@ -214,9 +222,14 @@ export async function saveWhatsApp(whatsappE164: string): Promise<SaveResult> {
   return { ok: true };
 }
 
-export async function savePlan(plan: Plan): Promise<SaveResult> {
+/**
+ * Grátis needs nothing. A paid plan becomes a plan request that the Casvitta team confirms
+ * (no billing yet): the account keeps working on Grátis meanwhile, and nothing is charged.
+ */
+export async function savePlan(plan: PlanKey): Promise<SaveResult> {
+  const requestedPlan = plan === 'free' ? null : plan;
   if (!isLive('accounts')) {
-    if (currentSignup()) updateDemo({ plan });
+    if (currentSignup()) updateDemo({ requestedPlan });
     else rememberPlan(plan);
     return { ok: true };
   }
@@ -224,8 +237,26 @@ export async function savePlan(plan: Plan): Promise<SaveResult> {
     rememberPlan(plan); // before the account exists
     return { ok: true };
   }
-  const { error } = await api.PATCH('/v1/me/workspace', { body: { plan } });
-  if (error) return failure(error);
+  if (requestedPlan === null) {
+    if (liveDraft.requestedPlan) {
+      const usage = await api.GET('/v1/me/plan');
+      const id = usage.data?.open_request?.id;
+      if (id)
+        await api.DELETE('/v1/me/plan/requests/{request_id}', {
+          params: { path: { request_id: id } },
+        });
+    }
+  } else if (requestedPlan !== liveDraft.requestedPlan) {
+    const { error } = await api.POST('/v1/me/plan/requests', {
+      body: {
+        kind: 'plan',
+        requested_plan: requestedPlan,
+        billing_period: 'monthly',
+        source: 'signup',
+      },
+    });
+    if (error) return failure(error);
+  }
   await loadLiveDraft();
   return { ok: true };
 }

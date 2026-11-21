@@ -1,5 +1,5 @@
 """Revenue (BO7). Billing (Stripe) is not wired, so there are no amounts yet: this returns the
-revenue lines from the offer catalog in settings (names and prices), each with its status, and
+revenue lines from the catalog (app.core.catalog: names and prices), each with its status, and
 never a number that did not happen. Media is never revenue: Meta and Google bill the broker
 directly (CLAUDE.md rule 14). Commissions need Casvitta's own CRECI-J and the Rental OS.
 """
@@ -10,6 +10,7 @@ from typing import Literal
 
 from pydantic import BaseModel
 
+from app.core.catalog import ADD_ONS, HIGHLIGHT_PACKAGES, OWNER_PACKAGES, SELLABLE, spec
 from app.core.settings import Settings
 
 Nature = Literal["recurring", "per_listing", "transaction", "transaction_recurring"]
@@ -20,9 +21,10 @@ class RevenueLine(BaseModel):
     key: str  # message key for the name on screen
     nature: Nature
     status: LineStatus
-    # Catalog price; None = "sob consulta" or not defined yet (never shown as a number).
+    # Catalog price; None = not defined (never shown as a number).
     price_cents: int | None
-    per: Literal["month", "listing"] | None
+    per: Literal["month", "listing", "package"] | None
+    price_from: bool = False  # "a partir de"
 
 
 class RevenueOut(BaseModel):
@@ -35,57 +37,47 @@ def revenue(settings: Settings) -> RevenueOut:
     waits: LineStatus = "waits_billing"
     lines = [
         RevenueLine(
-            key="saas_broker",
+            key=f"plan_{plan.value}",
             nature="recurring",
             status=waits,
-            price_cents=settings.offer_broker_price_cents,
+            price_cents=spec(plan).monthly_cents,
             per="month",
-        ),
+            price_from=spec(plan).price_from,
+        )
+        for plan in SELLABLE
+        if spec(plan).monthly_cents > 0
+    ]
+    lines += [
         RevenueLine(
-            key="saas_agency_essencial",
+            key=f"addon_{a.key}",
             nature="recurring",
             status=waits,
-            price_cents=settings.offer_agency_essencial_price_cents,
-            per="month",
-        ),
+            price_cents=a.price_cents,
+            per="package",
+        )
+        for a in ADD_ONS
+    ]
+    lines += [
         RevenueLine(
-            key="saas_agency_equipe",
-            nature="recurring",
-            status=waits,
-            price_cents=settings.offer_agency_equipe_price_cents,
-            per="month",
-        ),
-        RevenueLine(
-            key="saas_agency_larger", nature="recurring", status=waits, price_cents=None, per=None
-        ),
-        RevenueLine(
-            key="owner_30d",
+            key=f"owner_{days}d",
             nature="per_listing",
             status=waits,
-            price_cents=settings.offer_owner_30d_price_cents,
+            price_cents=cents,
             per="listing",
-        ),
+        )
+        for days, cents in OWNER_PACKAGES.items()
+    ]
+    lines += [
         RevenueLine(
-            key="owner_90d",
+            key=f"highlight_{days}d",
             nature="per_listing",
             status=waits,
-            price_cents=settings.offer_owner_90d_price_cents,
+            price_cents=cents,
             per="listing",
-        ),
-        RevenueLine(
-            key="highlight_7d",
-            nature="per_listing",
-            status=waits,
-            price_cents=settings.offer_highlight_7d_price_cents,
-            per="listing",
-        ),
-        RevenueLine(
-            key="highlight_30d",
-            nature="per_listing",
-            status=waits,
-            price_cents=settings.offer_highlight_30d_price_cents,
-            per="listing",
-        ),
+        )
+        for days, cents in HIGHLIGHT_PACKAGES.items()
+    ]
+    lines += [
         RevenueLine(
             key="commission_rent",
             nature="transaction_recurring",
@@ -98,5 +90,6 @@ def revenue(settings: Settings) -> RevenueOut:
         ),
         RevenueLine(key="insurance", nature="recurring", status="soon", price_cents=None, per=None),
     ]
-    # Billing is not wired yet: even with the module switched on there is nothing to read.
+    # Billing is not wired yet (settings.billing_enabled): there is nothing to read.
+    _ = settings.billing_enabled
     return RevenueOut(enabled=False, lines=lines)

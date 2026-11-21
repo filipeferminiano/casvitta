@@ -5,6 +5,7 @@
   "type": "module",
   "exports": {
     "./tokens": "./src/tokens.ts",
+    "./catalog.json": "./catalog.json",
     "./tailwind-preset.css": "./tailwind-preset.css",
     "./eslint": "./eslint.config.js",
     "./tsconfig/base.json": "./tsconfig/base.json",

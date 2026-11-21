@@ -32,6 +32,7 @@ import {
   type AccountView,
 } from '@/lib/data/staff';
 
+import { PlanRequestsPanel } from './PlanRequestsPanel';
 import { auditDetail } from './TeamAuditScreen';
 import { formatDayTime, formatToday, useAgo } from './format';
 import { isReauthCancelled, useSensitive } from './ReauthProvider';
@@ -120,6 +121,7 @@ export function AccountsScreen() {
         title={t('title')}
         description={t('description')}
       />
+      <PlanRequestsPanel />
       <nav aria-label={t('title')} className="mb-5 flex flex-wrap gap-2">
         {VIEWS.map((v) => (
           <Link

@@ -19,9 +19,15 @@ class WorkspaceKind(StrEnum):
 
 
 class Plan(StrEnum):
-    # Current offer (prices in settings.offer_*).
+    # Current ladder (prices, limits and features in app.core.catalog).
+    FREE = "free"
+    ESSENTIAL = "essential"
+    AUTOMATION = "automation"
+    PRO = "pro"
+    AGENCY = "agency"
+    # Legacy plans: valid on existing workspaces only, never sold. Workspaces on `corretor`
+    # were moved to `essential` by migration 0016.
     CORRETOR = "corretor"
-    # Legacy plans: kept valid so workspaces created before the new catalog keep working.
     ESSENCIAL = "essencial"
     PROFISSIONAL = "profissional"
 
@@ -36,7 +42,7 @@ class Workspace(UUIDPrimaryKey, Timestamps, DemoFlag, Base):
         str_enum(WorkspaceKind), default=WorkspaceKind.BROKER
     )
     plan: Mapped[Plan] = mapped_column(
-        str_enum(Plan), default=Plan.CORRETOR, server_default=Plan.CORRETOR.value
+        str_enum(Plan), default=Plan.FREE, server_default=Plan.FREE.value
     )
     # Staff paused everything this account publishes (BO5), with the reason. Publishing checks
     # it once listings exist; the pause is recorded now so it is never lost.

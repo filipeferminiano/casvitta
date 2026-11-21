@@ -70,5 +70,10 @@
   "listing_suspended": "Este anúncio foi suspenso pela equipe da Casvitta. Fale com o suporte para liberar.",
   "authorization_document_missing": "Anexe o documento de autorização assinado pelo proprietário (PDF ou foto).",
   "upload_type_not_allowed": "Este tipo de arquivo não é aceito. Envie JPG, PNG, WebP ou PDF.",
-  "upload_too_large": "O arquivo passa de 10 MB. Envie um arquivo menor."
+  "upload_too_large": "O arquivo passa de 10 MB. Envie um arquivo menor.",
+  "plan_request_not_found": "Não encontramos este pedido de plano. Ele pode já ter sido atendido; atualize a página.",
+  "plan_not_sellable": "Este plano não está mais à venda. Escolha um dos planos da página de preços.",
+  "plan_already_active": "Você já está neste plano.",
+  "add_on_not_available": "Este pacote extra não está disponível no seu plano. Veja os pacotes em Plano, uso e canais.",
+  "plan_change_requires_request": "A mudança para um plano pago é feita pela equipe da Casvitta. Peça a mudança em Plano, uso e canais; respondemos em até 1 dia útil."
 }

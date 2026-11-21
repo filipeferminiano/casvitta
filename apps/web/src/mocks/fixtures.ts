@@ -5,7 +5,7 @@
  */
 import { formatBRL } from '@casvitta/ui';
 
-import { OFFERS } from '@/config/site';
+import { planOf } from '@/config/catalog';
 import type {
   AdCreative,
   AiDraft,
@@ -46,7 +46,7 @@ export const broker: BrokerProfile = {
   slug: 'anaribeiro',
   regions: ['Vila Mariana', 'Saúde', 'Pinheiros'],
   phoneE164: '+5511927408912',
-  plan: 'corretor',
+  plan: 'essential',
   isDemo: true,
 };
 
@@ -1178,7 +1178,7 @@ export const modules: ModuleItem[] = [
     name: 'CRM e WhatsApp',
     description: 'Leads, conversas, agenda, propostas e suas landing pages.',
     state: 'active',
-    priceLine: `Plano Corretor · ${formatBRL(OFFERS.brokerPlan.priceCents)}/mês`,
+    priceLine: `Essencial · ${formatBRL(planOf('essential').monthly_cents)}/mês`,
     icon: 'users',
   },
   {

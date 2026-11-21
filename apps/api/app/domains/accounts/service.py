@@ -16,6 +16,7 @@ from typing import Any
 from sqlalchemy import func, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.core.catalog import SELLABLE
 from app.core.errors import AppError
 from app.core.i18n import translate
 from app.core.logging import get_logger
@@ -47,6 +48,7 @@ from app.domains.accounts.schemas import (
     UserOut,
     WorkspaceOut,
 )
+from app.domains.billing.models import ChangeKind, ChangeSource, PlanChangeRequest
 from app.domains.staff.audit import Actor, record
 from app.integrations.messaging.port import Email, EmailPort
 
@@ -146,7 +148,7 @@ async def request_email_link(
                 if user
                 else {
                     "name": payload.name or payload.email.split("@")[0],
-                    "plan": (payload.plan or Plan.CORRETOR).value,
+                    "plan": (payload.plan or Plan.FREE).value,
                 }
             ),
             created_at=now,
@@ -219,9 +221,13 @@ async def confirm_email_link(
 
 async def _create_account(session: AsyncSession, email: str, payload: dict[str, Any]) -> User:
     name = str(payload.get("name") or email.split("@", maxsplit=1)[0])
-    plan = Plan(payload.get("plan", Plan.CORRETOR.value))
+    chosen = Plan(payload.get("plan", Plan.FREE.value))
+    # Legacy signup links (?plano=corretor) mean the paid entry plan of the current ladder.
+    if chosen == Plan.CORRETOR:
+        chosen = Plan.ESSENTIAL
     user = User(email=email, name=name)
-    workspace = Workspace(name=name, kind=WorkspaceKind.BROKER, plan=plan)
+    # Every account starts on Grátis; a paid choice becomes a plan request for staff (no billing).
+    workspace = Workspace(name=name, kind=WorkspaceKind.BROKER, plan=Plan.FREE)
     session.add_all([user, workspace])
     await session.flush()
     slug = await _unique_slug(session, name)
@@ -232,6 +238,16 @@ async def _create_account(session: AsyncSession, email: str, payload: dict[str, 
             BrokerProfile(user_id=user.id, display_name=name, slug=slug),
         ]
     )
+    if chosen in SELLABLE and chosen != Plan.FREE:
+        session.add(
+            PlanChangeRequest(
+                kind=ChangeKind.PLAN,
+                current_plan=Plan.FREE,
+                requested_plan=chosen,
+                source=ChangeSource.SIGNUP,
+                requested_by_user_id=user.id,
+            )
+        )
     await session.flush()
     log.info("account_created", user_id=str(user.id), workspace_id=str(workspace.id))
     return user
@@ -516,9 +532,12 @@ async def update_broker_profile(
 
 
 async def set_plan(session: AsyncSession, plan: Plan) -> WorkspaceOut:
+    """Without billing a broker can only go back to Grátis; paid plans are plan requests."""
     workspace = await session.get(Workspace, current_workspace(session))
     if workspace is None:
         raise SessionExpired
+    if plan != Plan.FREE:
+        raise AppError("plan_change_requires_request", status_code=409)
     workspace.plan = plan
     await session.flush()
     return WorkspaceOut(

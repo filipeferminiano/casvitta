@@ -74,3 +74,13 @@ Every public page type is reachable from the home within a fixed number of click
 - **Property page (13).** The breadcrumb is a real trail ("Comprar › São Paulo › Vila Mariana › Apartamento"): the neighborhood opens its listings page when one is published (else the search filtered by it), and rentals start with "Alugar".
 - **Audience pages (landing-pages/01–03).** A visible "Início › page" breadcrumb above the hero; the owners form also links to "Quanto vale meu imóvel?".
 
+
+## CRM, plan catalog and Destaques (Nov 2026)
+
+- **One catalog (CRM-0).** Plans, limits, features, add-ons, Destaques and owner packages live in `apps/api/app/core/catalog.py`; the web reads the generated `packages/config/catalog.json`. It replaces the R$ 197/397 code plans, the R$ 99/299/499 landing offer and the Bio/Social ladder of `PROMPT_SOCIAL_BUILD` §5 (free plan: 5 active properties, not 10; custom domain from Automação, not Social).
+- **Annual prices hidden (00-prices-hypotheses, 02-brokers).** The mockups show "Anual · 2 meses grátis". CLAUDE.md forbids presenting a price as a discount, so the annual per-month prices are in the catalog but not rendered until the owner confirms (`SHOW_ANNUAL_PRICES=false`).
+- **No self-service plan change.** Billing is not wired: signup and upgrades create a plan request; the Casvitta team assigns the plan in the backoffice (Contas → "Pedidos de plano e pacotes"), audited. Every account starts on Grátis.
+- **"WhatsApp oficial conectado" (00-prices-hypotheses).** WhatsApp is connected by the Casvitta team through Evolution API (product decision, 21/11/2026), not the official Cloud API and not self-service: the row reads "WhatsApp conectado pela equipe Casvitta". The note "Responder um cliente dentro de 24 horas não é cobrado" is out of date for the official API too (Meta charges service and utility messages in the window since 01/10/2026) and is not shown.
+- **Pipeline stages are configurable** (CRM 03), with Novo → Em conversa → Visita marcada → Proposta → Fechado / Perdido as defaults; CLAUDE.md §5 listed a fixed `leads.stage` enum.
+- **"5 photos" to publish (CRM 04)** is a configurable gate on top of CLAUDE.md rules 1–2.
+- **Destaques seal.** "Destaque pago" → "Patrocinado"; it appears only in search slots (max 2 per page), never on the home, property page or broker page, and never from an Anúncios (Meta/Google) campaign.

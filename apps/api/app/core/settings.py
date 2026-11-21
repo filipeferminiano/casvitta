@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-from datetime import date
 from functools import lru_cache
 from pathlib import Path
 from typing import Annotated, Literal
@@ -131,24 +130,12 @@ class Settings(BaseSettings):
     interest_rate_limit_per_minute: int = 5
 
     # Business configuration. Money in integer cents, rates in basis points.
-    # Offer catalog (hypotheses, nov/2026). Mirrors apps/web/src/config/site.ts OFFERS; nothing
-    # in the API charges yet: these are for the ledger and backoffice. None = "sob consulta".
-    offer_owner_30d_price_cents: int = 5_900
-    offer_owner_90d_price_cents: int = 14_900
-    offer_broker_price_cents: int = 9_900
-    offer_broker_max_active_properties: int = 50
-    offer_broker_max_users: int = 1
-    offer_agency_essencial_price_cents: int = 29_900
-    offer_agency_essencial_max_active_properties: int = 200
-    offer_agency_essencial_max_users: int = 5
-    offer_agency_equipe_price_cents: int = 49_900
-    offer_agency_equipe_max_active_properties: int = 500
-    offer_agency_equipe_max_users: int = 15
-    # Destaque (highlight): fixed price per property and period, sold apart from publishing.
-    # Hypotheses confirmed by the owner on 2026-11-21 (effective date kept with the prices).
-    offer_highlight_effective_from: date = date(2026, 11, 21)
-    offer_highlight_7d_price_cents: int = 3_900
-    offer_highlight_30d_price_cents: int = 11_900
+    # Plans, prices and limits live in app.core.catalog (one catalog, PROMPT_CRM_BUILD §1).
+    # Annual prices are in the catalog but stay hidden until the owner confirms them
+    # (CLAUDE.md: never shown as a promotion or discount).
+    show_annual_prices: bool = False
+    # No payment provider yet: plan changes are upgrade requests assigned by staff.
+    billing_enabled: bool = False
     min_daily_budget_cents: int = 2_000
     financing_illustrative_annual_rate_bps: int = 1_150
 

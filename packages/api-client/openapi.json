@@ -4072,6 +4072,313 @@
           }
         }
       }
+    },
+    "/v1/public/catalog": {
+      "get": {
+        "tags": [
+          "public"
+        ],
+        "summary": "Get Catalog",
+        "operationId": "getCatalog",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CatalogOut"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/me/plan": {
+      "get": {
+        "tags": [
+          "me"
+        ],
+        "summary": "Get Usage",
+        "operationId": "getPlanUsage",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlanUsageOut"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/me/plan/requests": {
+      "post": {
+        "tags": [
+          "me"
+        ],
+        "summary": "Request Change",
+        "operationId": "requestPlanChange",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChangeRequestIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChangeRequestOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/me/plan/requests/{request_id}": {
+      "delete": {
+        "tags": [
+          "me"
+        ],
+        "summary": "Cancel Request",
+        "operationId": "cancelPlanChange",
+        "parameters": [
+          {
+            "name": "request_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Request Id"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/me/plan/downgrade": {
+      "post": {
+        "tags": [
+          "me"
+        ],
+        "summary": "Downgrade",
+        "operationId": "downgradeToFree",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlanUsageOut"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/staff/plan-requests": {
+      "get": {
+        "tags": [
+          "staff"
+        ],
+        "summary": "List Requests",
+        "operationId": "listPlanRequests",
+        "parameters": [
+          {
+            "name": "x-admin-token",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Admin-Token"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/StaffChangeRequestOut"
+                  },
+                  "title": "Response Listplanrequests"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/staff/plan-requests/{request_id}/approve": {
+      "post": {
+        "tags": [
+          "staff"
+        ],
+        "summary": "Approve",
+        "operationId": "approvePlanRequest",
+        "parameters": [
+          {
+            "name": "request_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Request Id"
+            }
+          },
+          {
+            "name": "x-admin-token",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Admin-Token"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/staff/plan-requests/{request_id}/decline": {
+      "post": {
+        "tags": [
+          "staff"
+        ],
+        "summary": "Decline",
+        "operationId": "declinePlanRequest",
+        "parameters": [
+          {
+            "name": "request_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Request Id"
+            }
+          },
+          {
+            "name": "x-admin-token",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Admin-Token"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeclineIn"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -4376,6 +4683,41 @@
           "details"
         ],
         "title": "ActivityItem"
+      },
+      "AddOnOut": {
+        "properties": {
+          "key": {
+            "type": "string",
+            "title": "Key"
+          },
+          "price_cents": {
+            "type": "integer",
+            "title": "Price Cents"
+          },
+          "meter": {
+            "$ref": "#/components/schemas/Meter"
+          },
+          "amount": {
+            "type": "integer",
+            "title": "Amount"
+          },
+          "plans": {
+            "items": {
+              "$ref": "#/components/schemas/Plan"
+            },
+            "type": "array",
+            "title": "Plans"
+          }
+        },
+        "type": "object",
+        "required": [
+          "key",
+          "price_cents",
+          "meter",
+          "amount",
+          "plans"
+        ],
+        "title": "AddOnOut"
       },
       "AddressSuggestion": {
         "properties": {
@@ -5979,6 +6321,226 @@
         ],
         "title": "CaptureListOut"
       },
+      "CatalogOut": {
+        "properties": {
+          "version": {
+            "type": "string",
+            "title": "Version"
+          },
+          "show_annual_prices": {
+            "type": "boolean",
+            "title": "Show Annual Prices"
+          },
+          "plans": {
+            "items": {
+              "$ref": "#/components/schemas/PlanOut"
+            },
+            "type": "array",
+            "title": "Plans"
+          },
+          "add_ons": {
+            "items": {
+              "$ref": "#/components/schemas/AddOnOut"
+            },
+            "type": "array",
+            "title": "Add Ons"
+          },
+          "highlight_effective_from": {
+            "type": "string",
+            "format": "date",
+            "title": "Highlight Effective From"
+          },
+          "highlight_packages": {
+            "items": {
+              "$ref": "#/components/schemas/PackageOut"
+            },
+            "type": "array",
+            "title": "Highlight Packages"
+          },
+          "owner_packages": {
+            "items": {
+              "$ref": "#/components/schemas/PackageOut"
+            },
+            "type": "array",
+            "title": "Owner Packages"
+          }
+        },
+        "type": "object",
+        "required": [
+          "version",
+          "show_annual_prices",
+          "plans",
+          "add_ons",
+          "highlight_effective_from",
+          "highlight_packages",
+          "owner_packages"
+        ],
+        "title": "CatalogOut"
+      },
+      "ChangeKind": {
+        "type": "string",
+        "enum": [
+          "plan",
+          "add_on"
+        ],
+        "title": "ChangeKind"
+      },
+      "ChangeRequestIn": {
+        "properties": {
+          "kind": {
+            "$ref": "#/components/schemas/ChangeKind",
+            "default": "plan"
+          },
+          "requested_plan": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Plan"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "add_on_key": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 60
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Add On Key"
+          },
+          "billing_period": {
+            "type": "string",
+            "enum": [
+              "monthly",
+              "annual"
+            ],
+            "title": "Billing Period",
+            "default": "monthly"
+          },
+          "source": {
+            "$ref": "#/components/schemas/ChangeSource",
+            "default": "plans_page"
+          }
+        },
+        "type": "object",
+        "title": "ChangeRequestIn"
+      },
+      "ChangeRequestOut": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "kind": {
+            "$ref": "#/components/schemas/ChangeKind"
+          },
+          "current_plan": {
+            "$ref": "#/components/schemas/Plan"
+          },
+          "requested_plan": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Plan"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "add_on_key": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Add On Key"
+          },
+          "billing_period": {
+            "type": "string",
+            "title": "Billing Period"
+          },
+          "source": {
+            "$ref": "#/components/schemas/ChangeSource"
+          },
+          "status": {
+            "$ref": "#/components/schemas/ChangeStatus"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          },
+          "handled_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Handled At"
+          },
+          "reason": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reason"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "kind",
+          "current_plan",
+          "requested_plan",
+          "add_on_key",
+          "billing_period",
+          "source",
+          "status",
+          "created_at",
+          "handled_at",
+          "reason"
+        ],
+        "title": "ChangeRequestOut"
+      },
+      "ChangeSource": {
+        "type": "string",
+        "enum": [
+          "signup",
+          "plans_page",
+          "limit_reached",
+          "feature_gate",
+          "support"
+        ],
+        "title": "ChangeSource"
+      },
+      "ChangeStatus": {
+        "type": "string",
+        "enum": [
+          "pending",
+          "awaiting_payment",
+          "approved",
+          "declined",
+          "cancelled"
+        ],
+        "title": "ChangeStatus"
+      },
       "Channel": {
         "type": "string",
         "enum": [
@@ -6403,6 +6965,21 @@
         "title": "CreciReviewStatus",
         "description": "Staff review of the CRECI (BO2). Only \"verified\" lets the broker publish (rule 1)."
       },
+      "DeclineIn": {
+        "properties": {
+          "reason": {
+            "type": "string",
+            "maxLength": 500,
+            "minLength": 3,
+            "title": "Reason"
+          }
+        },
+        "type": "object",
+        "required": [
+          "reason"
+        ],
+        "title": "DeclineIn"
+      },
       "DeveloperCriteria": {
         "properties": {
           "company": {
@@ -6584,6 +7161,29 @@
         "type": "object",
         "title": "EmailLinkSent",
         "description": "Same body whether or not the address has an account (no account enumeration)."
+      },
+      "Feature": {
+        "type": "string",
+        "enum": [
+          "broker_page",
+          "unbranded_page",
+          "custom_domain",
+          "page_per_broker",
+          "contact_history",
+          "pipeline_and_calendar",
+          "google_calendar",
+          "tracked_forms",
+          "segments",
+          "distribution_and_permissions",
+          "whatsapp_button",
+          "instagram_inbox",
+          "whatsapp_connected",
+          "comment_to_dm",
+          "agent_books_visits",
+          "saved_search_alerts",
+          "highlights_one_off"
+        ],
+        "title": "Feature"
       },
       "FinancedYear": {
         "properties": {
@@ -7450,6 +8050,67 @@
         ],
         "title": "MediaOut"
       },
+      "Meter": {
+        "type": "string",
+        "enum": [
+          "users",
+          "active_properties",
+          "crm_contacts",
+          "automation_contacts_month",
+          "journeys",
+          "agents",
+          "ai_conversations_month",
+          "included_highlights_month"
+        ],
+        "title": "Meter"
+      },
+      "MeterOut": {
+        "properties": {
+          "meter": {
+            "$ref": "#/components/schemas/Meter"
+          },
+          "used": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Used"
+          },
+          "limit": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Limit"
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "ok",
+              "warning",
+              "reached",
+              "not_included"
+            ],
+            "title": "State"
+          }
+        },
+        "type": "object",
+        "required": [
+          "meter",
+          "used",
+          "limit",
+          "state"
+        ],
+        "title": "MeterOut"
+      },
       "ModerationQueueOut": {
         "properties": {
           "enabled": {
@@ -8079,6 +8740,24 @@
         ],
         "title": "OwnerListingStartSignup"
       },
+      "PackageOut": {
+        "properties": {
+          "days": {
+            "type": "integer",
+            "title": "Days"
+          },
+          "price_cents": {
+            "type": "integer",
+            "title": "Price Cents"
+          }
+        },
+        "type": "object",
+        "required": [
+          "days",
+          "price_cents"
+        ],
+        "title": "PackageOut"
+      },
       "Permission": {
         "type": "string",
         "enum": [
@@ -8132,11 +8811,140 @@
       "Plan": {
         "type": "string",
         "enum": [
+          "free",
+          "essential",
+          "automation",
+          "pro",
+          "agency",
           "corretor",
           "essencial",
           "profissional"
         ],
         "title": "Plan"
+      },
+      "PlanOut": {
+        "properties": {
+          "key": {
+            "$ref": "#/components/schemas/Plan"
+          },
+          "monthly_cents": {
+            "type": "integer",
+            "title": "Monthly Cents"
+          },
+          "annual_monthly_cents": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Annual Monthly Cents"
+          },
+          "price_from": {
+            "type": "boolean",
+            "title": "Price From"
+          },
+          "extra_user_cents": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Extra User Cents"
+          },
+          "limits": {
+            "additionalProperties": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "propertyNames": {
+              "$ref": "#/components/schemas/Meter"
+            },
+            "type": "object",
+            "title": "Limits"
+          },
+          "features": {
+            "items": {
+              "$ref": "#/components/schemas/Feature"
+            },
+            "type": "array",
+            "title": "Features"
+          },
+          "reports": {
+            "type": "string",
+            "enum": [
+              "basic",
+              "full",
+              "by_source",
+              "by_broker"
+            ],
+            "title": "Reports"
+          }
+        },
+        "type": "object",
+        "required": [
+          "key",
+          "monthly_cents",
+          "annual_monthly_cents",
+          "price_from",
+          "extra_user_cents",
+          "limits",
+          "features",
+          "reports"
+        ],
+        "title": "PlanOut"
+      },
+      "PlanUsageOut": {
+        "properties": {
+          "plan": {
+            "$ref": "#/components/schemas/Plan"
+          },
+          "legacy": {
+            "type": "boolean",
+            "title": "Legacy"
+          },
+          "billing_enabled": {
+            "type": "boolean",
+            "title": "Billing Enabled"
+          },
+          "meters": {
+            "items": {
+              "$ref": "#/components/schemas/MeterOut"
+            },
+            "type": "array",
+            "title": "Meters"
+          },
+          "open_request": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ChangeRequestOut"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "plan",
+          "legacy",
+          "billing_enabled",
+          "meters",
+          "open_request"
+        ],
+        "title": "PlanUsageOut"
       },
       "PortfolioSize": {
         "type": "string",
@@ -9849,7 +10657,8 @@
                 "type": "string",
                 "enum": [
                   "month",
-                  "listing"
+                  "listing",
+                  "package"
                 ]
               },
               {
@@ -9857,6 +10666,11 @@
               }
             ],
             "title": "Per"
+          },
+          "price_from": {
+            "type": "boolean",
+            "title": "Price From",
+            "default": false
           }
         },
         "type": "object",
@@ -10172,6 +10986,106 @@
           "name"
         ],
         "title": "StaffBootstrapIn"
+      },
+      "StaffChangeRequestOut": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "kind": {
+            "$ref": "#/components/schemas/ChangeKind"
+          },
+          "current_plan": {
+            "$ref": "#/components/schemas/Plan"
+          },
+          "requested_plan": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Plan"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "add_on_key": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Add On Key"
+          },
+          "billing_period": {
+            "type": "string",
+            "title": "Billing Period"
+          },
+          "source": {
+            "$ref": "#/components/schemas/ChangeSource"
+          },
+          "status": {
+            "$ref": "#/components/schemas/ChangeStatus"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          },
+          "handled_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Handled At"
+          },
+          "reason": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reason"
+          },
+          "workspace_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Workspace Id"
+          },
+          "workspace_name": {
+            "type": "string",
+            "title": "Workspace Name"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "kind",
+          "current_plan",
+          "requested_plan",
+          "add_on_key",
+          "billing_period",
+          "source",
+          "status",
+          "created_at",
+          "handled_at",
+          "reason",
+          "workspace_id",
+          "workspace_name"
+        ],
+        "title": "StaffChangeRequestOut"
       },
       "StaffEmailLinkIn": {
         "properties": {

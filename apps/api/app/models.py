@@ -11,6 +11,7 @@ from app.domains.accounts.models import (
     Workspace,
 )
 from app.domains.alerts.models import PropertyAlert, PropertyAlertConsent
+from app.domains.billing.models import PlanChangeRequest
 from app.domains.interest.models import (
     InterestAssignment,
     InterestSignup,
@@ -62,6 +63,7 @@ __all__ = [
     "MarketStreet",
     "Membership",
     "OwnerAuthorization",
+    "PlanChangeRequest",
     "Property",
     "PropertyAlert",
     "PropertyAlertConsent",

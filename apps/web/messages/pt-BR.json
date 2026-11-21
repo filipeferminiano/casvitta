@@ -1375,13 +1375,25 @@
   },
   "plans": {
     "perMonth": "/mês",
-    "upTo": "Até {count} imóveis",
-    "corretor": {
-      "name": "Plano Corretor",
-      "users": "{count, plural, one {# usuário} other {# usuários}}",
-      "organize": "Cadastro de imóveis e organização de contatos e oportunidades",
-      "portal": "Publicação no portal Casvitta, dentro do limite do plano"
-    }
+    "from": "a partir de",
+    "free": "Grátis",
+    "names": {
+      "free": "Grátis",
+      "essential": "Essencial",
+      "automation": "Automação",
+      "pro": "Pro",
+      "agency": "Imobiliária",
+      "corretor": "Plano Corretor (anterior)",
+      "essencial": "Essencial (anterior)",
+      "profissional": "Profissional (anterior)"
+    },
+    "users": "{count, plural, one {# usuário} other {# usuários}}",
+    "properties": "Até {count} imóveis ativos",
+    "contacts": "{count} contatos no CRM",
+    "contactsUnlimited": "Contatos ilimitados no CRM",
+    "aiConversations": "{count} conversas de IA por mês",
+    "noAutomation": "Sem automações nem assistente de IA",
+    "requestSent": "Pedido do plano {plan} enviado. A equipe Casvitta confirma em até 1 dia útil; até lá você usa o Grátis e nada é cobrado."
   },
   "signup": {
     "metaTitle": "Cadastro do corretor",
@@ -1401,10 +1413,6 @@
     "back": "Voltar",
     "saving": "Salvando…",
     "saveError": "Não conseguimos salvar agora. Tente de novo em alguns minutos.",
-    "perMonth": "{amount}/mês",
-    "plans": {
-      "corretor": "Plano Corretor"
-    },
     "startFirstTitle": "Comece pela sua conta",
     "startFirstDescription": "Para seguir no cadastro, primeiro confirme seu celular.",
     "startFirstAction": "Criar minha conta",
@@ -1449,7 +1457,7 @@
     },
     "plano": {
       "title": "Seu plano",
-      "description": "Você pode trocar de plano quando quiser.",
+      "description": "Comece grátis. Se escolher um plano pago, a equipe Casvitta confirma a mudança; nada é cobrado agora.",
       "legend": "Escolha um plano",
       "choose": "Escolher",
       "chosen": "Escolhido"
@@ -1466,13 +1474,14 @@
       "error": "Não conseguimos abrir os Anúncios. Tente de novo em alguns segundos."
     },
     "aside": {
-      "plan": "Plano escolhido",
+      "plan": "Seu plano",
       "change": "Você pode trocar de plano depois.",
       "afterTitle": "Depois do cadastro",
       "landing": "Sua landing page fica pronta em {slug}.casvitta.com.br",
       "whatsapp": "Você conecta o WhatsApp onde quer receber os leads",
       "firstAd": "O primeiro imóvel abre direto em Anúncios",
-      "lgpd": "Seus dados são usados só para o cadastro e a verificação do CRECI, conforme a LGPD."
+      "lgpd": "Seus dados são usados só para o cadastro e a verificação do CRECI, conforme a LGPD.",
+      "requested": "Pedido: {plan}"
     }
   },
   "signIn": {
@@ -1832,10 +1841,10 @@
       },
       "brokers": {
         "title": "Para corretores e imobiliárias",
-        "forBrokers": "Software de gestão para corretor autônomo: imóveis, contatos e oportunidades num só lugar, com publicação no portal Casvitta incluída até o limite do plano. Plano Corretor: {price}/mês, {users, plural, one {# usuário} other {# usuários}}, até {max} imóveis ativos",
+        "forBrokers": "Página com CRECI, CRM, automações de WhatsApp e Instagram e assistente de IA para corretores, com os imóveis publicados no site Casvitta. Planos: {plans}",
         "media": "Mídia paga roda na conta de anúncios do próprio corretor no Meta e no Google, a partir de {minBudget} por dia por imóvel; a Casvitta não cobra nem revende mídia",
-        "forAgencies": "Sistema para imobiliárias: carteira, equipe, responsáveis e oportunidades, com publicação no portal Casvitta incluída até o limite do plano. Planos {plans} e Operação maior sob consulta; migração assistida com orçamento separado. Demonstração por vídeo",
-        "agencyPlan": "{name} {price}/mês (até {max} imóveis ativos, {users} usuários)"
+        "forAgencies": "Plano Imobiliária a partir de {price}/mês: {users} usuários (+{extraUser} por usuário extra), até {max} imóveis ativos, página para cada corretor, distribuição de contatos e permissões. Migração assistida com orçamento separado. Demonstração por vídeo",
+        "brokerPlan": "{name} {price} (até {max} imóveis ativos)"
       },
       "owners": {
         "title": "Para proprietários",
@@ -1869,11 +1878,8 @@
       "ai": "A IA não negocia preço nem condições, não promete aprovação de crédito e só usa fatos do cadastro do imóvel.",
       "contact": "Contato: WhatsApp {phone}."
     },
-    "agencyPlans": {
-      "essencial": "Essencial",
-      "equipe": "Equipe",
-      "operacao": "Operação maior"
-    }
+    "free": "grátis",
+    "perMonth": "{price}/mês"
   },
   "market": {
     "source": "Fonte: Prefeitura de São Paulo — guias de ITBI",
@@ -2850,9 +2856,14 @@
       "error": "A busca falhou. Tente de novo."
     },
     "plans": {
-      "corretor": "Corretor",
-      "essencial": "Essencial",
-      "profissional": "Profissional"
+      "free": "Grátis",
+      "essential": "Essencial",
+      "automation": "Automação",
+      "pro": "Pro",
+      "agency": "Imobiliária",
+      "corretor": "Corretor (anterior)",
+      "essencial": "Essencial (anterior)",
+      "profissional": "Profissional (anterior)"
     },
     "creci": {
       "title": "Verificação de CRECI",
@@ -3256,10 +3267,13 @@
         "status": "Status"
       },
       "lines": {
-        "saas_broker": "Assinatura Corretor",
-        "saas_agency_essencial": "Imobiliária Essencial",
-        "saas_agency_equipe": "Imobiliária Equipe",
-        "saas_agency_larger": "Imobiliária Operação maior",
+        "plan_essential": "Plano Essencial",
+        "plan_automation": "Plano Automação",
+        "plan_pro": "Plano Pro",
+        "plan_agency": "Plano Imobiliária",
+        "addon_ai_conversations_500": "+500 conversas de IA",
+        "addon_automation_contacts_1000": "+1.000 contatos em automação",
+        "addon_agency_extra_user": "Usuário extra na Imobiliária",
         "owner_30d": "Anúncio do proprietário · 30 dias",
         "owner_90d": "Anúncio do proprietário · 90 dias",
         "highlight_7d": "Destaque · 7 dias",
@@ -3285,8 +3299,40 @@
       },
       "perMonth": "{price}/mês",
       "perListing": "{price} por anúncio",
-      "onRequest": "Sob consulta",
-      "undefined": "Preço a definir"
+      "undefined": "Preço a definir",
+      "perMonthFrom": "a partir de {price}/mês",
+      "perPackage": "{price} por pacote"
+    },
+    "planRequests": {
+      "title": "Pedidos de plano e pacotes",
+      "description": "A cobrança ainda não está ligada: a mudança é feita aqui, à mão, e fica na auditoria. Confirme com o cliente antes de aprovar.",
+      "subject": "os pedidos de plano",
+      "empty": "Nenhum pedido de plano esperando.",
+      "toPlan": "{from} → {to}",
+      "addOn": "Pacote extra: {name}",
+      "addOns": {
+        "ai_conversations_500": "+500 conversas de IA",
+        "automation_contacts_1000": "+1.000 contatos em automação",
+        "agency_extra_user": "Usuário extra",
+        "unknown": "pacote"
+      },
+      "meta": "Pedido em {when} · {source}",
+      "sources": {
+        "signup": "no cadastro",
+        "plans_page": "na página de preços",
+        "limit_reached": "ao chegar no limite",
+        "feature_gate": "ao tentar um recurso",
+        "support": "pelo suporte"
+      },
+      "annual": "Anual",
+      "approve": "Aprovar",
+      "decline": "Recusar",
+      "declineTitle": "Recusar o pedido de {name}",
+      "declineDescription": "O motivo fica na auditoria. Avise o cliente pelo canal de atendimento.",
+      "reason": "Motivo",
+      "confirmDecline": "Recusar pedido",
+      "close": "Cancelar",
+      "error": "Não conseguimos salvar. Atualize a página e tente de novo."
     }
   },
   "audience": {

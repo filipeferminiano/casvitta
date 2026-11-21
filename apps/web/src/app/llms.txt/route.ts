@@ -1,5 +1,6 @@
 import { getTranslations } from 'next-intl/server';
 
+import { PLANS, planOf } from '@/config/catalog';
 import { COMPANY, OFFERS } from '@/config/site';
 import { DEFAULT_LOCALE } from '@/i18n/request';
 import { MIN_DAILY_BUDGET_CENTS } from '@/lib/data/ads';
@@ -17,6 +18,8 @@ export async function GET() {
   if (site.kind !== 'marketplace') return new Response('Not found', { status: 404 });
 
   const t = await getTranslations({ locale: DEFAULT_LOCALE, namespace: 'llms' });
+  const tPlans = await getTranslations({ locale: DEFAULT_LOCALE, namespace: 'plans' });
+  const agency = planOf('agency');
   const packs = OFFERS.ownerPacks;
   const [shortPack, longPack] = [packs[0]!, packs[packs.length - 1]!];
   const copy: LlmsCopy = {
@@ -38,29 +41,28 @@ export async function GET() {
             path: '/para-corretores',
             label: t('nav.forBrokers'),
             description: t('sections.brokers.forBrokers', {
-              price: formatBRL(OFFERS.brokerPlan.priceCents),
-              users: OFFERS.brokerPlan.maxUsers,
-              max: OFFERS.brokerPlan.maxActiveProperties,
+              plans: PLANS.filter((plan) => plan.key !== 'agency')
+                .map((plan) =>
+                  t('sections.brokers.brokerPlan', {
+                    name: tPlans(`names.${plan.key}`),
+                    price:
+                      plan.monthly_cents === 0
+                        ? t('free')
+                        : t('perMonth', { price: formatBRL(plan.monthly_cents) }),
+                    max: plan.limits.active_properties ?? 0,
+                  }),
+                )
+                .join('; '),
             }),
           },
           {
             path: '/para-imobiliarias',
             label: t('nav.forAgencies'),
             description: t('sections.brokers.forAgencies', {
-              plans: OFFERS.agencyPlans
-                .flatMap((plan) =>
-                  plan.priceCents === null
-                    ? []
-                    : [
-                        t('sections.brokers.agencyPlan', {
-                          name: t(`agencyPlans.${plan.key}`),
-                          price: formatBRL(plan.priceCents),
-                          max: plan.maxActiveProperties ?? 0,
-                          users: plan.maxUsers ?? 0,
-                        }),
-                      ],
-                )
-                .join('; '),
+              price: formatBRL(agency.monthly_cents),
+              users: agency.limits.users ?? 0,
+              extraUser: formatBRL(agency.extra_user_cents ?? 0),
+              max: agency.limits.active_properties ?? 0,
             }),
           },
         ],

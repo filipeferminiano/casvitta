@@ -141,12 +141,15 @@ export function RevenueScreen() {
 
   const price = (line: RevenueLine): string => {
     if (line.status === 'soon') return t(`soonNote.${line.key}` as 'soonNote.commission_rent');
-    if (line.price_cents === null || line.price_cents === undefined) {
-      return line.key === 'saas_agency_larger' ? t('onRequest') : t('undefined');
-    }
+    if (line.price_cents === null || line.price_cents === undefined) return t('undefined');
     const value = formatBRL(line.price_cents);
-    return line.per === 'month'
-      ? t('perMonth', { price: value })
+    if (line.per === 'month') {
+      return line.price_from
+        ? t('perMonthFrom', { price: value })
+        : t('perMonth', { price: value });
+    }
+    return line.per === 'package'
+      ? t('perPackage', { price: value })
       : t('perListing', { price: value });
   };
 
@@ -155,7 +158,7 @@ export function RevenueScreen() {
       key: 'line',
       header: t('columns.line'),
       cell: (l) => (
-        <span className="font-semibold">{t(`lines.${l.key}` as 'lines.saas_broker')}</span>
+        <span className="font-semibold">{t(`lines.${l.key}` as 'lines.plan_essential')}</span>
       ),
     },
     { key: 'nature', header: t('columns.nature'), cell: (l) => t(`nature.${l.nature}`) },

@@ -500,3 +500,37 @@ export function useRevenue(enabled: boolean) {
     queryFn: async () => unwrap(await staffApi.GET('/v1/staff/revenue')),
   });
 }
+
+// ------------------------------------------------------------------ plan requests (CRM-0)
+
+export type PlanRequest = components['schemas']['StaffChangeRequestOut'];
+
+export function usePlanRequests(enabled: boolean) {
+  return useQuery({
+    queryKey: ['staff', 'plan-requests'],
+    enabled,
+    queryFn: async () => unwrap(await staffApi.GET('/v1/staff/plan-requests')),
+  });
+}
+
+export type PlanDecision =
+  { id: string; outcome: 'approve' } | { id: string; outcome: 'decline'; reason: string };
+
+/** Approve assigns the plan (or add-on) by hand while billing is off; both are audited. */
+export function useDecidePlanRequest() {
+  const client = useQueryClient();
+  return useMutation({
+    mutationFn: async (d: PlanDecision) => {
+      const path = { params: { path: { request_id: d.id } } };
+      const result =
+        d.outcome === 'approve'
+          ? await staffApi.POST('/v1/staff/plan-requests/{request_id}/approve', path)
+          : await staffApi.POST('/v1/staff/plan-requests/{request_id}/decline', {
+              ...path,
+              body: { reason: d.reason },
+            });
+      if (result.error !== undefined) unwrap(result);
+    },
+    onSettled: () => invalidateAll(client),
+  });
+}

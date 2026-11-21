@@ -125,13 +125,16 @@ async def test_queue_is_off_until_listings_exist() -> None:
 def test_revenue_shows_catalog_lines_without_amounts() -> None:
     from app.domains.backoffice.revenue import revenue  # noqa: PLC0415
 
-    out = revenue(Settings(offer_broker_price_cents=9_900))
+    out = revenue(Settings())
     assert out.enabled is False  # billing is not wired: no numbers
     lines = {line.key: line for line in out.lines}
-    assert lines["saas_broker"].price_cents == 9_900
-    assert lines["saas_agency_larger"].price_cents is None  # "sob consulta"
+    assert lines["plan_essential"].price_cents == 4_900
+    assert lines["plan_agency"].price_from is True  # "a partir de R$ 499"
+    assert "plan_free" not in lines and "plan_corretor" not in lines  # legacy is never sold
+    assert lines["addon_ai_conversations_500"].price_cents == 4_900
     assert lines["highlight_7d"].price_cents == 3_900
     assert lines["highlight_30d"].price_cents == 11_900
+    assert lines["owner_30d"].price_cents == 5_900
     assert {lines[k].status for k in ("commission_rent", "commission_sale", "insurance")} == {
         "soon"
     }

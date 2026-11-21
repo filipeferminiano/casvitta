@@ -2,6 +2,7 @@
  * Public-site configuration. Prices and limits come from config, never from components
  * (CLAUDE.md §1); defaults mirror apps/api settings.
  */
+import { CATALOG } from '@/config/catalog';
 import type { ServingRules } from '@/lib/highlights/serving';
 
 // NEXT_PUBLIC_* values must be referenced literally (process.env.NEXT_PUBLIC_X) so Next inlines
@@ -30,8 +31,10 @@ export const COMPANY = {
 /**
  * Offer catalog for the audience pages (/anunciar-imovel, /para-corretores, /para-imobiliarias),
  * signup, llms.txt and structured data. Hypotheses (nov/2026), not validated prices: never shown
- * as a promotion or discount. Mirrors apps/api settings.offer_*. A null price is never rendered
- * as a number ("Sob consulta").
+ * as a promotion or discount. Owner packs and Destaques come from the plan catalog
+ * (src/config/catalog.ts). `brokerPlan` and `agencyPlans` are the previous landing-page offer,
+ * kept only until the audience pages are rebuilt on the catalog (PROMPT_CRM_BUILD §1); nothing
+ * new reads them. A null price is never rendered as a number ("Sob consulta").
  */
 export type OwnerPack = { key: '30d' | '90d'; days: 30 | 90; priceCents: number };
 export type BrokerPlan = {
@@ -60,18 +63,11 @@ export type Offers = {
 };
 
 export const OFFERS: Offers = {
-  ownerPacks: [
-    {
-      key: '30d',
-      days: 30,
-      priceCents: int(process.env.NEXT_PUBLIC_OFFER_OWNER_30D_PRICE_CENTS, 5_900),
-    },
-    {
-      key: '90d',
-      days: 90,
-      priceCents: int(process.env.NEXT_PUBLIC_OFFER_OWNER_90D_PRICE_CENTS, 14_900),
-    },
-  ],
+  ownerPacks: CATALOG.owner_packages.map((p) => ({
+    key: p.days === 30 ? '30d' : '90d',
+    days: p.days as 30 | 90,
+    priceCents: p.price_cents,
+  })),
   brokerPlan: {
     key: 'corretor',
     priceCents: int(process.env.NEXT_PUBLIC_OFFER_BROKER_PRICE_CENTS, 9_900),
@@ -101,21 +97,14 @@ export const OFFERS: Offers = {
     { key: 'operacao', priceCents: null, maxUsers: null, maxActiveProperties: null },
   ],
   highlight: {
-    effectiveFrom: env(process.env.NEXT_PUBLIC_OFFER_HIGHLIGHT_EFFECTIVE_FROM, '2026-11-21'),
-    packages: [
-      { days: 7, priceCents: int(process.env.NEXT_PUBLIC_OFFER_HIGHLIGHT_7D_PRICE_CENTS, 3_900) },
-      {
-        days: 30,
-        priceCents: int(process.env.NEXT_PUBLIC_OFFER_HIGHLIGHT_30D_PRICE_CENTS, 11_900),
-      },
-    ],
+    effectiveFrom: CATALOG.highlight_effective_from,
+    packages: CATALOG.highlight_packages.map((p) => ({
+      days: p.days as 7 | 30,
+      priceCents: p.price_cents,
+    })),
   },
 };
 // Assisted migration is always quoted apart ("orçamento separado"): no price in config.
-
-/** Plan a broker signs up to. Legacy workspaces may still be on essencial/profissional. */
-export type PlanKey = 'corretor';
-export type WorkspacePlan = PlanKey | 'essencial' | 'profissional';
 
 /** Destaques serving rules (mockup 45). Changing them needs the AdOps "Administração" permission. */
 export const HIGHLIGHT_SERVING: ServingRules = {

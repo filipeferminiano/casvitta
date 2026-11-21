@@ -1212,6 +1212,142 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/public/catalog": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Catalog */
+        get: operations["getCatalog"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/me/plan": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Usage */
+        get: operations["getPlanUsage"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/me/plan/requests": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Request Change */
+        post: operations["requestPlanChange"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/me/plan/requests/{request_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Cancel Request */
+        delete: operations["cancelPlanChange"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/me/plan/downgrade": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Downgrade */
+        post: operations["downgradeToFree"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/staff/plan-requests": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Requests */
+        get: operations["listPlanRequests"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/staff/plan-requests/{request_id}/approve": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Approve */
+        post: operations["approvePlanRequest"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/staff/plan-requests/{request_id}/decline": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Decline */
+        post: operations["declinePlanRequest"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -1323,6 +1459,18 @@ export interface components {
             details: {
                 [key: string]: unknown;
             };
+        };
+        /** AddOnOut */
+        AddOnOut: {
+            /** Key */
+            key: string;
+            /** Price Cents */
+            price_cents: number;
+            meter: components["schemas"]["Meter"];
+            /** Amount */
+            amount: number;
+            /** Plans */
+            plans: components["schemas"]["Plan"][];
         };
         /** AddressSuggestion */
         AddressSuggestion: {
@@ -1821,6 +1969,83 @@ export interface components {
             /** Items */
             items: components["schemas"]["CaptureItem"][];
         };
+        /** CatalogOut */
+        CatalogOut: {
+            /** Version */
+            version: string;
+            /** Show Annual Prices */
+            show_annual_prices: boolean;
+            /** Plans */
+            plans: components["schemas"]["PlanOut"][];
+            /** Add Ons */
+            add_ons: components["schemas"]["AddOnOut"][];
+            /**
+             * Highlight Effective From
+             * Format: date
+             */
+            highlight_effective_from: string;
+            /** Highlight Packages */
+            highlight_packages: components["schemas"]["PackageOut"][];
+            /** Owner Packages */
+            owner_packages: components["schemas"]["PackageOut"][];
+        };
+        /**
+         * ChangeKind
+         * @enum {string}
+         */
+        ChangeKind: "plan" | "add_on";
+        /** ChangeRequestIn */
+        ChangeRequestIn: {
+            /** @default plan */
+            kind: components["schemas"]["ChangeKind"];
+            requested_plan?: components["schemas"]["Plan"] | null;
+            /** Add On Key */
+            add_on_key?: string | null;
+            /**
+             * Billing Period
+             * @default monthly
+             * @enum {string}
+             */
+            billing_period: "monthly" | "annual";
+            /** @default plans_page */
+            source: components["schemas"]["ChangeSource"];
+        };
+        /** ChangeRequestOut */
+        ChangeRequestOut: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            kind: components["schemas"]["ChangeKind"];
+            current_plan: components["schemas"]["Plan"];
+            requested_plan: components["schemas"]["Plan"] | null;
+            /** Add On Key */
+            add_on_key: string | null;
+            /** Billing Period */
+            billing_period: string;
+            source: components["schemas"]["ChangeSource"];
+            status: components["schemas"]["ChangeStatus"];
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /** Handled At */
+            handled_at: string | null;
+            /** Reason */
+            reason: string | null;
+        };
+        /**
+         * ChangeSource
+         * @enum {string}
+         */
+        ChangeSource: "signup" | "plans_page" | "limit_reached" | "feature_gate" | "support";
+        /**
+         * ChangeStatus
+         * @enum {string}
+         */
+        ChangeStatus: "pending" | "awaiting_payment" | "approved" | "declined" | "cancelled";
         /**
          * Channel
          * @enum {string}
@@ -1966,6 +2191,11 @@ export interface components {
          * @enum {string}
          */
         CreciReviewStatus: "pending" | "correction_requested" | "verified" | "rejected";
+        /** DeclineIn */
+        DeclineIn: {
+            /** Reason */
+            reason: string;
+        };
         /** DeveloperCriteria */
         DeveloperCriteria: {
             /** Company */
@@ -2023,6 +2253,11 @@ export interface components {
              */
             status: "sent";
         };
+        /**
+         * Feature
+         * @enum {string}
+         */
+        Feature: "broker_page" | "unbranded_page" | "custom_domain" | "page_per_broker" | "contact_history" | "pipeline_and_calendar" | "google_calendar" | "tracked_forms" | "segments" | "distribution_and_permissions" | "whatsapp_button" | "instagram_inbox" | "whatsapp_connected" | "comment_to_dm" | "agent_books_visits" | "saved_search_alerts" | "highlights_one_off";
         /** FinancedYear */
         FinancedYear: {
             /** Year */
@@ -2301,6 +2536,24 @@ export interface components {
             /** Is Cover */
             is_cover: boolean;
         };
+        /**
+         * Meter
+         * @enum {string}
+         */
+        Meter: "users" | "active_properties" | "crm_contacts" | "automation_contacts_month" | "journeys" | "agents" | "ai_conversations_month" | "included_highlights_month";
+        /** MeterOut */
+        MeterOut: {
+            meter: components["schemas"]["Meter"];
+            /** Used */
+            used: number | null;
+            /** Limit */
+            limit: number | null;
+            /**
+             * State
+             * @enum {string}
+             */
+            state: "ok" | "warning" | "reached" | "not_included";
+        };
         /** ModerationQueueOut */
         ModerationQueueOut: {
             /** Enabled */
@@ -2494,6 +2747,13 @@ export interface components {
             kind: "owner_listing_start";
             criteria: components["schemas"]["OwnerListingStartCriteria"];
         };
+        /** PackageOut */
+        PackageOut: {
+            /** Days */
+            days: number;
+            /** Price Cents */
+            price_cents: number;
+        };
         /**
          * Permission
          * @enum {string}
@@ -2514,7 +2774,41 @@ export interface components {
          * Plan
          * @enum {string}
          */
-        Plan: "corretor" | "essencial" | "profissional";
+        Plan: "free" | "essential" | "automation" | "pro" | "agency" | "corretor" | "essencial" | "profissional";
+        /** PlanOut */
+        PlanOut: {
+            key: components["schemas"]["Plan"];
+            /** Monthly Cents */
+            monthly_cents: number;
+            /** Annual Monthly Cents */
+            annual_monthly_cents: number | null;
+            /** Price From */
+            price_from: boolean;
+            /** Extra User Cents */
+            extra_user_cents: number | null;
+            /** Limits */
+            limits: {
+                [key: string]: number | null;
+            };
+            /** Features */
+            features: components["schemas"]["Feature"][];
+            /**
+             * Reports
+             * @enum {string}
+             */
+            reports: "basic" | "full" | "by_source" | "by_broker";
+        };
+        /** PlanUsageOut */
+        PlanUsageOut: {
+            plan: components["schemas"]["Plan"];
+            /** Legacy */
+            legacy: boolean;
+            /** Billing Enabled */
+            billing_enabled: boolean;
+            /** Meters */
+            meters: components["schemas"]["MeterOut"][];
+            open_request: components["schemas"]["ChangeRequestOut"] | null;
+        };
         /**
          * PortfolioSize
          * @enum {string}
@@ -2981,7 +3275,12 @@ export interface components {
             /** Price Cents */
             price_cents: number | null;
             /** Per */
-            per: ("month" | "listing") | null;
+            per: ("month" | "listing" | "package") | null;
+            /**
+             * Price From
+             * @default false
+             */
+            price_from: boolean;
         };
         /** RevenueOut */
         RevenueOut: {
@@ -3100,6 +3399,39 @@ export interface components {
             email: string;
             /** Name */
             name: string;
+        };
+        /** StaffChangeRequestOut */
+        StaffChangeRequestOut: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            kind: components["schemas"]["ChangeKind"];
+            current_plan: components["schemas"]["Plan"];
+            requested_plan: components["schemas"]["Plan"] | null;
+            /** Add On Key */
+            add_on_key: string | null;
+            /** Billing Period */
+            billing_period: string;
+            source: components["schemas"]["ChangeSource"];
+            status: components["schemas"]["ChangeStatus"];
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /** Handled At */
+            handled_at: string | null;
+            /** Reason */
+            reason: string | null;
+            /**
+             * Workspace Id
+             * Format: uuid
+             */
+            workspace_id: string;
+            /** Workspace Name */
+            workspace_name: string;
         };
         /** StaffEmailLinkIn */
         StaffEmailLinkIn: {
@@ -5744,6 +6076,225 @@ export interface operations {
                 content: {
                     "application/json": components["schemas"]["PublicListingOut"][];
                 };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    getCatalog: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CatalogOut"];
+                };
+            };
+        };
+    };
+    getPlanUsage: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PlanUsageOut"];
+                };
+            };
+        };
+    };
+    requestPlanChange: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ChangeRequestIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ChangeRequestOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    cancelPlanChange: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                request_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    downgradeToFree: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PlanUsageOut"];
+                };
+            };
+        };
+    };
+    listPlanRequests: {
+        parameters: {
+            query?: never;
+            header?: {
+                "x-admin-token"?: string | null;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["StaffChangeRequestOut"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    approvePlanRequest: {
+        parameters: {
+            query?: never;
+            header?: {
+                "x-admin-token"?: string | null;
+            };
+            path: {
+                request_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    declinePlanRequest: {
+        parameters: {
+            query?: never;
+            header?: {
+                "x-admin-token"?: string | null;
+            };
+            path: {
+                request_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["DeclineIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
             /** @description Validation Error */
             422: {

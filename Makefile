@@ -50,9 +50,13 @@ format:
 	$(UV) run ruff check --fix .
 	pnpm format
 
-api\:gen: ## Export OpenAPI schema and regenerate the TS client
+api\:gen: ## Export OpenAPI schema and the plan catalog, regenerate the TS client
 	$(UV) run python -m app.scripts.export_openapi ../../packages/api-client/openapi.json
+	$(UV) run python -m app.scripts.export_catalog ../../packages/config/catalog.json
 	pnpm api:gen
+
+catalog\:gen: ## Export the plan catalog snapshot read by the web (packages/config/catalog.json)
+	$(UV) run python -m app.scripts.export_catalog ../../packages/config/catalog.json
 
 db\:migrate:
 	$(UV) run alembic upgrade head

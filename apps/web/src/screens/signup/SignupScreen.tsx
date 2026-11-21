@@ -6,7 +6,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 
-import { OFFERS, type PlanKey } from '@/config/site';
+import { PLANS, isPlanKey, type CatalogPlan, type PlanKey } from '@/config/catalog';
 import type { SignupDraft, SignupStep } from '@/domain/types';
 import { isLive } from '@/lib/live';
 import { track, trackBeforeNavigation } from '@/lib/analytics';
@@ -65,6 +65,7 @@ function appOrigin(): string {
 /** Mockup 55: broker signup in five steps; the last one opens Anúncios on the app host. */
 export function SignupScreen({ step }: { step: SignupStep }) {
   const t = useTranslations('signup');
+  const tPlans = useTranslations('plans');
   const router = useRouter();
   const params = useSearchParams();
   const { ready, draft } = useSignupDraft();
@@ -74,8 +75,10 @@ export function SignupScreen({ step }: { step: SignupStep }) {
     if (!isLive('accounts') && !currentSignup() && USE_MOCKS && params.get('demo') === '1') {
       startDemoSignup('Ana Paula Ribeiro', 'ana@exemplo.com.br');
     }
-    const plan = params.get('plano');
-    if (plan === OFFERS.brokerPlan.key) void savePlan(plan);
+    // ?plano=essential from a landing or prices page; old links (?plano=corretor) mean Essencial.
+    const raw = params.get('plano');
+    const plan = raw === 'corretor' ? 'essential' : raw;
+    if (isPlanKey(plan)) void savePlan(plan);
     track({ name: 'signup_step', step });
   }, [params, step]);
 
@@ -132,7 +135,11 @@ export function SignupScreen({ step }: { step: SignupStep }) {
             <WhatsAppStep draft={draft} onDone={() => go('plano')} onBack={() => go('creci')} />
           ) : null}
           {step === 'plano' && draft ? (
-            <PlanStep onDone={() => go('primeiro-imovel')} onBack={() => go('whatsapp')} />
+            <PlanStep
+              initial={draft?.requestedPlan ?? 'free'}
+              onDone={() => go('primeiro-imovel')}
+              onBack={() => go('whatsapp')}
+            />
           ) : null}
           {step === 'primeiro-imovel' && draft ? (
             <FirstPropertyStep draft={draft} onBack={() => go('plano')} />
@@ -141,12 +148,12 @@ export function SignupScreen({ step }: { step: SignupStep }) {
         <aside className="flex flex-col gap-4">
           <Panel>
             <p className="type-caption">{t('aside.plan')}</p>
-            <p className="mt-1 type-title">{t('plans.corretor')}</p>
-            <p className="type-value">
-              {t('perMonth', {
-                amount: formatBRL(OFFERS.brokerPlan.priceCents),
-              })}
-            </p>
+            <p className="mt-1 type-title">{tPlans(`names.${draft?.plan ?? 'free'}`)}</p>
+            {draft?.requestedPlan ? (
+              <p className="type-body-s text-fg-strong">
+                {t('aside.requested', { plan: tPlans(`names.${draft.requestedPlan}`) })}
+              </p>
+            ) : null}
             <p className="mt-1 type-body-s text-fg-muted">{t('aside.change')}</p>
           </Panel>
           <Panel title={t('aside.afterTitle')}>
@@ -317,11 +324,38 @@ function WhatsAppStep({
   );
 }
 
-function PlanStep({ onDone, onBack }: { onDone: () => void; onBack: () => void }) {
+/** Key limits shown on a plan card: only what the catalog says, nothing invented. */
+function usePlanLines() {
+  const tPlans = useTranslations('plans');
+  return (plan: CatalogPlan): string[] => {
+    const { users, active_properties, crm_contacts, ai_conversations_month } = plan.limits;
+    return [
+      tPlans('users', { count: users ?? 0 }),
+      tPlans('properties', { count: active_properties ?? 0 }),
+      crm_contacts == null
+        ? tPlans('contactsUnlimited')
+        : tPlans('contacts', { count: crm_contacts.toLocaleString('pt-BR') }),
+      ai_conversations_month
+        ? tPlans('aiConversations', { count: ai_conversations_month.toLocaleString('pt-BR') })
+        : tPlans('noAutomation'),
+    ];
+  };
+}
+
+function PlanStep({
+  initial,
+  onDone,
+  onBack,
+}: {
+  initial: PlanKey;
+  onDone: () => void;
+  onBack: () => void;
+}) {
   const t = useTranslations('signup.plano');
   const tSignup = useTranslations('signup');
   const tPlans = useTranslations('plans');
-  const [plan, setPlan] = useState<PlanKey>(OFFERS.brokerPlan.key);
+  const lines = usePlanLines();
+  const [plan, setPlan] = useState<PlanKey>(initial);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | undefined>();
   return (
@@ -342,39 +376,43 @@ function PlanStep({ onDone, onBack }: { onDone: () => void; onBack: () => void }
     >
       <fieldset className="grid gap-3">
         <legend className="sr-only">{t('legend')}</legend>
-        {[OFFERS.brokerPlan].map(({ key, priceCents, maxUsers, maxActiveProperties }) => (
-          <label
-            key={key}
-            className="block cursor-pointer rounded-card has-focus-visible:outline-2 has-focus-visible:outline-focus"
-          >
-            <input
-              type="radio"
-              name="plan"
-              value={key}
-              checked={plan === key}
-              onChange={() => setPlan(key)}
-              className="sr-only"
-            />
-            <PlanCard
-              highlighted={plan === key}
-              name={tPlans('corretor.name')}
-              price={formatBRL(priceCents)}
-              period={tPlans('perMonth')}
-              features={[
-                tPlans('corretor.users', { count: maxUsers }),
-                tPlans('upTo', { count: maxActiveProperties }),
-                tPlans('corretor.organize'),
-                tPlans('corretor.portal'),
-              ]}
-              action={
-                <span className="block text-center type-body-s font-semibold text-action">
-                  {plan === key ? t('chosen') : t('choose')}
-                </span>
-              }
-            />
-          </label>
-        ))}
+        {PLANS.map((p) => {
+          const key = p.key as PlanKey;
+          return (
+            <label
+              key={key}
+              className="block cursor-pointer rounded-card has-focus-visible:outline-2 has-focus-visible:outline-focus"
+            >
+              <input
+                type="radio"
+                name="plan"
+                value={key}
+                checked={plan === key}
+                onChange={() => setPlan(key)}
+                className="sr-only"
+              />
+              <PlanCard
+                highlighted={plan === key}
+                name={tPlans(`names.${key}`)}
+                price={p.monthly_cents === 0 ? tPlans('free') : formatBRL(p.monthly_cents)}
+                period={p.monthly_cents === 0 ? undefined : tPlans('perMonth')}
+                pricePrefix={p.price_from ? tPlans('from') : undefined}
+                features={lines(p)}
+                action={
+                  <span className="block text-center type-body-s font-semibold text-action">
+                    {plan === key ? t('chosen') : t('choose')}
+                  </span>
+                }
+              />
+            </label>
+          );
+        })}
       </fieldset>
+      {plan !== 'free' ? (
+        <p className="type-body-s text-fg-muted">
+          {tPlans('requestSent', { plan: tPlans(`names.${plan}`) })}
+        </p>
+      ) : null}
       {error ? <p className="type-body-s text-danger">{error}</p> : null}
       <StepActions onBack={onBack} submitLabel={tSignup('continue')} busy={busy} />
     </form>
@@ -383,7 +421,7 @@ function PlanStep({ onDone, onBack }: { onDone: () => void; onBack: () => void }
 
 function FirstPropertyStep({ draft, onBack }: { draft: SignupDraft; onBack: () => void }) {
   const t = useTranslations('signup.firstProperty');
-  const tSignup = useTranslations('signup');
+  const tPlans = useTranslations('plans');
   const [busy, setBusy] = useState(false);
   const [failed, setFailed] = useState(false);
   return (
@@ -410,7 +448,7 @@ function FirstPropertyStep({ draft, onBack }: { draft: SignupDraft; onBack: () =
             ? t('creciPending', { state: draft.creciState ?? '', number: draft.creciNumber })
             : t('creciMissing')}
         </li>
-        <li>{t('plan', { plan: tSignup(`plans.${draft.plan}`) })}</li>
+        <li>{t('plan', { plan: tPlans(`names.${draft.requestedPlan ?? draft.plan}`) })}</li>
       </ul>
       <Callout tone="attention">{t('blocked')}</Callout>
       {failed ? <p className="type-body-s text-danger">{t('error')}</p> : null}

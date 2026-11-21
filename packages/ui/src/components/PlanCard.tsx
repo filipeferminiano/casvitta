@@ -7,7 +7,10 @@ export type PlanCardProps = {
   name: ReactNode;
   /** Formatted price ("R$ 397"). */
   price: ReactNode;
-  period: ReactNode;
+  /** Shown before the price, e.g. "a partir de". */
+  pricePrefix?: ReactNode;
+  /** Omitted for free plans. */
+  period?: ReactNode;
   features: ReactNode[];
   action: ReactNode;
   /** 2px blue border for the plan to highlight. */
@@ -20,6 +23,7 @@ export type PlanCardProps = {
 export function PlanCard({
   name,
   price,
+  pricePrefix,
   period,
   features,
   action,
@@ -40,8 +44,9 @@ export function PlanCard({
         {badge}
       </header>
       <p className="flex items-baseline gap-1">
+        {pricePrefix ? <span className="type-body-s text-fg-muted">{pricePrefix}</span> : null}
         <span className="type-value text-[30px] leading-9">{price}</span>
-        <span className="type-body-s text-fg-muted">{period}</span>
+        {period ? <span className="type-body-s text-fg-muted">{period}</span> : null}
       </p>
       <ul className="flex flex-1 flex-col gap-2">
         {features.map((feature, i) => (

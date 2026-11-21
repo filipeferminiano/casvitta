@@ -41,11 +41,14 @@ class WorkspaceScoped:
     )
 
 
-def str_enum(enum_cls: type[StrEnum], length: int = 32) -> SAEnum:
-    """Store a StrEnum as VARCHAR + CHECK constraint (no native PG enum: simpler migrations)."""
+def str_enum(enum_cls: type[StrEnum], length: int = 32, *, name: str | None = None) -> SAEnum:
+    """Store a StrEnum as VARCHAR + CHECK constraint (no native PG enum: simpler migrations).
+
+    `name` names the CHECK constraint; pass one when a table has two columns of the same enum.
+    """
     return SAEnum(
         enum_cls,
-        name=_snake(enum_cls.__name__),
+        name=name or _snake(enum_cls.__name__),
         native_enum=False,
         create_constraint=True,
         length=length,

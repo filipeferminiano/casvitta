@@ -1,0 +1,211 @@
+{
+  "version": "2026-11-21",
+  "show_annual_prices": false,
+  "plans": [
+    {
+      "key": "free",
+      "monthly_cents": 0,
+      "annual_monthly_cents": null,
+      "price_from": false,
+      "extra_user_cents": null,
+      "limits": {
+        "users": 1,
+        "active_properties": 5,
+        "crm_contacts": 100,
+        "automation_contacts_month": 0,
+        "journeys": 0,
+        "agents": 0,
+        "ai_conversations_month": 0,
+        "included_highlights_month": 0
+      },
+      "features": [
+        "broker_page",
+        "contact_history",
+        "highlights_one_off",
+        "whatsapp_button"
+      ],
+      "reports": "basic"
+    },
+    {
+      "key": "essential",
+      "monthly_cents": 4900,
+      "annual_monthly_cents": 4100,
+      "price_from": false,
+      "extra_user_cents": null,
+      "limits": {
+        "users": 1,
+        "active_properties": 30,
+        "crm_contacts": 2000,
+        "automation_contacts_month": 0,
+        "journeys": 0,
+        "agents": 0,
+        "ai_conversations_month": 0,
+        "included_highlights_month": 0
+      },
+      "features": [
+        "broker_page",
+        "contact_history",
+        "highlights_one_off",
+        "instagram_inbox",
+        "pipeline_and_calendar",
+        "tracked_forms",
+        "unbranded_page",
+        "whatsapp_button"
+      ],
+      "reports": "basic"
+    },
+    {
+      "key": "automation",
+      "monthly_cents": 14900,
+      "annual_monthly_cents": 12400,
+      "price_from": false,
+      "extra_user_cents": null,
+      "limits": {
+        "users": 1,
+        "active_properties": 100,
+        "crm_contacts": null,
+        "automation_contacts_month": 1000,
+        "journeys": 3,
+        "agents": 1,
+        "ai_conversations_month": 200,
+        "included_highlights_month": 0
+      },
+      "features": [
+        "agent_books_visits",
+        "broker_page",
+        "comment_to_dm",
+        "contact_history",
+        "custom_domain",
+        "google_calendar",
+        "highlights_one_off",
+        "instagram_inbox",
+        "pipeline_and_calendar",
+        "saved_search_alerts",
+        "segments",
+        "tracked_forms",
+        "unbranded_page",
+        "whatsapp_button",
+        "whatsapp_connected"
+      ],
+      "reports": "full"
+    },
+    {
+      "key": "pro",
+      "monthly_cents": 29900,
+      "annual_monthly_cents": 24900,
+      "price_from": false,
+      "extra_user_cents": null,
+      "limits": {
+        "users": 2,
+        "active_properties": 300,
+        "crm_contacts": null,
+        "automation_contacts_month": 5000,
+        "journeys": null,
+        "agents": null,
+        "ai_conversations_month": 1000,
+        "included_highlights_month": 1
+      },
+      "features": [
+        "agent_books_visits",
+        "broker_page",
+        "comment_to_dm",
+        "contact_history",
+        "custom_domain",
+        "google_calendar",
+        "highlights_one_off",
+        "instagram_inbox",
+        "pipeline_and_calendar",
+        "saved_search_alerts",
+        "segments",
+        "tracked_forms",
+        "unbranded_page",
+        "whatsapp_button",
+        "whatsapp_connected"
+      ],
+      "reports": "by_source"
+    },
+    {
+      "key": "agency",
+      "monthly_cents": 49900,
+      "annual_monthly_cents": 41600,
+      "price_from": true,
+      "extra_user_cents": 5900,
+      "limits": {
+        "users": 5,
+        "active_properties": 1000,
+        "crm_contacts": null,
+        "automation_contacts_month": 15000,
+        "journeys": null,
+        "agents": null,
+        "ai_conversations_month": 3000,
+        "included_highlights_month": 3
+      },
+      "features": [
+        "agent_books_visits",
+        "broker_page",
+        "comment_to_dm",
+        "contact_history",
+        "custom_domain",
+        "distribution_and_permissions",
+        "google_calendar",
+        "highlights_one_off",
+        "instagram_inbox",
+        "page_per_broker",
+        "pipeline_and_calendar",
+        "saved_search_alerts",
+        "segments",
+        "tracked_forms",
+        "unbranded_page",
+        "whatsapp_button",
+        "whatsapp_connected"
+      ],
+      "reports": "by_broker"
+    }
+  ],
+  "add_ons": [
+    {
+      "key": "ai_conversations_500",
+      "price_cents": 4900,
+      "meter": "ai_conversations_month",
+      "amount": 500,
+      "plans": []
+    },
+    {
+      "key": "automation_contacts_1000",
+      "price_cents": 3900,
+      "meter": "automation_contacts_month",
+      "amount": 1000,
+      "plans": []
+    },
+    {
+      "key": "agency_extra_user",
+      "price_cents": 5900,
+      "meter": "users",
+      "amount": 1,
+      "plans": [
+        "agency"
+      ]
+    }
+  ],
+  "highlight_effective_from": "2026-11-21",
+  "highlight_packages": [
+    {
+      "days": 7,
+      "price_cents": 3900
+    },
+    {
+      "days": 30,
+      "price_cents": 11900
+    }
+  ],
+  "owner_packages": [
+    {
+      "days": 30,
+      "price_cents": 5900
+    },
+    {
+      "days": 90,
+      "price_cents": 14900
+    }
+  ]
+}
