@@ -35,6 +35,16 @@ export default defineConfig({
       // a separate casvitta_e2e database with the fabricated demo seed.
       command: `uv --directory ../api run python -m app.scripts.e2e_market_api --port ${E2E_API_PORT}`,
       url: `http://127.0.0.1:${E2E_API_PORT}/v1/health`,
+      // Backoffice flow: hosts on this port, the script token to create the first Admin, and the
+      // fake email outbox so the browser can open sign-in links (never in production).
+      env: {
+        SITE_URL: `http://${ROOT_DOMAIN}`,
+        APP_URL: `http://app.${ROOT_DOMAIN}`,
+        ADMIN_URL: `http://admin.${ROOT_DOMAIN}`,
+        ADMIN_TOKEN_ENABLED: 'true',
+        DEV_OUTBOX_ENABLED: 'true',
+        AUTH_RATE_LIMIT_PER_MINUTE: '1000',
+      },
       reuseExistingServer: !process.env.CI,
       timeout: 120_000,
     },

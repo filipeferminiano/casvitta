@@ -77,7 +77,10 @@ describe('routeRequest', () => {
     expect(resolveSite('admin.localhost:3000', 'localhost:3000')).toEqual({ kind: 'backoffice' });
     const site = { kind: 'backoffice' } as const;
     expect(routeRequest(site, '/', ROOT)).toEqual({ action: 'rewrite', pathname: '/bo' });
-    expect(routeRequest(site, '/creci', ROOT)).toEqual({ action: 'rewrite', pathname: '/bo/creci' });
+    expect(routeRequest(site, '/creci', ROOT)).toEqual({
+      action: 'rewrite',
+      pathname: '/bo/creci',
+    });
     // No hint of it on the public host.
     expect(routeRequest({ kind: 'marketplace' }, '/bo', ROOT)).toEqual({ action: 'not-found' });
     expect(routeRequest({ kind: 'marketplace' }, '/bo/equipe', ROOT)).toEqual({

@@ -59,7 +59,9 @@ export function Dialog({
           )}
         >
           <div className="flex items-start justify-between gap-4">
-            <RadixDialog.Title className="type-title text-[20px] leading-7">{title}</RadixDialog.Title>
+            <RadixDialog.Title className="type-title text-[20px] leading-7">
+              {title}
+            </RadixDialog.Title>
             <RadixDialog.Close
               aria-label={closeLabel}
               className="-mt-1 -mr-2 flex size-11 items-center justify-center rounded-control text-fg-muted hover:bg-subtle focus-visible:outline-2 focus-visible:outline-focus"

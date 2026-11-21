@@ -41,3 +41,17 @@ async def test_tables_live_in_the_configured_schema(session: AsyncSession) -> No
         {"s": schema},
     )
     assert in_schema >= len(Base.metadata.tables)
+
+
+def test_dev_outbox_is_refused_in_production() -> None:
+    import pytest  # noqa: PLC0415
+    from pydantic import ValidationError  # noqa: PLC0415
+
+    from app.core.settings import Settings  # noqa: PLC0415
+
+    with pytest.raises(ValidationError):
+        Settings(app_env="production", jwt_secret="x" * 40, dev_outbox_enabled=True)
+
+
+async def test_dev_outbox_is_404_unless_enabled(client) -> None:  # type: ignore[no-untyped-def]
+    assert (await client.get("/v1/dev/outbox")).status_code == 404

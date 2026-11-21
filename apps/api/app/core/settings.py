@@ -121,6 +121,9 @@ class Settings(BaseSettings):
     # admin_token_enabled is on; audited as "system:admin-token".
     admin_token: SecretStr | None = None
     admin_token_enabled: bool = False
+    # End-to-end tests only: GET /v1/dev/outbox shows the emails the fake adapter "sent", so a
+    # browser test can open sign-in links. Refused in production.
+    dev_outbox_enabled: bool = False
     # Public interest form: requests per IP and kind per minute.
     interest_rate_limit_per_minute: int = 5
 
@@ -193,6 +196,8 @@ class Settings(BaseSettings):
         secret = self.jwt_secret.get_secret_value()
         if self.app_env == "production" and (secret == DEV_JWT_SECRET or len(secret) < 32):
             raise ValueError("JWT_SECRET must be set in production (32+ characters)")
+        if self.app_env == "production" and self.dev_outbox_enabled:
+            raise ValueError("DEV_OUTBOX_ENABLED is for end-to-end tests, never production")
         return self
 
     @field_validator("database_url", "test_database_url", mode="before")
