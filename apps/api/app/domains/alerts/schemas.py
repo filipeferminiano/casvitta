@@ -1,8 +1,9 @@
 from __future__ import annotations
 
+import json
 import uuid
 from datetime import datetime
-from typing import Literal
+from typing import Any, Literal
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
@@ -15,7 +16,7 @@ class PropertyAlertIn(Strict):
 
     scope: AlertScope
     city: str = Field(min_length=2, max_length=60)
-    neighborhood: str = Field(min_length=2, max_length=80)
+    neighborhood: str | None = Field(default=None, min_length=2, max_length=80)
     street: str | None = Field(default=None, max_length=140)
     building: str | None = Field(default=None, max_length=180)
     intent: AlertIntent
@@ -25,6 +26,8 @@ class PropertyAlertIn(Strict):
     consents: ConsentIn
     utm: Utm = Field(default_factory=Utm)
     source_page: str | None = Field(default=None, max_length=300)
+    # Valuation leads: the estimate shown (range, confidence, inputs). Small and bounded.
+    valuation_snapshot: dict[str, Any] | None = None
     # Honeypot: real users never see or fill it.
     website: str | None = None
 
@@ -44,10 +47,14 @@ class PropertyAlertIn(Strict):
 
     @model_validator(mode="after")
     def _scope_slugs(self) -> PropertyAlertIn:
-        if self.scope is AlertScope.STREET and not self.street:
+        if self.scope is not AlertScope.CITY and not self.neighborhood:
+            raise ValueError("neighborhood slug required")
+        if self.scope in (AlertScope.STREET, AlertScope.STREET_SEGMENT) and not self.street:
             raise ValueError("street slug required for a street alert")
         if self.scope is AlertScope.BUILDING and not self.building:
             raise ValueError("building slug required for a building alert")
+        if self.valuation_snapshot is not None and len(json.dumps(self.valuation_snapshot)) > 4000:
+            raise ValueError("valuation snapshot too large")
         return self
 
 
@@ -67,6 +74,8 @@ class PropertyAlertOut(BaseModel):
     phone_e164: str
     email: str | None
     status: AlertStatus
+    source_path: str | None = None
+    has_valuation: bool = False
     contact_consent: bool
     marketing_consent: bool
     source_page: str | None

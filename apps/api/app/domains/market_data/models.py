@@ -251,6 +251,8 @@ class ItbiTransaction(Base):
     transaction_date: Mapped[date] = mapped_column(Date, index=True)
     payment_month: Mapped[date] = mapped_column(Date)
     value_cents: Mapped[int] = mapped_column(BigInteger)
+    # Base de cálculo adotada: max(value, proportional reference value); for estimated ITBI.
+    tax_base_cents: Mapped[int | None] = mapped_column(BigInteger)
     built_area_m2: Mapped[Decimal] = mapped_column(Numeric(12, 2))
     price_m2_cents: Mapped[int] = mapped_column(BigInteger)
     financing_type_code: Mapped[int | None] = mapped_column(SmallInteger)
@@ -280,6 +282,7 @@ class ItbiLocationReview(UUIDPrimaryKey, Base):
 
 
 class StatsEntity(StrEnum):
+    CITY = "city"
     NEIGHBORHOOD = "neighborhood"
     STREET = "street"
     BUILDING = "building"
@@ -339,3 +342,6 @@ class MarketMonthly(Base):
     tx_count: Mapped[int] = mapped_column()
     median_sample: Mapped[int] = mapped_column()
     median_price_m2_cents: Mapped[int | None] = mapped_column(BigInteger)
+    # Median of the 12 months ending at ``month`` (the chart's line).
+    rolling_sample: Mapped[int] = mapped_column(default=0, server_default="0")
+    rolling_median_price_m2_cents: Mapped[int | None] = mapped_column(BigInteger)

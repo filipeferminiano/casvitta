@@ -1,31 +1,48 @@
 'use client';
 
 import { CircleCheck } from 'lucide-react';
-import { useState, type FormEvent } from 'react';
+import { useState, type FormEvent, type ReactNode } from 'react';
 
 import { cn } from '../lib/cn.ts';
 import { Button } from './Button.tsx';
 import { Callout } from './Callout.tsx';
 import { Checkbox } from './Checkbox.tsx';
+import { CurrencyInput } from './CurrencyInput.tsx';
 import { Input } from './Input.tsx';
 import { SegmentedControl } from './SegmentedControl.tsx';
 
+/** Default intents (SEO-1 pages). Pages pass their own list through `intents`. */
 export type LeadAlertIntent = 'buy' | 'owner';
 
-export type LeadAlertValues = {
+export type LeadAlertIntentOption<I extends string = LeadAlertIntent> = { value: I; label: string };
+
+export type LeadAlertExtraField = {
+  name: string;
+  label: string;
+  kind: 'currency';
+  help?: string;
+};
+
+export type LeadAlertValues<I extends string = LeadAlertIntent> = {
   name: string;
   whatsapp: string;
   email: string;
-  intent: LeadAlertIntent;
+  intent: I;
+  /** Value of `extraField` (integer cents for 'currency'), or null when empty/absent. */
+  extra: number | null;
   consentContact: boolean;
   consentMarketing: boolean;
   /** Honeypot: people never see or fill it; bots do. */
   website: string;
 };
 
-export type LeadAlertResult =
+export type LeadAlertResult<I extends string = LeadAlertIntent> =
   | { ok: true }
-  | { ok: false; fieldErrors?: Partial<Record<keyof LeadAlertValues, string>>; message?: string };
+  | {
+      ok: false;
+      fieldErrors?: Partial<Record<keyof LeadAlertValues<I>, string>>;
+      message?: string;
+    };
 
 export type LeadAlertFormLabels = {
   title: string;
@@ -36,8 +53,9 @@ export type LeadAlertFormLabels = {
   email: string;
   emailOptional: string;
   intentLabel: string;
-  intentBuy: string;
-  intentOwner: string;
+  /** Labels of the default intents; not needed when `intents` is passed. */
+  intentBuy?: string;
+  intentOwner?: string;
   consentContact: string;
   consentMarketing: string;
   consentRequired: string;
@@ -48,42 +66,61 @@ export type LeadAlertFormLabels = {
   successTitle: string;
   successDescription: string;
   errorTitle: string;
+  /** "Usamos seus dados só para este contato, conforme a LGPD." */
+  privacyLine?: ReactNode;
 };
 
-export type LeadAlertFormProps = {
+export type LeadAlertFormProps<I extends string = LeadAlertIntent> = {
   labels: LeadAlertFormLabels;
-  defaultIntent?: LeadAlertIntent;
+  /** Intents for this page, default first. Without it: buy / owner from the labels. */
+  intents?: LeadAlertIntentOption<I>[];
+  /** Overrides the first intent as the initial choice. */
+  defaultIntent?: I;
   showIntent?: boolean;
-  onSubmit: (values: LeadAlertValues) => Promise<LeadAlertResult>;
+  /** Context shown above the fields, e.g. the current filters on listing pages. */
+  chips?: ReactNode[];
+  /** One optional extra field, e.g. the budget on the financing page. */
+  extraField?: LeadAlertExtraField;
+  onSubmit: (values: LeadAlertValues<I>) => Promise<LeadAlertResult<I>>;
   className?: string;
 };
 
 type Status = 'idle' | 'submitting' | 'success' | 'error';
 
 /** "Avise-me": name, WhatsApp, optional email, intent and per-purpose consent (both unchecked). */
-export function LeadAlertForm({
+export function LeadAlertForm<I extends string = LeadAlertIntent>({
   labels,
-  defaultIntent = 'buy',
+  intents,
+  defaultIntent,
   showIntent = true,
+  chips,
+  extraField,
   onSubmit,
   className,
-}: LeadAlertFormProps) {
-  const [values, setValues] = useState<LeadAlertValues>({
+}: LeadAlertFormProps<I>) {
+  const options: LeadAlertIntentOption<I>[] =
+    intents ??
+    ([
+      { value: 'buy', label: labels.intentBuy ?? 'buy' },
+      { value: 'owner', label: labels.intentOwner ?? 'owner' },
+    ] as LeadAlertIntentOption<I>[]);
+  const [values, setValues] = useState<LeadAlertValues<I>>({
     name: '',
     whatsapp: '',
     email: '',
-    intent: defaultIntent,
+    intent: defaultIntent ?? (options[0]?.value as I),
+    extra: null,
     consentContact: false,
     consentMarketing: false,
     website: '',
   });
   const [status, setStatus] = useState<Status>('idle');
-  const [fieldErrors, setFieldErrors] = useState<Partial<Record<keyof LeadAlertValues, string>>>(
+  const [fieldErrors, setFieldErrors] = useState<Partial<Record<keyof LeadAlertValues<I>, string>>>(
     {},
   );
   const [message, setMessage] = useState<string | undefined>();
 
-  const set = <K extends keyof LeadAlertValues>(key: K, value: LeadAlertValues[K]) =>
+  const set = <K extends keyof LeadAlertValues<I>>(key: K, value: LeadAlertValues<I>[K]) =>
     setValues((current) => ({ ...current, [key]: value }));
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
@@ -134,6 +171,13 @@ export function LeadAlertForm({
             <p className="type-body-s text-fg-muted">{labels.description}</p>
           ) : null}
         </div>
+        {chips?.length ? (
+          <ul className="flex flex-wrap gap-2">
+            {chips.map((chip, index) => (
+              <li key={index}>{chip}</li>
+            ))}
+          </ul>
+        ) : null}
         {status === 'error' && message ? (
           <Callout tone="risk" title={labels.errorTitle}>
             <p>{message}</p>
@@ -147,11 +191,8 @@ export function LeadAlertForm({
             <SegmentedControl
               label={labels.intentLabel}
               value={values.intent}
-              onValueChange={(next) => set('intent', next as LeadAlertIntent)}
-              options={[
-                { value: 'buy', label: labels.intentBuy },
-                { value: 'owner', label: labels.intentOwner },
-              ]}
+              onValueChange={(next) => set('intent', next as I)}
+              options={options}
             />
           </div>
         ) : null}
@@ -186,6 +227,16 @@ export function LeadAlertForm({
           error={fieldErrors.email}
           onChange={(e) => set('email', e.target.value)}
         />
+        {extraField ? (
+          <CurrencyInput
+            label={extraField.label}
+            name={extraField.name}
+            help={extraField.help}
+            value={values.extra}
+            error={fieldErrors.extra}
+            onValueChange={(cents) => set('extra', cents)}
+          />
+        ) : null}
         <div aria-hidden="true" className="absolute -left-[9999px] h-px w-px overflow-hidden">
           <label>
             {labels.honeypot}
@@ -215,6 +266,7 @@ export function LeadAlertForm({
         <Button type="submit" loading={submitting} loadingLabel={labels.submitting}>
           {labels.submit}
         </Button>
+        {labels.privacyLine ? <p className="type-caption">{labels.privacyLine}</p> : null}
       </form>
     </section>
   );

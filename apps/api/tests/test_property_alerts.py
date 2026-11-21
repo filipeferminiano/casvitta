@@ -77,7 +77,7 @@ async def test_stores_alert_with_consents(api: AsyncClient, session: AsyncSessio
 
 
 async def test_neighborhood_and_street_scopes(api: AsyncClient, session: AsyncSession) -> None:
-    neighborhood = payload(scope="neighborhood", building=None, intent="owner")
+    neighborhood = payload(scope="neighborhood", building=None, intent="own_sell")
     assert (await api.post(URL, json=neighborhood)).status_code == 202
     street = payload(scope="street", building=None, street="rua-das-acacias-ficticias")
     assert (await api.post(URL, json=street)).status_code == 202

@@ -10,8 +10,10 @@ from __future__ import annotations
 import uuid
 from datetime import datetime
 from enum import StrEnum
+from typing import Any
 
-from sqlalchemy import DateTime, ForeignKey, String
+from sqlalchemy import JSON, DateTime, ForeignKey, String
+from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.core.db import Base
@@ -20,14 +22,20 @@ from app.domains.interest.models import ConsentPurpose
 
 
 class AlertScope(StrEnum):
+    CITY = "city"  # e.g. valuation outside coverage: "avise-me quando cobrirmos sua região"
     NEIGHBORHOOD = "neighborhood"
     STREET = "street"
+    STREET_SEGMENT = "street_segment"  # SEO-2: street × neighborhood (same as STREET today)
     BUILDING = "building"
 
 
 class AlertIntent(StrEnum):
-    BUY = "buy"  # "avise-me quando houver imóvel à venda aqui"
-    OWNER = "owner"  # "tenho um imóvel aqui" (valuation, future listing)
+    BUY = "buy"
+    RENT = "rent"
+    OWN_SELL = "own_sell"  # owner who wants to sell (was "owner" in SEO-1)
+    OWN_RENT = "own_rent"  # owner who wants to rent out
+    OWN_VALUATION = "own_valuation"  # owner who only wants to know the value
+    RESEARCHING = "researching"
 
 
 class AlertStatus(StrEnum):
@@ -48,6 +56,12 @@ class PropertyAlert(UUIDPrimaryKey, Timestamps, Base):
     phone_e164: Mapped[str] = mapped_column(String(16), index=True)
     email: Mapped[str | None] = mapped_column(String(254))
     source_page: Mapped[str | None] = mapped_column(String(300))
+    # Path of the page the form was on (no query string: never addresses or filters with PII).
+    source_path: Mapped[str | None] = mapped_column(String(300))
+    # Valuation leads: the estimate the person saw (range, confidence, inputs).
+    valuation_snapshot: Mapped[dict[str, Any] | None] = mapped_column(
+        JSON().with_variant(JSONB(), "postgresql")
+    )
     utm_source: Mapped[str | None] = mapped_column(String(80))
     utm_medium: Mapped[str | None] = mapped_column(String(80))
     utm_campaign: Mapped[str | None] = mapped_column(String(120))

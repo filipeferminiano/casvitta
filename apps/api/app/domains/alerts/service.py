@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import uuid
 from collections.abc import Sequence
+from urllib.parse import urlsplit
 
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -34,6 +35,11 @@ class UnknownPlace(AppError):
 
 async def _resolve(session: AsyncSession, payload: PropertyAlertIn) -> tuple[uuid.UUID, uuid.UUID]:
     """(city id, scope id) from the page's slugs."""
+    if payload.scope is AlertScope.CITY:
+        city = await session.scalar(select(MarketCity.id).where(MarketCity.slug == payload.city))
+        if city is None:
+            raise UnknownPlace
+        return city, city
     row = (
         await session.execute(
             select(MarketCity.id, MarketNeighborhood.id)
@@ -46,7 +52,7 @@ async def _resolve(session: AsyncSession, payload: PropertyAlertIn) -> tuple[uui
     city_id, neighborhood_id = row
     if payload.scope is AlertScope.NEIGHBORHOOD:
         return city_id, neighborhood_id
-    if payload.scope is AlertScope.STREET:
+    if payload.scope in (AlertScope.STREET, AlertScope.STREET_SEGMENT):
         found = await session.scalar(
             select(MarketStreet.id).where(
                 MarketStreet.neighborhood_id == neighborhood_id, MarketStreet.slug == payload.street
@@ -92,6 +98,8 @@ async def create_alert(
         phone_e164=payload.phone,
         email=payload.email,
         source_page=payload.source_page,
+        source_path=urlsplit(payload.source_page).path[:300] if payload.source_page else None,
+        valuation_snapshot=payload.valuation_snapshot,
         utm_source=payload.utm.source,
         utm_medium=payload.utm.medium,
         utm_campaign=payload.utm.campaign,
@@ -145,6 +153,8 @@ async def _out(session: AsyncSession, alert: PropertyAlert) -> PropertyAlertOut:
         phone_e164=alert.phone_e164,
         email=alert.email,
         status=alert.status,
+        source_path=alert.source_path,
+        has_valuation=alert.valuation_snapshot is not None,
         contact_consent=consents.get(ConsentPurpose.CONTACT_ABOUT_PROPERTIES, False),
         marketing_consent=consents.get(ConsentPurpose.MARKETING, False),
         source_page=alert.source_page,
@@ -155,10 +165,13 @@ async def _out(session: AsyncSession, alert: PropertyAlert) -> PropertyAlertOut:
 async def _scope_label(
     session: AsyncSession, scope: AlertScope, scope_id: uuid.UUID
 ) -> tuple[str, str]:
+    if scope is AlertScope.CITY:
+        city = await session.get(MarketCity, scope_id)
+        return (city.name, f"/preco-m2/{city.slug}") if city else ("—", "")
     if scope is AlertScope.NEIGHBORHOOD:
         neighborhood = await session.get(MarketNeighborhood, scope_id)
         street: MarketStreet | None = None
-    elif scope is AlertScope.STREET:
+    elif scope in (AlertScope.STREET, AlertScope.STREET_SEGMENT):
         street = await session.get(MarketStreet, scope_id)
         neighborhood = (
             await session.get(MarketNeighborhood, street.neighborhood_id) if street else None

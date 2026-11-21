@@ -126,6 +126,7 @@ describe('LeadAlertForm', () => {
       whatsapp: '11927408912',
       email: '',
       intent: 'owner',
+      extra: null,
       consentContact: true,
       consentMarketing: false,
       website: 'bot',
