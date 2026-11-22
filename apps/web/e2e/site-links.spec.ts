@@ -36,6 +36,7 @@ const MAX_DEPTH: Record<string, number> = {
   '/anunciar-imovel': 1,
   '/para-corretores': 1,
   '/para-imobiliarias': 1,
+  '/precos': 1,
   '/preco-m2/[c]': 1,
   '/quanto-vale-meu-imovel': 1,
   '/itbi/[c]': 1,

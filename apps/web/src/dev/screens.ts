@@ -265,6 +265,20 @@ export const SCREENS: ScreenEntry[] = [
     viewport: 'mobile',
   },
   {
+    mockup: 'landing-pages/00-prices-hypotheses/prices',
+    title: 'Preços · desktop',
+    host: 'marketplace',
+    path: '/precos',
+    viewport: 'desktop',
+  },
+  {
+    mockup: 'landing-pages/00-prices-hypotheses/mobile',
+    title: 'Preços · celular (sem mockup)',
+    host: 'marketplace',
+    path: '/precos',
+    viewport: 'mobile',
+  },
+  {
     mockup: 'landing-pages/01-owners/desktop',
     title: 'Para proprietários · desktop',
     host: 'marketplace',

@@ -29,6 +29,7 @@ const COLUMNS = [
     links: [
       { key: 'brokers', href: '/para-corretores' },
       { key: 'agencies', href: '/para-imobiliarias' },
+      { key: 'prices', href: '/precos' },
       { key: 'developers', href: '/incorporadoras' },
       { key: 'investors', href: '/investidores' },
     ],

@@ -190,7 +190,10 @@ export function buildMenus(hoods: NavHood[]): NavMenu[] {
       sections: [
         {
           key: 'forBrokers',
-          links: [{ id: 'brokers', href: '/para-corretores', label: key('brokerPlans') }],
+          links: [
+            { id: 'brokers', href: '/para-corretores', label: key('brokerPlans') },
+            { id: 'prices', href: '/precos', label: key('prices') },
+          ],
         },
         {
           key: 'forCompanies',

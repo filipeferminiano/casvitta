@@ -65,6 +65,7 @@ export async function GET() {
               max: agency.limits.active_properties ?? 0,
             }),
           },
+          { path: '/precos', label: t('nav.prices'), description: t('sections.brokers.prices') },
         ],
         notes: [t('sections.brokers.media', { minBudget: formatBRL(MIN_DAILY_BUDGET_CENTS) })],
       },

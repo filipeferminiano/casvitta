@@ -107,7 +107,10 @@ export async function SiteMapScreen({ hoods }: { hoods: NavHood[] }) {
       columns: [
         {
           key: 'brokers',
-          items: [{ id: 'brokers', href: '/para-corretores', label: tl('brokerPlans') }],
+          items: [
+            { id: 'brokers', href: '/para-corretores', label: tl('brokerPlans') },
+            { id: 'prices', href: '/precos', label: tl('prices') },
+          ],
         },
         {
           key: 'companies',

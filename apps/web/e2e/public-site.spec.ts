@@ -60,8 +60,8 @@ test('broker signup → Anúncios, publishing blocked until the CRECI is verifie
   page,
 }) => {
   await page.goto(market('/para-corretores'));
-  await page.getByRole('link', { name: 'Começar com a Casvitta' }).first().click();
-  await expect(page).toHaveURL(/\/cadastro\/conta\?plano=corretor/);
+  await page.getByRole('link', { name: 'Começar grátis' }).first().click();
+  await expect(page).toHaveURL(/\/cadastro\/conta\?plano=free/);
 
   await page.getByLabel('Seu nome completo').fill('Bruno Lima');
   await page.getByLabel('E-mail').fill('bruno@exemplo.com.br');
@@ -76,7 +76,7 @@ test('broker signup → Anúncios, publishing blocked until the CRECI is verifie
   await page.getByRole('textbox', { name: 'WhatsApp' }).fill('(11) 92740-8912');
   await page.getByRole('button', { name: 'Continuar' }).click();
   await expect(page).toHaveURL(/\/cadastro\/plano/);
-  await expect(page.getByRole('radio', { name: /^Plano Corretor/ })).toBeChecked();
+  await expect(page.getByRole('radio', { name: /^Grátis/ })).toBeChecked();
   await page.getByRole('button', { name: 'Continuar' }).click();
   await expect(page).toHaveURL(/\/cadastro\/primeiro-imovel/);
   await expect(page.getByText('CRECI-SP 111.111-F: em verificação')).toBeVisible();

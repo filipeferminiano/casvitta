@@ -63,19 +63,47 @@ for (const { name, viewport, mobile } of VIEWPORTS) {
       await follow('Para profissionais', 'Planos para corretores');
       await expect(page).toHaveURL(/\/para-corretores$/);
       await expect(page).toHaveTitle(
-        'Software para corretor de imóveis com portal incluído | Casvitta',
+        'CRM para corretor de imóveis com página e assistente de visitas | Casvitta',
       );
       await siteHeader();
       await expect(
-        page.getByText('R$ 99', { exact: true }).filter({ visible: true }).first(),
+        page.getByText('R$ 149', { exact: true }).filter({ visible: true }).first(),
       ).toBeVisible();
 
       await follow('Para profissionais', 'Imobiliárias');
       await expect(page).toHaveURL(/\/para-imobiliarias$/);
       await expect(page).toHaveTitle('Sistema para imobiliárias com portal incluído | Casvitta');
       await siteHeader();
-      await expect(page.getByText('Sob consulta').filter({ visible: true }).first()).toBeVisible();
+      await expect(page.locator('#planos').getByText('R$ 499', { exact: true })).toBeVisible();
       await expect(page.getByRole('navigation', { name: 'Páginas por público' })).toHaveCount(0);
+    });
+
+    test('brokers plans lead to signup and to the full prices table', async ({ page }) => {
+      await page.goto(market('/para-corretores'));
+      const plans = page.locator('#planos');
+      await expect(plans.getByRole('heading', { level: 3 })).toHaveText([
+        'Grátis',
+        'Essencial',
+        'Automação',
+        'Pro',
+        'Imobiliária',
+        'O que não está no preço do plano',
+      ]);
+      await expect(plans.getByRole('link', { name: 'Escolher Automação' })).toHaveAttribute(
+        'href',
+        '/cadastro/conta?plano=automation',
+      );
+      await expect(page.getByText(/Anual|meses grátis/)).toHaveCount(0);
+
+      await plans.getByRole('link', { name: /Comparar todos os recursos e limites/ }).click();
+      await expect(page).toHaveURL(/\/precos$/);
+      await expect(page).toHaveTitle('Preços dos planos para corretores e imobiliárias | Casvitta');
+      await expect(page.getByRole('heading', { level: 1 })).toHaveText(
+        'Todos os recursos e limites',
+      );
+      await expect(
+        page.getByText('WhatsApp conectado pela equipe Casvitta').filter({ visible: true }).first(),
+      ).toBeVisible();
     });
 
     test('owner start form stores owner_listing_start and charges nothing', async ({ page }) => {

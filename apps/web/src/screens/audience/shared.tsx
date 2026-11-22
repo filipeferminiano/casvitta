@@ -188,14 +188,19 @@ export function AudienceJsonLd({
           { '@type': 'ListItem', position: 2, name: pageLabel, item: url },
         ],
       },
-      {
-        '@type': 'FAQPage',
-        mainEntity: faq.map((item) => ({
-          '@type': 'Question',
-          name: item.question,
-          acceptedAnswer: { '@type': 'Answer', text: item.answer },
-        })),
-      },
+      // Only pages that show questions declare a FAQPage.
+      ...(faq.length
+        ? [
+            {
+              '@type': 'FAQPage',
+              mainEntity: faq.map((item) => ({
+                '@type': 'Question',
+                name: item.question,
+                acceptedAnswer: { '@type': 'Answer', text: item.answer },
+              })),
+            },
+          ]
+        : []),
       ...offers.map((offer) => ({
         '@type': 'Product',
         name: offer.name,

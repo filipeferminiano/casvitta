@@ -29,32 +29,14 @@ export const COMPANY = {
 } as const;
 
 /**
- * Offer catalog for the audience pages (/anunciar-imovel, /para-corretores, /para-imobiliarias),
- * signup, llms.txt and structured data. Hypotheses (nov/2026), not validated prices: never shown
- * as a promotion or discount. Owner packs and Destaques come from the plan catalog
- * (src/config/catalog.ts). `brokerPlan` and `agencyPlans` are the previous landing-page offer,
- * kept only until the audience pages are rebuilt on the catalog (PROMPT_CRM_BUILD §1); nothing
- * new reads them. A null price is never rendered as a number ("Sob consulta").
+ * Owner packs and Destaque packages in the shape the owners page and Destaques use. Both come from
+ * the plan catalog (src/config/catalog.ts), which also holds every subscription plan. Hypotheses
+ * (nov/2026), never shown as a promotion or discount.
  */
 export type OwnerPack = { key: '30d' | '90d'; days: 30 | 90; priceCents: number };
-export type BrokerPlan = {
-  key: 'corretor';
-  priceCents: number;
-  maxUsers: number;
-  maxActiveProperties: number;
-};
-/** null = "Sob consulta" / "conforme a necessidade". */
-export type AgencyPlan = {
-  key: 'essencial' | 'equipe' | 'operacao';
-  priceCents: number | null;
-  maxUsers: number | null;
-  maxActiveProperties: number | null;
-};
 export type HighlightPackage = { days: 7 | 30; priceCents: number };
 export type Offers = {
   ownerPacks: OwnerPack[];
-  brokerPlan: BrokerPlan;
-  agencyPlans: AgencyPlan[];
   /**
    * Destaque: optional, fixed price per property and period, sold apart from publishing. Prices
    * confirmed as hypotheses on 21/11/2026 (`effectiveFrom`).
@@ -68,34 +50,6 @@ export const OFFERS: Offers = {
     days: p.days as 30 | 90,
     priceCents: p.price_cents,
   })),
-  brokerPlan: {
-    key: 'corretor',
-    priceCents: int(process.env.NEXT_PUBLIC_OFFER_BROKER_PRICE_CENTS, 9_900),
-    maxUsers: int(process.env.NEXT_PUBLIC_OFFER_BROKER_MAX_USERS, 1),
-    maxActiveProperties: int(process.env.NEXT_PUBLIC_OFFER_BROKER_MAX_ACTIVE_PROPERTIES, 50),
-  },
-  agencyPlans: [
-    {
-      key: 'essencial',
-      priceCents: int(process.env.NEXT_PUBLIC_OFFER_AGENCY_ESSENCIAL_PRICE_CENTS, 29_900),
-      maxUsers: int(process.env.NEXT_PUBLIC_OFFER_AGENCY_ESSENCIAL_MAX_USERS, 5),
-      maxActiveProperties: int(
-        process.env.NEXT_PUBLIC_OFFER_AGENCY_ESSENCIAL_MAX_ACTIVE_PROPERTIES,
-        200,
-      ),
-    },
-    {
-      key: 'equipe',
-      priceCents: int(process.env.NEXT_PUBLIC_OFFER_AGENCY_EQUIPE_PRICE_CENTS, 49_900),
-      maxUsers: int(process.env.NEXT_PUBLIC_OFFER_AGENCY_EQUIPE_MAX_USERS, 15),
-      maxActiveProperties: int(
-        process.env.NEXT_PUBLIC_OFFER_AGENCY_EQUIPE_MAX_ACTIVE_PROPERTIES,
-        500,
-      ),
-    },
-    // "Sob consulta": price and limits agreed case by case.
-    { key: 'operacao', priceCents: null, maxUsers: null, maxActiveProperties: null },
-  ],
   highlight: {
     effectiveFrom: CATALOG.highlight_effective_from,
     packages: CATALOG.highlight_packages.map((p) => ({

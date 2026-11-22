@@ -5,19 +5,19 @@ import {
   CheckList,
   FeatureCard,
   NumberedSteps,
-  PlanComparisonTable,
   UsageMeter,
   type AppPreviewNavItem,
-  type ComparisonValue,
   type FaqItem,
 } from '@casvitta/ui';
 import { Contact, House, LayoutGrid, Megaphone, Target, UserCheck, Users } from 'lucide-react';
+import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 
-import { OFFERS, type AgencyPlan } from '@/config/site';
+import { limitOf, planOf } from '@/config/catalog';
 import { formatBRL } from '@/lib/format';
 
 import { AgencyDemoForm } from './AgencyDemoForm';
+import { PlanExtras, PlanPriceTag, formatCount, usePlanItemsFor, usePlanName } from './plans';
 import {
   AGENCY_ACTIVITY,
   AGENCY_FILTERS,
@@ -47,17 +47,14 @@ import {
 
 const FAQ_KEYS = ['choose', 'limit', 'users', 'highlight', 'migration', 'guarantee'] as const;
 
-const planOf = (key: AgencyPlan['key']) => OFFERS.agencyPlans.find((p) => p.key === key);
-
 export function useAgenciesFaq(): FaqItem[] {
   const t = useTranslations('audience.agencies.faq');
-  const essencial = planOf('essencial');
-  const equipe = planOf('equipe');
+  const agency = planOf('agency');
   const values = {
-    essencialMax: essencial?.maxActiveProperties ?? 0,
-    essencialUsers: essencial?.maxUsers ?? 0,
-    equipeMax: equipe?.maxActiveProperties ?? 0,
-    equipeUsers: equipe?.maxUsers ?? 0,
+    users: limitOf('agency', 'users') ?? 0,
+    max: formatCount(limitOf('agency', 'active_properties') ?? 0),
+    price: formatBRL(agency.monthly_cents),
+    extra: formatBRL(agency.extra_user_cents ?? 0),
   };
   return FAQ_KEYS.map((key) => ({
     key,
@@ -73,10 +70,14 @@ export function AgenciesScreen() {
   const tCommon = useTranslations('audience.common');
   const tPreview = useTranslations('audience.preview');
   const tNav = useTranslations('audience.preview.nav');
+  const tPlans = useTranslations('audience.plans');
   const faq = useAgenciesFaq();
-  const plans = OFFERS.agencyPlans;
-  // The picture's meter uses the smallest priced plan's limit ("148 de 200").
-  const meterMax = planOf('essencial')?.maxActiveProperties ?? AGENCY_USAGE.max;
+  const name = usePlanName();
+  const agency = planOf('agency');
+  const agencyItems = usePlanItemsFor();
+  const tPrices = useTranslations('audience.prices');
+  // The picture's meter uses the agency plan's limit ("148 de 1.000").
+  const meterMax = limitOf('agency', 'active_properties') ?? AGENCY_USAGE.max;
 
   const nav = (active: string): AppPreviewNavItem[] =>
     [
@@ -91,18 +92,9 @@ export function AgenciesScreen() {
       label={tPreview('usage')}
       value={AGENCY_USAGE.value}
       max={meterMax}
-      valueLabel={tPreview('usageValue', { value: AGENCY_USAGE.value, max: meterMax })}
+      valueLabel={tPreview('usageValue', { value: AGENCY_USAGE.value, max: formatCount(meterMax) })}
     />
   );
-  const limit = (n: number | null) =>
-    n === null ? tCommon('asNeeded') : tCommon('upTo', { count: n });
-  const count = (n: number | null) => (n === null ? tCommon('asNeeded') : String(n));
-  const row = (key: string, values: ComparisonValue[]) => ({
-    key,
-    label: t(`plans.rows.${key}`),
-    values,
-  });
-  const all = (value: ComparisonValue) => plans.map(() => value);
   const demoLink = (variant: 'primary' | 'secondary', label = t('plans.cta')) => (
     <a href="#demonstracao" className={linkButtonClass(variant)}>
       {label}
@@ -116,17 +108,13 @@ export function AgenciesScreen() {
         homeLabel={tCommon('home')}
         pageLabel={t('meta.breadcrumb')}
         faq={faq}
-        offers={plans.flatMap((plan) =>
-          plan.priceCents === null
-            ? []
-            : [
-                {
-                  name: t('offerName', { name: t(`plans.names.${plan.key}`) }),
-                  priceCents: plan.priceCents,
-                  monthly: true,
-                },
-              ],
-        )}
+        offers={[
+          {
+            name: tPrices('offerName', { plan: name('agency') }),
+            priceCents: agency.monthly_cents,
+            monthly: true,
+          },
+        ]}
       />
 
       <AudienceBreadcrumb page={t('meta.breadcrumb')} />
@@ -276,38 +264,36 @@ export function AgenciesScreen() {
           title={t('plans.title')}
           subtitle={t('plans.subtitle')}
         />
-        <PlanComparisonTable
-          caption={t('plans.caption')}
-          featureHeader={tCommon('feature')}
-          includedLabel={tCommon('included')}
-          plans={plans.map((plan) => ({
-            key: plan.key,
-            name: t(`plans.names.${plan.key}`),
-            price: plan.priceCents === null ? tCommon('onQuote') : formatBRL(plan.priceCents),
-            period: plan.priceCents === null ? undefined : tCommon('perMonth'),
-            highlighted: plan.key === 'equipe',
-            action:
-              plan.priceCents === null
-                ? demoLink('secondary', t('plans.ctaTalk'))
-                : demoLink(plan.key === 'equipe' ? 'primary' : 'secondary'),
-          }))}
-          rows={[
-            row(
-              'properties',
-              plans.map((p) => limit(p.maxActiveProperties)),
-            ),
-            row(
-              'users',
-              plans.map((p) => count(p.maxUsers)),
-            ),
-            row('portfolio', all(true)),
-            row('contacts', all(true)),
-            row('team', all(true)),
-            row('portal', all(true)),
-            row('highlight', all(tCommon('apart'))),
-            row('migration', all(tCommon('quoted'))),
-          ]}
-        />
+        <article className="flex max-w-4xl flex-col gap-5 rounded-card border-2 border-action bg-panel p-5 md:p-6">
+          <div className="flex flex-wrap items-end justify-between gap-4">
+            <div>
+              <h3 className="type-title">{name('agency')}</h3>
+              <p className="type-body-s text-fg-muted">{tPlans('taglines.agency')}</p>
+            </div>
+            <PlanPriceTag plan={agency} />
+          </div>
+          <div className="flex flex-col gap-2">
+            <p className="type-body-s font-semibold">
+              {tPlans('everythingIn', { plan: name('pro') })}
+            </p>
+            <CheckList items={agencyItems('agency')} className="md:grid md:grid-cols-2" />
+          </div>
+          <div className="flex flex-wrap items-center gap-4">
+            {demoLink('primary')}
+            <Link
+              href="/precos"
+              className="inline-flex min-h-11 items-center type-body-s font-semibold text-action hover:underline"
+            >
+              {t('plans.compare')} →
+            </Link>
+          </div>
+          <p className="type-caption">
+            {t('plans.bigger', {
+              count: formatCount(limitOf('agency', 'active_properties') ?? 0),
+            })}
+          </p>
+        </article>
+        <PlanExtras className="max-w-4xl" />
       </Section>
 
       <Section tone="panel" labelledBy="migration-title" className="flex flex-col gap-8">

@@ -146,13 +146,38 @@ export const BROKER_STAGES = [
     key: 'new',
     title: 'Novo',
     cards: [
-      { name: 'Marina', area: 'Vila Mariana' },
-      { name: 'Pedro', area: 'Moema' },
+      { name: 'Lucas', area: 'Cambuí' },
+      { name: 'Pedro', area: 'Taquaral' },
     ],
   },
-  { key: 'talk', title: 'Em conversa', cards: [{ name: 'Rafael', area: 'Pinheiros' }] },
-  { key: 'visit', title: 'Visita', cards: [{ name: 'Júlia', area: 'Saúde' }] },
-  { key: 'proposal', title: 'Proposta', cards: [{ name: 'Carla', area: 'Moema' }] },
+  { key: 'talk', title: 'Em conversa', cards: [{ name: 'Fernanda', area: 'Taquaral' }] },
+  { key: 'visit', title: 'Visita', cards: [{ name: 'Juliana', area: 'Swiss Park' }] },
+  { key: 'proposal', title: 'Proposta', cards: [{ name: 'Carla', area: 'Cambuí' }] },
+];
+
+/** Brokers hero: contacts per pipeline stage. */
+export const BROKER_PIPELINE_COUNTS = { new: 12, talking: 8, visit: 5, proposal: 2 } as const;
+
+/** Brokers "O dia a dia": the automations list. */
+export const BROKER_AUTOMATIONS = [
+  {
+    key: 'comment',
+    title: 'Comentário “CAMBUÍ” → mensagem',
+    detail: 'Instagram · Reels do CV-204',
+    active: true,
+  },
+  {
+    key: 'confirm',
+    title: 'Confirmar visita na véspera',
+    detail: 'WhatsApp · na véspera, às 18h',
+    active: true,
+  },
+  {
+    key: 'retake',
+    title: 'Retomar quem sumiu há 7 dias',
+    detail: 'WhatsApp · até 2 por semana',
+    active: false,
+  },
 ];
 
 /** "Como funciona" mini pictures (brokers page). */

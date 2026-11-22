@@ -11,6 +11,7 @@ export const MARKETPLACE_PAGES = [
   { path: '/para-corretores', priority: 0.8 },
   { path: '/anunciar-imovel', priority: 0.8 },
   { path: '/para-imobiliarias', priority: 0.8 },
+  { path: '/precos', priority: 0.7 },
   { path: '/anunciar-imovel/corretor', priority: 0.5 },
   { path: '/investidores', priority: 0.6 },
   { path: '/incorporadoras', priority: 0.5 },
