@@ -1,5 +1,6 @@
 import { Panel, PhotoPlaceholder, formatBRL } from '@casvitta/ui';
 import { getTranslations } from 'next-intl/server';
+import type { ReactNode } from 'react';
 
 import type { LiveListing } from '@/lib/data/live-listing';
 
@@ -12,9 +13,12 @@ import { LiveListingContactForm } from './LiveListingContactForm';
 export async function LiveListingScreen({
   listing: l,
   pageUrl,
+  contact,
 }: {
   listing: LiveListing;
   pageUrl: string;
+  /** Replaces the contact form (the broker page sends visitors to WhatsApp). */
+  contact?: ReactNode;
 }) {
   const t = await getTranslations('liveListing');
   const tKinds = await getTranslations('crm.properties.kinds');
@@ -131,7 +135,7 @@ export async function LiveListingScreen({
           </p>
           <p className="mt-1 type-caption text-success">{t('creciChecked')}</p>
         </Panel>
-        <LiveListingContactForm slug={l.slug} code={l.code} pageUrl={pageUrl} />
+        {contact ?? <LiveListingContactForm slug={l.slug} code={l.code} pageUrl={pageUrl} />}
       </aside>
     </div>
   );

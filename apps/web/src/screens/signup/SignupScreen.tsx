@@ -82,7 +82,10 @@ export function SignupScreen({ step }: { step: SignupStep }) {
     track({ name: 'signup_step', step });
   }, [params, step]);
 
-  const index = SIGNUP_STEPS.indexOf(step);
+  // With Casvitta Social live there is no plan choice before the first publication (social/10):
+  // the page onboarding in the app follows the WhatsApp step.
+  const steps = isLive('social') ? SIGNUP_STEPS.filter((s) => s !== 'plano') : SIGNUP_STEPS;
+  const index = Math.max(0, steps.indexOf(step));
   const go = (next: SignupStep) => router.push(`/cadastro/${next}`);
   const firstName = draft?.name.split(' ')[0];
 
@@ -103,7 +106,7 @@ export function SignupScreen({ step }: { step: SignupStep }) {
     <div className="mx-auto flex max-w-6xl flex-col gap-6 px-4 py-8 md:px-8 md:py-10">
       <div className="flex flex-col gap-2">
         <p className="type-body-s text-fg-muted">
-          {t('progress', { n: index + 1, total: SIGNUP_STEPS.length })}
+          {t('progress', { n: index + 1, total: steps.length })}
         </p>
         <h1 className="type-display-l">
           {firstName ? t('titleNamed', { name: firstName }) : t('title')}
@@ -113,7 +116,7 @@ export function SignupScreen({ step }: { step: SignupStep }) {
         label={t('stepsLabel')}
         doneLabel={t('stepDone')}
         current={step}
-        steps={SIGNUP_STEPS.map((key) => ({ key, label: t(`steps.${key}`) }))}
+        steps={steps.map((key) => ({ key, label: t(`steps.${key}`) }))}
       />
       <div className="grid gap-6 lg:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)]">
         <Panel title={t(`${stepKey(step)}.title`)} className="self-start">
@@ -132,7 +135,11 @@ export function SignupScreen({ step }: { step: SignupStep }) {
             <CreciStep draft={draft} onDone={() => go('whatsapp')} onBack={() => go('conta')} />
           ) : null}
           {step === 'whatsapp' && draft ? (
-            <WhatsAppStep draft={draft} onDone={() => go('plano')} onBack={() => go('creci')} />
+            <WhatsAppStep
+              draft={draft}
+              onDone={() => go(isLive('social') ? 'primeiro-imovel' : 'plano')}
+              onBack={() => go('creci')}
+            />
           ) : null}
           {step === 'plano' && draft ? (
             <PlanStep
@@ -142,7 +149,10 @@ export function SignupScreen({ step }: { step: SignupStep }) {
             />
           ) : null}
           {step === 'primeiro-imovel' && draft ? (
-            <FirstPropertyStep draft={draft} onBack={() => go('plano')} />
+            <FirstPropertyStep
+              draft={draft}
+              onBack={() => go(isLive('social') ? 'whatsapp' : 'plano')}
+            />
           ) : null}
         </Panel>
         <aside className="flex flex-col gap-4">
@@ -432,7 +442,10 @@ function FirstPropertyStep({ draft, onBack }: { draft: SignupDraft; onBack: () =
         setBusy(true);
         setFailed(false);
         try {
-          const url = await openAppWithSession(appOrigin(), '/anuncios/novo');
+          const url = await openAppWithSession(
+            appOrigin(),
+            isLive('social') ? '/minha-pagina/comecar' : '/anuncios/novo',
+          );
           await trackBeforeNavigation({ name: 'sign_up', method: 'email', plan: draft.plan });
           window.location.assign(url);
         } catch {
@@ -450,9 +463,13 @@ function FirstPropertyStep({ draft, onBack }: { draft: SignupDraft; onBack: () =
         </li>
         <li>{t('plan', { plan: tPlans(`names.${draft.requestedPlan ?? draft.plan}`) })}</li>
       </ul>
-      <Callout tone="attention">{t('blocked')}</Callout>
+      <Callout tone="attention">{t(isLive('social') ? 'blockedPage' : 'blocked')}</Callout>
       {failed ? <p className="type-body-s text-danger">{t('error')}</p> : null}
-      <StepActions onBack={onBack} submitLabel={t('open')} busy={busy} />
+      <StepActions
+        onBack={onBack}
+        submitLabel={t(isLive('social') ? 'openPage' : 'open')}
+        busy={busy}
+      />
     </form>
   );
 }

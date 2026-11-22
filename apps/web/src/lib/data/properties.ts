@@ -117,6 +117,14 @@ export async function publish(id: string, channel: ListingChannel) {
   );
 }
 
+export async function unpublish(id: string, channel: ListingChannel) {
+  return check(
+    await api.DELETE('/v1/properties/{property_id}/listings/{channel}', {
+      params: { path: { property_id: id, channel } },
+    }),
+  );
+}
+
 export function usePropertyMutation<A extends unknown[], R>(fn: (...args: A) => Promise<R>) {
   const client = useQueryClient();
   return useMutation({

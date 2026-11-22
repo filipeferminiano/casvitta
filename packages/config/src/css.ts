@@ -4,6 +4,7 @@ import {
   font,
   fontVariable,
   layout,
+  pageThemes,
   radius,
   semantic,
   shadow,
@@ -66,6 +67,16 @@ export function renderThemeCss(): string {
     '}',
     '',
   );
+
+  lines.push('/* Broker page themes (Casvitta Social): remap semantic colors inside the page. */');
+  for (const [name, overrides] of Object.entries(pageThemes)) {
+    const entries = Object.entries(overrides);
+    if (entries.length === 0) continue;
+    lines.push(`[data-page-theme='${name}'] {`);
+    for (const [key, hex] of entries) lines.push(`  --color-${key}: ${hex};`);
+    lines.push('}');
+  }
+  lines.push('');
 
   lines.push('/* Type styles that need more than size/line-height/weight/tracking. */');
   for (const [name, style] of Object.entries(typography)) {

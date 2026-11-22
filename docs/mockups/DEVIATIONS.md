@@ -97,3 +97,10 @@ Compared in `docs/mockups/_impl/landing-pages/` (`pnpm screens:capture landing-p
 - **Demo persona.** The pictures use Ana Ribeiro (CLAUDE.md §6) instead of Mariana Alves; listing examples are the Vila Mariana and Pinheiros ones of the other audience pages.
 - **Header** as on the other audience pages: the site header, not the mockup's 3-link header.
 - **Agencies page (03).** The Essencial / Equipe / Operação maior table is replaced by one Imobiliária card from the catalog (from R$ 499, users included + price per extra user, active-property limit, what it adds to Pro), the extras box and a link to `/precos`. "Operação maior · sob consulta" becomes the line "Mais de 1.000 imóveis ou uma equipe maior? Fale com a gente na demonstração…". The FAQ "Como escolho o plano?" becomes "Como funciona o plano Imobiliária?".
+
+## Casvitta Social, SOC-1a (onboarding and the broker page)
+
+- **CRECI gate on the page.** Mockup social/10 says the page publishes before the CRECI check. CLAUDE.md rule 1 wins: the broker can publish, but `{slug}.casvitta.com.br` opens to visitors only after staff verify the CRECI (`PAGE_REQUIRES_VERIFIED_CRECI=true`; set it to false to follow the mockup). Properties always need the verified CRECI and the staff-checked owner authorization.
+- **No plan step in the signup** while the `social` area is live: account → CRECI → WhatsApp → the page onboarding in the app (steps 2–9 of social/10). A `?plano=` link still records a plan request.
+- **Free plan line** reads the catalog ("até 5 imóveis ativos"), not "até 10".
+- **Not in SOC-1a:** Vi no Instagram, Seleções, the finder, the owner form (the owner call to action opens WhatsApp), testimonials, slug change with redirects, custom domains, Interessados, backoffice Páginas e domínios. The print PDF is the QR code alone.

@@ -2,6 +2,7 @@ import { isLive } from '@/lib/live';
 import {
   Building2,
   Columns3,
+  Globe,
   Inbox,
   UserRound,
   Calculator,
@@ -30,7 +31,8 @@ export type NavLabelKey =
   | 'settings'
   | 'inbox'
   | 'contacts'
-  | 'pipeline';
+  | 'pipeline'
+  | 'myPage';
 
 export type NavItem = {
   /** Route segment under app/(app)/app; also the visible path on app.casvitta.com.br. */
@@ -52,6 +54,9 @@ const CRM_NAV: NavItem[] = [
   { segment: 'funil', labelKey: 'pipeline', icon: Columns3 },
   { segment: 'agenda', labelKey: 'calendar', icon: CalendarDays },
   { segment: 'imoveis', labelKey: 'properties', icon: Building2 },
+  ...(isLive('social')
+    ? [{ segment: 'minha-pagina', labelKey: 'myPage', icon: Globe } satisfies NavItem]
+    : []),
 ];
 
 const DEMO_NAV: NavItem[] = [

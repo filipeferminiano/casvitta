@@ -43,7 +43,8 @@
     "inbox": "Caixa de entrada",
     "contacts": "Contatos",
     "pipeline": "Funil",
-    "attendanceGroup": "Atendimento"
+    "attendanceGroup": "Atendimento",
+    "myPage": "Minha página"
   },
   "app": {
     "home": {
@@ -1477,7 +1478,9 @@
       "plan": "Plano {plan}",
       "blocked": "Você já pode montar o anúncio. Ele só é publicado depois que confirmarmos seu CRECI.",
       "open": "Montar meu primeiro anúncio",
-      "error": "Não conseguimos abrir os Anúncios. Tente de novo em alguns segundos."
+      "error": "Não conseguimos abrir os Anúncios. Tente de novo em alguns segundos.",
+      "blockedPage": "Você já pode montar sua página. Ela entra no ar depois que confirmarmos seu CRECI, em até 1 dia útil.",
+      "openPage": "Montar minha página"
     },
     "aside": {
       "plan": "Seu plano",
@@ -4586,5 +4589,221 @@
     "needReach": "Informe um WhatsApp ou um e-mail.",
     "needConsent": "Marque pelo menos um canal para o corretor poder responder.",
     "error": "Não conseguimos enviar. Confira os dados e tente de novo."
+  },
+  "social": {
+    "storefront": {
+      "metaTitle": "{name} · Corretor(a) de imóveis",
+      "metaDescription": "Imóveis e contato de {name}, com CRECI.",
+      "roleBroker": "Corretor(a) de imóveis",
+      "roleAgency": "Imobiliária",
+      "creciChecked": "CRECI conferido pela Casvitta",
+      "whatsapp": "Falar com {name} no WhatsApp",
+      "whatsappGreeting": "Olá, {name}! Vi sua página na Casvitta e quero conversar sobre imóveis.",
+      "tabsLabel": "O que você procura",
+      "tabs": {
+        "sale": "Comprar",
+        "rent": "Alugar",
+        "owner": "Anunciar"
+      },
+      "forSale": "Imóveis à venda",
+      "forRent": "Imóveis para alugar",
+      "emptySale": "Nenhum imóvel à venda publicado agora. Fale com {name} no WhatsApp para ver outras opções.",
+      "emptyRent": "Nenhum imóvel para alugar publicado agora. Fale com {name} no WhatsApp para ver outras opções.",
+      "previewWaitingCreci": "Seus imóveis aparecem aqui depois que a Casvitta conferir seu CRECI.",
+      "defaultTitle": "{kind} no {place}",
+      "bedrooms": "{n, plural, one {# quarto} other {# quartos}}",
+      "suites": "{n, plural, one {# suíte} other {# suítes}}",
+      "parking": "{n, plural, one {# vaga} other {# vagas}}",
+      "area": "{n} m²",
+      "perMonth": "/mês",
+      "photoSoon": "Fotos em breve",
+      "ownerTitle": "Quer vender ou alugar seu imóvel?",
+      "ownerText": "Conte sobre o imóvel e eu retorno para conversar.",
+      "ownerAction": "Quero vender ou alugar meu imóvel",
+      "ownerGreeting": "Olá, {name}! Vi sua página na Casvitta e quero vender ou alugar meu imóvel.",
+      "createYours": "Crie sua página com a Casvitta",
+      "badge": {
+        "sale": "Venda",
+        "rent": "Aluguel"
+      }
+    },
+    "property": {
+      "title": "Falar sobre este imóvel",
+      "intro": "Mande uma mensagem para {name} no WhatsApp com o código do imóvel.",
+      "action": "Falar no WhatsApp",
+      "message": "Olá, {name}! Vi o imóvel {code} ({title}) na sua página. Ainda está disponível?",
+      "back": "Ver todos os imóveis de {name}"
+    },
+    "themes": {
+      "legend": "Modelo visual",
+      "cambui": "Cambuí",
+      "planta": "Planta",
+      "terracota": "Terracota"
+    },
+    "copy": {
+      "copy": "Copiar",
+      "copied": "Link copiado."
+    },
+    "qr": {
+      "alt": "QR code que abre sua página",
+      "png": "Baixar PNG",
+      "pdf": "Baixar PDF para impressão",
+      "note": "Quem lê o QR abre sua página. As visitas por QR aparecem separadas em Resultados."
+    },
+    "share": {
+      "instagram": {
+        "name": "Instagram",
+        "how": "Editar perfil › Links › Adicionar link"
+      },
+      "tiktok": {
+        "name": "TikTok",
+        "how": "Editar perfil › Site"
+      },
+      "whatsapp": {
+        "name": "WhatsApp",
+        "how": "Status ou descrição do perfil comercial"
+      }
+    },
+    "blockers": {
+      "property_not_active": "o imóvel não está ativo;",
+      "no_responsible_broker": "falta o corretor responsável;",
+      "creci_unverified": "seu CRECI ainda está em conferência;",
+      "authorization_missing": "falta a autorização do proprietário;",
+      "authorization_wrong_kind": "a autorização não é do tipo certo (venda ou locação);",
+      "authorization_expired": "a autorização venceu;",
+      "authorization_rejected": "a autorização foi recusada pela Casvitta;",
+      "publishing_paused": "as publicações desta conta estão pausadas;",
+      "fewer_photos": "faltam fotos (mínimo de 5);"
+    },
+    "pageBlockers": {
+      "display_name_missing": "Informe o nome que aparece na página.",
+      "whatsapp_missing": "Informe seu WhatsApp: é o botão principal da página.",
+      "creci_missing": "Informe o número do seu CRECI em Configurações.",
+      "creci_unverified": "Seu CRECI ainda está em conferência."
+    },
+    "onboarding": {
+      "metaTitle": "Montar minha página",
+      "eyebrow": "Sua página na Casvitta",
+      "progress": "{n} de {total}",
+      "later": "Fazer depois",
+      "back": "Voltar",
+      "continue": "Continuar",
+      "saving": "Salvando…",
+      "loading": "Carregando…",
+      "saveError": "Não conseguimos salvar. Confira sua conexão e tente de novo.",
+      "errorTitle": "Não conseguimos abrir sua página",
+      "error": "Atualize a página em alguns segundos. Se continuar, fale com o suporte.",
+      "work": {
+        "title": "Como você trabalha?",
+        "broker": "Sou corretor(a)",
+        "agency": "Sou imobiliária",
+        "agencyNote": "Imobiliárias com mais de um corretor usam o plano Imobiliária, que a equipe Casvitta libera. Por enquanto sua página sai no seu nome, com o seu CRECI.",
+        "agencyName": "Imobiliária onde você atua",
+        "agencyNameHelp": "Aparece ao lado do seu nome, por exemplo: Corretora de imóveis · Horizonte Imóveis.",
+        "optional": "(opcional)"
+      },
+      "profile": {
+        "title": "Seus dados profissionais",
+        "photoAlt": "Sua foto",
+        "photoAdd": "Adicionar foto",
+        "photoChange": "Trocar foto",
+        "photoUploading": "Enviando…",
+        "name": "Nome de exibição",
+        "nameMissing": "Informe o nome que aparece na página.",
+        "creci": "CRECI",
+        "creciMissing": "Você ainda não informou o CRECI.",
+        "creciVerified": "Conferido pela Casvitta.",
+        "creciPending": "A Casvitta confere o CRECI em até 1 dia útil.",
+        "creciEdit": "Alterar em Configurações",
+        "regions": "Região de atuação",
+        "regionsHelp": "Separe por vírgula, por exemplo: Campinas, Cambuí, Taquaral.",
+        "bio": "Sobre você",
+        "optional": "(opcional)",
+        "bioHelp": "Uma ou duas frases sobre como você ajuda seus clientes.",
+        "whatsapp": "WhatsApp",
+        "whatsappMissing": "Informe seu WhatsApp: é o botão principal da página.",
+        "whatsappHelp": "Quem visita sua página fala com você por este número."
+      },
+      "theme": {
+        "title": "Escolha um modelo",
+        "note": "Você pode trocar a qualquer momento."
+      },
+      "properties": {
+        "title": "Escolha os imóveis da página",
+        "found": "{n, plural, one {Encontramos # imóvel na sua conta.} other {Encontramos # imóveis na sua conta.}}",
+        "none": "Você ainda não tem imóveis cadastrados. Pode publicar a página agora e incluir imóveis depois.",
+        "perMonth": "/mês",
+        "blocked": "Ainda não pode entrar:",
+        "fix": "Resolver",
+        "addManual": "+ Cadastrar imóvel",
+        "creciNote": "Os imóveis aparecem na página depois que a Casvitta conferir seu CRECI.",
+        "limit": "No seu plano, até {n} imóveis ativos.",
+        "limitUnlimited": "No seu plano, imóveis ativos sem limite.",
+        "reviewNote": "Cada imóvel entra depois que a Casvitta confere a autorização do proprietário."
+      },
+      "preview": {
+        "title": "Assim fica no celular",
+        "publish": "Publicar minha página",
+        "publishing": "Publicando…",
+        "blockedTitle": "Falta pouco para publicar"
+      },
+      "published": {
+        "title": "Sua página está no ar",
+        "titleWaiting": "Sua página está pronta",
+        "waitingCreci": "Ela entra no ar assim que a Casvitta conferir seu CRECI, em até 1 dia útil. Você recebe um aviso por e-mail.",
+        "plan": "Plano {plan}. Você escolhe outro plano só se quiser mais recursos."
+      },
+      "qr": {
+        "title": "Seu QR code",
+        "intro": "Para placa, cartão de visita e material impresso."
+      },
+      "share": {
+        "title": "Coloque o link nas suas redes",
+        "done": "Ir para minha página"
+      }
+    },
+    "myPage": {
+      "title": "Minha página",
+      "subtitle": "Seu link na bio, com seus imóveis e seu WhatsApp.",
+      "loading": "Carregando…",
+      "error": "Não conseguimos abrir sua página. Atualize em alguns segundos.",
+      "saveError": "Não conseguimos salvar. Tente de novo.",
+      "continueSetup": "Continuar configuração",
+      "open": "Abrir minha página",
+      "suspendedTitle": "Página suspensa pela Casvitta",
+      "suspended": "Fale com o suporte para entender o motivo.",
+      "addressTitle": "Endereço da página",
+      "switchOn": "Página publicada",
+      "switchOff": "Página fora do ar",
+      "waitingCreci": "Publicada por você. Ela abre para todos assim que a Casvitta conferir seu CRECI, em até 1 dia útil.",
+      "blocked": "Para publicar, complete seu nome, WhatsApp e CRECI.",
+      "addressNote": "Domínio próprio a partir do plano Automação.",
+      "qrTitle": "QR code",
+      "shareTitle": "Onde colocar o link",
+      "appearanceTitle": "Aparência",
+      "themeNote": "O modelo muda na hora na sua página.",
+      "themeSaved": "Modelo salvo.",
+      "editProfile": "Editar dados da página",
+      "editProperties": "Escolher imóveis",
+      "stats": {
+        "title": "Resultados · últimos 30 dias",
+        "views": "Pessoas que viram a página",
+        "propertyViews": "Visualizações de imóveis",
+        "whatsapp": "Cliques no WhatsApp",
+        "bySource": "Pelo link: {link} · Pelo QR code: {qr} · Por campanhas: {campaign}",
+        "note": "Cada pessoa conta uma vez por dia. Um clique no WhatsApp não quer dizer que a mensagem foi enviada."
+      },
+      "checklist": {
+        "title": "Sua página · {done} de {total}",
+        "done": "Feito:",
+        "todo": "A fazer:",
+        "published": "Publicar a página",
+        "creci_verified": "CRECI conferido pela Casvitta",
+        "profile_photo": "Adicionar sua foto",
+        "bio": "Escrever uma frase sobre você",
+        "has_properties": "Incluir pelo menos um imóvel",
+        "link_used": "Receber a primeira visita"
+      }
+    }
   }
 }

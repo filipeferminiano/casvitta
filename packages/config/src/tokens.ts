@@ -59,7 +59,45 @@ export const semantic = {
   'success-subtle': 'green-50',
   danger: 'red-600',
   'danger-subtle': 'red-50',
+  // Second brand color of a broker page theme (owner call to action); Planta uses the action blue.
+  accent: 'blue-600',
+  'accent-subtle': 'blue-50',
 } as const satisfies Record<string, ColorToken>;
+
+/**
+ * Casvitta Social page themes (docs/mockups/social): presets that remap semantic colors inside
+ * an element with data-page-theme="…". Only the public broker page uses them; the product UI stays
+ * on Planta. Every pair keeps 4.5:1 text contrast (white on action, accent on accent-subtle).
+ */
+export const pageThemes = {
+  cambui: {
+    action: '#1F4D3A',
+    'action-hover': '#173B2C',
+    'action-subtle': '#E8F1EC',
+    'action-line': '#B9D3C5',
+    focus: '#1F4D3A',
+    canvas: '#FBF8F3',
+    subtle: '#F1EBE1',
+    line: '#DCD2C2',
+    accent: '#A34A2E',
+    'accent-subtle': '#F8E9E2',
+  },
+  planta: {},
+  terracota: {
+    action: '#A34A2E',
+    'action-hover': '#863B24',
+    'action-subtle': '#F8E9E2',
+    'action-line': '#E7C3B5',
+    focus: '#A34A2E',
+    canvas: '#FCF7F4',
+    subtle: '#F4E9E2',
+    line: '#E3D3C8',
+    accent: '#1F4D3A',
+    'accent-subtle': '#E8F1EC',
+  },
+} as const satisfies Record<string, Partial<Record<keyof typeof semantic, string>>>;
+
+export type PageThemeName = keyof typeof pageThemes;
 
 export const font = {
   display: "'Familjen Grotesk', Arial, sans-serif",

@@ -6,7 +6,7 @@
  */
 import { USE_MOCKS } from '@/mocks/clock';
 
-export type LiveArea = 'interest' | 'accounts' | 'market' | 'listings' | 'crm';
+export type LiveArea = 'interest' | 'accounts' | 'market' | 'listings' | 'crm' | 'social';
 
 const LIVE = new Set(
   (process.env.NEXT_PUBLIC_LIVE ?? '')

@@ -59,6 +59,8 @@
   --color-success-subtle: var(--color-green-50);
   --color-danger: var(--color-red-600);
   --color-danger-subtle: var(--color-red-50);
+  --color-accent: var(--color-blue-600);
+  --color-accent-subtle: var(--color-blue-50);
 
   --font-display: var(--font-familjen-grotesk), 'Familjen Grotesk', Arial, sans-serif;
   --font-body: var(--font-ibm-plex-sans), 'IBM Plex Sans', Arial, sans-serif;
@@ -111,6 +113,32 @@
 :root {
   --layout-side-nav: 264px;
   --layout-content: 1112px;
+}
+
+/* Broker page themes (Casvitta Social): remap semantic colors inside the page. */
+[data-page-theme='cambui'] {
+  --color-action: #1F4D3A;
+  --color-action-hover: #173B2C;
+  --color-action-subtle: #E8F1EC;
+  --color-action-line: #B9D3C5;
+  --color-focus: #1F4D3A;
+  --color-canvas: #FBF8F3;
+  --color-subtle: #F1EBE1;
+  --color-line: #DCD2C2;
+  --color-accent: #A34A2E;
+  --color-accent-subtle: #F8E9E2;
+}
+[data-page-theme='terracota'] {
+  --color-action: #A34A2E;
+  --color-action-hover: #863B24;
+  --color-action-subtle: #F8E9E2;
+  --color-action-line: #E7C3B5;
+  --color-focus: #A34A2E;
+  --color-canvas: #FCF7F4;
+  --color-subtle: #F4E9E2;
+  --color-line: #E3D3C8;
+  --color-accent: #1F4D3A;
+  --color-accent-subtle: #E8F1EC;
 }
 
 /* Type styles that need more than size/line-height/weight/tracking. */

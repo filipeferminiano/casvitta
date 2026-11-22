@@ -3,10 +3,14 @@
 import { Button, Panel, StatTile } from '@casvitta/ui';
 import { CheckCircle2, Circle } from 'lucide-react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
+import { useEffect } from 'react';
 
 import { PageHeader } from '@/components/PageHeader';
 import { useHome, type HomeData } from '@/lib/data/crm';
+import { usePage } from '@/lib/data/page';
+import { isLive } from '@/lib/live';
 
 import { CrmStates } from './shared';
 
@@ -25,6 +29,7 @@ const STEP_HREF: Record<StepKey, string> = {
 export function CrmHomeScreen() {
   const t = useTranslations('crm.home');
   const home = useHome();
+  useOnboardingRedirect();
   return (
     <div className="flex flex-col gap-6">
       <PageHeader title={t('title')} subtitle={t('subtitle')} />
@@ -33,6 +38,26 @@ export function CrmHomeScreen() {
       </CrmStates>
     </div>
   );
+}
+
+/**
+ * A new broker lands on the page onboarding (docs/mockups/social/10) until the page is published,
+ * the onboarding is finished or they chose "Fazer depois".
+ */
+function useOnboardingRedirect() {
+  const social = isLive('social');
+  const page = usePage(social);
+  const router = useRouter();
+  const p = page.data;
+  const pending =
+    social &&
+    p !== undefined &&
+    p.status === 'draft' &&
+    !p.onboarding_done &&
+    !p.onboarding_dismissed;
+  useEffect(() => {
+    if (pending) router.replace('/minha-pagina/comecar');
+  }, [pending, router]);
 }
 
 function HomeView({ data }: { data: HomeData }) {
