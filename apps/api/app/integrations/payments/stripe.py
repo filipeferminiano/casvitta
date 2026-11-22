@@ -13,7 +13,7 @@ import httpx
 
 from app.core.logging import get_logger
 from app.integrations.base import IntegrationError
-from app.integrations.payments.events import parse_signed, subscription_from
+from app.integrations.payments.events import parse_signed, plan_item, subscription_from
 from app.integrations.payments.port import Checkout, PaymentEvent, SubscriptionSnapshot
 
 log = get_logger(__name__)
@@ -153,7 +153,7 @@ class StripePayments:
 
     async def change_price(self, subscription_id: str, lookup_key: str) -> SubscriptionSnapshot:
         current = await self.call("GET", f"/subscriptions/{subscription_id}")
-        item_id = current["items"]["data"][0]["id"]
+        item_id = plan_item(current)["id"]
         body = await self.call(
             "POST",
             f"/subscriptions/{subscription_id}",
@@ -164,6 +164,30 @@ class StripePayments:
                 "payment_behavior": "pending_if_incomplete",
             },
         )
+        return subscription_from(body)
+
+    async def set_item_quantity(
+        self, subscription_id: str, lookup_key: str, quantity: int
+    ) -> SubscriptionSnapshot:
+        current = await self.call("GET", f"/subscriptions/{subscription_id}")
+        items = current["items"]["data"]
+        found = next(
+            (i for i in items if (i.get("price") or {}).get("lookup_key") == lookup_key), None
+        )
+        before = int(found.get("quantity") or 0) if found else 0
+        if found is None and quantity == 0:
+            return subscription_from(current)
+        if found is None:
+            item: dict[str, Any] = {"price": await self._price_id(lookup_key), "quantity": quantity}
+        elif quantity == 0:
+            item = {"id": found["id"], "deleted": True}
+        else:
+            item = {"id": found["id"], "quantity": quantity}
+        params: dict[str, Any] = {"items": [item], "proration_behavior": "always_invoice"}
+        if quantity > before:
+            # Charged now; the extra units only count once paid.
+            params["payment_behavior"] = "pending_if_incomplete"
+        body = await self.call("POST", f"/subscriptions/{subscription_id}", params)
         return subscription_from(body)
 
     async def set_cancel_at_period_end(

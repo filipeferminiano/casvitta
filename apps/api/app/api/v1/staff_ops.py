@@ -418,9 +418,10 @@ async def moderation_queue(
 async def get_revenue(
     _actor: Annotated[Actor, Depends(require_permission(Permission.MANAGE_BILLING))],
     settings: SettingsDep,
+    session: SessionDep,
 ) -> revenue.RevenueOut:
-    """Lines from the offer catalog; amounts arrive with billing."""
-    return revenue.revenue(settings)
+    """Lines from the offer catalog; amounts from the ledger and live subscriptions."""
+    return await revenue.revenue(session, settings)
 
 
 # ------------------------------------------------------------------ owner authorizations (BO6)

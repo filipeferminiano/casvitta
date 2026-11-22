@@ -17,12 +17,21 @@ from __future__ import annotations
 
 import uuid
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from sqlalchemy import select
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.core.catalog import CHECKOUT_PLANS, plan_from_lookup_key, price_lookup_key
+from app.core.catalog import (
+    ADD_ONS,
+    CHECKOUT_PLANS,
+    Meter,
+    add_on_available,
+    add_on_from_lookup_key,
+    addon_lookup_key,
+    plan_from_lookup_key,
+    price_lookup_key,
+)
 from app.core.errors import AppError
 from app.core.i18n import translate
 from app.core.logging import get_logger
@@ -49,6 +58,7 @@ from app.integrations.messaging.port import Email, EmailPort
 from app.integrations.payments.port import PaymentEvent, PaymentsPort, SubscriptionSnapshot
 
 log = get_logger(__name__)
+MAX_ADD_ON_UNITS = 20
 
 # Statuses that keep the paid plan (past_due: Stripe is still retrying the card).
 KEEPS_PLAN = frozenset(
@@ -191,6 +201,10 @@ async def start_checkout(
     if sub is not None:
         if sub.cancel_at_period_end:
             await port.set_cancel_at_period_end(sub.provider_subscription_id, cancel=False)
+        for key in list(sub.add_ons):  # add-ons the new plan doesn't take are removed (credited)
+            add_on = next(a for a in ADD_ONS if a.key == key)
+            if not add_on_available(data.plan, add_on):
+                await port.set_item_quantity(sub.provider_subscription_id, addon_lookup_key(key), 0)
         snapshot = await port.change_price(
             sub.provider_subscription_id, price_lookup_key(data.plan)
         )
@@ -210,6 +224,47 @@ async def start_checkout(
     request.checkout_id = checkout.id
     await session.flush()
     return CheckoutOut(result="checkout", url=checkout.url, plan=data.plan)
+
+
+class AddOnIn(BaseModel):
+    key: str
+    quantity: int = Field(ge=0, le=MAX_ADD_ON_UNITS)
+
+
+async def set_add_on(
+    session: AsyncSession,
+    port: PaymentsPort,
+    settings: Settings,
+    user_id: uuid.UUID,
+    data: AddOnIn,
+) -> bool:
+    """Sets the units of an add-on on the subscription. True when the change is in effect;
+    False while the charge for more units is pending."""
+    await _require_billing(session, settings, user_id)
+    workspace = await _workspace(session)
+    add_on = next((a for a in ADD_ONS if a.key == data.key), None)
+    if add_on is None or not add_on_available(workspace.plan, add_on):
+        raise AppError("add_on_not_available", status_code=422)
+    sub = await live_subscription(session)
+    if sub is None:
+        raise AppError("add_on_needs_subscription", status_code=409)
+    if sub.status == SubscriptionStatus.PAST_DUE:
+        raise AppError("payment_problem", status_code=409)
+    snapshot = await port.set_item_quantity(
+        sub.provider_subscription_id, addon_lookup_key(add_on.key), data.quantity
+    )
+    await apply_snapshot(session, snapshot, workspace.id)
+    return sub.add_ons.get(add_on.key, 0) == data.quantity
+
+
+def extras(sub: Subscription | None) -> dict[Meter, int]:
+    """Extra limit units per meter bought as add-ons."""
+    out: dict[Meter, int] = {}
+    for key, qty in (sub.add_ons if sub else {}).items():
+        add_on = next((a for a in ADD_ONS if a.key == key), None)
+        if add_on is not None:
+            out[add_on.meter] = out.get(add_on.meter, 0) + add_on.amount * qty
+    return out
 
 
 async def cancel_at_period_end(session: AsyncSession, port: PaymentsPort) -> bool:
@@ -284,7 +339,13 @@ async def apply_snapshot(
             session.add(sub)
         plan = plan_from_lookup_key(snapshot.lookup_key)
         sub.plan = plan or sub.plan
+        sub.add_ons = {
+            a.key: qty
+            for key, qty in snapshot.items
+            if (a := add_on_from_lookup_key(key)) is not None and qty > 0
+        }
         sub.status = status
+        sub.is_test = not snapshot.livemode
         sub.current_period_end = snapshot.current_period_end
         sub.cancel_at_period_end = snapshot.cancel_at_period_end
         if status in KEEPS_PLAN and sub.plan is not None:
@@ -425,6 +486,7 @@ async def _record_payment(session: AsyncSession, sub: Subscription, event: Payme
                         plan=sub.plan,
                         source_ref=event.invoice_id,
                         occurred_at=event.created,
+                        is_test=not event.livemode,
                     )
                 )
         await session.flush()

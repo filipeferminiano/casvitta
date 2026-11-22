@@ -12,6 +12,7 @@ from datetime import datetime
 from enum import StrEnum
 
 from sqlalchemy import BigInteger, DateTime, ForeignKey, String, UniqueConstraint, func, sql
+from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import Mapped, mapped_column
 
 from app.core.db import Base
@@ -103,6 +104,10 @@ class Subscription(UUIDPrimaryKey, Timestamps, WorkspaceScoped, Base):
     current_period_end: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
     cancel_at_period_end: Mapped[bool] = mapped_column(default=False, server_default=sql.false())
     last_payment_failed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    # Add-ons on the subscription: {"ai_conversations_500": 2} (units, from the provider).
+    add_ons: Mapped[dict[str, int]] = mapped_column(JSONB, default=dict, server_default="{}")
+    # Stripe test mode: shown in the backoffice as a test, never counted as revenue.
+    is_test: Mapped[bool] = mapped_column(default=False, server_default=sql.false())
     ended_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
 
 
@@ -152,3 +157,4 @@ class LedgerEntry(UUIDPrimaryKey, Timestamps, WorkspaceScoped, Base):
     # The provider document (Stripe invoice id): one entry per document and status.
     source_ref: Mapped[str | None] = mapped_column(String(80))
     occurred_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    is_test: Mapped[bool] = mapped_column(default=False, server_default=sql.false())

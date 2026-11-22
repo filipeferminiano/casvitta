@@ -57,7 +57,23 @@ subscriptions.
 With a test key locally, webhooks need the Stripe CLI (`stripe listen --forward-to
 localhost:8000/v1/webhooks/stripe`, then use the `whsec_` it prints).
 
+## Add-ons
+
+Packages (+500 conversas de IA, +1.000 contatos em automação, usuário adicional na Imobiliária)
+are extra items on the same subscription, price lookup key `casvitta_addon_<key>_monthly`
+(created by `make stripe:sync`). `PUT /v1/me/plan/add-ons` sets the units: more units are
+charged now (prorated, `pending_if_incomplete`: they count once paid), fewer are credited. A
+plan change removes the add-ons the new plan doesn't take. Units add to the meter limits.
+
+## Backoffice
+
+- Corretores e imobiliárias → conta: "Assinatura e faturas" (status, plan, add-ons, renewal,
+  last payments; no card data).
+- Receita: received this month and per month (ledger), MRR at catalog prices, declined charges,
+  cancellations. Stripe test-mode payments (`livemode=false`) are flagged `is_test` and shown
+  apart, never as revenue. Migration 0026 marked every earlier row as test.
+
 ## Not built yet
 
-Add-ons and extra agency users as subscription items, invoices and revenue in the backoffice
-(BO5/BO7), Destaques one-off payments, notas fiscais (NFS-e: Stripe doesn't issue them in Brazil).
+Destaques one-off payments, notas fiscais (NFS-e: Stripe doesn't issue them in Brazil), "Enviar
+link de pagamento" in the backoffice.

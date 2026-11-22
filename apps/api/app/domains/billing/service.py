@@ -12,7 +12,15 @@ import uuid
 from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.core.catalog import ADD_ONS, SELLABLE, Meter, limit, limit_state, spec
+from app.core.catalog import (
+    ADD_ONS,
+    SELLABLE,
+    Meter,
+    add_on_available,
+    limit,
+    limit_state,
+    spec,
+)
 from app.core.errors import AppError
 from app.core.tenancy import cross_tenant, current_workspace
 from app.core.time import utcnow
@@ -25,6 +33,7 @@ from app.domains.billing.models import (
     PlanChangeRequest,
 )
 from app.domains.billing.schemas import (
+    AddOnUsageOut,
     ChangeRequestIn,
     ChangeRequestOut,
     MeterOut,
@@ -78,12 +87,22 @@ async def active_properties(session: AsyncSession) -> int:
 async def usage(session: AsyncSession, *, billing_enabled: bool) -> PlanUsageOut:
     workspace = await _workspace(session)
     measured: dict[Meter, int] = {Meter.ACTIVE_PROPERTIES: await active_properties(session)}
+    sub = await payments.live_subscription(session)
+    extra = payments.extras(sub)
     meters = []
     for meter in Meter:
         used = measured.get(meter)
-        state = limit_state(workspace.plan, meter, used or 0)
+        bought = extra.get(meter, 0)
+        state = limit_state(workspace.plan, meter, used or 0, bought)
+        cap = limit(workspace.plan, meter)
         meters.append(
-            MeterOut(meter=meter, used=used, limit=limit(workspace.plan, meter), state=state)
+            MeterOut(
+                meter=meter,
+                used=used,
+                limit=None if cap is None else cap + bought,
+                state=state,
+                extra=bought,
+            )
         )
     open_request = await session.scalar(
         select(PlanChangeRequest)
@@ -97,7 +116,18 @@ async def usage(session: AsyncSession, *, billing_enabled: bool) -> PlanUsageOut
         billing_enabled=billing_enabled,
         meters=meters,
         open_request=_out(open_request) if open_request else None,
-        subscription=payments.subscription_out(await payments.live_subscription(session)),
+        subscription=payments.subscription_out(sub),
+        add_ons=[
+            AddOnUsageOut(
+                key=a.key,
+                meter=a.meter,
+                amount=a.amount,
+                price_cents=a.price_cents,
+                quantity=(sub.add_ons.get(a.key, 0) if sub else 0),
+                available=add_on_available(workspace.plan, a),
+            )
+            for a in ADD_ONS
+        ],
     )
 
 

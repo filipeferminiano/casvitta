@@ -275,3 +275,103 @@ def test_production_test_key_needs_an_allowlist() -> None:
         Settings(**prod)
     ok = Settings(**prod, billing_allowed_emails="dono@exemplo.com.br, Outro@Exemplo.com.br")
     assert ok.billing_allowed_emails == ["dono@exemplo.com.br", "outro@exemplo.com.br"]
+
+
+async def test_add_ons_on_the_subscription(make_session, integrations: Integrations) -> None:  # type: ignore[no-untyped-def]
+    broker = await _broker(make_session)
+    fake = _fake(integrations)
+    async with make_client(make_session, integrations, SETTINGS) as api:
+        h = _cookie(broker)
+        body = {"key": "ai_conversations_500", "quantity": 1}
+        # Grátis: the add-on needs a plan with AI; then a paid subscription.
+        r = await api.put("/v1/me/plan/add-ons", headers=h, json=body)
+        assert r.status_code == 422 and r.json()["error"]["code"] == "add_on_not_available"
+        sub_id = await _subscribe(api, fake, h, "automation")
+
+        r = await api.put("/v1/me/plan/add-ons", headers=h, json={**body, "quantity": 2})
+        assert r.status_code == 200, r.text
+        usage = r.json()
+        ai = next(m for m in usage["meters"] if m["meter"] == "ai_conversations_month")
+        assert ai["limit"] == 200 + 1_000 and ai["extra"] == 1_000
+        bought = {a["key"]: (a["quantity"], a["available"]) for a in usage["add_ons"]}
+        assert bought["ai_conversations_500"] == (2, True)
+        assert bought["agency_extra_user"] == (0, False)  # Imobiliária only
+        items = dict(subscription_from_fake(fake, sub_id))
+        assert items["casvitta_addon_ai_conversations_500_monthly"] == 2
+
+        # A charge that doesn't go through: the extra units don't count.
+        fake.decline_next_change = True
+        r = await api.put("/v1/me/plan/add-ons", headers=h, json={**body, "quantity": 3})
+        assert next(a for a in r.json()["add_ons"] if a["key"] == body["key"])["quantity"] == 2
+
+        # Moving to a plan without AI removes it (credited); back on Essencial.
+        await api.post("/v1/me/plan/checkout", headers=h, json={"plan": "essential"})
+        usage = (await api.get("/v1/me/plan", headers=h)).json()
+        assert usage["plan"] == "essential"
+        assert all(a["quantity"] == 0 for a in usage["add_ons"])
+        r = await api.put("/v1/me/plan/add-ons", headers=h, json=body)
+        assert r.status_code == 422
+
+
+def subscription_from_fake(fake: FakePayments, sub_id: str) -> list[tuple[str, int]]:
+    return [
+        (i["price"]["lookup_key"], i.get("quantity", 1))
+        for i in fake.subscriptions[sub_id]["items"]["data"]
+    ]
+
+
+async def test_revenue_and_account_billing(make_session, integrations: Integrations) -> None:  # type: ignore[no-untyped-def]
+    """BO7 counts only live-mode money; test payments are shown apart. BO5 shows the billing."""
+    from app.domains.backoffice.revenue import revenue  # noqa: PLC0415
+
+    broker = await _broker(make_session)
+    fake = _fake(integrations)
+    async with make_client(make_session, integrations, SETTINGS) as api:
+        h = _cookie(broker)
+        sub_id = await _subscribe(api, fake, h, "automation")
+        await api.put(
+            "/v1/me/plan/add-ons", headers=h, json={"key": "ai_conversations_500", "quantity": 1}
+        )
+        await _deliver(api, [fake.invoice_failed(sub_id)])
+    async with make_session() as s:
+        out = await revenue(s, SETTINGS)
+        assert out.enabled and out.summary is not None
+        # The fake is Stripe test mode: no revenue, shown apart.
+        assert out.summary.month_cents == 0 and out.summary.test_received_cents == 14_900
+        assert out.summary.mrr_cents == 0 and out.summary.active_subscriptions == 0
+        assert [f.is_test for f in out.failed] == [True]
+        assert out.failed[0].amount_cents == 14_900 + 4_900
+        # The same flow in live mode counts.
+        with cross_tenant(s):
+            for sub in (await s.scalars(select(Subscription))).all():
+                sub.is_test = False
+            for entry in (await s.scalars(select(LedgerEntry))).all():
+                entry.is_test = False
+            await s.commit()
+        out = await revenue(s, SETTINGS)
+        assert out.summary is not None
+        assert out.summary.month_cents == 14_900 and out.summary.mrr_cents == 19_800
+        assert out.summary.active_subscriptions == 1 and out.summary.failed_cents == 19_800
+        lines = {line.key: line for line in out.lines}
+        assert lines["plan_automation"].subscribers == 1
+        assert lines["plan_automation"].month_cents == 14_900
+        assert lines["addon_ai_conversations_500"].subscribers == 1
+        assert out.months[-1].subscriptions_cents == 14_900
+
+
+async def test_account_360_shows_billing(make_session, integrations: Integrations, session) -> None:  # type: ignore[no-untyped-def]
+    from app.domains.staff.models import StaffRole  # noqa: PLC0415
+    from tests.staff_helpers import signed_in_as, staff_settings  # noqa: PLC0415
+
+    broker = await _broker(make_session)
+    fake = _fake(integrations)
+    settings = staff_settings(billing_enabled=True)
+    async with make_client(make_session, integrations, settings) as api:
+        await _subscribe(api, fake, _cookie(broker), "pro")
+        await signed_in_as(api, integrations, session, StaffRole.OPERATIONS)
+        r = await api.get(f"/v1/staff/accounts/{broker.workspace_id}")
+        assert r.status_code == 200, r.text
+        billing = r.json()["billing"]
+        assert billing["plan"] == "pro" and billing["status"] == "active"
+        assert billing["is_test"] is True and billing["monthly_cents"] == 29_900
+        assert [p["amount_cents"] for p in billing["payments"]] == [29_900]

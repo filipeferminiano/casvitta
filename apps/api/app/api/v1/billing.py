@@ -15,7 +15,7 @@ from app.core.errors import AppError
 from app.core.security import AccessClaims
 from app.core.settings import Settings
 from app.domains.billing import payments, service
-from app.domains.billing.payments import CheckoutIn, CheckoutOut, PortalOut
+from app.domains.billing.payments import AddOnIn, CheckoutIn, CheckoutOut, PortalOut
 from app.domains.billing.schemas import (
     ChangeRequestIn,
     ChangeRequestOut,
@@ -101,6 +101,21 @@ async def checkout(
     out = await payments.start_checkout(
         session, integrations.payments, settings, claims.user_id, data
     )
+    await session.commit()
+    return out
+
+
+@router.put("/add-ons", response_model=PlanUsageOut, operation_id="setPlanAddOn")
+async def set_add_on(
+    data: AddOnIn,
+    claims: ClaimsDep,
+    session: TenantSession,
+    settings: SettingsDep,
+    integrations: IntegrationsDep,
+) -> PlanUsageOut:
+    """Units of an add-on on the subscription (0 removes it). More units are charged now."""
+    await payments.set_add_on(session, integrations.payments, settings, claims.user_id, data)
+    out = await service.usage(session, billing_enabled=True)
     await session.commit()
     return out
 

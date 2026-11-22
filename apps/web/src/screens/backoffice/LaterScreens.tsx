@@ -8,6 +8,7 @@ import {
   ErrorState,
   LoadingState,
   Panel,
+  StatTile,
   StatusPill,
   Tabs,
   TabsList,
@@ -131,7 +132,8 @@ export function ModerationScreen() {
   );
 }
 
-/** BO7 · Receita (docs/mockups/backoffice/07-revenue). Liga depois: no amounts until billing. */
+/** BO7 · Receita (docs/mockups/backoffice/07-revenue). Amounts only from what Stripe confirmed;
+ * test-mode payments are shown apart and never counted. */
 export function RevenueScreen() {
   const t = useTranslations('backoffice.revenue');
   const tStates = useTranslations('backoffice.states');
@@ -164,9 +166,27 @@ export function RevenueScreen() {
     { key: 'nature', header: t('columns.nature'), cell: (l) => t(`nature.${l.nature}`) },
     { key: 'price', header: t('columns.price'), cell: (l) => price(l) },
     {
+      key: 'subscribers',
+      header: t('columns.subscribers'),
+      cell: (l) => (l.subscribers === null || l.subscribers === undefined ? '—' : l.subscribers),
+    },
+    {
+      key: 'month',
+      header: t('columns.month'),
+      cell: (l) => (
+        <span className="font-mono tabular">
+          {l.month_cents === null || l.month_cents === undefined ? '—' : formatBRL(l.month_cents)}
+        </span>
+      ),
+    },
+    {
       key: 'status',
       header: t('columns.status'),
-      cell: (l) => <StatusPill tone="neutral">{t(`status.${l.status}`)}</StatusPill>,
+      cell: (l) => (
+        <StatusPill tone={l.status === 'active' ? 'success' : 'neutral'}>
+          {t(`status.${l.status}`)}
+        </StatusPill>
+      ),
     },
   ];
 
@@ -194,6 +214,13 @@ export function RevenueScreen() {
       ) : (
         <>
           {!revenue.data.enabled ? <EmptyState title={t('off')} className="mb-5" /> : null}
+          {revenue.data.summary ? (
+            <RevenueSummaryBlock
+              summary={revenue.data.summary}
+              months={revenue.data.months ?? []}
+              failed={revenue.data.failed ?? []}
+            />
+          ) : null}
           <Panel title={t('linesTitle')}>
             <DataTable
               caption={t('linesTitle')}
@@ -205,5 +232,128 @@ export function RevenueScreen() {
         </>
       )}
     </>
+  );
+}
+
+type RevenueData = NonNullable<ReturnType<typeof useRevenue>['data']>;
+
+function RevenueSummaryBlock({
+  summary,
+  months,
+  failed,
+}: {
+  summary: NonNullable<RevenueData['summary']>;
+  months: NonNullable<RevenueData['months']>;
+  failed: NonNullable<RevenueData['failed']>;
+}) {
+  const t = useTranslations('backoffice.revenue.live');
+  const month = (key: string) => {
+    const [y, m] = key.split('-');
+    return `${m}/${y}`;
+  };
+  return (
+    <div className="mb-5 flex flex-col gap-5">
+      {summary.test_received_cents > 0 ? (
+        <Callout tone="attention">
+          {t('testNotice', { amount: formatBRL(summary.test_received_cents) })}
+        </Callout>
+      ) : null}
+      <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+        <StatTile
+          highlighted
+          label={t('month')}
+          value={formatBRL(summary.month_cents)}
+          caption={t('monthCaption', {
+            subscriptions: formatBRL(summary.subscriptions_cents),
+            listings: formatBRL(summary.listings_cents),
+          })}
+        />
+        <StatTile
+          label={t('mrr')}
+          value={formatBRL(summary.mrr_cents)}
+          caption={t('mrrCaption', { count: summary.active_subscriptions })}
+        />
+        <StatTile
+          attention={summary.failed_cents > 0}
+          label={t('failed')}
+          value={formatBRL(summary.failed_cents)}
+          caption={t('failedCaption', { count: failed.filter((f) => !f.is_test).length })}
+        />
+        <StatTile
+          label={t('churn')}
+          value={
+            summary.churn_pct === null || summary.churn_pct === undefined
+              ? '—'
+              : `${String(summary.churn_pct).replace('.', ',')}%`
+          }
+          caption={t('churnCaption', {
+            ended: summary.ended_this_month,
+            ending: summary.ending_subscriptions,
+          })}
+        />
+      </div>
+      <div className="grid gap-5 xl:grid-cols-2">
+        <Panel title={t('monthsTitle')}>
+          <DataTable
+            caption={t('monthsTitle')}
+            columns={[
+              { key: 'month', header: t('columns.month'), cell: (r) => month(r.month) },
+              {
+                key: 'subs',
+                header: t('columns.subscriptions'),
+                cell: (r) => (
+                  <span className="font-mono tabular">{formatBRL(r.subscriptions_cents)}</span>
+                ),
+              },
+              {
+                key: 'listings',
+                header: t('columns.listings'),
+                cell: (r) => (
+                  <span className="font-mono tabular">{formatBRL(r.listings_cents)}</span>
+                ),
+              },
+            ]}
+            rows={months}
+            rowKey={(r) => r.month}
+          />
+        </Panel>
+        <Panel title={t('failedTitle')}>
+          {failed.length ? (
+            <DataTable
+              caption={t('failedTitle')}
+              columns={[
+                {
+                  key: 'account',
+                  header: t('columns.account'),
+                  cell: (f) => (
+                    <span>
+                      {f.workspace_name}
+                      {f.is_test ? ` · ${t('test')}` : ''}
+                    </span>
+                  ),
+                },
+                {
+                  key: 'amount',
+                  header: t('columns.amount'),
+                  cell: (f) => (
+                    <span className="font-mono tabular">{formatBRL(f.amount_cents)}</span>
+                  ),
+                },
+                {
+                  key: 'when',
+                  header: t('columns.when'),
+                  cell: (f) => (f.failed_at ? formatDate(new Date(f.failed_at)) : '—'),
+                },
+              ]}
+              rows={failed}
+              rowKey={(f) => f.workspace_id}
+            />
+          ) : (
+            <p className="type-body-s text-fg-muted">{t('noFailed')}</p>
+          )}
+          <p className="mt-3 type-caption text-fg-muted">{t('failedNote')}</p>
+        </Panel>
+      </div>
+    </div>
   );
 }

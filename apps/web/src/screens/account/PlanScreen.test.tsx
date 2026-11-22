@@ -25,6 +25,8 @@ vi.mock('@/lib/data/plan', () => {
     useDowngrade: mutation,
     useResume: mutation,
     useBillingPortal: mutation,
+    useSetAddOn: mutation,
+    useRequestAddOn: mutation,
   };
 });
 
@@ -32,9 +34,19 @@ const base: PlanUsage = {
   plan: 'free',
   legacy: false,
   billing_enabled: true,
-  meters: [{ meter: 'active_properties', used: 4, limit: 5, state: 'warning' }],
+  meters: [{ meter: 'active_properties', used: 4, limit: 5, state: 'warning', extra: 0 }],
   open_request: null,
   subscription: null,
+  add_ons: [
+    {
+      key: 'ai_conversations_500',
+      meter: 'ai_conversations_month',
+      amount: 500,
+      price_cents: 4900,
+      quantity: 1,
+      available: true,
+    },
+  ],
 };
 
 const show = (usage: PlanUsage, query = '') => {
@@ -75,12 +87,17 @@ describe('Plano e uso', () => {
     expect(screen.getByRole('button', { name: 'Gerenciar pagamento' })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Mudar para Pro' })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Plano atual' })).toBeDisabled();
+    expect(screen.getByText('+500 conversas de IA por mês')).toBeInTheDocument();
+    expect(screen.getByText('1 pacote')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Adicionar um' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Remover um' })).toBeInTheDocument();
   });
 
   it('with billing off, a paid plan is a request to the Casvitta team', () => {
     show({ ...base, billing_enabled: false });
     expect(screen.getByRole('button', { name: 'Pedir Pro' })).toBeInTheDocument();
     expect(screen.getByText(/feita pela equipe da Casvitta/)).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Pedir pacote' })).toBeInTheDocument();
   });
 
   it('back from Stripe: confirming, then cancelled without a charge', () => {

@@ -3509,7 +3509,7 @@
           "staff"
         ],
         "summary": "Get Revenue",
-        "description": "Lines from the offer catalog; amounts arrive with billing.",
+        "description": "Lines from the offer catalog; amounts from the ledger and live subscriptions.",
         "operationId": "getRevenue",
         "parameters": [
           {
@@ -4787,6 +4787,48 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/CheckoutOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/me/plan/add-ons": {
+      "put": {
+        "tags": [
+          "me"
+        ],
+        "summary": "Set Add On",
+        "description": "Units of an add-on on the subscription (0 removes it). More units are charged now.",
+        "operationId": "setPlanAddOn",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddOnIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlanUsageOut"
                 }
               }
             }
@@ -7048,6 +7090,16 @@
           "is_demo": {
             "type": "boolean",
             "title": "Is Demo"
+          },
+          "billing": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/AccountBilling"
+              },
+              {
+                "type": "null"
+              }
+            ]
           }
         },
         "type": "object",
@@ -7067,6 +7119,88 @@
           "is_demo"
         ],
         "title": "Account360"
+      },
+      "AccountBilling": {
+        "properties": {
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "plan": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Plan"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "add_ons": {
+            "additionalProperties": {
+              "type": "integer"
+            },
+            "type": "object",
+            "title": "Add Ons"
+          },
+          "current_period_end": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Current Period End"
+          },
+          "cancel_at_period_end": {
+            "type": "boolean",
+            "title": "Cancel At Period End"
+          },
+          "payment_failed_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Payment Failed At"
+          },
+          "is_test": {
+            "type": "boolean",
+            "title": "Is Test"
+          },
+          "monthly_cents": {
+            "type": "integer",
+            "title": "Monthly Cents"
+          },
+          "payments": {
+            "items": {
+              "$ref": "#/components/schemas/PaymentRow"
+            },
+            "type": "array",
+            "title": "Payments"
+          }
+        },
+        "type": "object",
+        "required": [
+          "status",
+          "plan",
+          "add_ons",
+          "current_period_end",
+          "cancel_at_period_end",
+          "payment_failed_at",
+          "is_test",
+          "monthly_cents",
+          "payments"
+        ],
+        "title": "AccountBilling",
+        "description": "Read from the subscription Stripe confirms (no card data: that stays at Stripe)."
       },
       "AccountListOut": {
         "properties": {
@@ -7225,6 +7359,26 @@
         ],
         "title": "ActivityItem"
       },
+      "AddOnIn": {
+        "properties": {
+          "key": {
+            "type": "string",
+            "title": "Key"
+          },
+          "quantity": {
+            "type": "integer",
+            "maximum": 20.0,
+            "minimum": 0.0,
+            "title": "Quantity"
+          }
+        },
+        "type": "object",
+        "required": [
+          "key",
+          "quantity"
+        ],
+        "title": "AddOnIn"
+      },
       "AddOnOut": {
         "properties": {
           "key": {
@@ -7259,6 +7413,43 @@
           "plans"
         ],
         "title": "AddOnOut"
+      },
+      "AddOnUsageOut": {
+        "properties": {
+          "key": {
+            "type": "string",
+            "title": "Key"
+          },
+          "meter": {
+            "$ref": "#/components/schemas/Meter"
+          },
+          "amount": {
+            "type": "integer",
+            "title": "Amount"
+          },
+          "price_cents": {
+            "type": "integer",
+            "title": "Price Cents"
+          },
+          "quantity": {
+            "type": "integer",
+            "title": "Quantity"
+          },
+          "available": {
+            "type": "boolean",
+            "title": "Available"
+          }
+        },
+        "type": "object",
+        "required": [
+          "key",
+          "meter",
+          "amount",
+          "price_cents",
+          "quantity",
+          "available"
+        ],
+        "title": "AddOnUsageOut"
       },
       "AddressSuggestion": {
         "properties": {
@@ -11086,6 +11277,48 @@
         "title": "EmailLinkSent",
         "description": "Same body whether or not the address has an account (no account enumeration)."
       },
+      "FailedCharge": {
+        "properties": {
+          "workspace_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Workspace Id"
+          },
+          "workspace_name": {
+            "type": "string",
+            "title": "Workspace Name"
+          },
+          "amount_cents": {
+            "type": "integer",
+            "title": "Amount Cents"
+          },
+          "failed_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Failed At"
+          },
+          "is_test": {
+            "type": "boolean",
+            "title": "Is Test"
+          }
+        },
+        "type": "object",
+        "required": [
+          "workspace_id",
+          "workspace_name",
+          "amount_cents",
+          "failed_at",
+          "is_test"
+        ],
+        "title": "FailedCharge"
+      },
       "Feature": {
         "type": "string",
         "enum": [
@@ -12573,6 +12806,11 @@
               "not_included"
             ],
             "title": "State"
+          },
+          "extra": {
+            "type": "integer",
+            "title": "Extra",
+            "default": 0
           }
         },
         "type": "object",
@@ -12604,6 +12842,29 @@
           "items"
         ],
         "title": "ModerationQueueOut"
+      },
+      "MonthTotal": {
+        "properties": {
+          "month": {
+            "type": "string",
+            "title": "Month"
+          },
+          "subscriptions_cents": {
+            "type": "integer",
+            "title": "Subscriptions Cents"
+          },
+          "listings_cents": {
+            "type": "integer",
+            "title": "Listings Cents"
+          }
+        },
+        "type": "object",
+        "required": [
+          "month",
+          "subscriptions_cents",
+          "listings_cents"
+        ],
+        "title": "MonthTotal"
       },
       "MonthlyPoint": {
         "properties": {
@@ -14223,6 +14484,35 @@
         ],
         "title": "PagesQueueOut"
       },
+      "PaymentRow": {
+        "properties": {
+          "occurred_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Occurred At"
+          },
+          "amount_cents": {
+            "type": "integer",
+            "title": "Amount Cents"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "is_test": {
+            "type": "boolean",
+            "title": "Is Test"
+          }
+        },
+        "type": "object",
+        "required": [
+          "occurred_at",
+          "amount_cents",
+          "status",
+          "is_test"
+        ],
+        "title": "PaymentRow"
+      },
       "Permission": {
         "type": "string",
         "enum": [
@@ -14409,6 +14699,14 @@
                 "type": "null"
               }
             ]
+          },
+          "add_ons": {
+            "items": {
+              "$ref": "#/components/schemas/AddOnUsageOut"
+            },
+            "type": "array",
+            "title": "Add Ons",
+            "default": []
           }
         },
         "type": "object",
@@ -16669,6 +16967,7 @@
             "type": "string",
             "enum": [
               "waits_billing",
+              "active",
               "soon"
             ],
             "title": "Status"
@@ -16704,6 +17003,28 @@
             "type": "boolean",
             "title": "Price From",
             "default": false
+          },
+          "subscribers": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Subscribers"
+          },
+          "month_cents": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Month Cents"
           }
         },
         "type": "object",
@@ -16728,6 +17049,32 @@
             },
             "type": "array",
             "title": "Lines"
+          },
+          "summary": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/RevenueSummary"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "months": {
+            "items": {
+              "$ref": "#/components/schemas/MonthTotal"
+            },
+            "type": "array",
+            "title": "Months",
+            "default": []
+          },
+          "failed": {
+            "items": {
+              "$ref": "#/components/schemas/FailedCharge"
+            },
+            "type": "array",
+            "title": "Failed",
+            "default": []
           }
         },
         "type": "object",
@@ -16736,6 +17083,71 @@
           "lines"
         ],
         "title": "RevenueOut"
+      },
+      "RevenueSummary": {
+        "properties": {
+          "month_cents": {
+            "type": "integer",
+            "title": "Month Cents"
+          },
+          "subscriptions_cents": {
+            "type": "integer",
+            "title": "Subscriptions Cents"
+          },
+          "listings_cents": {
+            "type": "integer",
+            "title": "Listings Cents"
+          },
+          "mrr_cents": {
+            "type": "integer",
+            "title": "Mrr Cents"
+          },
+          "active_subscriptions": {
+            "type": "integer",
+            "title": "Active Subscriptions"
+          },
+          "ending_subscriptions": {
+            "type": "integer",
+            "title": "Ending Subscriptions"
+          },
+          "ended_this_month": {
+            "type": "integer",
+            "title": "Ended This Month"
+          },
+          "churn_pct": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Churn Pct"
+          },
+          "failed_cents": {
+            "type": "integer",
+            "title": "Failed Cents"
+          },
+          "test_received_cents": {
+            "type": "integer",
+            "title": "Test Received Cents"
+          }
+        },
+        "type": "object",
+        "required": [
+          "month_cents",
+          "subscriptions_cents",
+          "listings_cents",
+          "mrr_cents",
+          "active_subscriptions",
+          "ending_subscriptions",
+          "ended_this_month",
+          "churn_pct",
+          "failed_cents",
+          "test_received_cents"
+        ],
+        "title": "RevenueSummary"
       },
       "Role": {
         "type": "string",

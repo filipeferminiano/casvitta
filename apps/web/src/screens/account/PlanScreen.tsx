@@ -8,21 +8,25 @@ import { useState } from 'react';
 
 import { PageHeader } from '@/components/PageHeader';
 import { PAID_PLANS, type CatalogPlan } from '@/config/catalog';
-import { CrmError } from '@/lib/data/crm';
 import {
   useBillingPortal,
   useCancelRequest,
   useCheckout,
   useDowngrade,
   usePlan,
+  useRequestAddOn,
   useRequestPlan,
   useResume,
+  useSetAddOn,
   type PaidPlan,
   type PlanUsage,
 } from '@/lib/data/plan';
 import { formatNumber } from '@/lib/format';
 
-type Confirm = { kind: 'change'; plan: PaidPlan } | { kind: 'downgrade' };
+type Confirm =
+  | { kind: 'change'; plan: PaidPlan }
+  | { kind: 'downgrade' }
+  | { kind: 'addOn'; key: string; quantity: number; price: number };
 
 const when = (iso: string | null | undefined) => (iso ? formatDate(new Date(iso)) : '—');
 const price = (cents: number) => formatBRL(cents).replace(/,00$/, '');
@@ -44,10 +48,12 @@ export function PlanScreen() {
   const downgrade = useDowngrade();
   const resume = useResume();
   const portal = useBillingPortal();
+  const setAddOn = useSetAddOn();
+  const requestAddOn = useRequestAddOn();
+  const tAddOns = useTranslations('planUsage.addOns');
   const waiting = usage.data?.open_request?.status === 'awaiting_payment';
 
-  const fail = (e: unknown) =>
-    setError(e instanceof CrmError && e.message ? e.message : t('error'));
+  const fail = (e: unknown) => setError(e instanceof Error && e.message ? e.message : t('error'));
   const run = async (action: () => Promise<unknown>) => {
     setError(null);
     if (returned) router.replace('/plano'); // the Stripe return message is about the past now
@@ -106,6 +112,16 @@ export function PlanScreen() {
 
       <Meters data={data} />
 
+      <AddOns
+        data={data}
+        busy={setAddOn.isPending || requestAddOn.isPending}
+        onAdd={(key, quantity, priceCents) =>
+          setConfirm({ kind: 'addOn', key, quantity, price: priceCents })
+        }
+        onRemove={(key, quantity) => run(() => setAddOn.mutateAsync({ key, quantity }))}
+        onRequest={(key) => run(() => requestAddOn.mutateAsync(key))}
+      />
+
       <Panel title={t('plans.title')}>
         <ul className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
           {PAID_PLANS.map((plan) => (
@@ -132,14 +148,18 @@ export function PlanScreen() {
           title={
             confirm.kind === 'change'
               ? t('confirmChange.title', { plan: tNames(confirm.plan) })
-              : t('confirmDowngrade.title')
+              : confirm.kind === 'addOn'
+                ? tAddOns('confirmTitle', { name: tAddOns(`names.${confirm.key}`) })
+                : t('confirmDowngrade.title')
           }
           description={
             confirm.kind === 'change'
               ? t('confirmChange.description')
-              : sub
-                ? t('confirmDowngrade.withSubscription', { date: when(sub.current_period_end) })
-                : t('confirmDowngrade.now')
+              : confirm.kind === 'addOn'
+                ? tAddOns('confirmText', { price: price(confirm.price) })
+                : sub
+                  ? t('confirmDowngrade.withSubscription', { date: when(sub.current_period_end) })
+                  : t('confirmDowngrade.now')
           }
           closeLabel={t('cancel')}
         >
@@ -153,6 +173,23 @@ export function PlanScreen() {
                 onClick={() => run(() => checkout.mutateAsync(confirm.plan))}
               >
                 {t('confirmChange.confirm', { plan: tNames(confirm.plan) })}
+              </Button>
+            ) : confirm.kind === 'addOn' ? (
+              <Button
+                loading={setAddOn.isPending}
+                onClick={() =>
+                  run(async () => {
+                    const before = data.add_ons?.find((a) => a.key === confirm.key)?.quantity ?? 0;
+                    const out = await setAddOn.mutateAsync({
+                      key: confirm.key,
+                      quantity: confirm.quantity,
+                    });
+                    const after = out.add_ons?.find((a) => a.key === confirm.key)?.quantity ?? 0;
+                    if (after === before) throw new Error(tAddOns('pending'));
+                  })
+                }
+              >
+                {tAddOns('confirm')}
               </Button>
             ) : (
               <Button
@@ -367,5 +404,81 @@ function PlanCard({
         )}
       </div>
     </li>
+  );
+}
+
+function AddOns({
+  data,
+  busy,
+  onAdd,
+  onRemove,
+  onRequest,
+}: {
+  data: PlanUsage;
+  busy: boolean;
+  onAdd: (key: string, quantity: number, priceCents: number) => void;
+  onRemove: (key: string, quantity: number) => void;
+  onRequest: (key: string) => void;
+}) {
+  const t = useTranslations('planUsage.addOns');
+  const sub = data.subscription ?? null;
+  const shown = (data.add_ons ?? []).filter((a) => a.available || a.quantity > 0);
+  if (shown.length === 0) return null;
+  const requested = data.open_request?.kind === 'add_on' ? data.open_request.add_on_key : null;
+  return (
+    <Panel title={t('title')}>
+      <p className="mb-4 type-body-s text-fg-muted">{t('subtitle')}</p>
+      <ul className="flex flex-col divide-y divide-line">
+        {shown.map((a) => (
+          <li
+            key={a.key}
+            className="flex flex-wrap items-center justify-between gap-3 py-3 first:pt-0 last:pb-0"
+          >
+            <div className="flex flex-col gap-0.5">
+              <span className="type-body font-semibold">{t(`names.${a.key}`)}</span>
+              <span className="font-mono tabular type-body-s text-fg-muted">
+                {t('price', { price: price(a.price_cents) })}
+              </span>
+            </div>
+            {!data.billing_enabled ? (
+              requested === a.key ? (
+                <span className="type-body-s text-fg-muted">{t('requested')}</span>
+              ) : (
+                <Button variant="secondary" loading={busy} onClick={() => onRequest(a.key)}>
+                  {t('request')}
+                </Button>
+              )
+            ) : !sub ? (
+              <span className="type-body-s text-fg-muted">{t('needsPlan')}</span>
+            ) : (
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="type-body-s" aria-live="polite">
+                  {t('quantity', { count: a.quantity })}
+                </span>
+                {a.quantity > 0 ? (
+                  <Button
+                    variant="ghost"
+                    loading={busy}
+                    onClick={() => onRemove(a.key, a.quantity - 1)}
+                  >
+                    {t('remove')}
+                  </Button>
+                ) : null}
+                {a.available ? (
+                  <Button
+                    variant="secondary"
+                    loading={busy}
+                    disabled={sub.payment_failed}
+                    onClick={() => onAdd(a.key, a.quantity + 1, a.price_cents)}
+                  >
+                    {t('add')}
+                  </Button>
+                ) : null}
+              </div>
+            )}
+          </li>
+        ))}
+      </ul>
+    </Panel>
   );
 }

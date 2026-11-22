@@ -146,3 +146,9 @@ Compared in `docs/mockups/_impl/landing-pages/` (`pnpm screens:capture landing-p
 - **Plan changes with a subscription are immediate and prorated** (the difference is charged or credited now); the old plan stays until the difference is paid. Back to Grátis is at the end of the paid period and can be undone until then.
 - **Failed renewal:** the plan stays while Stripe retries ("Pagamento recusado" + email); after the last retry the workspace goes back to Grátis. The backoffice mockup's "na 3ª falha, as publicações pausam" becomes "back to Grátis, whose limits apply"; nothing is deleted.
 - **With billing off** (`BILLING_ENABLED=false`, production today) the same screen sends a request to staff, as before.
+
+## Billing, Stripe part 2 (add-ons and backoffice)
+
+- **Add-ons** are extra items on the plan subscription, sold one package at a time from Plano e uso ("Adicionar um" / "Remover um"), only on plans that have the meter (no AI packages on Grátis/Essencial; extra users only on Imobiliária). Adding is charged now, prorated; removing is credited.
+- **BO5 "Assinatura e faturas"** shows what Stripe confirmed (status, plan, packages, renewal, last payments). Invoices and receipts themselves stay on Stripe. "Enviar link de pagamento" stays off.
+- **BO7 Receita** shows received this month and per month, MRR at catalog prices, declined charges and cancellations, plus subscribers and amount per catalog line. The mockup's chart is a month table for now. Stripe test-mode payments are shown apart and never counted as revenue. All invoice amounts go to the plan line (add-on units are counted separately, their share of each invoice isn't split).

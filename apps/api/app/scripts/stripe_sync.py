@@ -1,4 +1,4 @@
-"""Creates the Stripe products and monthly prices of the paid plans from app.core.catalog.
+"""Creates the Stripe products and monthly prices of the paid plans and add-ons (catalog).
 
     make stripe:sync            # test mode (STRIPE_SECRET_KEY must be a test key)
     make stripe:sync ARGS=--live  # live mode, only with the owner's OK
@@ -14,7 +14,7 @@ import asyncio
 import os
 import sys
 
-from app.core.catalog import CHECKOUT_PLANS, PLANS, price_lookup_key
+from app.core.catalog import ADD_ONS, CHECKOUT_PLANS, PLANS, addon_lookup_key, price_lookup_key
 from app.integrations.payments.stripe import StripePayments
 
 # Product names shown on Stripe's checkout and invoices (pt-BR).
@@ -23,6 +23,9 @@ NAMES = {
     "automation": "Casvitta Automação",
     "pro": "Casvitta Pro",
     "agency": "Casvitta Imobiliária",
+    "ai_conversations_500": "Casvitta · +500 conversas de IA por mês",
+    "automation_contacts_1000": "Casvitta · +1.000 contatos em automação por mês",
+    "agency_extra_user": "Casvitta · usuário adicional (Imobiliária)",
 }
 
 
@@ -36,9 +39,9 @@ async def sync(live: bool) -> None:
     if live and not is_live:
         sys.exit("--live given with a test key")
     stripe = StripePayments(key, webhook_secret="")
-    for plan in CHECKOUT_PLANS:
-        lookup = price_lookup_key(plan)
-        cents = PLANS[plan].monthly_cents
+    items = [(p.value, price_lookup_key(p), PLANS[p].monthly_cents) for p in CHECKOUT_PLANS]
+    items += [(a.key, addon_lookup_key(a.key), a.price_cents) for a in ADD_ONS]
+    for key, lookup, cents in items:
         found = await stripe.call(
             "GET", "/prices", {"lookup_keys": [lookup], "active": True, "limit": 1}
         )
@@ -49,8 +52,8 @@ async def sync(live: bool) -> None:
         product = await stripe.call(
             "POST",
             "/products",
-            {"name": NAMES[plan.value], "metadata": {"plan": plan.value}},
-            idempotency_key=f"product-{plan.value}-{cents}",
+            {"name": NAMES[key], "metadata": {"catalog_key": key}},
+            idempotency_key=f"product-{key}-{cents}",
         )
         await stripe.call(
             "POST",
@@ -63,7 +66,7 @@ async def sync(live: bool) -> None:
                 "lookup_key": lookup,
                 "transfer_lookup_key": True,
                 "tax_behavior": "inclusive",
-                "metadata": {"plan": plan.value},
+                "metadata": {"catalog_key": key},
             },
             idempotency_key=f"price-{lookup}-{cents}",
         )

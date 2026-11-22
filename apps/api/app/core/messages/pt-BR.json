@@ -74,7 +74,7 @@
   "plan_request_not_found": "Não encontramos este pedido de plano. Ele pode já ter sido atendido; atualize a página.",
   "plan_not_sellable": "Este plano não está mais à venda. Escolha um dos planos da página de preços.",
   "plan_already_active": "Você já está neste plano.",
-  "add_on_not_available": "Este pacote extra não está disponível no seu plano. Veja os pacotes em Plano, uso e canais.",
+  "add_on_not_available": "Este pacote extra não está disponível no seu plano. Veja os pacotes em Plano e uso.",
   "plan_change_requires_request": "A mudança para um plano pago é feita pela equipe da Casvitta. Peça a mudança em Plano, uso e canais; respondemos em até 1 dia útil.",
   "contact_not_found": "Não encontramos este contato. Ele pode ter sido removido; volte para Contatos.",
   "contacts_limit_reached": "Você chegou ao limite de contatos do seu plano. Peça a mudança de plano em Plano, uso e canais; nada é cobrado automaticamente.",
@@ -152,5 +152,6 @@
   "billing_customer_not_found": "Esta conta ainda não tem pagamento cadastrado. Escolha um plano para começar.",
   "email.payment_failed.subject": "Não conseguimos cobrar seu plano Casvitta",
   "email.payment_failed.text": "Olá, {name}.\n\nO cartão cadastrado recusou a cobrança do seu plano. Seu plano continua ativo enquanto tentamos de novo nos próximos dias.\n\nPara não voltar ao plano Grátis, atualize o cartão em Plano e uso > Gerenciar pagamento:\n{link}\n\nSeus imóveis, contatos e páginas não são apagados.\n\nCasvitta",
-  "invalid_signature": "Assinatura do evento inválida."
+  "invalid_signature": "Assinatura do evento inválida.",
+  "add_on_needs_subscription": "Pacotes adicionais são somados a um plano pago pelo cartão. Assine um plano primeiro."
 }

@@ -153,7 +153,13 @@ async def test_upgrade_request_is_assigned_by_staff_and_audited(
         usage = (await api.get("/v1/me/plan", headers=headers)).json()
         assert usage["plan"] == "free" and usage["billing_enabled"] is False
         props = next(m for m in usage["meters"] if m["meter"] == "active_properties")
-        assert props == {"meter": "active_properties", "used": 0, "limit": 5, "state": "ok"}
+        assert props == {
+            "meter": "active_properties",
+            "used": 0,
+            "limit": 5,
+            "state": "ok",
+            "extra": 0,
+        }
 
         r = await api.post(
             "/v1/me/plan/requests",

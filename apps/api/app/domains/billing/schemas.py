@@ -57,8 +57,18 @@ class SubscriptionOut(BaseModel):
 class MeterOut(BaseModel):
     meter: Meter
     used: int | None  # None = not measured yet (the module does not exist yet)
-    limit: int | None  # None = unlimited
+    limit: int | None  # None = unlimited; includes the add-on units
     state: LimitState
+    extra: int = 0  # units from add-ons, included in `limit`
+
+
+class AddOnUsageOut(BaseModel):
+    key: str
+    meter: Meter
+    amount: int  # units per package
+    price_cents: int  # per package per month
+    quantity: int  # packages on the subscription
+    available: bool  # sold on top of the current plan
 
 
 class PlanUsageOut(BaseModel):
@@ -69,6 +79,7 @@ class PlanUsageOut(BaseModel):
     open_request: ChangeRequestOut | None
     # Paid through Stripe (None: Grátis, or a plan staff assigned).
     subscription: SubscriptionOut | None = None
+    add_ons: list[AddOnUsageOut] = []
 
 
 class DeclineIn(BaseModel):

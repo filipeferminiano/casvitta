@@ -98,6 +98,35 @@ export function useCancelRequest() {
   });
 }
 
+/** Add-on packages on the subscription (0 removes). More units are charged now, prorated. */
+export function useSetAddOn() {
+  const invalidate = useInvalidate();
+  return useMutation({
+    mutationFn: async (body: { key: string; quantity: number }) =>
+      check(await api.PUT('/v1/me/plan/add-ons', { body })),
+    onSuccess: invalidate,
+  });
+}
+
+/** Billing off: ask staff for an add-on. */
+export function useRequestAddOn() {
+  const invalidate = useInvalidate();
+  return useMutation({
+    mutationFn: async (key: string) =>
+      check(
+        await api.POST('/v1/me/plan/requests', {
+          body: {
+            kind: 'add_on',
+            add_on_key: key,
+            billing_period: 'monthly',
+            source: 'plans_page',
+          },
+        }),
+      ),
+    onSuccess: invalidate,
+  });
+}
+
 /** Back to Grátis (at the end of the paid period with a subscription). */
 export function useDowngrade() {
   const invalidate = useInvalidate();

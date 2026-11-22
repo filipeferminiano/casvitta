@@ -51,9 +51,22 @@ def _id(value: object) -> str | None:
     return None
 
 
+PLAN_PREFIX = "casvitta_plan_"
+
+
+def _lookup(item: dict[str, Any]) -> str:
+    return str((item.get("price") or {}).get("lookup_key") or "")
+
+
+def plan_item(obj: dict[str, Any]) -> dict[str, Any]:
+    """The subscription item of the plan (the others are add-ons)."""
+    items: list[dict[str, Any]] = (obj.get("items") or {}).get("data") or []
+    return next((i for i in items if _lookup(i).startswith(PLAN_PREFIX)), items[0] if items else {})
+
+
 def subscription_from(obj: dict[str, Any]) -> SubscriptionSnapshot:
-    items = (obj.get("items") or {}).get("data") or []
-    first: dict[str, Any] = items[0] if items else {}
+    items: list[dict[str, Any]] = (obj.get("items") or {}).get("data") or []
+    first = plan_item(obj)
     price = first.get("price") or {}
     # Newer API versions keep the period on the item; older ones on the subscription.
     period_end = _ts(first.get("current_period_end")) or _ts(obj.get("current_period_end"))
@@ -63,9 +76,11 @@ def subscription_from(obj: dict[str, Any]) -> SubscriptionSnapshot:
         customer_id=_id(obj.get("customer")) or "",
         status=str(obj.get("status") or ""),
         lookup_key=price.get("lookup_key"),
+        items=tuple((_lookup(i), int(i.get("quantity") or 1)) for i in items if _lookup(i)),
         current_period_end=period_end,
         cancel_at_period_end=bool(obj.get("cancel_at_period_end")),
         workspace_id=metadata.get("workspace_id"),
+        livemode=bool(obj.get("livemode")),
     )
 
 
@@ -83,6 +98,7 @@ def parse(payload: bytes) -> PaymentEvent:
         obj: dict[str, Any] = event["data"]["object"]
         kind = str(event["type"])
         event_id = str(event["id"])
+        live = bool(event.get("livemode"))
     except (ValueError, KeyError, TypeError) as exc:
         raise InvalidSignature from exc
     created = _ts(event.get("created")) or datetime.now(UTC)
@@ -111,6 +127,7 @@ def parse(payload: bytes) -> PaymentEvent:
             invoice_id=_id(obj.get("id")),
             amount_cents=amount if isinstance(amount, int) else None,
             currency=obj.get("currency"),
+            livemode=live,
         )
     return PaymentEvent(id=event_id, type=kind, created=created, customer_id=None)
 

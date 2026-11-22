@@ -30,9 +30,12 @@ class SubscriptionSnapshot:
     # Provider status: active, past_due, unpaid, canceled, incomplete, incomplete_expired, ...
     status: str
     lookup_key: str | None  # of the plan price; None if it has no known price
+    # Every item: (price lookup key, quantity), plan and add-ons.
+    items: tuple[tuple[str, int], ...]
     current_period_end: datetime | None
     cancel_at_period_end: bool
     workspace_id: str | None  # from the subscription metadata
+    livemode: bool = False  # False = Stripe test mode (never revenue)
 
 
 @dataclass(frozen=True, slots=True)
@@ -49,6 +52,7 @@ class PaymentEvent:
     invoice_id: str | None = None
     amount_cents: int | None = None
     currency: str | None = None
+    livemode: bool = False
 
 
 class InvalidSignature(Exception):
@@ -74,6 +78,13 @@ class PaymentsPort(Protocol):
     async def change_price(self, subscription_id: str, lookup_key: str) -> SubscriptionSnapshot:
         """Switch the plan now, charging or crediting the difference (prorated). The change only
         takes effect once paid: until then the snapshot keeps the old price."""
+        ...
+
+    async def set_item_quantity(
+        self, subscription_id: str, lookup_key: str, quantity: int
+    ) -> SubscriptionSnapshot:
+        """Add-ons: add, change or (quantity 0) remove an item. More units are charged now
+        (prorated) and only count once paid; fewer units are credited."""
         ...
 
     async def set_cancel_at_period_end(

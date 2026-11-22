@@ -122,10 +122,10 @@ async def test_queue_is_off_until_listings_exist() -> None:
     assert [i.price_cents for i in on.items] == [52_000_000]  # only the exception
 
 
-def test_revenue_shows_catalog_lines_without_amounts() -> None:
+async def test_revenue_shows_catalog_lines_without_amounts(session) -> None:  # type: ignore[no-untyped-def]
     from app.domains.backoffice.revenue import revenue  # noqa: PLC0415
 
-    out = revenue(Settings())
+    out = await revenue(session, Settings())
     assert out.enabled is False  # billing is not wired: no numbers
     lines = {line.key: line for line in out.lines}
     assert lines["plan_essential"].price_cents == 4_900

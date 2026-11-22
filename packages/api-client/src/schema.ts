@@ -1073,7 +1073,7 @@ export interface paths {
         };
         /**
          * Get Revenue
-         * @description Lines from the offer catalog; amounts arrive with billing.
+         * @description Lines from the offer catalog; amounts from the ledger and live subscriptions.
          */
         get: operations["getRevenue"];
         put?: never;
@@ -1464,6 +1464,26 @@ export interface paths {
         put?: never;
         /** Checkout */
         post: operations["startPlanCheckout"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/me/plan/add-ons": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * Set Add On
+         * @description Units of an add-on on the subscription (0 removes it). More units are charged now.
+         */
+        put: operations["setPlanAddOn"];
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -2330,6 +2350,32 @@ export interface components {
             notes: components["schemas"]["Note"][];
             /** Is Demo */
             is_demo: boolean;
+            billing?: components["schemas"]["AccountBilling"] | null;
+        };
+        /**
+         * AccountBilling
+         * @description Read from the subscription Stripe confirms (no card data: that stays at Stripe).
+         */
+        AccountBilling: {
+            /** Status */
+            status: string;
+            plan: components["schemas"]["Plan"] | null;
+            /** Add Ons */
+            add_ons: {
+                [key: string]: number;
+            };
+            /** Current Period End */
+            current_period_end: string | null;
+            /** Cancel At Period End */
+            cancel_at_period_end: boolean;
+            /** Payment Failed At */
+            payment_failed_at: string | null;
+            /** Is Test */
+            is_test: boolean;
+            /** Monthly Cents */
+            monthly_cents: number;
+            /** Payments */
+            payments: components["schemas"]["PaymentRow"][];
         };
         /** AccountListOut */
         AccountListOut: {
@@ -2393,6 +2439,13 @@ export interface components {
                 [key: string]: unknown;
             };
         };
+        /** AddOnIn */
+        AddOnIn: {
+            /** Key */
+            key: string;
+            /** Quantity */
+            quantity: number;
+        };
         /** AddOnOut */
         AddOnOut: {
             /** Key */
@@ -2404,6 +2457,20 @@ export interface components {
             amount: number;
             /** Plans */
             plans: components["schemas"]["Plan"][];
+        };
+        /** AddOnUsageOut */
+        AddOnUsageOut: {
+            /** Key */
+            key: string;
+            meter: components["schemas"]["Meter"];
+            /** Amount */
+            amount: number;
+            /** Price Cents */
+            price_cents: number;
+            /** Quantity */
+            quantity: number;
+            /** Available */
+            available: boolean;
         };
         /** AddressSuggestion */
         AddressSuggestion: {
@@ -3658,6 +3725,22 @@ export interface components {
              */
             status: "sent";
         };
+        /** FailedCharge */
+        FailedCharge: {
+            /**
+             * Workspace Id
+             * Format: uuid
+             */
+            workspace_id: string;
+            /** Workspace Name */
+            workspace_name: string;
+            /** Amount Cents */
+            amount_cents: number;
+            /** Failed At */
+            failed_at: string | null;
+            /** Is Test */
+            is_test: boolean;
+        };
         /**
          * Feature
          * @enum {string}
@@ -4142,6 +4225,11 @@ export interface components {
              * @enum {string}
              */
             state: "ok" | "warning" | "reached" | "not_included";
+            /**
+             * Extra
+             * @default 0
+             */
+            extra: number;
         };
         /** ModerationQueueOut */
         ModerationQueueOut: {
@@ -4149,6 +4237,15 @@ export interface components {
             enabled: boolean;
             /** Items */
             items: components["schemas"]["app__domains__backoffice__moderation__QueueItem"][];
+        };
+        /** MonthTotal */
+        MonthTotal: {
+            /** Month */
+            month: string;
+            /** Subscriptions Cents */
+            subscriptions_cents: number;
+            /** Listings Cents */
+            listings_cents: number;
         };
         /** MonthlyPoint */
         MonthlyPoint: {
@@ -4635,6 +4732,20 @@ export interface components {
             /** Items */
             items: components["schemas"]["PageRow"][];
         };
+        /** PaymentRow */
+        PaymentRow: {
+            /**
+             * Occurred At
+             * Format: date-time
+             */
+            occurred_at: string;
+            /** Amount Cents */
+            amount_cents: number;
+            /** Status */
+            status: string;
+            /** Is Test */
+            is_test: boolean;
+        };
         /**
          * Permission
          * @enum {string}
@@ -4690,6 +4801,11 @@ export interface components {
             meters: components["schemas"]["MeterOut"][];
             open_request: components["schemas"]["ChangeRequestOut"] | null;
             subscription?: components["schemas"]["SubscriptionOut"] | null;
+            /**
+             * Add Ons
+             * @default []
+             */
+            add_ons: components["schemas"]["AddOnUsageOut"][];
         };
         /** PortalOut */
         PortalOut: {
@@ -5328,7 +5444,7 @@ export interface components {
              * Status
              * @enum {string}
              */
-            status: "waits_billing" | "soon";
+            status: "waits_billing" | "active" | "soon";
             /** Price Cents */
             price_cents: number | null;
             /** Per */
@@ -5338,6 +5454,10 @@ export interface components {
              * @default false
              */
             price_from: boolean;
+            /** Subscribers */
+            subscribers?: number | null;
+            /** Month Cents */
+            month_cents?: number | null;
         };
         /** RevenueOut */
         RevenueOut: {
@@ -5345,6 +5465,40 @@ export interface components {
             enabled: boolean;
             /** Lines */
             lines: components["schemas"]["RevenueLine"][];
+            summary?: components["schemas"]["RevenueSummary"] | null;
+            /**
+             * Months
+             * @default []
+             */
+            months: components["schemas"]["MonthTotal"][];
+            /**
+             * Failed
+             * @default []
+             */
+            failed: components["schemas"]["FailedCharge"][];
+        };
+        /** RevenueSummary */
+        RevenueSummary: {
+            /** Month Cents */
+            month_cents: number;
+            /** Subscriptions Cents */
+            subscriptions_cents: number;
+            /** Listings Cents */
+            listings_cents: number;
+            /** Mrr Cents */
+            mrr_cents: number;
+            /** Active Subscriptions */
+            active_subscriptions: number;
+            /** Ending Subscriptions */
+            ending_subscriptions: number;
+            /** Ended This Month */
+            ended_this_month: number;
+            /** Churn Pct */
+            churn_pct: number | null;
+            /** Failed Cents */
+            failed_cents: number;
+            /** Test Received Cents */
+            test_received_cents: number;
         };
         /**
          * Role
@@ -8829,6 +8983,39 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["CheckoutOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    setPlanAddOn: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AddOnIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PlanUsageOut"];
                 };
             };
             /** @description Validation Error */

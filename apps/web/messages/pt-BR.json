@@ -3168,8 +3168,27 @@
       "kpisLater": "Imóveis no ar, leads, visitas e tempo de resposta aparecem quando imóveis e leads estiverem no banco.",
       "billing": {
         "title": "Assinatura e faturas",
-        "plan": "Plano escolhido: {plan}",
-        "empty": "Liga quando a cobrança for ativada. Nenhuma fatura existe ainda."
+        "none": "Sem assinatura paga pelo cartão. Plano atribuído pela equipe ou Grátis.",
+        "monthly": "{price}/mês",
+        "failed": "Pagamento recusado",
+        "test": "Teste",
+        "status": {
+          "active": "Ativa",
+          "past_due": "Pagamento recusado",
+          "unpaid": "Não paga",
+          "canceled": "Encerrada",
+          "incomplete": "Incompleta",
+          "incomplete_expired": "Expirada",
+          "paused": "Pausada",
+          "trialing": "Ativa"
+        },
+        "addOn": "{name} · {count, plural, one {# pacote} other {# pacotes}}",
+        "renews": "Renova em {date}.",
+        "ending": "Termina em {date} (volta para o Grátis).",
+        "paid": "Pago",
+        "noPayments": "Nenhum pagamento ainda.",
+        "note": "Valores confirmados pela Stripe. Cartão, faturas e recibos ficam na Stripe; a Casvitta não guarda dados de cartão.",
+        "plan": "Plano: {plan}"
       },
       "timeline": {
         "title": "Linha do tempo",
@@ -3272,14 +3291,16 @@
     "revenue": {
       "title": "Receita",
       "description": "Quanto entra por linha: assinaturas, anúncios e, depois, comissões de aluguel e venda.",
-      "notice": "Assinaturas e anúncios passam a ler a Stripe quando a cobrança for ligada; até lá não há valores. Comissões só entram com CRECI-J da Casvitta e o Rental OS. Mídia nunca entra: a Meta e o Google cobram o corretor direto.",
+      "notice": "Valores confirmados pela Stripe (assinaturas e pacotes). Pagamentos em modo de teste aparecem à parte e não contam como receita. Comissões só entram com CRECI-J da Casvitta e o Rental OS. Mídia nunca entra: a Meta e o Google cobram o corretor direto.",
       "off": "Liga quando a cobrança for ativada.",
       "linesTitle": "Linhas de receita",
       "columns": {
         "line": "Linha de receita",
         "nature": "Natureza",
         "price": "Preço de catálogo",
-        "status": "Status"
+        "status": "Status",
+        "subscribers": "Assinantes",
+        "month": "Recebido no mês"
       },
       "lines": {
         "plan_essential": "Plano Essencial",
@@ -3305,7 +3326,8 @@
       },
       "status": {
         "waits_billing": "Liga com a cobrança",
-        "soon": "Em breve"
+        "soon": "Em breve",
+        "active": "Ativa"
       },
       "soonNote": {
         "commission_rent": "CRECI-J e Rental OS",
@@ -3316,7 +3338,31 @@
       "perListing": "{price} por anúncio",
       "undefined": "Preço a definir",
       "perMonthFrom": "a partir de {price}/mês",
-      "perPackage": "{price} por pacote"
+      "perPackage": "{price} por pacote",
+      "live": {
+        "testNotice": "Pagamentos em modo de teste da Stripe neste mês: {amount}. Não são receita e não entram nos números abaixo.",
+        "month": "Recebido no mês",
+        "monthCaption": "Assinaturas {subscriptions} · anúncios {listings}",
+        "mrr": "Receita recorrente mensal",
+        "mrrCaption": "{count, plural, =0 {nenhuma assinatura ativa} one {# assinatura ativa} other {# assinaturas ativas}}",
+        "failed": "Cobranças recusadas",
+        "failedCaption": "{count, plural, =0 {nenhuma conta} one {# conta} other {# contas}}",
+        "churn": "Cancelamento no mês",
+        "churnCaption": "{ended} encerradas · {ending} terminam no fim do período",
+        "monthsTitle": "Recebido por mês",
+        "failedTitle": "Cobranças recusadas",
+        "noFailed": "Nenhuma cobrança recusada.",
+        "failedNote": "A Stripe tenta de novo sozinha. Depois da última tentativa, a conta volta para o Grátis; nada é apagado.",
+        "test": "teste",
+        "columns": {
+          "month": "Mês",
+          "subscriptions": "Assinaturas",
+          "listings": "Anúncios",
+          "account": "Conta",
+          "amount": "Valor mensal",
+          "when": "Recusada em"
+        }
+      }
     },
     "planRequests": {
       "title": "Pedidos de plano e pacotes",
@@ -5191,6 +5237,26 @@
       "withSubscription": "Você continua no plano atual até {date} e não é cobrado de novo. Depois disso valem os limites do Grátis. Nada é apagado.",
       "now": "A conta passa a usar os limites do Grátis agora. Nada é apagado.",
       "confirm": "Voltar para o Grátis"
+    },
+    "addOns": {
+      "title": "Pacotes adicionais",
+      "subtitle": "Somam ao limite do seu plano todo mês, até você remover.",
+      "names": {
+        "ai_conversations_500": "+500 conversas de IA por mês",
+        "automation_contacts_1000": "+1.000 contatos em automação por mês",
+        "agency_extra_user": "Usuário adicional"
+      },
+      "price": "{price}/mês por pacote",
+      "quantity": "{count, plural, =0 {Nenhum pacote} one {# pacote} other {# pacotes}}",
+      "add": "Adicionar um",
+      "remove": "Remover um",
+      "request": "Pedir pacote",
+      "requested": "Pedido enviado à equipe Casvitta.",
+      "needsPlan": "Assine um plano pelo cartão para somar pacotes.",
+      "confirmTitle": "Adicionar {name}?",
+      "confirmText": "São {price} a mais por mês. Hoje é cobrado só o proporcional aos dias que faltam no período. O pacote vale assim que o pagamento passar.",
+      "confirm": "Adicionar pacote",
+      "pending": "O pagamento do pacote não passou. Atualize o cartão em \"Gerenciar pagamento\" e tente de novo."
     }
   }
 }

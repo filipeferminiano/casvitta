@@ -33,6 +33,7 @@ from app.domains.accounts.models import (
 )
 from app.domains.accounts.service import create_view_as_handoff
 from app.domains.backoffice.creci import display_creci
+from app.domains.billing.models import LedgerEntry, Subscription
 from app.domains.staff.audit import Actor, record
 from app.domains.staff.models import StaffUser
 from app.domains.staff.service import actor_name
@@ -87,6 +88,27 @@ class Note(BaseModel):
     created_at: datetime
 
 
+class PaymentRow(BaseModel):
+    occurred_at: datetime
+    amount_cents: int
+    status: str
+    is_test: bool
+
+
+class AccountBilling(BaseModel):
+    """Read from the subscription Stripe confirms (no card data: that stays at Stripe)."""
+
+    status: str
+    plan: Plan | None
+    add_ons: dict[str, int]
+    current_period_end: datetime | None
+    cancel_at_period_end: bool
+    payment_failed_at: datetime | None
+    is_test: bool
+    monthly_cents: int
+    payments: list[PaymentRow]
+
+
 class Account360(BaseModel):
     id: uuid.UUID
     name: str
@@ -101,6 +123,7 @@ class Account360(BaseModel):
     timeline: list[TimelineItem]
     notes: list[Note]
     is_demo: bool
+    billing: AccountBilling | None = None
 
 
 class ReasonIn(BaseModel):
@@ -247,6 +270,7 @@ async def account_360(session: AsyncSession, actor: Actor, workspace_id: uuid.UU
         )
     ).all()
     owner = next((p for m, _u, p in team if m.role == Role.OWNER), None)
+    billing = await _billing(session, workspace.id)
     record(session, actor, "account.viewed", "workspaces", workspace.id, name=workspace.name)
     await session.flush()
     return Account360(
@@ -288,6 +312,48 @@ async def account_360(session: AsyncSession, actor: Actor, workspace_id: uuid.UU
             for n, name in notes
         ],
         is_demo=workspace.is_demo,
+        billing=billing,
+    )
+
+
+async def _billing(session: AsyncSession, workspace_id: uuid.UUID) -> AccountBilling | None:
+    from app.domains.backoffice.revenue import monthly_cents  # noqa: PLC0415 - avoid a cycle
+
+    with cross_tenant(session):
+        sub = await session.scalar(
+            select(Subscription)
+            .where(Subscription.workspace_id == workspace_id)
+            .order_by(Subscription.created_at.desc())
+            .limit(1)
+        )
+        if sub is None:
+            return None
+        payments = (
+            await session.scalars(
+                select(LedgerEntry)
+                .where(LedgerEntry.workspace_id == workspace_id)
+                .order_by(LedgerEntry.occurred_at.desc())
+                .limit(12)
+            )
+        ).all()
+    return AccountBilling(
+        status=sub.status.value,
+        plan=sub.plan,
+        add_ons=dict(sub.add_ons),
+        current_period_end=sub.current_period_end,
+        cancel_at_period_end=sub.cancel_at_period_end,
+        payment_failed_at=sub.last_payment_failed_at,
+        is_test=sub.is_test,
+        monthly_cents=monthly_cents(sub),
+        payments=[
+            PaymentRow(
+                occurred_at=p.occurred_at,
+                amount_cents=p.amount_cents,
+                status=p.status.value,
+                is_test=p.is_test,
+            )
+            for p in payments
+        ],
     )
 
 

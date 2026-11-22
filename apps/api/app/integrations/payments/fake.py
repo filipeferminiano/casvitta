@@ -10,7 +10,7 @@ import time
 from dataclasses import dataclass, field
 from typing import Any
 
-from app.integrations.payments.events import parse_signed, sign, subscription_from
+from app.integrations.payments.events import parse_signed, plan_item, sign, subscription_from
 from app.integrations.payments.port import Checkout, PaymentEvent, SubscriptionSnapshot
 
 FAKE_WEBHOOK_SECRET = "whsec_fake_casvitta"  # noqa: S105 - not a secret, the fake's own key
@@ -77,7 +77,26 @@ class FakePayments:
         if self.decline_next_change:
             self.decline_next_change = False  # payment pending: keeps the old price
         else:
-            sub["items"]["data"][0]["price"]["lookup_key"] = lookup_key
+            plan_item(sub)["price"]["lookup_key"] = lookup_key
+        return subscription_from(sub)
+
+    async def set_item_quantity(
+        self, subscription_id: str, lookup_key: str, quantity: int
+    ) -> SubscriptionSnapshot:
+        sub = self.subscriptions[subscription_id]
+        items: list[dict[str, Any]] = sub["items"]["data"]
+        current = next((i for i in items if i["price"]["lookup_key"] == lookup_key), None)
+        if self.decline_next_change and (quantity > (current or {}).get("quantity", 0)):
+            self.decline_next_change = False
+            return subscription_from(sub)
+        if current is None and quantity > 0:
+            items.append(
+                {"id": self._next("si"), "price": {"lookup_key": lookup_key}, "quantity": quantity}
+            )
+        elif current is not None and quantity == 0:
+            items.remove(current)
+        elif current is not None:
+            current["quantity"] = quantity
         return subscription_from(sub)
 
     async def set_cancel_at_period_end(
@@ -115,7 +134,7 @@ class FakePayments:
             "cancel_at_period_end": False,
             "metadata": {"workspace_id": s.workspace_id},
             "items": {"data": [{"id": self._next("si"), "price": {"lookup_key": s.lookup_key},
-                                "current_period_end": int(time.time()) + MONTH}]},
+                                "quantity": 1, "current_period_end": int(time.time()) + MONTH}]},
         }  # fmt: skip
         self.subscriptions[sub_id] = sub
         invoice = {
@@ -152,7 +171,7 @@ class FakePayments:
 
     def invoice_failed(self, subscription_id: str) -> tuple[bytes, str]:
         sub = self.subscriptions[subscription_id]
-        lookup = sub["items"]["data"][0]["price"]["lookup_key"]
+        lookup = plan_item(sub)["price"]["lookup_key"]
         return self.event(
             "invoice.payment_failed",
             {"id": self._next("in"), "customer": sub["customer"], "subscription": subscription_id,

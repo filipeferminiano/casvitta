@@ -292,9 +292,27 @@ def plan_from_lookup_key(lookup_key: str | None) -> Plan | None:
     return None
 
 
+def addon_lookup_key(key: str) -> str:
+    """The Stripe price lookup key of an add-on (monthly, per unit)."""
+    return f"casvitta_addon_{key}_monthly"
+
+
+def add_on_from_lookup_key(lookup_key: str | None) -> AddOn | None:
+    return next((a for a in ADD_ONS if addon_lookup_key(a.key) == lookup_key), None)
+
+
+def add_on_available(plan: Plan, add_on: AddOn) -> bool:
+    """Sold on top of a plan that has the meter (not on plans where it is not included)."""
+    if add_on.plans and plan not in add_on.plans:
+        return False
+    return limit(plan, add_on.meter) not in (0, None)
+
+
 def paid_price_cents() -> dict[str, int]:
-    """Monthly price per lookup key (fake payments adapter and the Stripe sync)."""
-    return {price_lookup_key(p): PLANS[p].monthly_cents for p in CHECKOUT_PLANS}
+    """Monthly price per lookup key, plans and add-ons (fake adapter and the Stripe sync)."""
+    prices = {price_lookup_key(p): PLANS[p].monthly_cents for p in CHECKOUT_PLANS}
+    prices.update({addon_lookup_key(a.key): a.price_cents for a in ADD_ONS})
+    return prices
 
 
 def spec(plan: Plan) -> PlanSpec:

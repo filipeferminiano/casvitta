@@ -10,6 +10,7 @@ import {
   Panel,
   StatusPill,
   filterChipClass,
+  formatBRL,
   formatDate,
   useToast,
   type DataTableColumn,
@@ -30,6 +31,7 @@ import {
   viewAsCustomer,
   type AccountRow,
   type AccountView,
+  type Account360,
 } from '@/lib/data/staff';
 
 import { PlanRequestsPanel } from './PlanRequestsPanel';
@@ -211,15 +213,7 @@ export function AccountScreen({ id }: { id: string }) {
       </p>
       <div className="grid grid-cols-1 items-start gap-5 xl:grid-cols-[minmax(0,1fr)_360px]">
         <div className="flex flex-col gap-5">
-          <Panel
-            title={t('billing.title')}
-            aside={
-              <StatusPill tone="info">{t('billing.plan', { plan: tPlans(a.plan) })}</StatusPill>
-            }
-            dashed
-          >
-            <p className="type-body-s text-fg-muted">{t('billing.empty')}</p>
-          </Panel>
+          <BillingPanel billing={a.billing ?? null} plan={tPlans(a.plan)} />
           <Panel title={t('timeline.title')}>
             {a.timeline.length ? (
               <ol className="flex flex-col">
@@ -507,6 +501,79 @@ function NotesPanel({
       ) : (
         <p className="mt-3 type-body-s text-fg-muted">{t('empty')}</p>
       )}
+    </Panel>
+  );
+}
+
+type Billing = NonNullable<Account360['billing']>;
+
+/** Assinatura e pagamentos (mockup backoffice/05): what Stripe confirmed. No card data. */
+function BillingPanel({ billing, plan }: { billing: Billing | null; plan: string }) {
+  const t = useTranslations('backoffice.account.billing');
+  const tPlans = useTranslations('backoffice.plans');
+  const tAddOns = useTranslations('planUsage.addOns.names');
+  if (!billing) {
+    return (
+      <Panel title={t('title')} aside={<StatusPill tone="info">{t('plan', { plan })}</StatusPill>}>
+        <p className="type-body-s text-fg-muted">{t('none')}</p>
+      </Panel>
+    );
+  }
+  const failed = billing.status === 'past_due' || billing.payment_failed_at;
+  return (
+    <Panel title={t('title')}>
+      <div className="flex flex-col gap-3">
+        <p className="flex flex-wrap items-center gap-2 type-body-s">
+          <strong className="font-semibold">
+            {billing.plan ? tPlans(billing.plan) : '—'} ·{' '}
+            {t('monthly', { price: formatBRL(billing.monthly_cents) })}
+          </strong>
+          <StatusPill
+            tone={failed ? 'danger' : billing.status === 'active' ? 'success' : 'neutral'}
+          >
+            {failed ? t('failed') : t(`status.${billing.status}` as 'status.active')}
+          </StatusPill>
+          {billing.is_test ? <Badge variant="demo">{t('test')}</Badge> : null}
+        </p>
+        {Object.entries(billing.add_ons).map(([key, qty]) => (
+          <p key={key} className="type-body-s text-fg-muted">
+            {t('addOn', { name: tAddOns(key as 'ai_conversations_500'), count: qty })}
+          </p>
+        ))}
+        <p className="type-body-s text-fg-muted">
+          {billing.cancel_at_period_end
+            ? t('ending', {
+                date: billing.current_period_end
+                  ? formatDate(new Date(billing.current_period_end))
+                  : '—',
+              })
+            : t('renews', {
+                date: billing.current_period_end
+                  ? formatDate(new Date(billing.current_period_end))
+                  : '—',
+              })}
+        </p>
+        {billing.payments.length ? (
+          <ul className="flex flex-col">
+            {billing.payments.map((p) => (
+              <li
+                key={`${p.occurred_at}-${p.amount_cents}`}
+                className="flex items-center justify-between gap-3 border-t border-line py-2 type-body-s first:border-t-0"
+              >
+                <span>{formatDate(new Date(p.occurred_at))}</span>
+                <span className="font-mono tabular">{formatBRL(p.amount_cents)}</span>
+                <span className="text-fg-muted">
+                  {t('paid')}
+                  {p.is_test ? ` · ${t('test')}` : ''}
+                </span>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p className="type-body-s text-fg-muted">{t('noPayments')}</p>
+        )}
+        <p className="type-caption text-fg-muted">{t('note')}</p>
+      </div>
     </Panel>
   );
 }
