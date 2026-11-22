@@ -11,13 +11,36 @@ export type ComparisonPlan = {
   /** "por mês"; omitted when the price is not a number. */
   period?: ReactNode;
   highlighted?: boolean;
+  /** Small line under the price ("a partir de"). */
+  note?: ReactNode;
   action: ReactNode;
 };
 
 /** `true` renders a check with `includedLabel` for screen readers. */
 export type ComparisonValue = ReactNode | true;
 
-export type ComparisonRow = { key: string; label: ReactNode; values: ComparisonValue[] };
+export type ComparisonRow =
+  | { key: string; label: ReactNode; values: ComparisonValue[] }
+  /** A group heading spanning every column ("CRM", "Assistente de IA"). */
+  | { key: string; section: ReactNode };
+
+type ValueRow = { key: string; label: ReactNode; values: ComparisonValue[] };
+
+const isSection = (row: ComparisonRow): row is { key: string; section: ReactNode } =>
+  'section' in row;
+
+/** Phone cards: one list per section, so each `<dl>` holds only label/value pairs. */
+function groupRows(rows: ComparisonRow[]) {
+  const groups: { key: string; section?: ReactNode; rows: ValueRow[] }[] = [];
+  for (const row of rows) {
+    if (isSection(row)) groups.push({ key: row.key, section: row.section, rows: [] });
+    else {
+      if (!groups.length) groups.push({ key: 'rows', rows: [] });
+      groups[groups.length - 1]!.rows.push(row);
+    }
+  }
+  return groups;
+}
 
 export type PlanComparisonTableProps = {
   /** Accessible caption of the table ("Comparação dos planos"). */
@@ -79,29 +102,44 @@ export function PlanComparisonTable({
                       <span className="type-caption font-normal">{plan.period}</span>
                     ) : null}
                   </span>
+                  {plan.note ? (
+                    <span className="block type-caption font-normal">{plan.note}</span>
+                  ) : null}
                 </th>
               ))}
             </tr>
           </thead>
           <tbody>
-            {rows.map((row) => (
-              <tr key={row.key} className="border-t border-line">
-                <th scope="row" className="p-4 type-body-s font-medium">
-                  {row.label}
-                </th>
-                {row.values.map((value, i) => (
-                  <td
-                    key={plans[i]?.key ?? i}
-                    className={cn(
-                      'p-4 type-body-s text-fg-strong',
-                      plans[i]?.highlighted && 'bg-action-subtle',
-                    )}
+            {rows.map((row) =>
+              isSection(row) ? (
+                <tr key={row.key} className="border-t border-line">
+                  <th
+                    scope="colgroup"
+                    colSpan={plans.length + 1}
+                    className="px-4 pt-6 pb-2 type-body font-semibold"
                   >
-                    <Value value={value} includedLabel={includedLabel} />
-                  </td>
-                ))}
-              </tr>
-            ))}
+                    {row.section}
+                  </th>
+                </tr>
+              ) : (
+                <tr key={row.key} className="border-t border-line">
+                  <th scope="row" className="p-4 type-body-s font-medium">
+                    {row.label}
+                  </th>
+                  {row.values.map((value, i) => (
+                    <td
+                      key={plans[i]?.key ?? i}
+                      className={cn(
+                        'p-4 type-body-s text-fg-strong',
+                        plans[i]?.highlighted && 'bg-action-subtle',
+                      )}
+                    >
+                      <Value value={value} includedLabel={includedLabel} />
+                    </td>
+                  ))}
+                </tr>
+              ),
+            )}
             <tr className="border-t border-line">
               <td />
               {plans.map((plan) => (
@@ -134,20 +172,28 @@ export function PlanComparisonTable({
                 </span>
                 {plan.period ? <span className="type-caption">{plan.period}</span> : null}
               </p>
+              {plan.note ? <p className="type-caption">{plan.note}</p> : null}
             </div>
-            <dl className="flex flex-col">
-              {rows.map((row) => (
-                <div
-                  key={row.key}
-                  className="flex items-center justify-between gap-4 border-t border-line py-2"
-                >
-                  <dt className="type-body-s">{row.label}</dt>
-                  <dd className="flex shrink-0 items-center text-right type-body-s text-fg-strong">
-                    <Value value={row.values[p]} includedLabel={includedLabel} />
-                  </dd>
-                </div>
-              ))}
-            </dl>
+            {groupRows(rows).map((group) => (
+              <div key={group.key}>
+                {group.section ? (
+                  <h4 className="pt-2 pb-1 type-body-s font-semibold">{group.section}</h4>
+                ) : null}
+                <dl className="flex flex-col">
+                  {group.rows.map((row) => (
+                    <div
+                      key={row.key}
+                      className="flex items-center justify-between gap-4 border-t border-line py-2"
+                    >
+                      <dt className="type-body-s">{row.label}</dt>
+                      <dd className="flex shrink-0 items-center text-right type-body-s text-fg-strong">
+                        <Value value={row.values[p]} includedLabel={includedLabel} />
+                      </dd>
+                    </div>
+                  ))}
+                </dl>
+              </div>
+            ))}
             <div className="[&>*]:w-full">{plan.action}</div>
           </li>
         ))}

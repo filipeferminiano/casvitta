@@ -149,6 +149,7 @@ export const AgencyPlans: Story = {
         },
       ]}
       rows={[
+        { key: 's-limits', section: 'Limites' },
         {
           key: 'properties',
           label: 'Imóveis ativos',
@@ -159,6 +160,7 @@ export const AgencyPlans: Story = {
           label: 'Usuários incluídos',
           values: ['5', '15', 'conforme a necessidade'],
         },
+        { key: 's-features', section: 'Recursos' },
         { key: 'portfolio', label: 'Gestão da carteira', values: [true, true, true] },
         {
           key: 'highlight',
