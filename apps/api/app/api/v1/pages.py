@@ -21,7 +21,8 @@ from app.core.errors import AppError
 from app.core.rate_limit import RateLimiter
 from app.core.security import AccessClaims
 from app.core.settings import Settings
-from app.domains.pages import service
+from app.domains.pages import inquiries, service
+from app.domains.pages.inquiries import PageInquiryAccepted, PageInquiryIn
 from app.domains.pages.schemas import (
     PageEventIn,
     PageOut,
@@ -166,3 +167,33 @@ async def record_event(  # noqa: PLR0917 - FastAPI dependencies
     )
     await session.commit()
     return Response(status_code=status.HTTP_204_NO_CONTENT)
+
+
+@public_router.post(
+    "/{slug}/inquiries",
+    response_model=PageInquiryAccepted,
+    status_code=status.HTTP_201_CREATED,
+    operation_id="submitPageInquiry",
+)
+async def submit_inquiry(  # noqa: PLR0917 - FastAPI dependencies
+    slug: str,
+    data: PageInquiryIn,
+    request: Request,
+    session: Annotated[AsyncSession, Depends(get_session)],
+    settings: SettingsDep,
+    limiter: Annotated[RateLimiter, Depends(get_rate_limiter)],
+) -> PageInquiryAccepted:
+    client = client_key(request)
+    limit = settings.page_inquiries_rate_limit_per_hour
+    if not limiter.hit(f"page-inquiries:{client}", limit, 3600):
+        raise AppError("rate_limited", status_code=429)
+    out = await inquiries.submit(
+        session,
+        slug,
+        data,
+        client=client,
+        user_agent=request.headers.get("user-agent", ""),
+        settings=settings,
+    )
+    await session.commit()
+    return out

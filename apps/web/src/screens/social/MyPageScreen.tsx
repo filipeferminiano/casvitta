@@ -66,7 +66,7 @@ export function MyPageScreen() {
       <div className="grid gap-6 lg:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)]">
         <div className="flex flex-col gap-6">
           <AddressPanel page={data} />
-          <StatsPanel />
+          <StatsPanel forms={data.forms} />
           <AppearancePanel page={data} />
         </div>
         <div className="flex flex-col gap-6">
@@ -116,16 +116,21 @@ function AddressPanel({ page }: { page: Page }) {
   );
 }
 
-function StatsPanel() {
+function StatsPanel({ forms }: { forms: boolean }) {
   const t = useTranslations('social.myPage.stats');
   const stats = usePageStats(30);
   const s = stats.data;
   return (
     <Panel title={t('title')}>
-      <div className="grid gap-3 sm:grid-cols-3">
+      <div
+        className={forms ? 'grid gap-3 sm:grid-cols-2 lg:grid-cols-4' : 'grid gap-3 sm:grid-cols-3'}
+      >
         <StatTile label={t('views')} value={s ? formatNumber(s.page_views) : '…'} highlighted />
         <StatTile label={t('propertyViews')} value={s ? formatNumber(s.property_views) : '…'} />
         <StatTile label={t('whatsapp')} value={s ? formatNumber(s.whatsapp_clicks) : '…'} />
+        {forms ? (
+          <StatTile label={t('forms')} value={s ? formatNumber(s.forms_submitted) : '…'} />
+        ) : null}
       </div>
       {s ? (
         <p className="mt-3 type-body-s text-fg-strong">
@@ -137,6 +142,16 @@ function StatsPanel() {
         </p>
       ) : null}
       <p className="mt-2 type-caption">{t('note')}</p>
+      {forms ? (
+        <Link
+          href="/contatos?visao=page"
+          className="mt-3 inline-flex min-h-11 items-center type-body-s font-semibold text-action underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-focus"
+        >
+          {t('inquiries')}
+        </Link>
+      ) : (
+        <p className="mt-3 type-body-s text-fg-strong">{t('formsInPlan')}</p>
+      )}
     </Panel>
   );
 }

@@ -52,6 +52,8 @@ class PageOut(BaseModel):
     checklist: PageChecklist
     # Branded footer "Crie sua página com a Casvitta" (plans without unbranded_page).
     branded: bool
+    # Finder and owner form on the page (plans with tracked_forms).
+    forms: bool
 
 
 class PageUpdate(BaseModel):
@@ -96,6 +98,8 @@ class PublicPageOut(BaseModel):
     creci_verified: bool
     branded: bool
     is_demo: bool
+    # Finder ("Encontre um imóvel para mim") and the owner form (plans with tracked_forms).
+    forms: bool
     # Only with a verified CRECI and a staff-checked owner authorization (rules 1 and 2).
     properties: list[PublicListingOut]
 
@@ -113,4 +117,5 @@ class PageStatsOut(BaseModel):
     page_views: int
     property_views: int
     whatsapp_clicks: int
+    forms_submitted: int
     by_source: dict[PageSource, int]

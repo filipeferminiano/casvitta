@@ -134,6 +134,7 @@ class Settings(BaseSettings):
     page_requires_verified_creci: bool = True
     # Public page events (views, WhatsApp clicks): requests per IP per minute.
     page_events_rate_limit_per_minute: int = 60
+    page_inquiries_rate_limit_per_hour: int = 10
     # Public interest form: requests per IP and kind per minute.
     interest_rate_limit_per_minute: int = 5
 

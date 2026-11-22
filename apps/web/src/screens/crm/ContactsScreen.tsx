@@ -26,10 +26,19 @@ import {
   type ContactRow,
   type ContactView,
 } from '@/lib/data/crm';
+import { isLive } from '@/lib/live';
 
 import { ConsentMarks, CrmStates, useAgo, useInterestLine, useStageName } from './shared';
 
-const VIEWS: ContactView[] = ['all', 'buyers', 'tenants', 'owners', 'no_reply_14d'];
+// "page" = Interessados: contacts from the broker page forms (Casvitta Social).
+const VIEWS: ContactView[] = [
+  'all',
+  ...(isLive('social') ? (['page'] as const) : []),
+  'buyers',
+  'tenants',
+  'owners',
+  'no_reply_14d',
+];
 const isView = (v: string | null): v is ContactView => VIEWS.includes(v as ContactView);
 
 /** CR1 · Contatos (docs/mockups/crm/01-contacts). */

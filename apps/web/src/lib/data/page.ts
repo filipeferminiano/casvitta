@@ -17,6 +17,8 @@ export type PageStats = S['PageStatsOut'];
 export type PublicPage = S['PublicPageOut'];
 export type PageEventKind = S['PageEventKind'];
 export type PageSource = S['PageSource'];
+export type PageInquiry = S['PageInquiryIn'];
+export type PropertyKind = S['app__domains__properties__models__PropertyKind'];
 
 export const PAGE_THEMES: PageTheme[] = ['cambui', 'planta', 'terracota'];
 
@@ -134,4 +136,9 @@ export function usePlanUsage() {
     queryKey: [...KEY, 'plan'],
     queryFn: async () => check(await api.GET('/v1/me/plan')),
   });
+}
+
+/** Finder "Pedir ajuda" or the owner form: goes to the broker's Interessados (CRM). */
+export async function submitPageInquiry(slug: string, body: PageInquiry): Promise<void> {
+  check(await api.POST('/v1/public/pages/{slug}/inquiries', { params: { path: { slug } }, body }));
 }

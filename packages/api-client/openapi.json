@@ -4638,7 +4638,8 @@
                 "buyers",
                 "tenants",
                 "owners",
-                "no_reply_14d"
+                "no_reply_14d",
+                "page"
               ],
               "type": "string",
               "default": "all",
@@ -6125,6 +6126,58 @@
         "responses": {
           "204": {
             "description": "Successful Response"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/public/pages/{slug}/inquiries": {
+      "post": {
+        "tags": [
+          "public"
+        ],
+        "summary": "Submit Inquiry",
+        "operationId": "submitPageInquiry",
+        "parameters": [
+          {
+            "name": "slug",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Slug"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PageInquiryIn"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PageInquiryAccepted"
+                }
+              }
+            }
           },
           "422": {
             "description": "Validation Error",
@@ -12217,9 +12270,225 @@
         "enum": [
           "page_view",
           "property_view",
-          "whatsapp_click"
+          "whatsapp_click",
+          "form_submitted"
         ],
         "title": "PageEventKind"
+      },
+      "PageInquiryAccepted": {
+        "properties": {
+          "status": {
+            "type": "string",
+            "title": "Status",
+            "default": "received"
+          }
+        },
+        "type": "object",
+        "title": "PageInquiryAccepted"
+      },
+      "PageInquiryIn": {
+        "properties": {
+          "kind": {
+            "type": "string",
+            "enum": [
+              "finder",
+              "owner"
+            ],
+            "title": "Kind"
+          },
+          "purpose": {
+            "$ref": "#/components/schemas/Purpose"
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 160,
+            "minLength": 2,
+            "title": "Name"
+          },
+          "phone": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Phone"
+          },
+          "email": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 254
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Email"
+          },
+          "consent": {
+            "type": "boolean",
+            "title": "Consent",
+            "default": false
+          },
+          "consent_text": {
+            "type": "string",
+            "maxLength": 2000,
+            "minLength": 10,
+            "title": "Consent Text"
+          },
+          "page_url": {
+            "type": "string",
+            "maxLength": 300,
+            "title": "Page Url"
+          },
+          "source": {
+            "$ref": "#/components/schemas/PageSource",
+            "default": "link"
+          },
+          "utm_source": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 120
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Utm Source"
+          },
+          "utm_medium": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 120
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Utm Medium"
+          },
+          "utm_campaign": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 120
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Utm Campaign"
+          },
+          "city": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 120
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "City"
+          },
+          "neighborhoods": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "maxItems": 12,
+            "title": "Neighborhoods"
+          },
+          "property_kinds": {
+            "items": {
+              "$ref": "#/components/schemas/app__domains__properties__models__PropertyKind"
+            },
+            "type": "array",
+            "maxItems": 5,
+            "title": "Property Kinds"
+          },
+          "min_price_cents": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Min Price Cents"
+          },
+          "max_price_cents": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Max Price Cents"
+          },
+          "min_bedrooms": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 10.0,
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Min Bedrooms"
+          },
+          "matched_codes": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "maxItems": 20,
+            "title": "Matched Codes"
+          },
+          "details": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 1000
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Details"
+          },
+          "contact_preference": {
+            "type": "string",
+            "enum": [
+              "whatsapp",
+              "call",
+              "email"
+            ],
+            "title": "Contact Preference",
+            "default": "whatsapp"
+          }
+        },
+        "type": "object",
+        "required": [
+          "kind",
+          "purpose",
+          "name",
+          "consent_text",
+          "page_url"
+        ],
+        "title": "PageInquiryIn"
       },
       "PageOut": {
         "properties": {
@@ -12373,6 +12642,10 @@
           "branded": {
             "type": "boolean",
             "title": "Branded"
+          },
+          "forms": {
+            "type": "boolean",
+            "title": "Forms"
           }
         },
         "type": "object",
@@ -12398,7 +12671,8 @@
           "creci_status",
           "blockers",
           "checklist",
-          "branded"
+          "branded",
+          "forms"
         ],
         "title": "PageOut"
       },
@@ -12430,6 +12704,10 @@
             "type": "integer",
             "title": "Whatsapp Clicks"
           },
+          "forms_submitted": {
+            "type": "integer",
+            "title": "Forms Submitted"
+          },
           "by_source": {
             "additionalProperties": {
               "type": "integer"
@@ -12447,6 +12725,7 @@
           "page_views",
           "property_views",
           "whatsapp_clicks",
+          "forms_submitted",
           "by_source"
         ],
         "title": "PageStatsOut",
@@ -14334,6 +14613,10 @@
             "type": "boolean",
             "title": "Is Demo"
           },
+          "forms": {
+            "type": "boolean",
+            "title": "Forms"
+          },
           "properties": {
             "items": {
               "$ref": "#/components/schemas/PublicListingOut"
@@ -14357,6 +14640,7 @@
           "creci_verified",
           "branded",
           "is_demo",
+          "forms",
           "properties"
         ],
         "title": "PublicPageOut",

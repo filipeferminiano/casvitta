@@ -1,11 +1,13 @@
 'use client';
 
-import { Button, LogoMark, PhotoPlaceholder, SegmentedControl, formatBRL } from '@casvitta/ui';
+import { Button, LogoMark, PhotoPlaceholder, SegmentedControl, cn, formatBRL } from '@casvitta/ui';
 import { MessageCircle } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 
 import { sendPageEvent, sourceFromSearch, whatsappHref, type PageTheme } from '@/lib/data/page';
+
+import { Finder, OwnerForm } from './PageForms';
 
 export type StorefrontProperty = {
   code: string;
@@ -36,10 +38,13 @@ export type StorefrontData = {
   creci: string | null;
   creci_verified: boolean;
   branded: boolean;
+  /** Finder and owner form (plans with tracked_forms). */
+  forms: boolean;
   properties: StorefrontProperty[];
 };
 
 type Tab = 'sale' | 'rent' | 'owner';
+type Mode = 'page' | 'finder' | 'owner';
 
 const currentSource = () => sourceFromSearch(new URLSearchParams(window.location.search));
 
@@ -58,7 +63,6 @@ const initials = (name: string) =>
  */
 export function Storefront({ page, preview = false }: { page: StorefrontData; preview?: boolean }) {
   const t = useTranslations('social.storefront');
-  const tKinds = useTranslations('crm.properties.kinds');
   const firstName = page.display_name.split(' ')[0] ?? page.display_name;
   const [tab, setTab] = useState<Tab>(
     page.properties.some((p) => p.transaction === 'sale') ||
@@ -77,11 +81,20 @@ export function Storefront({ page, preview = false }: { page: StorefrontData; pr
   const onWhatsapp = () => {
     if (!preview) sendPageEvent(page.slug, 'whatsapp_click', currentSource());
   };
+  const [mode, setMode] = useState<Mode>('page');
+  const open = (next: Mode) => {
+    setMode(next);
+    window.scrollTo({ top: 0 });
+  };
+  const ownerAction =
+    page.forms && !preview
+      ? { onClick: () => open('owner') }
+      : { href: whatsapp(t('ownerGreeting', { name: firstName })), onClick: onWhatsapp };
   const role = page.works_as === 'agency' ? t('roleAgency') : t('roleBroker');
   const shown = page.properties.filter((p) => p.transaction === tab);
 
   return (
-    <div data-page-theme={page.theme} className="bg-canvas text-fg">
+    <div data-page-theme={page.theme} className={cn('bg-canvas text-fg', !preview && 'min-h-dvh')}>
       <div className="mx-auto flex max-w-xl flex-col gap-6 px-4 py-8">
         <header className="flex flex-col items-center gap-2 text-center">
           {page.photo_url ? (
@@ -119,7 +132,17 @@ export function Storefront({ page, preview = false }: { page: StorefrontData; pr
           {page.bio ? <p className="max-w-md type-body text-fg-strong">{page.bio}</p> : null}
         </header>
 
-        {page.whatsapp_e164 ? (
+        {mode === 'finder' ? (
+          <Finder
+            page={page}
+            onClose={() => setMode('page')}
+            renderProperty={(p) => <PropertyCard property={p} preview={false} />}
+          />
+        ) : mode === 'owner' ? (
+          <OwnerForm page={page} onClose={() => setMode('page')} />
+        ) : null}
+
+        {mode !== 'page' ? null : page.whatsapp_e164 ? (
           preview ? (
             <span className="flex h-14 w-full items-center justify-center gap-2 rounded-pill bg-action px-5 type-body-s font-semibold text-fg-on-action">
               <MessageCircle aria-hidden="true" className="size-5" />
@@ -140,96 +163,61 @@ export function Storefront({ page, preview = false }: { page: StorefrontData; pr
           )
         ) : null}
 
-        <SegmentedControl
-          label={t('tabsLabel')}
-          value={tab}
-          onValueChange={(v) => setTab(v as Tab)}
-          options={[
-            { value: 'sale', label: t('tabs.sale') },
-            { value: 'rent', label: t('tabs.rent') },
-            { value: 'owner', label: t('tabs.owner') },
-          ]}
-          className="w-full"
-        />
+        {mode !== 'page' ? null : (
+          <>
+            <SegmentedControl
+              label={t('tabsLabel')}
+              value={tab}
+              onValueChange={(v) => setTab(v as Tab)}
+              options={[
+                { value: 'sale', label: t('tabs.sale') },
+                { value: 'rent', label: t('tabs.rent') },
+                { value: 'owner', label: t('tabs.owner') },
+              ]}
+              className="w-full"
+            />
 
-        {tab === 'owner' ? (
-          <OwnerCta href={whatsapp(t('ownerGreeting', { name: firstName }))} onClick={onWhatsapp} />
-        ) : (
-          <section aria-labelledby="page-properties" className="flex flex-col gap-4">
-            <h2 id="page-properties" className="type-title">
-              {tab === 'sale' ? t('forSale') : t('forRent')}
-            </h2>
-            {shown.length === 0 ? (
-              <p className="rounded-card border border-line bg-panel p-4 type-body-s text-fg-strong">
-                {preview && !page.creci_verified
-                  ? t('previewWaitingCreci')
-                  : t(tab === 'sale' ? 'emptySale' : 'emptyRent', { name: firstName })}
-              </p>
+            {tab === 'owner' ? (
+              <OwnerCta {...ownerAction} />
             ) : (
-              <ul className="flex flex-col gap-5">
-                {shown.map((p) => {
-                  const title =
-                    p.title ?? t('defaultTitle', { kind: tKinds(p.kind), place: p.neighborhood });
-                  const specs = [
-                    p.bedrooms != null ? t('bedrooms', { n: p.bedrooms }) : null,
-                    p.suites ? t('suites', { n: p.suites }) : null,
-                    p.parking != null ? t('parking', { n: p.parking }) : null,
-                    p.area_m2 != null ? t('area', { n: p.area_m2 }) : null,
-                  ].filter(Boolean);
-                  const body = (
-                    <>
-                      <div className="relative">
-                        {p.photos[0] ? (
-                          // eslint-disable-next-line @next/next/no-img-element -- property photo from storage
-                          <img
-                            src={p.photos[0]}
-                            alt=""
-                            className="aspect-[16/10] w-full rounded-card object-cover"
-                          />
-                        ) : (
-                          <PhotoPlaceholder
-                            caption={t('photoSoon')}
-                            className="aspect-[16/10] w-full rounded-card"
-                          />
-                        )}
-                        <span className="absolute top-3 left-3 rounded-pill bg-panel px-3 py-1 type-caption font-semibold text-fg">
-                          {p.transaction === 'sale' ? t('badge.sale') : t('badge.rent')}
-                        </span>
-                      </div>
-                      <p className="mt-3 font-mono text-[20px] leading-7 font-semibold tabular">
-                        {formatBRL(p.price_cents)}
-                        {p.transaction === 'rent' ? t('perMonth') : ''}
-                      </p>
-                      <p className="type-body font-semibold">{title}</p>
-                      {specs.length ? (
-                        <p className="type-body-s text-fg-muted">{specs.join(' · ')}</p>
-                      ) : null}
-                      <p className="type-caption font-mono">{p.code}</p>
-                    </>
-                  );
-                  return (
-                    <li key={p.code}>
-                      {preview ? (
-                        <div>{body}</div>
-                      ) : (
-                        <a
-                          href={`/${p.slug}`}
-                          className="block rounded-card focus-visible:outline-2 focus-visible:outline-focus"
-                        >
-                          {body}
-                        </a>
-                      )}
-                    </li>
-                  );
-                })}
-              </ul>
+              <section aria-labelledby="page-properties" className="flex flex-col gap-4">
+                <h2 id="page-properties" className="type-title">
+                  {tab === 'sale' ? t('forSale') : t('forRent')}
+                </h2>
+                {shown.length === 0 ? (
+                  <p className="rounded-card border border-line bg-panel p-4 type-body-s text-fg-strong">
+                    {preview && !page.creci_verified
+                      ? t('previewWaitingCreci')
+                      : t(tab === 'sale' ? 'emptySale' : 'emptyRent', { name: firstName })}
+                  </p>
+                ) : (
+                  <ul className="flex flex-col gap-5">
+                    {shown.map((p) => (
+                      <li key={p.code}>
+                        <PropertyCard property={p} preview={preview} />
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </section>
             )}
-          </section>
-        )}
 
-        {tab !== 'owner' ? (
-          <OwnerCta href={whatsapp(t('ownerGreeting', { name: firstName }))} onClick={onWhatsapp} />
-        ) : null}
+            {tab !== 'owner' && page.forms ? (
+              <section className="flex flex-col gap-3 rounded-card border border-line bg-panel p-5">
+                <p className="type-body text-fg-strong">{t('finderText')}</p>
+                <Button
+                  variant="secondary"
+                  className="h-12 rounded-pill"
+                  onClick={preview ? undefined : () => open('finder')}
+                >
+                  {t('finderAction')}
+                </Button>
+              </section>
+            ) : null}
+
+            {tab !== 'owner' ? <OwnerCta {...ownerAction} /> : null}
+          </>
+        )}
 
         <footer className="flex flex-col items-center gap-3 border-t border-line pt-5 text-center type-caption">
           <p>{[page.display_name, page.creci].filter(Boolean).join(' · ')}</p>
@@ -248,21 +236,88 @@ export function Storefront({ page, preview = false }: { page: StorefrontData; pr
   );
 }
 
-function OwnerCta({ href, onClick }: { href: string | undefined; onClick: () => void }) {
+const ownerButtonClass =
+  'flex h-12 items-center justify-center rounded-pill bg-accent px-5 type-body-s font-semibold text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus';
+
+/** "Quero vender ou alugar meu imóvel": the owner form (plans with forms) or WhatsApp. */
+function OwnerCta({ href, onClick }: { href?: string | undefined; onClick: () => void }) {
   const t = useTranslations('social.storefront');
   return (
     <section className="flex flex-col gap-3 rounded-card bg-accent-subtle p-5">
       <h2 className="type-title text-accent">{t('ownerTitle')}</h2>
       <p className="type-body-s text-fg-strong">{t('ownerText')}</p>
-      <a
-        href={href}
-        target="_blank"
-        rel="noopener noreferrer"
-        onClick={onClick}
-        className="flex h-12 items-center justify-center rounded-pill bg-accent px-5 type-body-s font-semibold text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"
-      >
-        {t('ownerAction')}
-      </a>
+      {href === undefined && onClick ? (
+        <button type="button" onClick={onClick} className={ownerButtonClass}>
+          {t('ownerAction')}
+        </button>
+      ) : (
+        <a
+          href={href}
+          target="_blank"
+          rel="noopener noreferrer"
+          onClick={onClick}
+          className={ownerButtonClass}
+        >
+          {t('ownerAction')}
+        </a>
+      )}
     </section>
+  );
+}
+
+export function PropertyCard({
+  property: p,
+  preview,
+}: {
+  property: StorefrontProperty;
+  preview: boolean;
+}) {
+  const t = useTranslations('social.storefront');
+  const tKinds = useTranslations('crm.properties.kinds');
+  const title = p.title ?? t('defaultTitle', { kind: tKinds(p.kind), place: p.neighborhood });
+  const specs = [
+    p.bedrooms != null ? t('bedrooms', { n: p.bedrooms }) : null,
+    p.suites ? t('suites', { n: p.suites }) : null,
+    p.parking != null ? t('parking', { n: p.parking }) : null,
+    p.area_m2 != null ? t('area', { n: p.area_m2 }) : null,
+  ].filter(Boolean);
+  const body = (
+    <>
+      <div className="relative">
+        {p.photos[0] ? (
+          // eslint-disable-next-line @next/next/no-img-element -- property photo from storage
+          <img
+            src={p.photos[0]}
+            alt=""
+            className="aspect-[16/10] w-full rounded-card object-cover"
+          />
+        ) : (
+          <PhotoPlaceholder
+            caption={t('photoSoon')}
+            className="aspect-[16/10] w-full rounded-card"
+          />
+        )}
+        <span className="absolute top-3 left-3 rounded-pill bg-panel px-3 py-1 type-caption font-semibold text-fg">
+          {p.transaction === 'sale' ? t('badge.sale') : t('badge.rent')}
+        </span>
+      </div>
+      <p className="mt-3 font-mono text-[20px] leading-7 font-semibold tabular">
+        {formatBRL(p.price_cents)}
+        {p.transaction === 'rent' ? t('perMonth') : ''}
+      </p>
+      <p className="type-body font-semibold">{title}</p>
+      {specs.length ? <p className="type-body-s text-fg-muted">{specs.join(' · ')}</p> : null}
+      <p className="type-caption font-mono">{p.code}</p>
+    </>
+  );
+  return preview ? (
+    <div>{body}</div>
+  ) : (
+    <a
+      href={`/${p.slug}`}
+      className="block rounded-card focus-visible:outline-2 focus-visible:outline-focus"
+    >
+      {body}
+    </a>
   );
 }

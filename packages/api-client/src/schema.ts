@@ -1998,6 +1998,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/public/pages/{slug}/inquiries": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Submit Inquiry */
+        post: operations["submitPageInquiry"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -3981,7 +3998,69 @@ export interface components {
          * PageEventKind
          * @enum {string}
          */
-        PageEventKind: "page_view" | "property_view" | "whatsapp_click";
+        PageEventKind: "page_view" | "property_view" | "whatsapp_click" | "form_submitted";
+        /** PageInquiryAccepted */
+        PageInquiryAccepted: {
+            /**
+             * Status
+             * @default received
+             */
+            status: string;
+        };
+        /** PageInquiryIn */
+        PageInquiryIn: {
+            /**
+             * Kind
+             * @enum {string}
+             */
+            kind: "finder" | "owner";
+            purpose: components["schemas"]["Purpose"];
+            /** Name */
+            name: string;
+            /** Phone */
+            phone?: string | null;
+            /** Email */
+            email?: string | null;
+            /**
+             * Consent
+             * @default false
+             */
+            consent: boolean;
+            /** Consent Text */
+            consent_text: string;
+            /** Page Url */
+            page_url: string;
+            /** @default link */
+            source: components["schemas"]["PageSource"];
+            /** Utm Source */
+            utm_source?: string | null;
+            /** Utm Medium */
+            utm_medium?: string | null;
+            /** Utm Campaign */
+            utm_campaign?: string | null;
+            /** City */
+            city?: string | null;
+            /** Neighborhoods */
+            neighborhoods?: string[];
+            /** Property Kinds */
+            property_kinds?: components["schemas"]["app__domains__properties__models__PropertyKind"][];
+            /** Min Price Cents */
+            min_price_cents?: number | null;
+            /** Max Price Cents */
+            max_price_cents?: number | null;
+            /** Min Bedrooms */
+            min_bedrooms?: number | null;
+            /** Matched Codes */
+            matched_codes?: string[];
+            /** Details */
+            details?: string | null;
+            /**
+             * Contact Preference
+             * @default whatsapp
+             * @enum {string}
+             */
+            contact_preference: "whatsapp" | "call" | "email";
+        };
         /** PageOut */
         PageOut: {
             /** Slug */
@@ -4027,6 +4106,8 @@ export interface components {
             checklist: components["schemas"]["PageChecklist"];
             /** Branded */
             branded: boolean;
+            /** Forms */
+            forms: boolean;
         };
         /**
          * PageSource
@@ -4046,6 +4127,8 @@ export interface components {
             property_views: number;
             /** Whatsapp Clicks */
             whatsapp_clicks: number;
+            /** Forms Submitted */
+            forms_submitted: number;
             /** By Source */
             by_source: {
                 [key: string]: number;
@@ -4539,6 +4622,8 @@ export interface components {
             branded: boolean;
             /** Is Demo */
             is_demo: boolean;
+            /** Forms */
+            forms: boolean;
             /** Properties */
             properties: components["schemas"]["PublicListingOut"][];
         };
@@ -8101,7 +8186,7 @@ export interface operations {
     listContacts: {
         parameters: {
             query?: {
-                view?: "all" | "buyers" | "tenants" | "owners" | "no_reply_14d";
+                view?: "all" | "buyers" | "tenants" | "owners" | "no_reply_14d" | "page";
                 q?: string | null;
             };
             header?: never;
@@ -9205,6 +9290,41 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    submitPageInquiry: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                slug: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PageInquiryIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PageInquiryAccepted"];
+                };
             };
             /** @description Validation Error */
             422: {

@@ -142,9 +142,13 @@ async def _bio_listing_count(session: AsyncSession, profile: BrokerProfile) -> i
     )
 
 
-async def _plan_branded(session: AsyncSession, workspace_id: uuid.UUID) -> bool:
+async def plan_has(session: AsyncSession, workspace_id: uuid.UUID, feature: Feature) -> bool:
     workspace = await session.get(Workspace, workspace_id)
-    return workspace is None or not has_feature(workspace.plan, Feature.UNBRANDED_PAGE)
+    return workspace is not None and has_feature(workspace.plan, feature)
+
+
+async def _plan_branded(session: AsyncSession, workspace_id: uuid.UUID) -> bool:
+    return not await plan_has(session, workspace_id, Feature.UNBRANDED_PAGE)
 
 
 async def to_out(
@@ -181,6 +185,7 @@ async def to_out(
             link_used=viewed is not None,
         ),
         branded=await _plan_branded(session, page.workspace_id),
+        forms=await plan_has(session, page.workspace_id, Feature.TRACKED_FORMS),
     )
 
 
@@ -234,7 +239,7 @@ async def unpublish(session: AsyncSession, page: BrokerPage) -> None:
     await session.flush()
 
 
-async def _live_page(
+async def live_page(
     session: AsyncSession, slug: str, settings: Settings
 ) -> tuple[BrokerPage, BrokerProfile] | None:
     with cross_tenant(session):
@@ -257,7 +262,7 @@ async def _live_page(
 
 
 async def public_page(session: AsyncSession, slug: str, settings: Settings) -> PublicPageOut:
-    found = await _live_page(session, slug, settings)
+    found = await live_page(session, slug, settings)
     if found is None:
         raise PageNotFound
     page, profile = found
@@ -270,6 +275,7 @@ async def public_page(session: AsyncSession, slug: str, settings: Settings) -> P
     )
     with cross_tenant(session):
         branded = await _plan_branded(session, page.workspace_id)
+        forms = await plan_has(session, page.workspace_id, Feature.TRACKED_FORMS)
     return PublicPageOut(
         slug=profile.slug,
         theme=page.theme,
@@ -284,6 +290,7 @@ async def public_page(session: AsyncSession, slug: str, settings: Settings) -> P
         creci_verified=profile.creci_verified_at is not None,
         branded=branded,
         is_demo=profile.is_demo,
+        forms=forms,
         properties=listings,
     )
 
@@ -310,21 +317,40 @@ async def record_event(
 ) -> None:
     if is_bot(user_agent):
         return
-    found = await _live_page(session, slug, settings)
+    found = await live_page(session, slug, settings)
     if found is None:
         raise PageNotFound
     page, _ = found
     bind_workspace(session, page.workspace_id)
+    await insert_event(
+        session,
+        page,
+        kind=data.kind,
+        source=data.source,
+        property_code=data.property_code,
+        key=visitor_key(client, user_agent, settings),
+    )
+
+
+async def insert_event(
+    session: AsyncSession,
+    page: BrokerPage,
+    *,
+    kind: PageEventKind,
+    source: PageSource,
+    property_code: str | None,
+    key: str,
+) -> None:
     await session.execute(
         pg_insert(PageEvent)
         .values(
             id=uuid.uuid4(),
             workspace_id=page.workspace_id,
             page_id=page.id,
-            kind=data.kind,
-            source=data.source,
-            property_code=data.property_code or "",
-            visitor_key=visitor_key(client, user_agent, settings),
+            kind=kind,
+            source=source,
+            property_code=property_code or "",
+            visitor_key=key,
             day=today_local(),
             occurred_at=utcnow(),
         )
@@ -352,6 +378,7 @@ async def stats(session: AsyncSession, page: BrokerPage, days: int = 30) -> Page
         page_views=by_kind[PageEventKind.PAGE_VIEW],
         property_views=by_kind[PageEventKind.PROPERTY_VIEW],
         whatsapp_clicks=by_kind[PageEventKind.WHATSAPP_CLICK],
+        forms_submitted=by_kind[PageEventKind.FORM_SUBMITTED],
         by_source=by_source,
     )
 

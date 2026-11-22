@@ -73,6 +73,7 @@ export function previewData(page: Page, properties: PropertyOut[]): StorefrontDa
     creci: page.creci,
     creci_verified: page.checklist.creci_verified,
     branded: page.branded,
+    forms: page.forms,
     properties: shown,
   };
 }

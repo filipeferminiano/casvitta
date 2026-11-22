@@ -136,7 +136,8 @@ class ContactRow(BaseModel):
     is_demo: bool
 
 
-ContactView = Literal["all", "buyers", "tenants", "owners", "no_reply_14d"]
+# "page" = Interessados: people who came through the broker page forms (Casvitta Social).
+ContactView = Literal["all", "buyers", "tenants", "owners", "no_reply_14d", "page"]
 
 
 class ContactListOut(BaseModel):

@@ -104,3 +104,10 @@ Compared in `docs/mockups/_impl/landing-pages/` (`pnpm screens:capture landing-p
 - **No plan step in the signup** while the `social` area is live: account → CRECI → WhatsApp → the page onboarding in the app (steps 2–9 of social/10). A `?plano=` link still records a plan request.
 - **Free plan line** reads the catalog ("até 5 imóveis ativos"), not "até 10".
 - **Not in SOC-1a:** Vi no Instagram, Seleções, the finder, the owner form (the owner call to action opens WhatsApp), testimonials, slug change with redirects, custom domains, Interessados, backoffice Páginas e domínios. The print PDF is the QR code alone.
+
+## Casvitta Social, SOC-1b (forms)
+
+- **Interessados is a view of Contatos, not a new table.** The finder ("Pedir ajuda") and the owner form create the same person, consent, preferences and lead in "Novo" as every other door (CLAUDE.md: never duplicate data), plus a note with what the person answered. Contatos gains the chip "Interessados da página" (sources `broker_page`, `finder`, `owner_form`); owners stay apart from buyers through the existing Proprietários view.
+- **Forms from Essencial.** The prompt puts them in "Social"; the catalog's `tracked_forms` feature (Essencial and up) gates them. On Grátis the owner call to action opens WhatsApp and the finder is hidden.
+- **Copy without gender.** "Quer ajuda da Mariana? Ela te avisa…" becomes "Quer ajuda de Mariana? Mariana recebe suas preferências e te chama…": we do not infer the broker's gender, and nothing is sent automatically.
+- **Finder steps 2, 4 and 5** are not in the mockup: bairros (from the page's regions and properties), quartos and tipo. Matching runs in the browser on the published properties; only the help request is sent.

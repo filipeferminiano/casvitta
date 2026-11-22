@@ -4193,7 +4193,8 @@
         "buyers": "Compradores",
         "tenants": "Inquilinos",
         "owners": "Proprietários",
-        "no_reply_14d": "Sem retorno há 14 dias"
+        "no_reply_14d": "Sem retorno há 14 dias",
+        "page": "Interessados da página"
       },
       "columns": {
         "contact": "Contato",
@@ -4625,7 +4626,9 @@
       "badge": {
         "sale": "Venda",
         "rent": "Aluguel"
-      }
+      },
+      "finderText": "Não achou o que procura? Responda 5 perguntas e veja os imóveis que combinam com você.",
+      "finderAction": "Encontre um imóvel para mim"
     },
     "property": {
       "title": "Falar sobre este imóvel",
@@ -4791,7 +4794,10 @@
         "propertyViews": "Visualizações de imóveis",
         "whatsapp": "Cliques no WhatsApp",
         "bySource": "Pelo link: {link} · Pelo QR code: {qr} · Por campanhas: {campaign}",
-        "note": "Cada pessoa conta uma vez por dia. Um clique no WhatsApp não quer dizer que a mensagem foi enviada."
+        "note": "Cada pessoa conta uma vez por dia. Um clique no WhatsApp não quer dizer que a mensagem foi enviada.",
+        "forms": "Pedidos pelos formulários",
+        "inquiries": "Ver interessados da página",
+        "formsInPlan": "Com o plano Essencial, sua página ganha o “Encontre um imóvel para mim” e o formulário para proprietários, e os pedidos chegam em Contatos."
       },
       "checklist": {
         "title": "Sua página · {done} de {total}",
@@ -4803,6 +4809,90 @@
         "bio": "Escrever uma frase sobre você",
         "has_properties": "Incluir pelo menos um imóvel",
         "link_used": "Receber a primeira visita"
+      }
+    },
+    "forms": {
+      "backToPage": "Voltar à página",
+      "back": "Voltar",
+      "continue": "Continuar",
+      "optional": "(opcional)",
+      "name": "Nome",
+      "whatsapp": "WhatsApp",
+      "email": "E-mail",
+      "consent": "Aceito ser contatado(a) por {name} sobre imóveis",
+      "needName": "Escreva seu nome.",
+      "needPhone": "Escreva seu WhatsApp com DDD para receber a resposta.",
+      "needReach": "Escreva seu WhatsApp ou e-mail para receber a resposta.",
+      "needConsent": "Marque a caixa de consentimento para enviar o pedido.",
+      "noDocuments": "Não pedimos CPF nem documentos financeiros.",
+      "send": "Enviar",
+      "sending": "Enviando…",
+      "error": "Não conseguimos enviar agora. Confira os dados e tente de novo em alguns segundos.",
+      "keepBrowsing": "Continuar vendo imóveis",
+      "finder": {
+        "stepOf": "{step} de {total}",
+        "q1": "Você quer comprar ou alugar?",
+        "q2": "Em quais bairros?",
+        "q3buy": "Até quanto você quer investir?",
+        "q3rent": "Até quanto de aluguel por mês?",
+        "q4": "Quantos quartos, no mínimo?",
+        "q5": "Que tipo de imóvel?",
+        "purpose": {
+          "buy": "Comprar",
+          "rent": "Alugar"
+        },
+        "manyAllowed": "Você pode escolher mais de um.",
+        "anyPlace": "Qualquer bairro",
+        "notSure": "Ainda não sei",
+        "whatever": "Tanto faz",
+        "bedrooms": "{n, plural, one {1 quarto ou mais} other {# quartos ou mais}}",
+        "budget": {
+          "buy": {
+            "0": "Até R$ 600 mil",
+            "1": "R$ 600 mil a R$ 900 mil",
+            "2": "R$ 900 mil a R$ 1,5 milhão",
+            "3": "Acima de R$ 1,5 milhão"
+          },
+          "rent": {
+            "0": "Até R$ 2.000",
+            "1": "R$ 2.000 a R$ 3.500",
+            "2": "R$ 3.500 a R$ 6.000",
+            "3": "Acima de R$ 6.000"
+          }
+        },
+        "seeMatches": "Ver imóveis",
+        "matches": "{n, plural, =0 {Nenhum imóvel combina agora} one {1 imóvel combina com você} other {# imóveis combinam com você}}",
+        "noMatches": "Nenhum imóvel publicado combina com essas respostas. Peça ajuda: {name} recebe suas preferências e pode procurar outras opções.",
+        "helpTitle": "Quer ajuda de {name}?",
+        "helpText": "{name} recebe suas preferências e te chama quando tiver algo com esse perfil.",
+        "helpAction": "Pedir ajuda de {name}",
+        "contactTitle": "Para {name} te responder",
+        "sentTitle": "Pedido enviado",
+        "sentText": "{name} recebeu suas preferências e vai te chamar. A resposta costuma vir em horário comercial."
+      },
+      "owner": {
+        "title": "Quero vender ou alugar meu imóvel",
+        "service": "Serviço",
+        "purpose": {
+          "sell": "Vender",
+          "let": "Alugar"
+        },
+        "city": "Cidade",
+        "neighborhood": "Bairro",
+        "kind": "Tipo de imóvel",
+        "details": "Detalhes",
+        "detailsPlaceholder": "Quartos, área, valor esperado",
+        "preference": "Prefere contato por",
+        "preferences": {
+          "whatsapp": "WhatsApp",
+          "call": "Ligação",
+          "email": "E-mail"
+        },
+        "needCity": "Escreva a cidade do imóvel.",
+        "needEmail": "Escreva seu e-mail para receber o contato por e-mail.",
+        "send": "Enviar pedido",
+        "sentTitle": "Recebemos seu pedido",
+        "sentText": "{name} vai te chamar para conversar sobre o imóvel e, se fizer sentido, preparar uma análise de mercado. Isso não é uma avaliação formal."
       }
     }
   }

@@ -66,6 +66,7 @@ class PageEventKind(StrEnum):
     PAGE_VIEW = "page_view"
     PROPERTY_VIEW = "property_view"
     WHATSAPP_CLICK = "whatsapp_click"  # a click on the button, never "message sent"
+    FORM_SUBMITTED = "form_submitted"  # finder "Pedir ajuda" or owner form
 
 
 class PageSource(StrEnum):

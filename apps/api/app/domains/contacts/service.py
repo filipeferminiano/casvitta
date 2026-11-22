@@ -32,6 +32,7 @@ from app.domains.contacts.models import (
     ContactInterest,
     ContactKind,
     ContactNote,
+    ContactSource,
     Person,
     ProofSource,
     Purpose,
@@ -221,6 +222,9 @@ def _summary(records: list[Consent]) -> ConsentSummary:
     )
 
 
+PAGE_SOURCES = (ContactSource.BROKER_PAGE, ContactSource.FINDER, ContactSource.OWNER_FORM)
+
+
 def _view_filter(view: ContactView):  # type: ignore[no-untyped-def]
     if view == "buyers":
         return Person.kind == ContactKind.BUYER
@@ -228,6 +232,8 @@ def _view_filter(view: ContactView):  # type: ignore[no-untyped-def]
         return Person.kind == ContactKind.TENANT
     if view == "owners":
         return Person.kind == ContactKind.OWNER
+    if view == "page":
+        return Person.source.in_(PAGE_SOURCES)
     if view == "no_reply_14d":
         return Person.last_interaction_at < utcnow() - timedelta(days=NO_REPLY_DAYS)
     return None
@@ -268,7 +274,7 @@ async def list_contacts(
         for person_id, stage in stage_rows:
             stage_of[person_id] = stage
     counts = {}
-    for name in ("all", "buyers", "tenants", "owners", "no_reply_14d"):
+    for name in ("all", "buyers", "tenants", "owners", "no_reply_14d", "page"):
         cond = _view_filter(name)
         count_query = select(func.count()).select_from(Person)
         counts[name] = int(
@@ -379,7 +385,11 @@ async def contact_360(session: AsyncSession, person_id: uuid.UUID) -> Contact360
     for n in await session.scalars(select(ContactNote).where(ContactNote.person_id == person.id)):
         timeline.append(
             ContactTimelineItem(
-                at=n.created_at, kind="note", channel=None, author="broker", text=n.body
+                at=n.created_at,
+                kind="note",
+                channel=None,
+                author="broker" if n.author_user_id else "system",
+                text=n.body,
             )
         )
     for e in await session.scalars(
