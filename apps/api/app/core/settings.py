@@ -153,6 +153,9 @@ class Settings(BaseSettings):
     stripe_secret_key: SecretStr | None = None
     stripe_webhook_secret: SecretStr | None = None
     stripe_api_version: str | None = None  # None = the account's default version
+    # Who may pay through Stripe while billing is being tried (emails, CSV). Empty = everyone.
+    # Required in production with a test key: a public test card would otherwise buy plans.
+    billing_allowed_emails: Annotated[list[str], NoDecode] = Field(default_factory=list)
     min_daily_budget_cents: int = 2_000
     financing_illustrative_annual_rate_bps: int = 1_150
 
@@ -214,6 +217,16 @@ class Settings(BaseSettings):
             raise ValueError("STRIPE_SECRET_KEY needs STRIPE_WEBHOOK_SECRET (webhook signatures)")
         if self.app_env == "production" and self.billing_enabled and not self.stripe_secret_key:
             raise ValueError("BILLING_ENABLED in production needs STRIPE_SECRET_KEY")
+        test_key = self.stripe_secret_key and self.stripe_secret_key.get_secret_value().startswith(
+            ("sk_test_", "rk_test_")
+        )
+        if (
+            self.app_env == "production"
+            and self.billing_enabled
+            and test_key
+            and not self.billing_allowed_emails
+        ):
+            raise ValueError("A Stripe test key in production needs BILLING_ALLOWED_EMAILS")
         return self
 
     @field_validator("database_url", "test_database_url", mode="before")
@@ -226,7 +239,18 @@ class Settings(BaseSettings):
                     return "postgresql+asyncpg://" + value.removeprefix(prefix)
         return value
 
-    @field_validator("cors_origins", "itbi_source_urls", "backoffice_modules", mode="before")
+    @field_validator("billing_allowed_emails", mode="after")
+    @classmethod
+    def _lower_emails(cls, value: list[str]) -> list[str]:
+        return [v.strip().lower() for v in value if v.strip()]
+
+    @field_validator(
+        "cors_origins",
+        "itbi_source_urls",
+        "backoffice_modules",
+        "billing_allowed_emails",
+        mode="before",
+    )
     @classmethod
     def _split_csv(cls, value: object) -> object:
         if isinstance(value, str):

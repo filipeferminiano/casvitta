@@ -46,8 +46,11 @@ async def get_catalog(settings: SettingsDep) -> CatalogOut:
 
 
 @router.get("", response_model=PlanUsageOut, operation_id="getPlanUsage")
-async def get_usage(session: TenantSession, settings: SettingsDep) -> PlanUsageOut:
-    return await service.usage(session, billing_enabled=settings.billing_enabled)
+async def get_usage(
+    claims: ClaimsDep, session: TenantSession, settings: SettingsDep
+) -> PlanUsageOut:
+    on = await payments.billing_on(session, settings, claims.user_id)
+    return await service.usage(session, billing_enabled=on)
 
 
 @router.post(
@@ -76,12 +79,13 @@ async def cancel_request(request_id: uuid.UUID, session: TenantSession) -> None:
 
 @router.post("/downgrade", response_model=PlanUsageOut, operation_id="downgradeToFree")
 async def downgrade(
-    session: TenantSession, settings: SettingsDep, integrations: IntegrationsDep
+    claims: ClaimsDep, session: TenantSession, settings: SettingsDep, integrations: IntegrationsDep
 ) -> PlanUsageOut:
     """Back to Grátis: at the end of the paid period when paying through Stripe, else now."""
     if not await payments.cancel_at_period_end(session, integrations.payments):
         await service.downgrade_to_free(session)
-    out = await service.usage(session, billing_enabled=settings.billing_enabled)
+    on = await payments.billing_on(session, settings, claims.user_id)
+    out = await service.usage(session, billing_enabled=on)
     await session.commit()
     return out
 
@@ -103,20 +107,21 @@ async def checkout(
 
 @router.post("/resume", response_model=PlanUsageOut, operation_id="resumePlan")
 async def resume(
-    session: TenantSession, settings: SettingsDep, integrations: IntegrationsDep
+    claims: ClaimsDep, session: TenantSession, settings: SettingsDep, integrations: IntegrationsDep
 ) -> PlanUsageOut:
     """Undo "voltar para o Grátis" before the paid period ends."""
     await payments.resume(session, integrations.payments)
-    out = await service.usage(session, billing_enabled=settings.billing_enabled)
+    on = await payments.billing_on(session, settings, claims.user_id)
+    out = await service.usage(session, billing_enabled=on)
     await session.commit()
     return out
 
 
 @router.post("/portal", response_model=PortalOut, operation_id="openBillingPortal")
 async def billing_portal(
-    session: TenantSession, settings: SettingsDep, integrations: IntegrationsDep
+    claims: ClaimsDep, session: TenantSession, settings: SettingsDep, integrations: IntegrationsDep
 ) -> PortalOut:
-    return await payments.portal(session, integrations.payments, settings)
+    return await payments.portal(session, integrations.payments, settings, claims.user_id)
 
 
 @webhooks_router.post("/stripe", status_code=status.HTTP_200_OK)

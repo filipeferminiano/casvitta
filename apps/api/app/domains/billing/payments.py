@@ -122,8 +122,18 @@ def subscription_out(sub: Subscription | None) -> SubscriptionOut | None:
     )
 
 
-def _require_billing(settings: Settings) -> None:
+async def billing_on(session: AsyncSession, settings: Settings, user_id: uuid.UUID) -> bool:
+    """Stripe for this user: billing on and, while being tried, the user is on the allowlist."""
     if not settings.billing_enabled:
+        return False
+    if not settings.billing_allowed_emails:
+        return True
+    user = await session.get(User, user_id)
+    return user is not None and user.email.lower() in settings.billing_allowed_emails
+
+
+async def _require_billing(session: AsyncSession, settings: Settings, user_id: uuid.UUID) -> None:
+    if not await billing_on(session, settings, user_id):
         raise AppError("billing_disabled", status_code=409)
 
 
@@ -148,7 +158,7 @@ async def start_checkout(
     user_id: uuid.UUID,
     data: CheckoutIn,
 ) -> CheckoutOut:
-    _require_billing(settings)
+    await _require_billing(session, settings, user_id)
     if data.plan not in CHECKOUT_PLANS:
         raise AppError("plan_not_sellable", status_code=422)
     workspace = await _workspace(session)
@@ -221,8 +231,10 @@ async def resume(session: AsyncSession, port: PaymentsPort) -> None:
     await apply_snapshot(session, snapshot, sub.workspace_id)
 
 
-async def portal(session: AsyncSession, port: PaymentsPort, settings: Settings) -> PortalOut:
-    _require_billing(settings)
+async def portal(
+    session: AsyncSession, port: PaymentsPort, settings: Settings, user_id: uuid.UUID
+) -> PortalOut:
+    await _require_billing(session, settings, user_id)
     customer = await session.scalar(select(BillingCustomer))
     if customer is None:
         raise AppError("billing_customer_not_found", status_code=404)

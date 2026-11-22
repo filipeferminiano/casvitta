@@ -98,10 +98,19 @@ indexnow: ## Submit the live sitemap(s) to IndexNow (Bing and others): make inde
 # Reached only through the load balancer at https://api.casvitta.com.br.
 API_REGION ?= us-east5
 API_CORS ?= https://casvitta.com.br,https://www.casvitta.com.br
+# Stripe (docs/runbooks/stripe.md). Billing is on only for the allowlist while on test keys
+# (the API refuses to start with a test key, billing on and no allowlist).
+BILLING_ENABLED ?= true
+STRIPE_KEY_SECRET ?= stripe_test_secret_key
+STRIPE_WEBHOOK_SECRET_NAME ?= stripe_test_webhook_secret
+BILLING_ALLOWLIST_SECRET ?= casvitta-billing-allowed-emails
+secret-exists = $(shell gcloud secrets describe $(1) --project $(GCP_PROJECT) --format='value(name)' >/dev/null 2>&1 && echo $(1))
 deploy-api: ## Build apps/api, run migrations (Cloud Run job) and deploy casvitta-api
 	$(eval TAG := $(shell git rev-parse --short HEAD))
 	$(eval API_IMAGE := $(GCP_REGION)-docker.pkg.dev/$(GCP_PROJECT)/casvitta/api:$(TAG))
 	$(eval EMAIL_SECRET := $(shell gcloud secrets describe casvitta-email-api-key --project $(GCP_PROJECT) --format='value(name)' >/dev/null 2>&1 && echo casvitta-email-api-key))
+	$(eval STRIPE_SECRETS := $(if $(and $(call secret-exists,$(STRIPE_KEY_SECRET)),$(call secret-exists,$(STRIPE_WEBHOOK_SECRET_NAME))),$(comma)STRIPE_SECRET_KEY=$(STRIPE_KEY_SECRET):latest$(comma)STRIPE_WEBHOOK_SECRET=$(STRIPE_WEBHOOK_SECRET_NAME):latest))
+	$(eval ALLOWLIST := $(if $(call secret-exists,$(BILLING_ALLOWLIST_SECRET)),$(comma)BILLING_ALLOWED_EMAILS=$(BILLING_ALLOWLIST_SECRET):latest))
 	gcloud builds submit --project $(GCP_PROJECT) --region $(GCP_REGION) --config infra/cloudbuild/api.yaml --substitutions=_TAG=$(TAG) apps/api
 	gcloud run jobs deploy casvitta-migrate --project $(GCP_PROJECT) --region $(API_REGION) --image $(API_IMAGE) --command alembic --args upgrade,head --set-secrets DATABASE_URL=casvitta-database-url:latest,JWT_SECRET=casvitta-jwt-secret:latest --set-env-vars DATABASE_SSL_REQUIRE=true --max-retries 0 --execute-now --wait
-	gcloud run deploy casvitta-api --project $(GCP_PROJECT) --region $(API_REGION) --image $(API_IMAGE) --port 8080 --memory 512Mi --cpu 1 --min-instances 0 --max-instances 2 --allow-unauthenticated --ingress internal-and-cloud-load-balancing --set-secrets DATABASE_URL=casvitta-database-url:latest,JWT_SECRET=casvitta-jwt-secret:latest,ADMIN_TOKEN=casvitta-admin-token:latest$(if $(EMAIL_SECRET),$(comma)EMAIL_API_KEY=$(EMAIL_SECRET):latest) --set-env-vars "^@^APP_ENV=production@DATABASE_SSL_REQUIRE=true@CORS_ORIGINS=$(API_CORS)@SITE_URL=$(WEB_URL)@APP_URL=$(APP_URL)@ADMIN_URL=$(ADMIN_URL)@BACKOFFICE_ENVIRONMENT=production@ADMIN_TOKEN_ENABLED=$(ADMIN_TOKEN_ENABLED)@COOKIE_SECURE=true@ITBI_SP_RULES_REVIEWED=true"
+	gcloud run deploy casvitta-api --project $(GCP_PROJECT) --region $(API_REGION) --image $(API_IMAGE) --port 8080 --memory 512Mi --cpu 1 --min-instances 0 --max-instances 2 --allow-unauthenticated --ingress internal-and-cloud-load-balancing --set-secrets DATABASE_URL=casvitta-database-url:latest,JWT_SECRET=casvitta-jwt-secret:latest,ADMIN_TOKEN=casvitta-admin-token:latest$(if $(EMAIL_SECRET),$(comma)EMAIL_API_KEY=$(EMAIL_SECRET):latest)$(STRIPE_SECRETS)$(ALLOWLIST) --set-env-vars "^@^APP_ENV=production@DATABASE_SSL_REQUIRE=true@CORS_ORIGINS=$(API_CORS)@SITE_URL=$(WEB_URL)@APP_URL=$(APP_URL)@ADMIN_URL=$(ADMIN_URL)@BACKOFFICE_ENVIRONMENT=production@ADMIN_TOKEN_ENABLED=$(ADMIN_TOKEN_ENABLED)@COOKIE_SECURE=true@ITBI_SP_RULES_REVIEWED=true@BILLING_ENABLED=$(if $(STRIPE_SECRETS),$(BILLING_ENABLED),false)"

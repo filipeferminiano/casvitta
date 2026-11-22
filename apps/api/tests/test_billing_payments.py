@@ -239,3 +239,39 @@ async def test_stripe_adapter_requests() -> None:
         ("a[b][1]", "2"),
         ("d", "true"),
     ]
+
+
+async def test_allowlist_while_trying_billing(make_session, integrations: Integrations) -> None:  # type: ignore[no-untyped-def]
+    owner = await _broker(make_session, "Dono Casvitta")
+    other = await _broker(make_session, "Outro Corretor")
+    async with make_session() as s:
+        with cross_tenant(s):
+            from app.domains.accounts.models import User  # noqa: PLC0415
+
+            email = (await s.get(User, owner.user_id)).email  # type: ignore[union-attr]
+    _fake(integrations)
+    trying = Settings(
+        cookie_path_prefix="", billing_enabled=True, billing_allowed_emails=[email.upper()]
+    )
+    async with make_client(make_session, integrations, trying) as api:
+        assert (await api.get("/v1/me/plan", headers=_cookie(owner))).json()["billing_enabled"]
+        usage = (await api.get("/v1/me/plan", headers=_cookie(other))).json()
+        assert usage["billing_enabled"] is False  # keeps the request to staff
+        r = await api.post("/v1/me/plan/checkout", headers=_cookie(other), json={"plan": "pro"})
+        assert r.status_code == 409 and r.json()["error"]["code"] == "billing_disabled"
+        r = await api.post("/v1/me/plan/checkout", headers=_cookie(owner), json={"plan": "pro"})
+        assert r.json()["result"] == "checkout"
+
+
+def test_production_test_key_needs_an_allowlist() -> None:
+    prod = {
+        "app_env": "production",
+        "jwt_secret": "x" * 40,
+        "billing_enabled": True,
+        "stripe_secret_key": "sk_test_abc",
+        "stripe_webhook_secret": "whsec_abc",
+    }
+    with pytest.raises(ValueError, match="BILLING_ALLOWED_EMAILS"):
+        Settings(**prod)
+    ok = Settings(**prod, billing_allowed_emails="dono@exemplo.com.br, Outro@Exemplo.com.br")
+    assert ok.billing_allowed_emails == ["dono@exemplo.com.br", "outro@exemplo.com.br"]

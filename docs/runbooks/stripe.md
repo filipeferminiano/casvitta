@@ -25,7 +25,11 @@ Google) is never charged here (CLAUDE.md rule 14).
 |---|---|---|
 | `STRIPE_SECRET_KEY` | `stripe_test_secret_key` | Test key outside production. Empty = fake adapter. |
 | `STRIPE_WEBHOOK_SECRET` | `stripe_test_webhook_secret` | `whsec_…` of the webhook endpoint below. |
-| `BILLING_ENABLED` | — | `false` until the owner turns billing on. |
+| `BILLING_ALLOWED_EMAILS` | `casvitta-billing-allowed-emails` | While on test keys, only these emails pay through Stripe; everyone else keeps the staff request. Required in production with a test key. |
+| `BILLING_ENABLED` | — | `make deploy-api` sets it to `true` when both Stripe secrets exist (`BILLING_ENABLED=false make deploy-api` to switch off). |
+
+Test-mode webhook endpoint created 22/11/2026 (secret in `stripe_test_webhook_secret`). The
+Cloud Run service account has `secretAccessor` on the three secrets.
 
 The publishable key is not used (Checkout is a redirect).
 
