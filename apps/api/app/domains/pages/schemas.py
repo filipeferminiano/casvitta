@@ -82,6 +82,17 @@ class PageUpdate(BaseModel):
         return list(dict.fromkeys(cleaned))
 
 
+class PublicCollectionOut(BaseModel):
+    title: str
+    codes: list[str]  # only properties live on the page, in the broker's order
+
+
+class PublicInstagramPostOut(BaseModel):
+    url: str
+    label: str
+    code: str
+
+
 class PublicPageOut(BaseModel):
     """What anyone sees on {slug}.casvitta.com.br. No email, no owner data."""
 
@@ -102,6 +113,9 @@ class PublicPageOut(BaseModel):
     forms: bool
     # Only with a verified CRECI and a staff-checked owner authorization (rules 1 and 2).
     properties: list[PublicListingOut]
+    # Seleções and "Vi no Instagram" (plans with page_collections); empty otherwise.
+    collections: list[PublicCollectionOut] = []
+    instagram: list[PublicInstagramPostOut] = []
 
 
 class PageEventIn(BaseModel):

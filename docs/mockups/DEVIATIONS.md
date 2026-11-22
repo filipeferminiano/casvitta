@@ -111,3 +111,10 @@ Compared in `docs/mockups/_impl/landing-pages/` (`pnpm screens:capture landing-p
 - **Forms from Essencial.** The prompt puts them in "Social"; the catalog's `tracked_forms` feature (Essencial and up) gates them. On Grátis the owner call to action opens WhatsApp and the finder is hidden.
 - **Copy without gender.** "Quer ajuda da Mariana? Ela te avisa…" becomes "Quer ajuda de Mariana? Mariana recebe suas preferências e te chama…": we do not infer the broker's gender, and nothing is sent automatically.
 - **Finder steps 2, 4 and 5** are not in the mockup: bairros (from the page's regions and properties), quartos and tipo. Matching runs in the browser on the published properties; only the help request is sent.
+
+## Casvitta Social, SOC-1b (Seleções and "Vi no Instagram")
+
+- **New catalog feature `page_collections`** (Essencial and up), shown as a row in the prices table. The prompt's "Social" plan maps to Essencial, as with the forms.
+- **Edited in Minha página**, not in a separate Coleções screen: one panel with Seleções (title + properties, reorder with buttons) and "Vi no Instagram" (post or reel link → one property, with a card text). Saved all at once.
+- **Nothing is read from Instagram.** The link is stored normalized (no tracking parameters); the card shows the property photo, not the post. Only `instagram.com` post/reel links are accepted.
+- **Only live properties appear.** An item whose property leaves the page (or loses its authorization check) disappears from the public page without being deleted; a selection left empty is hidden. After a downgrade the set is kept but not shown.

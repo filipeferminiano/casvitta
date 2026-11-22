@@ -325,6 +325,7 @@ const TABLE: Row[] = [
   { feature: 'broker_page' },
   { meter: 'active_properties' },
   { feature: 'unbranded_page' },
+  { feature: 'page_collections' },
   { feature: 'custom_domain' },
   { feature: 'page_per_broker' },
   { section: 'crm' },

@@ -1930,6 +1930,24 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/page/collections": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Collections */
+        get: operations["getPageCollections"];
+        /** Replace Collections */
+        put: operations["replacePageCollections"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/page/stats": {
         parameters: {
             query?: never;
@@ -2913,6 +2931,27 @@ export interface components {
             /** Neighborhoods */
             neighborhoods: components["schemas"]["NeighborhoodRow"][];
         };
+        /** CollectionIn */
+        CollectionIn: {
+            /** Id */
+            id?: string | null;
+            /** Title */
+            title: string;
+            /** Property Ids */
+            property_ids?: string[];
+        };
+        /** CollectionOut */
+        CollectionOut: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Title */
+            title: string;
+            /** Property Ids */
+            property_ids: string[];
+        };
         /** ComparableGroupOut */
         ComparableGroupOut: {
             /**
@@ -3308,7 +3347,7 @@ export interface components {
          * Feature
          * @enum {string}
          */
-        Feature: "broker_page" | "unbranded_page" | "custom_domain" | "page_per_broker" | "contact_history" | "pipeline_and_calendar" | "google_calendar" | "tracked_forms" | "segments" | "distribution_and_permissions" | "whatsapp_button" | "instagram_inbox" | "whatsapp_connected" | "comment_to_dm" | "agent_books_visits" | "saved_search_alerts" | "highlights_one_off";
+        Feature: "broker_page" | "unbranded_page" | "custom_domain" | "page_per_broker" | "contact_history" | "pipeline_and_calendar" | "google_calendar" | "tracked_forms" | "page_collections" | "segments" | "distribution_and_permissions" | "whatsapp_button" | "instagram_inbox" | "whatsapp_connected" | "comment_to_dm" | "agent_books_visits" | "saved_search_alerts" | "highlights_one_off";
         /** FinancedYear */
         FinancedYear: {
             /** Year */
@@ -3446,6 +3485,37 @@ export interface components {
             window_open: boolean;
             /** Is Demo */
             is_demo: boolean;
+        };
+        /** InstagramPostIn */
+        InstagramPostIn: {
+            /** Id */
+            id?: string | null;
+            /** Url */
+            url: string;
+            /** Label */
+            label: string;
+            /**
+             * Property Id
+             * Format: uuid
+             */
+            property_id: string;
+        };
+        /** InstagramPostOut */
+        InstagramPostOut: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Url */
+            url: string;
+            /** Label */
+            label: string;
+            /**
+             * Property Id
+             * Format: uuid
+             */
+            property_id: string;
         };
         /**
          * InstitutionalFront
@@ -3986,6 +4056,25 @@ export interface components {
             /** Link Used */
             link_used: boolean;
         };
+        /**
+         * PageCollectionsIn
+         * @description The whole set, in display order (the editor saves everything at once).
+         */
+        PageCollectionsIn: {
+            /** Collections */
+            collections?: components["schemas"]["CollectionIn"][];
+            /** Instagram */
+            instagram?: components["schemas"]["InstagramPostIn"][];
+        };
+        /** PageCollectionsOut */
+        PageCollectionsOut: {
+            /** Available */
+            available: boolean;
+            /** Collections */
+            collections: components["schemas"]["CollectionOut"][];
+            /** Instagram */
+            instagram: components["schemas"]["InstagramPostOut"][];
+        };
         /** PageEventIn */
         PageEventIn: {
             kind: components["schemas"]["PageEventKind"];
@@ -4505,6 +4594,13 @@ export interface components {
             /** Photo Url */
             photo_url: string | null;
         };
+        /** PublicCollectionOut */
+        PublicCollectionOut: {
+            /** Title */
+            title: string;
+            /** Codes */
+            codes: string[];
+        };
         /** PublicContactAccepted */
         PublicContactAccepted: {
             /**
@@ -4543,6 +4639,15 @@ export interface components {
             utm_medium?: string | null;
             /** Utm Campaign */
             utm_campaign?: string | null;
+        };
+        /** PublicInstagramPostOut */
+        PublicInstagramPostOut: {
+            /** Url */
+            url: string;
+            /** Label */
+            label: string;
+            /** Code */
+            code: string;
         };
         /**
          * PublicListingOut
@@ -4626,6 +4731,16 @@ export interface components {
             forms: boolean;
             /** Properties */
             properties: components["schemas"]["PublicListingOut"][];
+            /**
+             * Collections
+             * @default []
+             */
+            collections: components["schemas"]["PublicCollectionOut"][];
+            /**
+             * Instagram
+             * @default []
+             */
+            instagram: components["schemas"]["PublicInstagramPostOut"][];
         };
         /**
          * PublicStats
@@ -9171,6 +9286,59 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["PageOut"];
+                };
+            };
+        };
+    };
+    getPageCollections: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PageCollectionsOut"];
+                };
+            };
+        };
+    };
+    replacePageCollections: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PageCollectionsIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PageCollectionsOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
         };

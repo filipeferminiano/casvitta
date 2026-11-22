@@ -4001,7 +4001,8 @@
           "saved_search_alerts": "Alertas de busca salva",
           "reports": "Relatório de contatos e visitas",
           "included_highlights_month": "Destaques de 7 dias inclusos",
-          "highlights_one_off": "Destaques avulsos ({short} / {long})"
+          "highlights_one_off": "Destaques avulsos ({short} / {long})",
+          "page_collections": "Seleções e “Vi no Instagram” na página"
         },
         "reports": {
           "basic": "básico",
@@ -4628,7 +4629,10 @@
         "rent": "Aluguel"
       },
       "finderText": "Não achou o que procura? Responda 5 perguntas e veja os imóveis que combinam com você.",
-      "finderAction": "Encontre um imóvel para mim"
+      "finderAction": "Encontre um imóvel para mim",
+      "instagramTitle": "Vi no Instagram",
+      "openPost": "Ver o post",
+      "selectionsTitle": "Seleções"
     },
     "property": {
       "title": "Falar sobre este imóvel",
@@ -4894,6 +4898,42 @@
         "sentTitle": "Recebemos seu pedido",
         "sentText": "{name} vai te chamar para conversar sobre o imóvel e, se fizer sentido, preparar uma análise de mercado. Isso não é uma avaliação formal."
       }
+    },
+    "collections": {
+      "title": "Seleções e “Vi no Instagram”",
+      "loading": "Carregando…",
+      "loadError": "Não conseguimos abrir as seleções. Atualize em alguns segundos.",
+      "notInPlan": "Com o plano Essencial, sua página ganha seleções de imóveis (“Até R$ 800 mil”, “Casas para famílias”) e a faixa “Vi no Instagram”, que liga seus posts aos imóveis.",
+      "seePlans": "Ver planos em Configurações",
+      "noProperties": "Escolha antes os imóveis da página (em “Escolher imóveis”). As seleções usam só imóveis que estão na página.",
+      "defaultTitle": "{kind} em {place}",
+      "selections": "Seleções",
+      "selectionsHelp": "Grupos de imóveis com um título. Aparecem como botões na página, na ordem daqui.",
+      "selectionN": "Seleção {n}",
+      "selectionTitle": "Título da seleção",
+      "selectionPlaceholder": "Até R$ 800 mil",
+      "addSelection": "Adicionar seleção",
+      "instagram": "Vi no Instagram",
+      "instagramHelp": "Cole o link de um post ou reel e escolha o imóvel que aparece nele. A Casvitta não lê nada do seu Instagram.",
+      "postN": "Post {n}",
+      "postUrl": "Link do post ou reel",
+      "postLabel": "Texto do cartão",
+      "postLabelPlaceholder": "Tour no Cambuí",
+      "postProperty": "Imóvel do post",
+      "choose": "Escolha o imóvel",
+      "addPost": "Adicionar post",
+      "moveUp": "Subir “{name}”",
+      "moveDown": "Descer “{name}”",
+      "remove": "Remover “{name}”",
+      "needTitle": "Dê um título com pelo menos 2 letras para cada seleção.",
+      "badUrl": "Use o link de um post ou reel, como https://www.instagram.com/reel/…",
+      "needPost": "Preencha o texto do cartão e escolha o imóvel de cada post.",
+      "save": "Salvar seleções",
+      "saving": "Salvando…",
+      "saved": "Tudo salvo. As mudanças já aparecem na página.",
+      "unsaved": "Alterações não salvas.",
+      "saveError": "Não conseguimos salvar. Tente de novo.",
+      "onlyLive": "Imóveis que saírem da página somem das seleções e dos posts sozinhos; nada é apagado."
     }
   }
 }

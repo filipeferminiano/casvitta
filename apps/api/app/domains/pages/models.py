@@ -97,3 +97,49 @@ class PageEvent(UUIDPrimaryKey, WorkspaceScoped, Base):
     visitor_key: Mapped[str] = mapped_column(String(64))
     day: Mapped[date] = mapped_column(Date)
     occurred_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+
+
+class PageCollection(UUIDPrimaryKey, Timestamps, WorkspaceScoped, Base):
+    """Seleções: a titled, manually ordered group of the page's properties ("Até R$ 800 mil")."""
+
+    __tablename__ = "page_collections"
+
+    page_id: Mapped[uuid.UUID] = mapped_column(
+        ForeignKey("broker_pages.id", ondelete="CASCADE"), index=True
+    )
+    title: Mapped[str] = mapped_column(String(60))
+    position: Mapped[int] = mapped_column(Integer)
+
+
+class PageCollectionItem(UUIDPrimaryKey, WorkspaceScoped, Base):
+    __tablename__ = "page_collection_items"
+    __table_args__ = (
+        UniqueConstraint("collection_id", "property_id", name="uq_page_collection_items"),
+    )
+
+    collection_id: Mapped[uuid.UUID] = mapped_column(
+        ForeignKey("page_collections.id", ondelete="CASCADE"), index=True
+    )
+    property_id: Mapped[uuid.UUID] = mapped_column(
+        ForeignKey("properties.id", ondelete="CASCADE"), index=True
+    )
+    position: Mapped[int] = mapped_column(Integer)
+
+
+class PageInstagramPost(UUIDPrimaryKey, Timestamps, WorkspaceScoped, Base):
+    """ "Vi no Instagram": a post or reel URL the broker mapped by hand to one property.
+
+    No Instagram connection: nothing is read from Instagram (SOC-2 brings the integration).
+    """
+
+    __tablename__ = "page_instagram_posts"
+
+    page_id: Mapped[uuid.UUID] = mapped_column(
+        ForeignKey("broker_pages.id", ondelete="CASCADE"), index=True
+    )
+    url: Mapped[str] = mapped_column(String(300))
+    label: Mapped[str] = mapped_column(String(60))
+    property_id: Mapped[uuid.UUID] = mapped_column(
+        ForeignKey("properties.id", ondelete="CASCADE"), index=True
+    )
+    position: Mapped[int] = mapped_column(Integer)

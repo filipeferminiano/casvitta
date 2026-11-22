@@ -39,7 +39,13 @@ from app.domains.market_data.models import (
     MarketStats,
     MarketStreet,
 )
-from app.domains.pages.models import BrokerPage, PageEvent
+from app.domains.pages.models import (
+    BrokerPage,
+    PageCollection,
+    PageCollectionItem,
+    PageEvent,
+    PageInstagramPost,
+)
 from app.domains.properties.models import OwnerAuthorization, Property, PropertyMedia
 from app.domains.staff.models import StaffLoginToken, StaffSession, StaffUser
 
@@ -80,7 +86,10 @@ __all__ = [
     "Membership",
     "Message",
     "OwnerAuthorization",
+    "PageCollection",
+    "PageCollectionItem",
     "PageEvent",
+    "PageInstagramPost",
     "Person",
     "PipelineStage",
     "PlanChangeRequest",

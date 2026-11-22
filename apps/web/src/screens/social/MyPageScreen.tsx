@@ -11,6 +11,7 @@ import { CrmError } from '@/lib/data/crm';
 import { usePage, usePageStats, usePublishPage, useUpdatePage, type Page } from '@/lib/data/page';
 import { formatNumber } from '@/lib/format';
 
+import { CollectionsPanel } from './CollectionsEditor';
 import { CopyLink } from './CopyLink';
 import { QrBlock, ShareHowTo, ThemePicker } from './OnboardingScreen';
 
@@ -68,6 +69,7 @@ export function MyPageScreen() {
           <AddressPanel page={data} />
           <StatsPanel forms={data.forms} />
           <AppearancePanel page={data} />
+          <CollectionsPanel />
         </div>
         <div className="flex flex-col gap-6">
           <ChecklistPanel page={data} />

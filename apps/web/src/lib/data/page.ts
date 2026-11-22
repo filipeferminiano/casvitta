@@ -142,3 +142,24 @@ export function usePlanUsage() {
 export async function submitPageInquiry(slug: string, body: PageInquiry): Promise<void> {
   check(await api.POST('/v1/public/pages/{slug}/inquiries', { params: { path: { slug } }, body }));
 }
+
+export type PageCollections = S['PageCollectionsOut'];
+export type PageCollectionsIn = S['PageCollectionsIn'];
+const COLLECTIONS_KEY = ['page', 'collections'] as const;
+
+/** Seleções and "Vi no Instagram" (saved all at once, in display order). */
+export function usePageCollections() {
+  return useQuery({
+    queryKey: COLLECTIONS_KEY,
+    queryFn: async () => check(await api.GET('/v1/page/collections')),
+  });
+}
+
+export function useSavePageCollections() {
+  const client = useQueryClient();
+  return useMutation({
+    mutationFn: async (body: PageCollectionsIn) =>
+      check(await api.PUT('/v1/page/collections', { body })),
+    onSuccess: (data) => client.setQueryData(COLLECTIONS_KEY, data),
+  });
+}

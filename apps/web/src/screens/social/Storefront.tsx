@@ -1,7 +1,7 @@
 'use client';
 
 import { Button, LogoMark, PhotoPlaceholder, SegmentedControl, cn, formatBRL } from '@casvitta/ui';
-import { MessageCircle } from 'lucide-react';
+import { ExternalLink, MessageCircle, Play } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 
@@ -40,6 +40,9 @@ export type StorefrontData = {
   branded: boolean;
   /** Finder and owner form (plans with tracked_forms). */
   forms: boolean;
+  /** Seleções and "Vi no Instagram" (plans with page_collections; live properties only). */
+  collections?: Array<{ title: string; codes: string[] }>;
+  instagram?: Array<{ url: string; label: string; code: string }>;
   properties: StorefrontProperty[];
 };
 
@@ -177,6 +180,10 @@ export function Storefront({ page, preview = false }: { page: StorefrontData; pr
               className="w-full"
             />
 
+            {tab !== 'owner' && page.instagram?.length ? (
+              <InstagramRow page={page} preview={preview} />
+            ) : null}
+
             {tab === 'owner' ? (
               <OwnerCta {...ownerAction} />
             ) : (
@@ -201,6 +208,10 @@ export function Storefront({ page, preview = false }: { page: StorefrontData; pr
                 )}
               </section>
             )}
+
+            {tab !== 'owner' && page.collections?.length ? (
+              <Selections page={page} preview={preview} />
+            ) : null}
 
             {tab !== 'owner' && page.forms ? (
               <section className="flex flex-col gap-3 rounded-card border border-line bg-panel p-5">
@@ -319,5 +330,105 @@ export function PropertyCard({
     >
       {body}
     </a>
+  );
+}
+
+/** "Vi no Instagram": posts the broker mapped by hand to a property (nothing read from Instagram). */
+function InstagramRow({ page, preview }: { page: StorefrontData; preview: boolean }) {
+  const t = useTranslations('social.storefront');
+  const byCode = new Map(page.properties.map((p) => [p.code, p]));
+  return (
+    <section aria-labelledby="page-instagram" className="flex flex-col gap-3">
+      <h2 id="page-instagram" className="type-title">
+        {t('instagramTitle')}
+      </h2>
+      <ul className="-mx-4 flex snap-x gap-3 overflow-x-auto px-4 pb-2">
+        {(page.instagram ?? []).map((post) => {
+          const property = byCode.get(post.code);
+          return (
+            <li key={post.url} className="flex w-36 shrink-0 snap-start flex-col gap-1.5">
+              <a
+                href={preview || !property ? undefined : `/${property.slug}`}
+                className="flex flex-col gap-1.5 rounded-card focus-visible:outline-2 focus-visible:outline-focus"
+              >
+                <span className="relative flex aspect-[4/5] items-end overflow-hidden rounded-card bg-accent-subtle p-2">
+                  {property?.photos[0] ? (
+                    // eslint-disable-next-line @next/next/no-img-element -- property photo from storage
+                    <img
+                      src={property.photos[0]}
+                      alt=""
+                      className="absolute inset-0 size-full object-cover"
+                    />
+                  ) : null}
+                  <Play
+                    aria-hidden="true"
+                    className="absolute top-2 left-2 size-6 rounded-pill bg-panel p-1 text-accent"
+                  />
+                  <span className="relative rounded-pill bg-panel px-2 py-0.5 font-mono type-caption text-fg">
+                    {post.code}
+                  </span>
+                </span>
+                <span className="type-body-s font-semibold">{post.label}</span>
+              </a>
+              <a
+                href={preview ? undefined : post.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hit-area-44 inline-flex items-center gap-1 type-caption text-fg-muted underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-focus"
+              >
+                {t('openPost')}
+                <ExternalLink aria-hidden="true" className="size-3" />
+              </a>
+            </li>
+          );
+        })}
+      </ul>
+    </section>
+  );
+}
+
+/** Seleções: chips; the chosen one lists its properties right below. */
+function Selections({ page, preview }: { page: StorefrontData; preview: boolean }) {
+  const t = useTranslations('social.storefront');
+  const [open, setOpen] = useState<number | null>(null);
+  const byCode = new Map(page.properties.map((p) => [p.code, p]));
+  const chosen = open == null ? null : (page.collections ?? [])[open];
+  return (
+    <section aria-labelledby="page-selections" className="flex flex-col gap-3">
+      <h2 id="page-selections" className="type-title">
+        {t('selectionsTitle')}
+      </h2>
+      <div className="flex flex-wrap gap-2">
+        {(page.collections ?? []).map((c, i) => (
+          <button
+            key={c.title}
+            type="button"
+            aria-pressed={open === i}
+            onClick={() => setOpen(open === i ? null : i)}
+            className={cn(
+              'hit-area-44 inline-flex min-h-10 items-center rounded-pill border px-4 type-body-s font-medium',
+              'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus',
+              open === i
+                ? 'border-accent bg-accent-subtle text-fg'
+                : 'border-line bg-panel text-fg',
+            )}
+          >
+            {c.title}
+          </button>
+        ))}
+      </div>
+      {chosen ? (
+        <ul aria-label={chosen.title} className="flex flex-col gap-5">
+          {chosen.codes.map((code) => {
+            const p = byCode.get(code);
+            return p ? (
+              <li key={code}>
+                <PropertyCard property={p} preview={preview} />
+              </li>
+            ) : null;
+          })}
+        </ul>
+      ) : null}
+    </section>
   );
 }

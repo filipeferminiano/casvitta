@@ -5965,6 +5965,66 @@
         }
       }
     },
+    "/v1/page/collections": {
+      "get": {
+        "tags": [
+          "pages"
+        ],
+        "summary": "Get Collections",
+        "operationId": "getPageCollections",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PageCollectionsOut"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "pages"
+        ],
+        "summary": "Replace Collections",
+        "operationId": "replacePageCollections",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PageCollectionsIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PageCollectionsOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/v1/page/stats": {
       "get": {
         "tags": [
@@ -8814,6 +8874,70 @@
         ],
         "title": "CityIndexPage"
       },
+      "CollectionIn": {
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Id"
+          },
+          "title": {
+            "type": "string",
+            "maxLength": 60,
+            "minLength": 2,
+            "title": "Title"
+          },
+          "property_ids": {
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "type": "array",
+            "maxItems": 30,
+            "title": "Property Ids"
+          }
+        },
+        "type": "object",
+        "required": [
+          "title"
+        ],
+        "title": "CollectionIn"
+      },
+      "CollectionOut": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "property_ids": {
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "type": "array",
+            "title": "Property Ids"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "title",
+          "property_ids"
+        ],
+        "title": "CollectionOut"
+      },
       "ComparableGroupOut": {
         "properties": {
           "level": {
@@ -10107,6 +10231,7 @@
           "pipeline_and_calendar",
           "google_calendar",
           "tracked_forms",
+          "page_collections",
           "segments",
           "distribution_and_permissions",
           "whatsapp_button",
@@ -10531,6 +10656,75 @@
           "is_demo"
         ],
         "title": "InboxItem"
+      },
+      "InstagramPostIn": {
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Id"
+          },
+          "url": {
+            "type": "string",
+            "maxLength": 300,
+            "title": "Url"
+          },
+          "label": {
+            "type": "string",
+            "maxLength": 60,
+            "minLength": 2,
+            "title": "Label"
+          },
+          "property_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Property Id"
+          }
+        },
+        "type": "object",
+        "required": [
+          "url",
+          "label",
+          "property_id"
+        ],
+        "title": "InstagramPostIn"
+      },
+      "InstagramPostOut": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "url": {
+            "type": "string",
+            "title": "Url"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label"
+          },
+          "property_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Property Id"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "url",
+          "label",
+          "property_id"
+        ],
+        "title": "InstagramPostOut"
       },
       "InstitutionalFront": {
         "type": "string",
@@ -12235,6 +12429,58 @@
         ],
         "title": "PageChecklist",
         "description": "Visão geral (mockup social/11): what is done towards a page that works."
+      },
+      "PageCollectionsIn": {
+        "properties": {
+          "collections": {
+            "items": {
+              "$ref": "#/components/schemas/CollectionIn"
+            },
+            "type": "array",
+            "maxItems": 8,
+            "title": "Collections"
+          },
+          "instagram": {
+            "items": {
+              "$ref": "#/components/schemas/InstagramPostIn"
+            },
+            "type": "array",
+            "maxItems": 12,
+            "title": "Instagram"
+          }
+        },
+        "type": "object",
+        "title": "PageCollectionsIn",
+        "description": "The whole set, in display order (the editor saves everything at once)."
+      },
+      "PageCollectionsOut": {
+        "properties": {
+          "available": {
+            "type": "boolean",
+            "title": "Available"
+          },
+          "collections": {
+            "items": {
+              "$ref": "#/components/schemas/CollectionOut"
+            },
+            "type": "array",
+            "title": "Collections"
+          },
+          "instagram": {
+            "items": {
+              "$ref": "#/components/schemas/InstagramPostOut"
+            },
+            "type": "array",
+            "title": "Instagram"
+          }
+        },
+        "type": "object",
+        "required": [
+          "available",
+          "collections",
+          "instagram"
+        ],
+        "title": "PageCollectionsOut"
       },
       "PageEventIn": {
         "properties": {
@@ -14196,6 +14442,27 @@
         ],
         "title": "PublicBroker"
       },
+      "PublicCollectionOut": {
+        "properties": {
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "codes": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Codes"
+          }
+        },
+        "type": "object",
+        "required": [
+          "title",
+          "codes"
+        ],
+        "title": "PublicCollectionOut"
+      },
       "PublicContactAccepted": {
         "properties": {
           "status": {
@@ -14310,6 +14577,29 @@
           "page_url"
         ],
         "title": "PublicContactIn"
+      },
+      "PublicInstagramPostOut": {
+        "properties": {
+          "url": {
+            "type": "string",
+            "title": "Url"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label"
+          },
+          "code": {
+            "type": "string",
+            "title": "Code"
+          }
+        },
+        "type": "object",
+        "required": [
+          "url",
+          "label",
+          "code"
+        ],
+        "title": "PublicInstagramPostOut"
       },
       "PublicListingOut": {
         "properties": {
@@ -14623,6 +14913,22 @@
             },
             "type": "array",
             "title": "Properties"
+          },
+          "collections": {
+            "items": {
+              "$ref": "#/components/schemas/PublicCollectionOut"
+            },
+            "type": "array",
+            "title": "Collections",
+            "default": []
+          },
+          "instagram": {
+            "items": {
+              "$ref": "#/components/schemas/PublicInstagramPostOut"
+            },
+            "type": "array",
+            "title": "Instagram",
+            "default": []
           }
         },
         "type": "object",

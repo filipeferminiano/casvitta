@@ -21,7 +21,8 @@ from app.core.errors import AppError
 from app.core.rate_limit import RateLimiter
 from app.core.security import AccessClaims
 from app.core.settings import Settings
-from app.domains.pages import inquiries, service
+from app.domains.pages import collections, inquiries, service
+from app.domains.pages.collections import PageCollectionsIn, PageCollectionsOut
 from app.domains.pages.inquiries import PageInquiryAccepted, PageInquiryIn
 from app.domains.pages.schemas import (
     PageEventIn,
@@ -95,6 +96,26 @@ async def unpublish_page(
     page, profile = await service.get_or_create(session, claims.user_id)
     await service.unpublish(session, page)
     out = await service.to_out(session, page, profile, settings)
+    await session.commit()
+    return out
+
+
+@router.get("/collections", response_model=PageCollectionsOut, operation_id="getPageCollections")
+async def get_collections(claims: ClaimsDep, session: TenantSession) -> PageCollectionsOut:
+    page, _ = await service.get_or_create(session, claims.user_id)
+    out = await collections.read(session, page)
+    await session.commit()
+    return out
+
+
+@router.put(
+    "/collections", response_model=PageCollectionsOut, operation_id="replacePageCollections"
+)
+async def replace_collections(
+    data: PageCollectionsIn, claims: ClaimsDep, session: TenantSession
+) -> PageCollectionsOut:
+    page, profile = await service.get_or_create(session, claims.user_id)
+    out = await collections.replace(session, page, profile, data)
     await session.commit()
     return out
 

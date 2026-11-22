@@ -28,6 +28,7 @@ from app.core.time import today_local, utcnow
 from app.domains.accounts.models import BrokerProfile, Workspace
 from app.domains.accounts.service import creci_status
 from app.domains.listings.models import Channel, Listing, ListingStatus
+from app.domains.pages import collections
 from app.domains.pages.models import (
     BrokerPage,
     PageEvent,
@@ -276,6 +277,9 @@ async def public_page(session: AsyncSession, slug: str, settings: Settings) -> P
     with cross_tenant(session):
         branded = await _plan_branded(session, page.workspace_id)
         forms = await plan_has(session, page.workspace_id, Feature.TRACKED_FORMS)
+        selections, instagram = await collections.public(
+            session, page, {listing.code for listing in listings}
+        )
     return PublicPageOut(
         slug=profile.slug,
         theme=page.theme,
@@ -292,6 +296,8 @@ async def public_page(session: AsyncSession, slug: str, settings: Settings) -> P
         is_demo=profile.is_demo,
         forms=forms,
         properties=listings,
+        collections=selections,
+        instagram=instagram,
     )
 
 

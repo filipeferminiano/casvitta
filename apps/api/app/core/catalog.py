@@ -38,6 +38,7 @@ class Feature(StrEnum):
     PIPELINE_AND_CALENDAR = "pipeline_and_calendar"
     GOOGLE_CALENDAR = "google_calendar"
     TRACKED_FORMS = "tracked_forms"  # forms and links with source
+    PAGE_COLLECTIONS = "page_collections"  # Seleções and "Vi no Instagram" on the page
     SEGMENTS = "segments"
     DISTRIBUTION_AND_PERMISSIONS = "distribution_and_permissions"
     WHATSAPP_BUTTON = "whatsapp_button"  # WhatsApp button with the property code
@@ -98,6 +99,7 @@ _ESSENTIAL = _BASE | {
     Feature.UNBRANDED_PAGE,
     Feature.PIPELINE_AND_CALENDAR,
     Feature.TRACKED_FORMS,
+    Feature.PAGE_COLLECTIONS,
     Feature.INSTAGRAM_INBOX,
 }
 _AUTOMATION = _ESSENTIAL | {
