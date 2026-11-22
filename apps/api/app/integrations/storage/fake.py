@@ -5,7 +5,8 @@ from app.integrations.storage.port import StoredObject
 
 
 class FakeStorage:
-    def __init__(self, base_url: str = "http://localhost:8000/fake-storage") -> None:
+    def __init__(self, base_url: str = "/api/v1/dev/storage") -> None:
+        # Served by /v1/dev/storage (in memory, development only) through each web host's /api.
         self.base_url = base_url.rstrip("/")
         self.objects: dict[str, tuple[bytes, str]] = {}
 

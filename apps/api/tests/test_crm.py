@@ -235,6 +235,8 @@ async def test_booking_rechecks_the_slot_at_commit(make_session) -> None:  # typ
     board = await leads.board(s)
     booked = next(c for c in board if c.stage.key == "visit_booked")
     assert [card.person_id for card in booked.cards] == [person.id]
+    # The visit moved the contact's existing lead; it did not open a second card.
+    assert sum(card.person_id == person.id for col in board for card in col.cards) == 1
     await s.close()
 
 

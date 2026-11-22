@@ -54,9 +54,10 @@ function check<T>(result: Result<T>): T {
 const KEY = ['crm'] as const;
 const invalidate = (client: QueryClient) => client.invalidateQueries({ queryKey: KEY });
 
-export function useHome() {
+export function useHome(enabled = true) {
   return useQuery({
     queryKey: [...KEY, 'home'],
+    enabled,
     queryFn: async () => check(await api.GET('/v1/home')),
   });
 }

@@ -100,6 +100,17 @@ async def stage_by_key(session: AsyncSession, key: str) -> PipelineStage:
     return (await stages(session))[0]
 
 
+async def latest_open_lead(session: AsyncSession, person_id: uuid.UUID) -> Lead | None:
+    """The contact's most recently moved open lead (a visit without a property joins it)."""
+    open_kinds = select(PipelineStage.id).where(PipelineStage.kind == StageKind.OPEN)
+    return await session.scalar(
+        select(Lead)
+        .where(Lead.person_id == person_id, Lead.stage_id.in_(open_kinds))
+        .order_by(Lead.stage_changed_at.desc())
+        .limit(1)
+    )
+
+
 async def open_lead(
     session: AsyncSession,
     person: Person,

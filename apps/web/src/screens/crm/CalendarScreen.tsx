@@ -40,6 +40,9 @@ function addDays(iso: string, days: number): string {
   return d.toLocaleDateString('en-CA', { timeZone: TZ });
 }
 
+/** "Seg 23/11". */
+const dayLabel = (iso: string) => `${formatWeekdayShort(iso).split(' ')[0]} ${formatDayMonth(iso)}`;
+
 const dayKey = (iso: string) => new Date(iso).toLocaleDateString('en-CA', { timeZone: TZ });
 
 /** AG4 · Agenda de visitas (docs/mockups/crm/23-visit-calendar). */
@@ -116,9 +119,7 @@ function WeekView({ start, data }: { start: string; data: WeekData }) {
             key={day}
             className="flex flex-col gap-2 rounded-card border border-line bg-panel p-3"
           >
-            <p className="type-body-s font-semibold">
-              {formatWeekdayShort(date)} {formatDayMonth(date)}
-            </p>
+            <p className="type-body-s font-semibold">{dayLabel(date)}</p>
             {visits.map((v) => (
               <div key={v.id} className="rounded-control bg-action-subtle px-2 py-1 type-caption">
                 <span className="font-semibold">{formatTime(new Date(v.starts_at))}</span>{' '}
@@ -215,7 +216,7 @@ function BookDialog({ onClose }: { onClose: () => void }) {
     () =>
       (slots.data ?? []).slice(0, 60).map((s) => ({
         value: s.starts_at,
-        label: `${formatWeekdayShort(s.starts_at)} ${formatDayMonth(s.starts_at)} · ${formatTime(new Date(s.starts_at))}`,
+        label: `${dayLabel(s.starts_at)} · ${formatTime(new Date(s.starts_at))}`,
       })),
     [slots.data],
   );

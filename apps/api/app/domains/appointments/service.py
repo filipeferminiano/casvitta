@@ -14,9 +14,11 @@ from datetime import date, datetime, time, timedelta
 
 from pydantic import BaseModel, Field
 from sqlalchemy import select, text
+from sqlalchemy.dialects.postgresql import insert as pg_insert
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.errors import AppError
+from app.core.tenancy import current_workspace
 from app.core.time import TZ, utcnow
 from app.domains.activity.models import EventActor, KeyEventKind
 from app.domains.activity.service import emit
@@ -105,9 +107,16 @@ class SlotTaken(AppError):
 
 
 async def get_settings(session: AsyncSession, user_id: uuid.UUID) -> CalendarSettings:
+    """The broker's rules; the defaults are created once, safely under concurrent first reads."""
     row = await session.scalar(select(CalendarSettings).where(CalendarSettings.user_id == user_id))
-    if row is None:
-        row = CalendarSettings(
+    if row is not None:
+        return row
+    workspace_id = current_workspace(session)
+    await session.execute(
+        pg_insert(CalendarSettings)
+        .values(
+            id=uuid.uuid4(),
+            workspace_id=workspace_id,
             user_id=user_id,
             visit_minutes=45,
             buffer_minutes=30,
@@ -117,8 +126,11 @@ async def get_settings(session: AsyncSession, user_id: uuid.UUID) -> CalendarSet
             weekly_hours=DEFAULT_WEEKLY_HOURS,
             neighborhoods_by_day={},
         )
-        session.add(row)
-        await session.flush()
+        .on_conflict_do_nothing(index_elements=["user_id"])
+    )
+    row = await session.scalar(select(CalendarSettings).where(CalendarSettings.user_id == user_id))
+    if row is None:  # pragma: no cover - the insert or a concurrent one created it
+        raise AppError("internal_error", status_code=500)
     return row
 
 
@@ -297,7 +309,9 @@ async def book(
     )
     if not any(s.starts_at == start for s in candidates):
         raise SlotTaken
-    lead = await leads.open_lead(
+    lead = (
+        await leads.latest_open_lead(session, person.id) if data.property_id is None else None
+    ) or await leads.open_lead(
         session, person, property_id=data.property_id, source=person.source.value
     )
     visit = Appointment(

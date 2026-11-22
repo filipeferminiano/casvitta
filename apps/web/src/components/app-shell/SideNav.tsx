@@ -5,7 +5,9 @@ import Link from 'next/link';
 import { useSelectedLayoutSegment } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 
+import { useHome } from '@/lib/data/crm';
 import { useBroker, useNavCounts } from '@/lib/data/hooks';
+import { isLive } from '@/lib/live';
 
 import { footerNav, hrefFor, moduleNav, primaryNav, type NavItem } from './nav-items';
 import { SignOutButton } from './SignOutButton';
@@ -19,14 +21,21 @@ export function SideNav() {
   const t = useTranslations('nav');
   const active = useSelectedLayoutSegment();
   const broker = useBroker().data;
+  const crm = isLive('crm');
   const counts = useNavCounts().data;
+  // Live CRM: unread messages from the API, never the demo store's counters.
+  const unread = useLiveUnread(crm);
 
   const countFor = (item: NavItem) =>
-    item.segment === 'leads'
-      ? counts?.leads
-      : item.segment === 'conversas'
-        ? counts?.conversations
-        : 0;
+    crm
+      ? item.segment === 'conversas'
+        ? unread
+        : 0
+      : item.segment === 'leads'
+        ? counts?.leads
+        : item.segment === 'conversas'
+          ? counts?.conversations
+          : 0;
 
   const renderItem = (item: NavItem) => {
     const current = item.segment === active;
@@ -77,7 +86,9 @@ export function SideNav() {
       <nav aria-label={t('label')} className="flex flex-1 flex-col gap-4 overflow-y-auto px-3 py-4">
         <div className="flex flex-col gap-1">
           <h2 className="px-3 pb-1 type-eyebrow">
-            <span className="sr-only lg:not-sr-only">{t('coreGroup')}</span>
+            <span className="sr-only lg:not-sr-only">
+              {t(crm ? 'attendanceGroup' : 'coreGroup')}
+            </span>
           </h2>
           <ul className="flex flex-col">{primaryNav.map(renderItem)}</ul>
         </div>
@@ -92,4 +103,9 @@ export function SideNav() {
       </nav>
     </aside>
   );
+}
+
+function useLiveUnread(enabled: boolean): number {
+  const home = useHome(enabled);
+  return home.data?.today.unread ?? 0;
 }
