@@ -36,14 +36,14 @@ from app.domains.appointments.models import AppointmentStatus
 from app.domains.contacts import public as contact_public
 from app.domains.contacts import service as contacts
 from app.domains.contacts.schemas import (
-    ConsentIn,
     Contact360,
+    ContactConsentIn,
     ContactIn,
     ContactListOut,
+    ContactNoteIn,
     ContactPatch,
     ContactView,
     InterestIn,
-    NoteIn,
     TaskIn,
 )
 from app.domains.conversations import service as conversations
@@ -162,7 +162,7 @@ async def add_interest(person_id: uuid.UUID, data: InterestIn, session: TenantSe
     operation_id="addContactNote",
 )
 async def add_note(
-    person_id: uuid.UUID, data: NoteIn, claims: ClaimsDep, session: TenantSession
+    person_id: uuid.UUID, data: ContactNoteIn, claims: ClaimsDep, session: TenantSession
 ) -> None:
     await contacts.add_note(session, person_id, data, claims.user_id)
     await session.commit()
@@ -194,7 +194,7 @@ async def complete_task(task_id: uuid.UUID, session: TenantSession) -> None:
     operation_id="setContactConsent",
 )
 async def set_consent(
-    person_id: uuid.UUID, data: ConsentIn, claims: ClaimsDep, session: TenantSession
+    person_id: uuid.UUID, data: ContactConsentIn, claims: ClaimsDep, session: TenantSession
 ) -> None:
     await contacts.set_consent(session, person_id, data, claims.user_id)
     await session.commit()

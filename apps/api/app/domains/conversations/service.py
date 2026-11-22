@@ -20,7 +20,7 @@ from app.domains.activity.models import EventActor, KeyEventKind
 from app.domains.activity.service import emit
 from app.domains.contacts import service as contacts
 from app.domains.contacts.consent import is_opt_out
-from app.domains.contacts.models import Channel, Person
+from app.domains.contacts.models import ContactChannel, Person
 from app.domains.conversations.models import (
     AiMode,
     Author,
@@ -36,8 +36,8 @@ from app.domains.conversations.models import (
 SERVICE_WINDOW = timedelta(hours=24)
 
 CHANNEL_CONSENT = {
-    ConversationChannel.WHATSAPP: Channel.WHATSAPP,
-    ConversationChannel.INSTAGRAM: Channel.INSTAGRAM,
+    ConversationChannel.WHATSAPP: ContactChannel.WHATSAPP,
+    ConversationChannel.INSTAGRAM: ContactChannel.INSTAGRAM,
 }
 
 

@@ -25,10 +25,10 @@ from app.domains.activity.service import emit
 from app.domains.appointments.models import Appointment
 from app.domains.contacts import consent as consent_rules
 from app.domains.contacts.models import (
-    Channel,
     Consent,
     ConsentPurpose,
     ConsentStatus,
+    ContactChannel,
     ContactInterest,
     ContactKind,
     ContactNote,
@@ -37,24 +37,24 @@ from app.domains.contacts.models import (
     Purpose,
 )
 from app.domains.contacts.schemas import (
-    ConsentIn,
     ConsentState,
     ConsentSummary,
     Contact360,
+    ContactConsentIn,
     ContactIn,
     ContactListOut,
+    ContactNoteIn,
     ContactPatch,
     ContactRow,
+    ContactTimelineItem,
     ContactView,
     InterestIn,
     InterestOut,
     LeadSummary,
     MatchingProperty,
-    NoteIn,
     StageRef,
     TaskIn,
     TaskOut,
-    TimelineItem,
 )
 from app.domains.conversations.models import Conversation, Message
 from app.domains.leads import service as leads
@@ -94,7 +94,7 @@ def _interest(person: Person, data: InterestIn) -> ContactInterest:
 def record_consent(
     session: AsyncSession,
     person: Person,
-    data: ConsentIn,
+    data: ContactConsentIn,
     *,
     user_id: uuid.UUID | None = None,
 ) -> Consent:
@@ -214,9 +214,9 @@ def _interest_out(i: ContactInterest) -> InterestOut:
 
 def _summary(records: list[Consent]) -> ConsentSummary:
     return ConsentSummary(
-        whatsapp=consent_rules.summary(records, Channel.WHATSAPP),
-        instagram=consent_rules.summary(records, Channel.INSTAGRAM),
-        email=consent_rules.summary(records, Channel.EMAIL),
+        whatsapp=consent_rules.summary(records, ContactChannel.WHATSAPP),
+        instagram=consent_rules.summary(records, ContactChannel.INSTAGRAM),
+        email=consent_rules.summary(records, ContactChannel.EMAIL),
     )
 
 
@@ -329,7 +329,7 @@ async def contact_360(session: AsyncSession, person_id: uuid.UUID) -> Contact360
         (await session.scalars(select(Consent).where(Consent.person_id == person.id))).all()
     )
     consents = []
-    for channel in Channel:
+    for channel in ContactChannel:
         for purpose in ConsentPurpose:
             cur = consent_rules.current(records, channel, purpose)
             consents.append(
@@ -357,7 +357,7 @@ async def contact_360(session: AsyncSession, person_id: uuid.UUID) -> Contact360
         )
     ).all()
 
-    timeline: list[TimelineItem] = []
+    timeline: list[ContactTimelineItem] = []
     messages = await session.execute(
         select(Message, Conversation.channel)
         .join(Conversation, Conversation.id == Message.conversation_id)
@@ -367,7 +367,7 @@ async def contact_360(session: AsyncSession, person_id: uuid.UUID) -> Contact360
     )
     for m, conv_channel in messages:
         timeline.append(
-            TimelineItem(
+            ContactTimelineItem(
                 at=m.sent_at,
                 kind="message",
                 channel=conv_channel.value,
@@ -377,7 +377,9 @@ async def contact_360(session: AsyncSession, person_id: uuid.UUID) -> Contact360
         )
     for n in await session.scalars(select(ContactNote).where(ContactNote.person_id == person.id)):
         timeline.append(
-            TimelineItem(at=n.created_at, kind="note", channel=None, author="broker", text=n.body)
+            ContactTimelineItem(
+                at=n.created_at, kind="note", channel=None, author="broker", text=n.body
+            )
         )
     for e in await session.scalars(
         select(KeyEvent)
@@ -386,7 +388,7 @@ async def contact_360(session: AsyncSession, person_id: uuid.UUID) -> Contact360
         .limit(50)
     ):
         timeline.append(
-            TimelineItem(
+            ContactTimelineItem(
                 at=e.occurred_at,
                 kind="event",
                 channel=None,
@@ -397,7 +399,7 @@ async def contact_360(session: AsyncSession, person_id: uuid.UUID) -> Contact360
         )
     for a in await session.scalars(select(Appointment).where(Appointment.person_id == person.id)):
         timeline.append(
-            TimelineItem(
+            ContactTimelineItem(
                 at=a.starts_at,
                 kind="visit",
                 channel=None,
@@ -475,7 +477,7 @@ async def add_interest(session: AsyncSession, person_id: uuid.UUID, data: Intere
 
 
 async def add_note(
-    session: AsyncSession, person_id: uuid.UUID, data: NoteIn, user_id: uuid.UUID
+    session: AsyncSession, person_id: uuid.UUID, data: ContactNoteIn, user_id: uuid.UUID
 ) -> None:
     person = await _load(session, person_id)
     session.add(ContactNote(person_id=person.id, author_user_id=user_id, body=data.body))
@@ -501,7 +503,7 @@ async def complete_task(session: AsyncSession, task_id: uuid.UUID) -> None:
 
 
 async def set_consent(
-    session: AsyncSession, person_id: uuid.UUID, data: ConsentIn, user_id: uuid.UUID
+    session: AsyncSession, person_id: uuid.UUID, data: ContactConsentIn, user_id: uuid.UUID
 ) -> None:
     person = await _load(session, person_id)
     record_consent(session, person, data, user_id=user_id)
@@ -509,14 +511,14 @@ async def set_consent(
 
 
 async def opt_out(
-    session: AsyncSession, person: Person, channel: Channel, location: str | None
+    session: AsyncSession, person: Person, channel: ContactChannel, location: str | None
 ) -> None:
     """SAIR: every purpose on that channel stops now."""
     for purpose in ConsentPurpose:
         record_consent(
             session,
             person,
-            ConsentIn(
+            ContactConsentIn(
                 channel=channel,
                 purpose=purpose,
                 granted=False,
@@ -552,9 +554,9 @@ async def export_csv(session: AsyncSession) -> str:
                 p.instagram_handle or "",
                 p.kind.value,
                 p.source.value,
-                consent_rules.summary(mine, Channel.WHATSAPP),
-                consent_rules.summary(mine, Channel.INSTAGRAM),
-                consent_rules.summary(mine, Channel.EMAIL),
+                consent_rules.summary(mine, ContactChannel.WHATSAPP),
+                consent_rules.summary(mine, ContactChannel.INSTAGRAM),
+                consent_rules.summary(mine, ContactChannel.EMAIL),
                 p.last_interaction_at.isoformat() if p.last_interaction_at else "",
             ]
         )

@@ -7,9 +7,9 @@ from typing import Literal
 from pydantic import BaseModel, Field, field_validator, model_validator
 
 from app.domains.contacts.models import (
-    Channel,
     ConsentPurpose,
     ConsentStatus,
+    ContactChannel,
     ContactKind,
     ContactSource,
     InterestSource,
@@ -35,10 +35,10 @@ class InterestOut(InterestIn):
     id: uuid.UUID
 
 
-class ConsentIn(BaseModel):
+class ContactConsentIn(BaseModel):
     """A consent the person gave. Never pre-checked: the client sends it only when ticked."""
 
-    channel: Channel
+    channel: ContactChannel
     purpose: ConsentPurpose
     granted: bool
     proof_source: ProofSource
@@ -46,14 +46,14 @@ class ConsentIn(BaseModel):
     proof_text: str | None = Field(default=None, max_length=2000)
 
     @model_validator(mode="after")
-    def _proof(self) -> ConsentIn:
+    def _proof(self) -> ContactConsentIn:
         if self.granted and self.proof_source == ProofSource.FORM and not self.proof_text:
             raise ValueError("a form consent needs the text shown")
         return self
 
 
 class ConsentState(BaseModel):
-    channel: Channel
+    channel: ContactChannel
     purpose: ConsentPurpose
     status: ConsentStatus | None  # None = never asked
     occurred_at: datetime | None
@@ -74,7 +74,7 @@ class ContactIn(BaseModel):
     utm_campaign: str | None = Field(default=None, max_length=120)
     property_id: uuid.UUID | None = None
     interest: InterestIn | None = None
-    consents: list[ConsentIn] = Field(default_factory=list, max_length=6)
+    consents: list[ContactConsentIn] = Field(default_factory=list, max_length=6)
 
     @field_validator("phone")
     @classmethod
@@ -144,7 +144,7 @@ class ContactListOut(BaseModel):
     counts: dict[str, int]
 
 
-class TimelineItem(BaseModel):
+class ContactTimelineItem(BaseModel):
     at: datetime
     kind: Literal["message", "event", "note", "visit"]
     channel: str | None
@@ -190,11 +190,11 @@ class Contact360(BaseModel):
     consents: list[ConsentState]
     leads: list[LeadSummary]
     tasks: list[TaskOut]
-    timeline: list[TimelineItem]
+    timeline: list[ContactTimelineItem]
     matching_properties: list[MatchingProperty]
 
 
-class NoteIn(BaseModel):
+class ContactNoteIn(BaseModel):
     body: str = Field(min_length=1, max_length=4000)
 
 

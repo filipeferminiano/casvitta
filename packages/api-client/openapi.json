@@ -3355,7 +3355,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/app__domains__backoffice__accounts__NoteIn"
+                "$ref": "#/components/schemas/NoteIn"
               }
             }
           }
@@ -3882,7 +3882,7 @@
             "in": "path",
             "required": true,
             "schema": {
-              "$ref": "#/components/schemas/app__domains__listings__models__Channel"
+              "$ref": "#/components/schemas/Channel"
             }
           }
         ],
@@ -3931,7 +3931,7 @@
             "in": "path",
             "required": true,
             "schema": {
-              "$ref": "#/components/schemas/app__domains__listings__models__Channel"
+              "$ref": "#/components/schemas/Channel"
             }
           }
         ],
@@ -3973,7 +3973,7 @@
             "in": "query",
             "required": false,
             "schema": {
-              "$ref": "#/components/schemas/app__domains__listings__models__Channel",
+              "$ref": "#/components/schemas/Channel",
               "default": "marketplace"
             }
           },
@@ -4692,7 +4692,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/app__domains__contacts__schemas__NoteIn"
+                "$ref": "#/components/schemas/ContactNoteIn"
               }
             }
           }
@@ -4820,7 +4820,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/app__domains__contacts__schemas__ConsentIn"
+                "$ref": "#/components/schemas/ContactConsentIn"
               }
             }
           }
@@ -5667,7 +5667,7 @@
           },
           "timeline": {
             "items": {
-              "$ref": "#/components/schemas/app__domains__backoffice__accounts__TimelineItem"
+              "$ref": "#/components/schemas/TimelineItem"
             },
             "type": "array",
             "title": "Timeline"
@@ -6204,7 +6204,7 @@
             "title": "Email"
           },
           "consents": {
-            "$ref": "#/components/schemas/app__domains__interest__schemas__ConsentIn"
+            "$ref": "#/components/schemas/ConsentIn"
           },
           "utm": {
             "$ref": "#/components/schemas/Utm"
@@ -6278,7 +6278,7 @@
             "title": "Email"
           },
           "consents": {
-            "$ref": "#/components/schemas/app__domains__interest__schemas__ConsentIn"
+            "$ref": "#/components/schemas/ConsentIn"
           },
           "utm": {
             "$ref": "#/components/schemas/Utm"
@@ -6579,7 +6579,7 @@
             "title": "Email"
           },
           "consents": {
-            "$ref": "#/components/schemas/app__domains__interest__schemas__ConsentIn"
+            "$ref": "#/components/schemas/ConsentIn"
           },
           "utm": {
             "$ref": "#/components/schemas/Utm"
@@ -7936,6 +7936,17 @@
         ],
         "title": "ChangeStatus"
       },
+      "Channel": {
+        "type": "string",
+        "enum": [
+          "marketplace",
+          "bio_page",
+          "landing",
+          "meta",
+          "google"
+        ],
+        "title": "Channel"
+      },
       "CheckResult": {
         "properties": {
           "key": {
@@ -8065,6 +8076,25 @@
         ],
         "title": "ComparableGroupOut"
       },
+      "ConsentIn": {
+        "properties": {
+          "contact_about_properties": {
+            "type": "boolean",
+            "title": "Contact About Properties"
+          },
+          "marketing": {
+            "type": "boolean",
+            "title": "Marketing",
+            "default": false
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "contact_about_properties"
+        ],
+        "title": "ConsentIn"
+      },
       "ConsentPurpose": {
         "type": "string",
         "enum": [
@@ -8076,7 +8106,7 @@
       "ConsentState": {
         "properties": {
           "channel": {
-            "$ref": "#/components/schemas/app__domains__contacts__models__Channel"
+            "$ref": "#/components/schemas/ContactChannel"
           },
           "purpose": {
             "$ref": "#/components/schemas/ConsentPurpose"
@@ -8290,7 +8320,7 @@
           },
           "timeline": {
             "items": {
-              "$ref": "#/components/schemas/app__domains__contacts__schemas__TimelineItem"
+              "$ref": "#/components/schemas/ContactTimelineItem"
             },
             "type": "array",
             "title": "Timeline"
@@ -8323,6 +8353,65 @@
           "matching_properties"
         ],
         "title": "Contact360"
+      },
+      "ContactChannel": {
+        "type": "string",
+        "enum": [
+          "whatsapp",
+          "instagram",
+          "email"
+        ],
+        "title": "ContactChannel"
+      },
+      "ContactConsentIn": {
+        "properties": {
+          "channel": {
+            "$ref": "#/components/schemas/ContactChannel"
+          },
+          "purpose": {
+            "$ref": "#/components/schemas/ConsentPurpose"
+          },
+          "granted": {
+            "type": "boolean",
+            "title": "Granted"
+          },
+          "proof_source": {
+            "$ref": "#/components/schemas/ProofSource"
+          },
+          "proof_location": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 300
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Proof Location"
+          },
+          "proof_text": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 2000
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Proof Text"
+          }
+        },
+        "type": "object",
+        "required": [
+          "channel",
+          "purpose",
+          "granted",
+          "proof_source"
+        ],
+        "title": "ContactConsentIn",
+        "description": "A consent the person gave. Never pre-checked: the client sends it only when ticked."
       },
       "ContactIn": {
         "properties": {
@@ -8447,7 +8536,7 @@
           },
           "consents": {
             "items": {
-              "$ref": "#/components/schemas/app__domains__contacts__schemas__ConsentIn"
+              "$ref": "#/components/schemas/ContactConsentIn"
             },
             "type": "array",
             "maxItems": 6,
@@ -8493,6 +8582,21 @@
           "counts"
         ],
         "title": "ContactListOut"
+      },
+      "ContactNoteIn": {
+        "properties": {
+          "body": {
+            "type": "string",
+            "maxLength": 4000,
+            "minLength": 1,
+            "title": "Body"
+          }
+        },
+        "type": "object",
+        "required": [
+          "body"
+        ],
+        "title": "ContactNoteIn"
       },
       "ContactPatch": {
         "properties": {
@@ -8667,6 +8771,71 @@
           "manual"
         ],
         "title": "ContactSource"
+      },
+      "ContactTimelineItem": {
+        "properties": {
+          "at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "At"
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "message",
+              "event",
+              "note",
+              "visit"
+            ],
+            "title": "Kind"
+          },
+          "channel": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Channel"
+          },
+          "author": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Author"
+          },
+          "text": {
+            "type": "string",
+            "title": "Text"
+          },
+          "ref": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ref"
+          }
+        },
+        "type": "object",
+        "required": [
+          "at",
+          "kind",
+          "channel",
+          "author",
+          "text"
+        ],
+        "title": "ContactTimelineItem"
       },
       "ConversationChannel": {
         "type": "string",
@@ -9034,7 +9203,7 @@
             "title": "Email"
           },
           "consents": {
-            "$ref": "#/components/schemas/app__domains__interest__schemas__ConsentIn"
+            "$ref": "#/components/schemas/ConsentIn"
           },
           "utm": {
             "$ref": "#/components/schemas/Utm"
@@ -10042,7 +10211,7 @@
             "title": "Email"
           },
           "consents": {
-            "$ref": "#/components/schemas/app__domains__interest__schemas__ConsentIn"
+            "$ref": "#/components/schemas/ConsentIn"
           },
           "utm": {
             "$ref": "#/components/schemas/Utm"
@@ -10272,7 +10441,7 @@
       "ListingOut": {
         "properties": {
           "channel": {
-            "$ref": "#/components/schemas/app__domains__listings__models__Channel"
+            "$ref": "#/components/schemas/Channel"
           },
           "status": {
             "$ref": "#/components/schemas/ListingStatus"
@@ -10832,6 +11001,21 @@
         ],
         "title": "Note"
       },
+      "NoteIn": {
+        "properties": {
+          "body": {
+            "type": "string",
+            "maxLength": 2000,
+            "minLength": 2,
+            "title": "Body"
+          }
+        },
+        "type": "object",
+        "required": [
+          "body"
+        ],
+        "title": "NoteIn"
+      },
       "OverviewOut": {
         "properties": {
           "tiles": {
@@ -11017,7 +11201,7 @@
             "title": "Email"
           },
           "consents": {
-            "$ref": "#/components/schemas/app__domains__interest__schemas__ConsentIn"
+            "$ref": "#/components/schemas/ConsentIn"
           },
           "utm": {
             "$ref": "#/components/schemas/Utm"
@@ -11135,7 +11319,7 @@
             "title": "Email"
           },
           "consents": {
-            "$ref": "#/components/schemas/app__domains__interest__schemas__ConsentIn"
+            "$ref": "#/components/schemas/ConsentIn"
           },
           "utm": {
             "$ref": "#/components/schemas/Utm"
@@ -11552,7 +11736,7 @@
             "title": "Email"
           },
           "consents": {
-            "$ref": "#/components/schemas/app__domains__interest__schemas__ConsentIn"
+            "$ref": "#/components/schemas/ConsentIn"
           },
           "utm": {
             "$ref": "#/components/schemas/Utm"
@@ -13093,7 +13277,7 @@
             "title": "Email"
           },
           "consents": {
-            "$ref": "#/components/schemas/app__domains__interest__schemas__ConsentIn"
+            "$ref": "#/components/schemas/ConsentIn"
           },
           "utm": {
             "$ref": "#/components/schemas/Utm"
@@ -14479,6 +14663,48 @@
         ],
         "title": "ThreadOut"
       },
+      "TimelineItem": {
+        "properties": {
+          "occurred_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Occurred At"
+          },
+          "actor_name": {
+            "type": "string",
+            "title": "Actor Name"
+          },
+          "action": {
+            "type": "string",
+            "title": "Action"
+          },
+          "details": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Details"
+          },
+          "reason": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reason"
+          }
+        },
+        "type": "object",
+        "required": [
+          "occurred_at",
+          "actor_name",
+          "action",
+          "details",
+          "reason"
+        ],
+        "title": "TimelineItem"
+      },
       "TodayOut": {
         "properties": {
           "handed_off": {
@@ -15129,63 +15355,6 @@
         "title": "YearCount",
         "description": "Sales in a calendar year: a count, never prices or dates."
       },
-      "app__domains__backoffice__accounts__NoteIn": {
-        "properties": {
-          "body": {
-            "type": "string",
-            "maxLength": 2000,
-            "minLength": 2,
-            "title": "Body"
-          }
-        },
-        "type": "object",
-        "required": [
-          "body"
-        ],
-        "title": "NoteIn"
-      },
-      "app__domains__backoffice__accounts__TimelineItem": {
-        "properties": {
-          "occurred_at": {
-            "type": "string",
-            "format": "date-time",
-            "title": "Occurred At"
-          },
-          "actor_name": {
-            "type": "string",
-            "title": "Actor Name"
-          },
-          "action": {
-            "type": "string",
-            "title": "Action"
-          },
-          "details": {
-            "additionalProperties": true,
-            "type": "object",
-            "title": "Details"
-          },
-          "reason": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Reason"
-          }
-        },
-        "type": "object",
-        "required": [
-          "occurred_at",
-          "actor_name",
-          "action",
-          "details",
-          "reason"
-        ],
-        "title": "TimelineItem"
-      },
       "app__domains__backoffice__moderation__QueueItem": {
         "properties": {
           "listing_id": {
@@ -15269,164 +15438,6 @@
         "title": "QueueItem",
         "description": "A line of \"Precisa de você\": a queue that waits for someone, with a link target."
       },
-      "app__domains__contacts__models__Channel": {
-        "type": "string",
-        "enum": [
-          "whatsapp",
-          "instagram",
-          "email"
-        ],
-        "title": "Channel"
-      },
-      "app__domains__contacts__schemas__ConsentIn": {
-        "properties": {
-          "channel": {
-            "$ref": "#/components/schemas/app__domains__contacts__models__Channel"
-          },
-          "purpose": {
-            "$ref": "#/components/schemas/ConsentPurpose"
-          },
-          "granted": {
-            "type": "boolean",
-            "title": "Granted"
-          },
-          "proof_source": {
-            "$ref": "#/components/schemas/ProofSource"
-          },
-          "proof_location": {
-            "anyOf": [
-              {
-                "type": "string",
-                "maxLength": 300
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Proof Location"
-          },
-          "proof_text": {
-            "anyOf": [
-              {
-                "type": "string",
-                "maxLength": 2000
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Proof Text"
-          }
-        },
-        "type": "object",
-        "required": [
-          "channel",
-          "purpose",
-          "granted",
-          "proof_source"
-        ],
-        "title": "ConsentIn",
-        "description": "A consent the person gave. Never pre-checked: the client sends it only when ticked."
-      },
-      "app__domains__contacts__schemas__NoteIn": {
-        "properties": {
-          "body": {
-            "type": "string",
-            "maxLength": 4000,
-            "minLength": 1,
-            "title": "Body"
-          }
-        },
-        "type": "object",
-        "required": [
-          "body"
-        ],
-        "title": "NoteIn"
-      },
-      "app__domains__contacts__schemas__TimelineItem": {
-        "properties": {
-          "at": {
-            "type": "string",
-            "format": "date-time",
-            "title": "At"
-          },
-          "kind": {
-            "type": "string",
-            "enum": [
-              "message",
-              "event",
-              "note",
-              "visit"
-            ],
-            "title": "Kind"
-          },
-          "channel": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Channel"
-          },
-          "author": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Author"
-          },
-          "text": {
-            "type": "string",
-            "title": "Text"
-          },
-          "ref": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Ref"
-          }
-        },
-        "type": "object",
-        "required": [
-          "at",
-          "kind",
-          "channel",
-          "author",
-          "text"
-        ],
-        "title": "TimelineItem"
-      },
-      "app__domains__interest__schemas__ConsentIn": {
-        "properties": {
-          "contact_about_properties": {
-            "type": "boolean",
-            "title": "Contact About Properties"
-          },
-          "marketing": {
-            "type": "boolean",
-            "title": "Marketing",
-            "default": false
-          }
-        },
-        "additionalProperties": false,
-        "type": "object",
-        "required": [
-          "contact_about_properties"
-        ],
-        "title": "ConsentIn"
-      },
       "app__domains__interest__schemas__PropertyKind": {
         "type": "string",
         "enum": [
@@ -15436,17 +15447,6 @@
           "commercial"
         ],
         "title": "PropertyKind"
-      },
-      "app__domains__listings__models__Channel": {
-        "type": "string",
-        "enum": [
-          "marketplace",
-          "bio_page",
-          "landing",
-          "meta",
-          "google"
-        ],
-        "title": "Channel"
       },
       "app__domains__properties__models__PropertyKind": {
         "type": "string",

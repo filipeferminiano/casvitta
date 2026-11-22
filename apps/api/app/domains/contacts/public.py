@@ -15,13 +15,13 @@ from app.core.tenancy import bind_workspace
 from app.domains.activity.models import EventActor
 from app.domains.contacts import service as contacts
 from app.domains.contacts.models import (
-    Channel,
     ConsentPurpose,
+    ContactChannel,
     ContactKind,
     ContactSource,
     ProofSource,
 )
-from app.domains.contacts.schemas import ConsentIn, ContactIn
+from app.domains.contacts.schemas import ContactConsentIn, ContactIn
 from app.domains.conversations import service as conversations
 from app.domains.conversations.models import ConversationChannel
 from app.domains.interest.schemas import normalize_br_phone
@@ -76,12 +76,12 @@ async def submit_listing_contact(
     bind_workspace(session, prop.workspace_id)
     consents = []
     for granted, channel in (
-        (data.consent_whatsapp, Channel.WHATSAPP),
-        (data.consent_email, Channel.EMAIL),
+        (data.consent_whatsapp, ContactChannel.WHATSAPP),
+        (data.consent_email, ContactChannel.EMAIL),
     ):
         if granted:
             consents.append(
-                ConsentIn(
+                ContactConsentIn(
                     channel=channel,
                     purpose=ConsentPurpose.CONTACT_ABOUT_PROPERTIES,
                     granted=True,

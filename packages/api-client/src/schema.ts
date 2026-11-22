@@ -1820,7 +1820,7 @@ export interface components {
             /** Team */
             team: components["schemas"]["TeamMember"][];
             /** Timeline */
-            timeline: components["schemas"]["app__domains__backoffice__accounts__TimelineItem"][];
+            timeline: components["schemas"]["TimelineItem"][];
             /** Notes */
             notes: components["schemas"]["Note"][];
             /** Is Demo */
@@ -1988,7 +1988,7 @@ export interface components {
             phone: string;
             /** Email */
             email: string;
-            consents: components["schemas"]["app__domains__interest__schemas__ConsentIn"];
+            consents: components["schemas"]["ConsentIn"];
             utm?: components["schemas"]["Utm"];
             /** Source Page */
             source_page?: string | null;
@@ -2009,7 +2009,7 @@ export interface components {
             phone: string;
             /** Email */
             email?: string | null;
-            consents: components["schemas"]["app__domains__interest__schemas__ConsentIn"];
+            consents: components["schemas"]["ConsentIn"];
             utm?: components["schemas"]["Utm"];
             /** Source Page */
             source_page?: string | null;
@@ -2124,7 +2124,7 @@ export interface components {
             phone: string;
             /** Email */
             email?: string | null;
-            consents: components["schemas"]["app__domains__interest__schemas__ConsentIn"];
+            consents: components["schemas"]["ConsentIn"];
             utm?: components["schemas"]["Utm"];
             /** Source Page */
             source_page?: string | null;
@@ -2582,6 +2582,11 @@ export interface components {
          * @enum {string}
          */
         ChangeStatus: "pending" | "awaiting_payment" | "approved" | "declined" | "cancelled";
+        /**
+         * Channel
+         * @enum {string}
+         */
+        Channel: "marketplace" | "bio_page" | "landing" | "meta" | "google";
         /** CheckResult */
         CheckResult: {
             /**
@@ -2623,6 +2628,16 @@ export interface components {
             /** Median Price M2 Cents */
             median_price_m2_cents: number | null;
         };
+        /** ConsentIn */
+        ConsentIn: {
+            /** Contact About Properties */
+            contact_about_properties: boolean;
+            /**
+             * Marketing
+             * @default false
+             */
+            marketing: boolean;
+        };
         /**
          * ConsentPurpose
          * @enum {string}
@@ -2630,7 +2645,7 @@ export interface components {
         ConsentPurpose: "contact_about_properties" | "marketing";
         /** ConsentState */
         ConsentState: {
-            channel: components["schemas"]["app__domains__contacts__models__Channel"];
+            channel: components["schemas"]["ContactChannel"];
             purpose: components["schemas"]["ConsentPurpose"];
             status: components["schemas"]["ConsentStatus"] | null;
             /** Occurred At */
@@ -2697,9 +2712,29 @@ export interface components {
             /** Tasks */
             tasks: components["schemas"]["TaskOut"][];
             /** Timeline */
-            timeline: components["schemas"]["app__domains__contacts__schemas__TimelineItem"][];
+            timeline: components["schemas"]["ContactTimelineItem"][];
             /** Matching Properties */
             matching_properties: components["schemas"]["MatchingProperty"][];
+        };
+        /**
+         * ContactChannel
+         * @enum {string}
+         */
+        ContactChannel: "whatsapp" | "instagram" | "email";
+        /**
+         * ContactConsentIn
+         * @description A consent the person gave. Never pre-checked: the client sends it only when ticked.
+         */
+        ContactConsentIn: {
+            channel: components["schemas"]["ContactChannel"];
+            purpose: components["schemas"]["ConsentPurpose"];
+            /** Granted */
+            granted: boolean;
+            proof_source: components["schemas"]["ProofSource"];
+            /** Proof Location */
+            proof_location?: string | null;
+            /** Proof Text */
+            proof_text?: string | null;
         };
         /** ContactIn */
         ContactIn: {
@@ -2727,7 +2762,7 @@ export interface components {
             property_id?: string | null;
             interest?: components["schemas"]["InterestIn"] | null;
             /** Consents */
-            consents?: components["schemas"]["app__domains__contacts__schemas__ConsentIn"][];
+            consents?: components["schemas"]["ContactConsentIn"][];
         };
         /**
          * ContactKind
@@ -2742,6 +2777,11 @@ export interface components {
             counts: {
                 [key: string]: number;
             };
+        };
+        /** ContactNoteIn */
+        ContactNoteIn: {
+            /** Body */
+            body: string;
         };
         /** ContactPatch */
         ContactPatch: {
@@ -2783,6 +2823,27 @@ export interface components {
          * @enum {string}
          */
         ContactSource: "broker_page" | "listing_page" | "finder" | "owner_form" | "instagram" | "whatsapp" | "qr_sign" | "import" | "manual";
+        /** ContactTimelineItem */
+        ContactTimelineItem: {
+            /**
+             * At
+             * Format: date-time
+             */
+            at: string;
+            /**
+             * Kind
+             * @enum {string}
+             */
+            kind: "message" | "event" | "note" | "visit";
+            /** Channel */
+            channel: string | null;
+            /** Author */
+            author: string | null;
+            /** Text */
+            text: string;
+            /** Ref */
+            ref?: string | null;
+        };
         /**
          * ConversationChannel
          * @enum {string}
@@ -2901,7 +2962,7 @@ export interface components {
             phone: string;
             /** Email */
             email?: string | null;
-            consents: components["schemas"]["app__domains__interest__schemas__ConsentIn"];
+            consents: components["schemas"]["ConsentIn"];
             utm?: components["schemas"]["Utm"];
             /** Source Page */
             source_page?: string | null;
@@ -3228,7 +3289,7 @@ export interface components {
             phone: string;
             /** Email */
             email?: string | null;
-            consents: components["schemas"]["app__domains__interest__schemas__ConsentIn"];
+            consents: components["schemas"]["ConsentIn"];
             utm?: components["schemas"]["Utm"];
             /** Source Page */
             source_page?: string | null;
@@ -3292,7 +3353,7 @@ export interface components {
         };
         /** ListingOut */
         ListingOut: {
-            channel: components["schemas"]["app__domains__listings__models__Channel"];
+            channel: components["schemas"]["Channel"];
             status: components["schemas"]["ListingStatus"];
             /** Published At */
             published_at: string | null;
@@ -3475,6 +3536,11 @@ export interface components {
              */
             created_at: string;
         };
+        /** NoteIn */
+        NoteIn: {
+            /** Body */
+            body: string;
+        };
         /** OverviewOut */
         OverviewOut: {
             tiles: components["schemas"]["OverviewTiles"];
@@ -3532,7 +3598,7 @@ export interface components {
             phone: string;
             /** Email */
             email?: string | null;
-            consents: components["schemas"]["app__domains__interest__schemas__ConsentIn"];
+            consents: components["schemas"]["ConsentIn"];
             utm?: components["schemas"]["Utm"];
             /** Source Page */
             source_page?: string | null;
@@ -3569,7 +3635,7 @@ export interface components {
             phone: string;
             /** Email */
             email?: string | null;
-            consents: components["schemas"]["app__domains__interest__schemas__ConsentIn"];
+            consents: components["schemas"]["ConsentIn"];
             utm?: components["schemas"]["Utm"];
             /** Source Page */
             source_page?: string | null;
@@ -3698,7 +3764,7 @@ export interface components {
             phone: string;
             /** Email */
             email?: string | null;
-            consents: components["schemas"]["app__domains__interest__schemas__ConsentIn"];
+            consents: components["schemas"]["ConsentIn"];
             utm?: components["schemas"]["Utm"];
             /** Source Page */
             source_page?: string | null;
@@ -4109,7 +4175,7 @@ export interface components {
             phone: string;
             /** Email */
             email?: string | null;
-            consents: components["schemas"]["app__domains__interest__schemas__ConsentIn"];
+            consents: components["schemas"]["ConsentIn"];
             utm?: components["schemas"]["Utm"];
             /** Source Page */
             source_page?: string | null;
@@ -4589,6 +4655,24 @@ export interface components {
             /** Messages */
             messages: components["schemas"]["MessageOut"][];
         };
+        /** TimelineItem */
+        TimelineItem: {
+            /**
+             * Occurred At
+             * Format: date-time
+             */
+            occurred_at: string;
+            /** Actor Name */
+            actor_name: string;
+            /** Action */
+            action: string;
+            /** Details */
+            details: {
+                [key: string]: unknown;
+            };
+            /** Reason */
+            reason: string | null;
+        };
         /** TodayOut */
         TodayOut: {
             /** Handed Off */
@@ -4791,29 +4875,6 @@ export interface components {
             /** Partial Until */
             partial_until: string | null;
         };
-        /** NoteIn */
-        app__domains__backoffice__accounts__NoteIn: {
-            /** Body */
-            body: string;
-        };
-        /** TimelineItem */
-        app__domains__backoffice__accounts__TimelineItem: {
-            /**
-             * Occurred At
-             * Format: date-time
-             */
-            occurred_at: string;
-            /** Actor Name */
-            actor_name: string;
-            /** Action */
-            action: string;
-            /** Details */
-            details: {
-                [key: string]: unknown;
-            };
-            /** Reason */
-            reason: string | null;
-        };
         /** QueueItem */
         app__domains__backoffice__moderation__QueueItem: {
             /**
@@ -4856,71 +4917,10 @@ export interface components {
             over_sla: number;
         };
         /**
-         * Channel
-         * @enum {string}
-         */
-        app__domains__contacts__models__Channel: "whatsapp" | "instagram" | "email";
-        /**
-         * ConsentIn
-         * @description A consent the person gave. Never pre-checked: the client sends it only when ticked.
-         */
-        app__domains__contacts__schemas__ConsentIn: {
-            channel: components["schemas"]["app__domains__contacts__models__Channel"];
-            purpose: components["schemas"]["ConsentPurpose"];
-            /** Granted */
-            granted: boolean;
-            proof_source: components["schemas"]["ProofSource"];
-            /** Proof Location */
-            proof_location?: string | null;
-            /** Proof Text */
-            proof_text?: string | null;
-        };
-        /** NoteIn */
-        app__domains__contacts__schemas__NoteIn: {
-            /** Body */
-            body: string;
-        };
-        /** TimelineItem */
-        app__domains__contacts__schemas__TimelineItem: {
-            /**
-             * At
-             * Format: date-time
-             */
-            at: string;
-            /**
-             * Kind
-             * @enum {string}
-             */
-            kind: "message" | "event" | "note" | "visit";
-            /** Channel */
-            channel: string | null;
-            /** Author */
-            author: string | null;
-            /** Text */
-            text: string;
-            /** Ref */
-            ref?: string | null;
-        };
-        /** ConsentIn */
-        app__domains__interest__schemas__ConsentIn: {
-            /** Contact About Properties */
-            contact_about_properties: boolean;
-            /**
-             * Marketing
-             * @default false
-             */
-            marketing: boolean;
-        };
-        /**
          * PropertyKind
          * @enum {string}
          */
         app__domains__interest__schemas__PropertyKind: "apartment" | "house" | "land" | "commercial";
-        /**
-         * Channel
-         * @enum {string}
-         */
-        app__domains__listings__models__Channel: "marketplace" | "bio_page" | "landing" | "meta" | "google";
         /**
          * PropertyKind
          * @enum {string}
@@ -6801,7 +6801,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["app__domains__backoffice__accounts__NoteIn"];
+                "application/json": components["schemas"]["NoteIn"];
             };
         };
         responses: {
@@ -7152,7 +7152,7 @@ export interface operations {
             header?: never;
             path: {
                 property_id: string;
-                channel: components["schemas"]["app__domains__listings__models__Channel"];
+                channel: components["schemas"]["Channel"];
             };
             cookie?: never;
         };
@@ -7184,7 +7184,7 @@ export interface operations {
             header?: never;
             path: {
                 property_id: string;
-                channel: components["schemas"]["app__domains__listings__models__Channel"];
+                channel: components["schemas"]["Channel"];
             };
             cookie?: never;
         };
@@ -7213,7 +7213,7 @@ export interface operations {
     listPublicListings: {
         parameters: {
             query?: {
-                channel?: components["schemas"]["app__domains__listings__models__Channel"];
+                channel?: components["schemas"]["Channel"];
                 transaction?: components["schemas"]["Transaction"] | null;
                 city?: string | null;
                 neighborhood?: string | null;
@@ -7679,7 +7679,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["app__domains__contacts__schemas__NoteIn"];
+                "application/json": components["schemas"]["ContactNoteIn"];
             };
         };
         responses: {
@@ -7774,7 +7774,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["app__domains__contacts__schemas__ConsentIn"];
+                "application/json": components["schemas"]["ContactConsentIn"];
             };
         };
         responses: {

@@ -13,7 +13,7 @@ import unicodedata
 from collections.abc import Iterable
 from dataclasses import dataclass
 
-from app.domains.contacts.models import Channel, Consent, ConsentPurpose, ConsentStatus
+from app.domains.contacts.models import Consent, ConsentPurpose, ConsentStatus, ContactChannel
 
 _OPT_OUT = re.compile(r"^\s*(sair|parar|pare|cancelar|descadastrar|stop)\s*[.!]*\s*$")
 
@@ -29,17 +29,19 @@ class Current:
     record: Consent | None
 
 
-def current(records: Iterable[Consent], channel: Channel, purpose: ConsentPurpose) -> Current:
+def current(
+    records: Iterable[Consent], channel: ContactChannel, purpose: ConsentPurpose
+) -> Current:
     mine = [r for r in records if r.channel == channel and r.purpose == purpose]
     latest = max(mine, key=lambda r: r.occurred_at, default=None)
     return Current(latest.status if latest else None, latest)
 
 
-def allows(records: Iterable[Consent], channel: Channel, purpose: ConsentPurpose) -> bool:
+def allows(records: Iterable[Consent], channel: ContactChannel, purpose: ConsentPurpose) -> bool:
     return current(list(records), channel, purpose).status == ConsentStatus.GRANTED
 
 
-def summary(records: Iterable[Consent], channel: Channel) -> str:
+def summary(records: Iterable[Consent], channel: ContactChannel) -> str:
     """'granted' when any purpose is granted, 'revoked' when the last word was no, else 'none'."""
     items = list(records)
     states = [current(items, channel, p).status for p in ConsentPurpose]

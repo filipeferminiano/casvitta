@@ -21,14 +21,16 @@ from app.domains.appointments import service as calendar
 from app.domains.contacts import consent as consent_rules
 from app.domains.contacts import service as contacts
 from app.domains.contacts.models import (
-    Channel,
     Consent,
     ConsentPurpose,
     ConsentStatus,
     ContactSource,
     Person,
 )
-from app.domains.contacts.schemas import ConsentIn, ContactIn
+from app.domains.contacts.models import (
+    ContactChannel as Channel,
+)
+from app.domains.contacts.schemas import ContactConsentIn, ContactIn
 from app.domains.conversations import service as conversations
 from app.domains.conversations.models import AiMode, ConversationChannel
 from app.domains.leads import service as leads
@@ -111,9 +113,9 @@ async def test_broker_limit_blocks_manual_contacts_but_never_inbound(make_sessio
 
 async def test_consent_needs_proof_and_sair_revokes_at_once(make_session) -> None:  # type: ignore[no-untyped-def]
     with pytest.raises(ValueError):
-        ConsentIn(channel="whatsapp", purpose="marketing", granted=True, proof_source="form")
+        ContactConsentIn(channel="whatsapp", purpose="marketing", granted=True, proof_source="form")
     _broker, s = await broker_session(make_session)
-    granted = ConsentIn(
+    granted = ContactConsentIn(
         channel=Channel.WHATSAPP,
         purpose=ConsentPurpose.MARKETING,
         granted=True,

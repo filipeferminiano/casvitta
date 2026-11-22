@@ -112,7 +112,7 @@ class ContactInterest(UUIDPrimaryKey, Timestamps, WorkspaceScoped, Base):
     source: Mapped[InterestSource] = mapped_column(str_enum(InterestSource))
 
 
-class Channel(StrEnum):
+class ContactChannel(StrEnum):
     WHATSAPP = "whatsapp"
     INSTAGRAM = "instagram"
     EMAIL = "email"
@@ -150,7 +150,7 @@ class Consent(UUIDPrimaryKey, Timestamps, WorkspaceScoped, Base):
     person_id: Mapped[uuid.UUID] = mapped_column(
         ForeignKey("people.id", ondelete="CASCADE"), index=True
     )
-    channel: Mapped[Channel] = mapped_column(str_enum(Channel))
+    channel: Mapped[ContactChannel] = mapped_column(str_enum(ContactChannel, name="channel"))
     purpose: Mapped[ConsentPurpose] = mapped_column(str_enum(ConsentPurpose))
     status: Mapped[ConsentStatus] = mapped_column(str_enum(ConsentStatus))
     occurred_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
