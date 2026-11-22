@@ -121,5 +121,10 @@
   "inquiry.preference.call": "Prefere contato por ligação.",
   "inquiry.preference.email": "Prefere contato por e-mail.",
   "inquiry.matched": "Imóveis que combinaram: {codes}.",
-  "inquiry.details": "Detalhes: {details}"
+  "inquiry.details": "Detalhes: {details}",
+  "page_slug_invalid": "Use de 3 a 40 caracteres: letras sem acento, números e hífen no meio.",
+  "page_slug_reserved": "Este endereço é reservado pela Casvitta. Escolha outro.",
+  "page_slug_taken": "Este endereço já é de outra página. Tente uma variação, como acrescentar a cidade.",
+  "page_slug_same": "Este já é o endereço da sua página.",
+  "page_slug_too_many_changes": "Você já mudou o endereço 5 vezes. Fale com o suporte para mudar de novo."
 }

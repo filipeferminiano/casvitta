@@ -73,6 +73,18 @@ export function usePublishPage() {
   );
 }
 
+export type SlugCheck = S['SlugCheckOut'];
+
+export async function checkPageSlug(slug: string): Promise<SlugCheck> {
+  return check(await api.GET('/v1/page/slug-check', { params: { query: { slug } } }));
+}
+
+export function useChangePageSlug() {
+  return usePageMutation(async (slug: string) =>
+    check(await api.PUT('/v1/page/slug', { body: { slug } })),
+  );
+}
+
 export function useUploadPagePhoto() {
   return usePageMutation(async (file: File) => {
     const form = new FormData();
@@ -162,4 +174,22 @@ export function useSavePageCollections() {
       check(await api.PUT('/v1/page/collections', { body })),
     onSuccess: (data) => client.setQueryData(COLLECTIONS_KEY, data),
   });
+}
+
+type Search = Record<string, string | string[] | undefined>;
+
+/**
+ * An earlier page address: answer with a permanent redirect to the current one, keeping the path
+ * and the query (?origem=qr on printed QR codes keeps being counted as QR).
+ */
+export function movedTo(page: PublicPage, requested: string, path: string, search: Search) {
+  if (page.slug === requested.toLowerCase()) return null;
+  const query = new URLSearchParams();
+  for (const [key, value] of Object.entries(search)) {
+    for (const v of Array.isArray(value) ? value : value === undefined ? [] : [value]) {
+      query.append(key, v);
+    }
+  }
+  const qs = query.toString();
+  return `${page.url}${path}${qs ? `?${qs}` : ''}`;
 }

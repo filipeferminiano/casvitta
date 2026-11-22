@@ -29,6 +29,8 @@ class PageChecklist(BaseModel):
 class PageOut(BaseModel):
     slug: str
     url: str
+    # Earlier addresses that still lead here (oldest first).
+    old_slugs: list[str]
     theme: PageTheme
     works_as: WorksAs
     agency_name: str | None
@@ -96,7 +98,9 @@ class PublicInstagramPostOut(BaseModel):
 class PublicPageOut(BaseModel):
     """What anyone sees on {slug}.casvitta.com.br. No email, no owner data."""
 
+    # The current address; differs from the requested one when an old address was used.
     slug: str
+    url: str
     theme: PageTheme
     display_name: str
     works_as: WorksAs
@@ -133,3 +137,19 @@ class PageStatsOut(BaseModel):
     whatsapp_clicks: int
     forms_submitted: int
     by_source: dict[PageSource, int]
+
+
+class SlugCheckOut(BaseModel):
+    slug: str
+    url: str
+    # None = available; otherwise why not ("same" = already the page address).
+    problem: Literal["invalid", "reserved", "taken", "same", "too_many_changes"] | None
+
+
+class SlugChangeIn(BaseModel):
+    slug: str = Field(min_length=1, max_length=63)
+
+    @field_validator("slug")
+    @classmethod
+    def _lower(cls, value: str) -> str:
+        return value.strip().lower()

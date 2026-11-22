@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { sourceFromSearch, whatsappHref } from './page';
+import { movedTo, sourceFromSearch, whatsappHref, type PublicPage } from './page';
 
 describe('broker page helpers', () => {
   it('reads where the visit came from', () => {
@@ -13,5 +13,17 @@ describe('broker page helpers', () => {
     expect(whatsappHref('+5519998765432', 'Olá, Mariana! CV-12')).toBe(
       'https://wa.me/5519998765432?text=Ol%C3%A1%2C%20Mariana!%20CV-12',
     );
+  });
+});
+
+describe('movedTo', () => {
+  const page = { slug: 'mariana-campinas', url: 'https://mariana-campinas.casvitta.com.br' };
+  it('keeps path and query when an old address is used', () => {
+    expect(
+      movedTo(page as PublicPage, 'marianaalves', '/cv-204', { origem: 'qr', utm_source: ['ig'] }),
+    ).toBe('https://mariana-campinas.casvitta.com.br/cv-204?origem=qr&utm_source=ig');
+  });
+  it('does nothing on the current address', () => {
+    expect(movedTo(page as PublicPage, 'Mariana-Campinas', '', {})).toBeNull();
   });
 });

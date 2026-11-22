@@ -1,15 +1,18 @@
 import type { Metadata } from 'next';
-import { notFound } from 'next/navigation';
+import { notFound, permanentRedirect } from 'next/navigation';
 import { getTranslations } from 'next-intl/server';
 
 import { getListingBySlug } from '@/lib/data/marketplace';
-import { getPublicPage } from '@/lib/data/page';
+import { getPublicPage, movedTo } from '@/lib/data/page';
 import { isLive } from '@/lib/live';
 import { LiveListingScreen } from '@/screens/marketplace/LiveListingScreen';
 import { PropertyLanding } from '@/screens/landing/LandingPages';
 import { PropertyWhatsApp } from '@/screens/social/PropertyWhatsApp';
 
-type Props = { params: Promise<{ brokerSlug: string; propertySlug: string }> };
+type Props = {
+  params: Promise<{ brokerSlug: string; propertySlug: string }>;
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+};
 
 function load(brokerSlug: string, propertySlug: string) {
   const listing = getListingBySlug(propertySlug);
@@ -45,12 +48,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 /** {brokerSlug}.casvitta.com.br/{propertySlug}: live (social/02) or demo (mockup 40). */
-export default async function PropertyLandingPage({ params }: Props) {
+export default async function PropertyLandingPage({ params, searchParams }: Props) {
   const { brokerSlug, propertySlug } = await params;
   if (isLive('social')) {
     const found = await loadLive(brokerSlug, propertySlug);
     if (!found) notFound();
     const { page, listing } = found;
+    const moved = movedTo(page, brokerSlug, `/${propertySlug}`, await searchParams);
+    if (moved) permanentRedirect(moved);
     const tKinds = await getTranslations('crm.properties.kinds');
     return (
       <div data-page-theme={page.theme} className="min-h-dvh bg-canvas">

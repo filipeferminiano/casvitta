@@ -49,6 +49,7 @@ from app.domains.accounts.schemas import (
     WorkspaceOut,
 )
 from app.domains.billing.models import ChangeKind, ChangeSource, PlanChangeRequest
+from app.domains.pages.models import PageSlugRedirect
 from app.domains.staff.audit import Actor, record
 from app.integrations.messaging.port import Email, EmailPort
 
@@ -74,8 +75,36 @@ RESERVED_SLUGS = frozenset(
         "suporte",
         "ajuda",
         "casvitta",
+        "oficial",
+        "backoffice",
+        "contato",
+        "seguranca",
+        "privacidade",
+        "termos",
+        "imoveis",
+        "imovel",
+        "anunciar",
+        "planos",
+        "precos",
+        "entrar",
+        "login",
+        "cadastro",
+        "conta",
+        "pagamento",
+        "staging",
+        "dev",
+        "teste",
+        "test",
+        "preview",
     }
 )
+# 3–40 characters: lowercase letters, digits and single hyphens inside.
+SLUG_FORMAT = re.compile(r"^[a-z0-9](?:[a-z0-9]|-(?!-)){1,38}[a-z0-9]$")
+
+
+def is_reserved_slug(slug: str) -> bool:
+    """Platform words, and anything that looks like Casvitta itself (impersonation)."""
+    return slug in RESERVED_SLUGS or "casvitta" in slug
 
 
 class LinkInvalid(AppError):
@@ -266,6 +295,8 @@ def slugify(name: str) -> str:
 
 async def _unique_slug(session: AsyncSession, name: str) -> str:
     base = slugify(name)
+    if "casvitta" in base:
+        base = "corretor"
     with cross_tenant(session):  # slugs are unique across the platform
         taken = set(
             (
@@ -274,8 +305,18 @@ async def _unique_slug(session: AsyncSession, name: str) -> str:
                 )
             ).all()
         )
+        # Old page addresses stay with their broker (redirects, printed QR codes).
+        taken |= set(
+            (
+                await session.scalars(
+                    select(PageSlugRedirect.old_slug).where(
+                        PageSlugRedirect.old_slug.like(f"{base}%")
+                    )
+                )
+            ).all()
+        )
     candidate, n = base, 1
-    while candidate in taken or candidate in RESERVED_SLUGS:
+    while candidate in taken or is_reserved_slug(candidate) or len(candidate) < 3:
         n += 1
         candidate = f"{base}{n}"
     return candidate

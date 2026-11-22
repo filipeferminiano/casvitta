@@ -143,3 +143,15 @@ class PageInstagramPost(UUIDPrimaryKey, Timestamps, WorkspaceScoped, Base):
         ForeignKey("properties.id", ondelete="CASCADE"), index=True
     )
     position: Mapped[int] = mapped_column(Integer)
+
+
+class PageSlugRedirect(UUIDPrimaryKey, Timestamps, WorkspaceScoped, Base):
+    """An earlier page address. It keeps pointing to the broker's page (301) and stays reserved
+    for that broker, so old links and printed QR codes never land on someone else."""
+
+    __tablename__ = "page_slug_redirects"
+
+    old_slug: Mapped[str] = mapped_column(String(63), unique=True)
+    broker_profile_id: Mapped[uuid.UUID] = mapped_column(
+        ForeignKey("broker_profiles.id", ondelete="CASCADE"), index=True
+    )

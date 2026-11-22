@@ -118,3 +118,9 @@ Compared in `docs/mockups/_impl/landing-pages/` (`pnpm screens:capture landing-p
 - **Edited in Minha página**, not in a separate Coleções screen: one panel with Seleções (title + properties, reorder with buttons) and "Vi no Instagram" (post or reel link → one property, with a card text). Saved all at once.
 - **Nothing is read from Instagram.** The link is stored normalized (no tracking parameters); the card shows the property photo, not the post. Only `instagram.com` post/reel links are accepted.
 - **Only live properties appear.** An item whose property leaves the page (or loses its authorization check) disappears from the public page without being deleted; a selection left empty is hidden. After a downgrade the set is kept but not shown.
+
+## Casvitta Social, SOC-1b (page address)
+
+- **Endereço lives in Minha página** (panel "Endereço da página"), not a separate tab. Check first, then confirm.
+- **Old addresses never expire and stay with the broker**, so printed QR codes and old links can't be taken over by someone else. The web answers an old address with a 308 to the new one, keeping the path and the query (`?origem=qr` is still counted). Limit: 5 old addresses per broker; going back to one of them is always allowed. Changes take up to 60 s to reach the public page (page cache).
+- **Reserved:** platform words (app, admin, suporte, oficial, backoffice, contato, planos, …) and anything containing "casvitta". Signup slugs follow the same rules and skip addresses held by redirects.

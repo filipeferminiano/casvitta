@@ -13,10 +13,11 @@ import io
 import re
 import uuid
 from datetime import timedelta
+from typing import Literal
 from urllib.parse import urlsplit
 
 import segno
-from sqlalchemy import func, select
+from sqlalchemy import delete, func, or_, select
 from sqlalchemy.dialects.postgresql import insert as pg_insert
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -26,13 +27,14 @@ from app.core.settings import Settings
 from app.core.tenancy import bind_workspace, cross_tenant
 from app.core.time import today_local, utcnow
 from app.domains.accounts.models import BrokerProfile, Workspace
-from app.domains.accounts.service import creci_status
+from app.domains.accounts.service import SLUG_FORMAT, creci_status, is_reserved_slug
 from app.domains.listings.models import Channel, Listing, ListingStatus
 from app.domains.pages import collections
 from app.domains.pages.models import (
     BrokerPage,
     PageEvent,
     PageEventKind,
+    PageSlugRedirect,
     PageSource,
     PageStatus,
 )
@@ -159,6 +161,7 @@ async def to_out(
     return PageOut(
         slug=profile.slug,
         url=page_url(settings, profile.slug),
+        old_slugs=await old_addresses(session, profile),
         theme=page.theme,
         works_as=page.works_as,
         agency_name=page.agency_name,
@@ -243,13 +246,16 @@ async def unpublish(session: AsyncSession, page: BrokerPage) -> None:
 async def live_page(
     session: AsyncSession, slug: str, settings: Settings
 ) -> tuple[BrokerPage, BrokerProfile] | None:
+    slug = slug.lower()
     with cross_tenant(session):
+        # An earlier address resolves to the same page (the web answers with a redirect).
+        moved = select(PageSlugRedirect.broker_profile_id).where(PageSlugRedirect.old_slug == slug)
         row = (
             await session.execute(
                 select(BrokerPage, BrokerProfile, Workspace)
                 .join(BrokerProfile, BrokerProfile.id == BrokerPage.broker_profile_id)
                 .join(Workspace, Workspace.id == BrokerPage.workspace_id)
-                .where(BrokerProfile.slug == slug.lower())
+                .where(or_(BrokerProfile.slug == slug, BrokerProfile.id.in_(moved)))
             )
         ).first()
     if row is None:
@@ -282,6 +288,7 @@ async def public_page(session: AsyncSession, slug: str, settings: Settings) -> P
         )
     return PublicPageOut(
         slug=profile.slug,
+        url=page_url(settings, profile.slug),
         theme=page.theme,
         display_name=profile.display_name,
         works_as=page.works_as,
@@ -398,3 +405,68 @@ def qr_code(url: str, kind: str) -> bytes:
     else:
         qr.save(out, kind="png", scale=16, border=4, dark="#0F1E3D")
     return out.getvalue()
+
+
+# ------------------------------------------------------------------ page address
+
+MAX_OLD_ADDRESSES = 5
+SlugProblem = Literal["invalid", "reserved", "taken", "same", "too_many_changes"]
+
+
+async def slug_problem(
+    session: AsyncSession, profile: BrokerProfile, slug: str
+) -> SlugProblem | None:
+    """Why `slug` cannot be this broker's new address (None = it can)."""
+    if slug == profile.slug:
+        return "same"
+    if not SLUG_FORMAT.match(slug):
+        return "invalid"
+    if is_reserved_slug(slug):
+        return "reserved"
+    with cross_tenant(session):  # addresses are unique across the platform
+        owner = await session.scalar(select(BrokerProfile.id).where(BrokerProfile.slug == slug))
+        held_by = await session.scalar(
+            select(PageSlugRedirect.broker_profile_id).where(PageSlugRedirect.old_slug == slug)
+        )
+    if owner is not None or (held_by is not None and held_by != profile.id):
+        return "taken"
+    if held_by is None:
+        used = await session.scalar(
+            select(func.count())
+            .select_from(PageSlugRedirect)
+            .where(PageSlugRedirect.broker_profile_id == profile.id)
+        )
+        if int(used or 0) >= MAX_OLD_ADDRESSES:
+            return "too_many_changes"
+    return None
+
+
+async def change_slug(session: AsyncSession, profile: BrokerProfile, slug: str) -> None:
+    problem = await slug_problem(session, profile, slug)
+    if problem is not None:
+        raise AppError(f"page_slug_{problem}", status_code=409)
+    # Going back to one of this broker's earlier addresses frees that redirect.
+    await session.execute(
+        delete(PageSlugRedirect).where(
+            PageSlugRedirect.old_slug == slug, PageSlugRedirect.broker_profile_id == profile.id
+        )
+    )
+    session.add(
+        PageSlugRedirect(
+            workspace_id=profile.workspace_id, old_slug=profile.slug, broker_profile_id=profile.id
+        )
+    )
+    profile.slug = slug
+    await session.flush()
+
+
+async def old_addresses(session: AsyncSession, profile: BrokerProfile) -> list[str]:
+    return list(
+        (
+            await session.scalars(
+                select(PageSlugRedirect.old_slug)
+                .where(PageSlugRedirect.broker_profile_id == profile.id)
+                .order_by(PageSlugRedirect.created_at)
+            )
+        ).all()
+    )

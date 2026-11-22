@@ -1,14 +1,23 @@
 'use client';
 
-import { Button, Callout, Panel, StatTile, Switch } from '@casvitta/ui';
+import { Button, Callout, Input, Panel, StatTile, Switch } from '@casvitta/ui';
 import { Check, Circle } from 'lucide-react';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
-import { useState } from 'react';
+import { useState, type FormEvent } from 'react';
 
 import { PageHeader } from '@/components/PageHeader';
 import { CrmError } from '@/lib/data/crm';
-import { usePage, usePageStats, usePublishPage, useUpdatePage, type Page } from '@/lib/data/page';
+import {
+  checkPageSlug,
+  useChangePageSlug,
+  usePage,
+  usePageStats,
+  usePublishPage,
+  useUpdatePage,
+  type Page,
+  type SlugCheck,
+} from '@/lib/data/page';
 import { formatNumber } from '@/lib/format';
 
 import { CollectionsPanel } from './CollectionsEditor';
@@ -93,6 +102,7 @@ function AddressPanel({ page }: { page: Page }) {
     <Panel title={t('addressTitle')}>
       <div className="flex flex-col gap-4">
         <CopyLink url={page.url} />
+        <ChangeAddress page={page} />
         <Switch
           checked={on}
           disabled={
@@ -215,5 +225,123 @@ function ChecklistPanel({ page }: { page: Page }) {
         ))}
       </ul>
     </Panel>
+  );
+}
+
+/** Endereço: a new {slug}; the old one keeps leading here (and stays yours). */
+function ChangeAddress({ page }: { page: Page }) {
+  const t = useTranslations('social.myPage.address');
+  const change = useChangePageSlug();
+  const [open, setOpen] = useState(false);
+  const [value, setValue] = useState('');
+  const [result, setResult] = useState<SlugCheck | null>(null);
+  const [checking, setChecking] = useState(false);
+  const [failed, setFailed] = useState<string | null>(null);
+  const suffix = page.url.replace(/^https?:\/\/[^.]+/, '');
+
+  const verify = async (e: FormEvent) => {
+    e.preventDefault();
+    if (!value.trim()) return;
+    setChecking(true);
+    setFailed(null);
+    try {
+      setResult(await checkPageSlug(value.trim()));
+    } catch {
+      setFailed(t('checkError'));
+    } finally {
+      setChecking(false);
+    }
+  };
+
+  if (!open) {
+    return (
+      <div className="flex flex-col gap-2">
+        <Button variant="secondary" className="w-fit" onClick={() => setOpen(true)}>
+          {t('change')}
+        </Button>
+        {page.old_slugs.length ? (
+          <p className="type-caption">
+            {t('oldOnes', { list: page.old_slugs.map((s) => `${s}${suffix}`).join(', ') })}
+          </p>
+        ) : null}
+      </div>
+    );
+  }
+  return (
+    <form
+      onSubmit={verify}
+      noValidate
+      className="flex flex-col gap-3 rounded-card border border-line p-4"
+    >
+      <Input
+        label={t('label')}
+        help={t('help', { suffix })}
+        autoComplete="off"
+        spellCheck={false}
+        maxLength={40}
+        value={value}
+        onChange={(e) => {
+          setValue(e.target.value.toLowerCase());
+          setResult(null);
+        }}
+      />
+      <div className="flex flex-wrap gap-2">
+        <Button type="submit" variant="secondary" loading={checking} loadingLabel={t('checking')}>
+          {t('check')}
+        </Button>
+        <Button
+          type="button"
+          variant="ghost"
+          onClick={() => {
+            setOpen(false);
+            setResult(null);
+            setValue('');
+          }}
+        >
+          {t('cancel')}
+        </Button>
+      </div>
+      {failed ? (
+        <p role="alert" className="type-body-s text-danger">
+          {failed}
+        </p>
+      ) : null}
+      {result?.problem ? (
+        <p role="alert" className="type-body-s text-danger">
+          {t(`problems.${result.problem}`)}
+        </p>
+      ) : null}
+      {result && !result.problem ? (
+        <div role="status" className="flex flex-col gap-3">
+          <p className="type-body-s text-fg-strong">
+            {t('free', { url: result.url.replace(/^https?:\/\//, '') })}
+          </p>
+          <Callout tone="info">{t('whatHappens')}</Callout>
+          <Button
+            className="w-fit"
+            loading={change.isPending}
+            loadingLabel={t('saving')}
+            onClick={() =>
+              change.mutate(result.slug, {
+                onSuccess: () => {
+                  setOpen(false);
+                  setResult(null);
+                  setValue('');
+                },
+              })
+            }
+          >
+            {t('confirm')}
+          </Button>
+          {change.error ? (
+            <p role="alert" className="type-body-s text-danger">
+              {change.error instanceof CrmError && change.error.message
+                ? change.error.message
+                : t('saveError')}
+            </p>
+          ) : null}
+        </div>
+      ) : null}
+    </form>
   );
 }

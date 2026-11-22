@@ -30,6 +30,8 @@ from app.domains.pages.schemas import (
     PageStatsOut,
     PageUpdate,
     PublicPageOut,
+    SlugChangeIn,
+    SlugCheckOut,
 )
 from app.integrations.registry import Integrations, get_integrations
 
@@ -116,6 +118,31 @@ async def replace_collections(
 ) -> PageCollectionsOut:
     page, profile = await service.get_or_create(session, claims.user_id)
     out = await collections.replace(session, page, profile, data)
+    await session.commit()
+    return out
+
+
+@router.get("/slug-check", response_model=SlugCheckOut, operation_id="checkPageSlug")
+async def check_slug(
+    claims: ClaimsDep,
+    session: TenantSession,
+    settings: SettingsDep,
+    slug: Annotated[str, Query(min_length=1, max_length=63)],
+) -> SlugCheckOut:
+    _, profile = await service.get_or_create(session, claims.user_id)
+    wanted = slug.strip().lower()
+    problem = await service.slug_problem(session, profile, wanted)
+    await session.commit()
+    return SlugCheckOut(slug=wanted, url=service.page_url(settings, wanted), problem=problem)
+
+
+@router.put("/slug", response_model=PageOut, operation_id="changePageSlug")
+async def change_slug(
+    data: SlugChangeIn, claims: ClaimsDep, session: TenantSession, settings: SettingsDep
+) -> PageOut:
+    page, profile = await service.get_or_create(session, claims.user_id)
+    await service.change_slug(session, profile, data.slug)
+    out = await service.to_out(session, page, profile, settings)
     await session.commit()
     return out
 

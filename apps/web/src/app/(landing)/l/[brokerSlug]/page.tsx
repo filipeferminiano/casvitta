@@ -1,14 +1,17 @@
 import type { Metadata } from 'next';
-import { notFound } from 'next/navigation';
+import { notFound, permanentRedirect } from 'next/navigation';
 import { getTranslations } from 'next-intl/server';
 
-import { getPublicPage } from '@/lib/data/page';
+import { getPublicPage, movedTo } from '@/lib/data/page';
 import { getBrokerPage } from '@/lib/data/marketplace';
 import { isLive } from '@/lib/live';
 import { BrokerLanding } from '@/screens/landing/LandingPages';
 import { Storefront } from '@/screens/social/Storefront';
 
-type Props = { params: Promise<{ brokerSlug: string }> };
+type Props = {
+  params: Promise<{ brokerSlug: string }>;
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+};
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { brokerSlug } = await params;
@@ -35,11 +38,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
  * {slug}.casvitta.com.br. Live: Casvitta Social storefront (docs/mockups/social/01), generated from
  * the broker profile and the properties published on the page. Demo: mockup 41.
  */
-export default async function BrokerLandingPage({ params }: Props) {
+export default async function BrokerLandingPage({ params, searchParams }: Props) {
   const { brokerSlug } = await params;
   if (isLive('social')) {
     const page = await getPublicPage(brokerSlug);
     if (!page) notFound();
+    const moved = movedTo(page, brokerSlug, '', await searchParams);
+    if (moved) permanentRedirect(moved);
     const jsonLd = {
       '@context': 'https://schema.org',
       '@type': 'RealEstateAgent',

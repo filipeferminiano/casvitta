@@ -6025,6 +6025,91 @@
         }
       }
     },
+    "/v1/page/slug-check": {
+      "get": {
+        "tags": [
+          "pages"
+        ],
+        "summary": "Check Slug",
+        "operationId": "checkPageSlug",
+        "parameters": [
+          {
+            "name": "slug",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 63,
+              "title": "Slug"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SlugCheckOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/page/slug": {
+      "put": {
+        "tags": [
+          "pages"
+        ],
+        "summary": "Change Slug",
+        "operationId": "changePageSlug",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SlugChangeIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PageOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/v1/page/stats": {
       "get": {
         "tags": [
@@ -12746,6 +12831,13 @@
             "type": "string",
             "title": "Url"
           },
+          "old_slugs": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Old Slugs"
+          },
           "theme": {
             "$ref": "#/components/schemas/PageTheme"
           },
@@ -12898,6 +12990,7 @@
         "required": [
           "slug",
           "url",
+          "old_slugs",
           "theme",
           "works_as",
           "agency_name",
@@ -14819,6 +14912,10 @@
             "type": "string",
             "title": "Slug"
           },
+          "url": {
+            "type": "string",
+            "title": "Url"
+          },
           "theme": {
             "$ref": "#/components/schemas/PageTheme"
           },
@@ -14934,6 +15031,7 @@
         "type": "object",
         "required": [
           "slug",
+          "url",
           "theme",
           "display_name",
           "works_as",
@@ -15876,6 +15974,58 @@
           "ends_at"
         ],
         "title": "Slot"
+      },
+      "SlugChangeIn": {
+        "properties": {
+          "slug": {
+            "type": "string",
+            "maxLength": 63,
+            "minLength": 1,
+            "title": "Slug"
+          }
+        },
+        "type": "object",
+        "required": [
+          "slug"
+        ],
+        "title": "SlugChangeIn"
+      },
+      "SlugCheckOut": {
+        "properties": {
+          "slug": {
+            "type": "string",
+            "title": "Slug"
+          },
+          "url": {
+            "type": "string",
+            "title": "Url"
+          },
+          "problem": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "invalid",
+                  "reserved",
+                  "taken",
+                  "same",
+                  "too_many_changes"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Problem"
+          }
+        },
+        "type": "object",
+        "required": [
+          "slug",
+          "url",
+          "problem"
+        ],
+        "title": "SlugCheckOut"
       },
       "SourceInfo": {
         "properties": {

@@ -4813,6 +4813,28 @@
         "bio": "Escrever uma frase sobre você",
         "has_properties": "Incluir pelo menos um imóvel",
         "link_used": "Receber a primeira visita"
+      },
+      "address": {
+        "change": "Mudar endereço",
+        "oldOnes": "Endereços antigos que continuam levando para cá: {list}.",
+        "label": "Novo endereço",
+        "help": "Só o começo, antes de {suffix}. De 3 a 40 caracteres: letras sem acento, números e hífen.",
+        "check": "Conferir",
+        "checking": "Conferindo…",
+        "cancel": "Cancelar",
+        "checkError": "Não conseguimos conferir agora. Tente de novo em alguns segundos.",
+        "problems": {
+          "invalid": "Use de 3 a 40 caracteres: letras sem acento, números e hífen no meio.",
+          "reserved": "Este endereço é reservado pela Casvitta. Escolha outro.",
+          "taken": "Este endereço já é de outra página. Tente uma variação, como acrescentar a cidade.",
+          "same": "Este já é o endereço da sua página.",
+          "too_many_changes": "Você já mudou o endereço 5 vezes. Fale com o suporte para mudar de novo."
+        },
+        "free": "{url} está livre.",
+        "whatHappens": "O endereço atual continua funcionando e leva para o novo, inclusive os QR codes já impressos. Ele fica reservado para você. Baixe o QR code novo depois da mudança.",
+        "confirm": "Mudar para este endereço",
+        "saving": "Mudando…",
+        "saveError": "Não conseguimos mudar o endereço. Tente de novo."
       }
     },
     "forms": {

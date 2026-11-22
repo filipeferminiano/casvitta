@@ -1948,6 +1948,40 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/page/slug-check": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Check Slug */
+        get: operations["checkPageSlug"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/page/slug": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Change Slug */
+        put: operations["changePageSlug"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/page/stats": {
         parameters: {
             query?: never;
@@ -4156,6 +4190,8 @@ export interface components {
             slug: string;
             /** Url */
             url: string;
+            /** Old Slugs */
+            old_slugs: string[];
             theme: components["schemas"]["PageTheme"];
             works_as: components["schemas"]["WorksAs"];
             /** Agency Name */
@@ -4705,6 +4741,8 @@ export interface components {
         PublicPageOut: {
             /** Slug */
             slug: string;
+            /** Url */
+            url: string;
             theme: components["schemas"]["PageTheme"];
             /** Display Name */
             display_name: string;
@@ -5068,6 +5106,20 @@ export interface components {
              * Format: date-time
              */
             ends_at: string;
+        };
+        /** SlugChangeIn */
+        SlugChangeIn: {
+            /** Slug */
+            slug: string;
+        };
+        /** SlugCheckOut */
+        SlugCheckOut: {
+            /** Slug */
+            slug: string;
+            /** Url */
+            url: string;
+            /** Problem */
+            problem: ("invalid" | "reserved" | "taken" | "same" | "too_many_changes") | null;
         };
         /**
          * SourceInfo
@@ -9330,6 +9382,70 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["PageCollectionsOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    checkPageSlug: {
+        parameters: {
+            query: {
+                slug: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SlugCheckOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    changePageSlug: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SlugChangeIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PageOut"];
                 };
             };
             /** @description Validation Error */
