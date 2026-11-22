@@ -13,7 +13,7 @@ import {
   type QueryClient,
 } from '@tanstack/react-query';
 
-import { downloadCsv, staffApi, unwrap } from '@/lib/staff-api';
+import { downloadCsv, StaffApiError, staffApi, unwrap } from '@/lib/staff-api';
 
 export type StaffMe = components['schemas']['StaffMeOut'];
 export type StaffMember = components['schemas']['StaffMemberOut'];
@@ -533,4 +533,48 @@ export function useDecidePlanRequest() {
     },
     onSettled: () => invalidateAll(client),
   });
+}
+
+// ------------------------------------------------------------------ owner authorizations (BO6)
+
+export type AuthorizationItem = components['schemas']['AuthorizationItem'];
+
+export function useAuthorizationQueue(enabled: boolean) {
+  return useQuery({
+    queryKey: ['staff', 'authorizations'],
+    enabled,
+    queryFn: async () => unwrap(await staffApi.GET('/v1/staff/authorizations')),
+  });
+}
+
+export type AuthorizationDecision =
+  { id: string; outcome: 'verify' } | { id: string; outcome: 'reject'; reason: string };
+
+/** Verify puts the waiting listings live; reject keeps them off with the reason. Audited. */
+export function useDecideAuthorization() {
+  const client = useQueryClient();
+  return useMutation({
+    mutationFn: async (d: AuthorizationDecision) => {
+      const path = { params: { path: { authorization_id: d.id } } };
+      const result =
+        d.outcome === 'verify'
+          ? await staffApi.POST('/v1/staff/authorizations/{authorization_id}/verify', path)
+          : await staffApi.POST('/v1/staff/authorizations/{authorization_id}/reject', {
+              ...path,
+              body: { reason: d.reason },
+            });
+      if (result.error !== undefined) unwrap(result);
+    },
+    onSettled: () => invalidateAll(client),
+  });
+}
+
+/** Opens the stored document in a new tab (the view is audited by the API). */
+export async function openAuthorizationDocument(id: string): Promise<void> {
+  const response = await fetch(`/api/v1/staff/authorizations/${id}/document`, {
+    credentials: 'include',
+  });
+  if (!response.ok) throw new StaffApiError('document', '', response.status);
+  const url = URL.createObjectURL(await response.blob());
+  window.open(url, '_blank', 'noopener');
 }

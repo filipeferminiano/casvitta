@@ -354,3 +354,33 @@ async def test_free_plan_has_no_pipeline_or_calendar(
         home = (await api.get("/v1/home", headers=_headers(broker))).json()
         assert home["steps"][0] == {"key": "creci", "done": True}
         assert home["next_step"] == "first_property"
+
+
+async def test_matching_contacts_for_a_property(make_session) -> None:  # type: ignore[no-untyped-def]
+    _broker, s = await broker_session(make_session)
+    prop = await properties.create_property(
+        s,
+        PropertyIn(
+            kind="apartment", transaction="sale", neighborhood="Cambuí", city="Campinas",
+            state="SP", price_cents=74_000_000, bedrooms=3,
+        ),
+    )  # fmt: skip
+    interest = {"purpose": "buy", "neighborhoods": ["Cambuí"], "min_bedrooms": 3}
+    await contacts.upsert_contact(s, contact(interest={**interest, "max_price_cents": 90_000_000}))
+    await contacts.upsert_contact(
+        s,
+        contact(
+            name="Marcos", phone="11911112222", interest={**interest, "max_price_cents": 70_000_000}
+        ),
+    )
+    await contacts.upsert_contact(
+        s,
+        contact(
+            name="Camila",
+            phone="11933334444",
+            interest={"purpose": "rent", "neighborhoods": ["Cambuí"]},
+        ),
+    )
+    rows = await contacts.matching_contacts(s, prop.id)
+    assert [(r.name, r.within_budget) for r in rows] == [("Lucas Martins", True), ("Marcos", False)]
+    await s.close()

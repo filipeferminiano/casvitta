@@ -1,6 +1,8 @@
 import { getTranslations } from 'next-intl/server';
 
+import { isLive } from '@/lib/live';
 import { AgendaScreen } from '@/screens/agenda/AgendaScreen';
+import { CalendarScreen } from '@/screens/crm/CalendarScreen';
 
 export async function generateMetadata() {
   const t = await getTranslations('agenda');
@@ -8,5 +10,5 @@ export async function generateMetadata() {
 }
 
 export default function Page() {
-  return <AgendaScreen />;
+  return isLive('crm') ? <CalendarScreen /> : <AgendaScreen />;
 }

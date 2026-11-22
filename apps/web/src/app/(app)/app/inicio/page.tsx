@@ -1,5 +1,7 @@
 import { getTranslations } from 'next-intl/server';
 
+import { isLive } from '@/lib/live';
+import { CrmHomeScreen } from '@/screens/crm/HomeScreen';
 import { DashboardScreen } from '@/screens/dashboard/DashboardScreen';
 
 export async function generateMetadata() {
@@ -8,5 +10,5 @@ export async function generateMetadata() {
 }
 
 export default function Page() {
-  return <DashboardScreen />;
+  return isLive('crm') ? <CrmHomeScreen /> : <DashboardScreen />;
 }

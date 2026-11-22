@@ -1,5 +1,8 @@
 import { getTranslations } from 'next-intl/server';
 
+import { redirect } from 'next/navigation';
+
+import { isLive } from '@/lib/live';
 import { ConversationScreen } from '@/screens/conversations/ConversationScreen';
 
 export async function generateMetadata() {
@@ -9,5 +12,7 @@ export async function generateMetadata() {
 
 export default async function Page({ params }: { params: Promise<{ conversationId: string }> }) {
   const { conversationId } = await params;
+  // The live inbox keeps the list and the thread on one page (?c=).
+  if (isLive('crm')) redirect(`/conversas?c=${conversationId}`);
   return <ConversationScreen conversationId={conversationId} />;
 }

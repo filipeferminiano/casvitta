@@ -51,6 +51,7 @@ from app.domains.contacts.schemas import (
     InterestIn,
     InterestOut,
     LeadSummary,
+    MatchingContact,
     MatchingProperty,
     StageRef,
     TaskIn,
@@ -561,3 +562,37 @@ async def export_csv(session: AsyncSession) -> str:
             ]
         )
     return buffer.getvalue()
+
+
+async def matching_contacts(session: AsyncSession, property_id: uuid.UUID) -> list[MatchingContact]:
+    """CR5 "Contatos que combinam": contacts whose latest interest matches this property."""
+    prop = await session.get(Property, property_id)
+    if prop is None:
+        raise AppError("property_not_found", status_code=404)
+    latest: dict[uuid.UUID, ContactInterest] = {}
+    for i in await session.scalars(select(ContactInterest).order_by(ContactInterest.created_at)):
+        latest[i.person_id] = i
+    if not latest:
+        return []
+    people = {
+        p.id: p for p in await session.scalars(select(Person).where(Person.id.in_(list(latest))))
+    }
+    records: dict[uuid.UUID, list[Consent]] = {}
+    for c in await session.scalars(select(Consent).where(Consent.person_id.in_(list(latest)))):
+        records.setdefault(c.person_id, []).append(c)
+    out = []
+    for person_id, interest in latest.items():
+        ok, within = _matches(interest, prop)
+        person = people.get(person_id)
+        if not ok or person is None:
+            continue
+        out.append(
+            MatchingContact(
+                person_id=person.id,
+                name=person.name,
+                interest=_interest_out(interest),
+                within_budget=within,
+                consent=_summary(records.get(person.id, [])),
+            )
+        )
+    return sorted(out, key=lambda m: (not m.within_budget, m.name))

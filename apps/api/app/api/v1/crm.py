@@ -44,6 +44,7 @@ from app.domains.contacts.schemas import (
     ContactPatch,
     ContactView,
     InterestIn,
+    MatchingContact,
     TaskIn,
 )
 from app.domains.conversations import service as conversations
@@ -198,6 +199,17 @@ async def set_consent(
 ) -> None:
     await contacts.set_consent(session, person_id, data, claims.user_id)
     await session.commit()
+
+
+@router.get(
+    "/properties/{property_id}/matching-contacts",
+    response_model=list[MatchingContact],
+    operation_id="listMatchingContacts",
+)
+async def matching_contacts(
+    property_id: uuid.UUID, session: TenantSession
+) -> list[MatchingContact]:
+    return await contacts.matching_contacts(session, property_id)
 
 
 # ------------------------------------------------------------------ Funil

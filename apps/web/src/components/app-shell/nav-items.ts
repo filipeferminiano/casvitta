@@ -1,5 +1,9 @@
+import { isLive } from '@/lib/live';
 import {
   Building2,
+  Columns3,
+  Inbox,
+  UserRound,
   Calculator,
   CalendarDays,
   FileText,
@@ -23,7 +27,10 @@ export type NavLabelKey =
   | 'ads'
   | 'tools'
   | 'moduleStore'
-  | 'settings';
+  | 'settings'
+  | 'inbox'
+  | 'contacts'
+  | 'pipeline';
 
 export type NavItem = {
   /** Route segment under app/(app)/app; also the visible path on app.casvitta.com.br. */
@@ -34,7 +41,20 @@ export type NavItem = {
 
 export const hrefFor = (item: NavItem) => `/${item.segment}`;
 
-export const primaryNav: NavItem[] = [
+/**
+ * With the live CRM ("crm" area) the menu follows the CRM mockups: Atendimento (Início, Caixa de
+ * entrada, Contatos, Funil, Agenda) and Imóveis. The demo build keeps the Broker OS menu.
+ */
+const CRM_NAV: NavItem[] = [
+  { segment: 'inicio', labelKey: 'home', icon: House },
+  { segment: 'conversas', labelKey: 'inbox', icon: Inbox },
+  { segment: 'contatos', labelKey: 'contacts', icon: UserRound },
+  { segment: 'funil', labelKey: 'pipeline', icon: Columns3 },
+  { segment: 'agenda', labelKey: 'calendar', icon: CalendarDays },
+  { segment: 'imoveis', labelKey: 'properties', icon: Building2 },
+];
+
+const DEMO_NAV: NavItem[] = [
   { segment: 'inicio', labelKey: 'home', icon: House },
   { segment: 'imoveis', labelKey: 'properties', icon: Building2 },
   { segment: 'leads', labelKey: 'leads', icon: Users },
@@ -42,6 +62,8 @@ export const primaryNav: NavItem[] = [
   { segment: 'agenda', labelKey: 'calendar', icon: CalendarDays },
   { segment: 'propostas', labelKey: 'proposals', icon: FileText },
 ];
+
+export const primaryNav: NavItem[] = isLive('crm') ? CRM_NAV : DEMO_NAV;
 
 /** Shown under the "Módulos" heading. "Ads Studio" internally; the UI says "Anúncios". */
 export const moduleNav: NavItem[] = [{ segment: 'anuncios', labelKey: 'ads', icon: Megaphone }];
@@ -54,10 +76,6 @@ export const footerNav: NavItem[] = [
 ];
 
 /** Mobile bottom tabs (DESIGN_SYSTEM.md §3). */
-export const bottomTabs: NavItem[] = [
-  primaryNav[0]!,
-  primaryNav[2]!,
-  primaryNav[3]!,
-  primaryNav[4]!,
-  moduleNav[0]!,
-];
+export const bottomTabs: NavItem[] = isLive('crm')
+  ? [CRM_NAV[0]!, CRM_NAV[1]!, CRM_NAV[2]!, CRM_NAV[4]!, CRM_NAV[5]!]
+  : [DEMO_NAV[0]!, DEMO_NAV[2]!, DEMO_NAV[3]!, DEMO_NAV[4]!, moduleNav[0]!];

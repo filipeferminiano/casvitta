@@ -201,3 +201,11 @@ class ContactNoteIn(BaseModel):
 class TaskIn(BaseModel):
     title: str = Field(min_length=1, max_length=200)
     due_at: datetime | None = None
+
+
+class MatchingContact(BaseModel):
+    person_id: uuid.UUID
+    name: str
+    interest: InterestOut
+    within_budget: bool
+    consent: ConsentSummary

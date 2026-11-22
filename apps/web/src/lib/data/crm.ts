@@ -55,16 +55,17 @@ const KEY = ['crm'] as const;
 const invalidate = (client: QueryClient) => client.invalidateQueries({ queryKey: KEY });
 
 export function useHome() {
-  return useQuery({ queryKey: [...KEY, 'home'], queryFn: async () => check(await api.GET('/v1/home')) });
+  return useQuery({
+    queryKey: [...KEY, 'home'],
+    queryFn: async () => check(await api.GET('/v1/home')),
+  });
 }
 
 export function useContacts(view: ContactView, q: string) {
   return useQuery({
     queryKey: [...KEY, 'contacts', view, q],
     queryFn: async () =>
-      check(
-        await api.GET('/v1/contacts', { params: { query: { view, ...(q ? { q } : {}) } } }),
-      ),
+      check(await api.GET('/v1/contacts', { params: { query: { view, ...(q ? { q } : {}) } } })),
   });
 }
 
@@ -224,7 +225,8 @@ export function useTakeOver(conversationId: string) {
 export function useWeek(start: string) {
   return useQuery({
     queryKey: [...KEY, 'week', start],
-    queryFn: async () => check(await api.GET('/v1/calendar/week', { params: { query: { start } } })),
+    queryFn: async () =>
+      check(await api.GET('/v1/calendar/week', { params: { query: { start } } })),
   });
 }
 
@@ -259,8 +261,11 @@ export function useSlots(propertyId: string | null) {
 export function useBookVisit() {
   const client = useQueryClient();
   return useMutation({
-    mutationFn: async (body: { person_id: string; property_id?: string | null; starts_at: string }) =>
-      check(await api.POST('/v1/calendar/visits', { body: { ...body, booked_by: 'broker' } })),
+    mutationFn: async (body: {
+      person_id: string;
+      property_id?: string | null;
+      starts_at: string;
+    }) => check(await api.POST('/v1/calendar/visits', { body: { ...body, booked_by: 'broker' } })),
     onSettled: () => invalidate(client),
   });
 }

@@ -5061,6 +5061,53 @@
         }
       }
     },
+    "/v1/properties/{property_id}/matching-contacts": {
+      "get": {
+        "tags": [
+          "crm"
+        ],
+        "summary": "Matching Contacts",
+        "operationId": "listMatchingContacts",
+        "parameters": [
+          {
+            "name": "property_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Property Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/MatchingContact"
+                  },
+                  "title": "Response Listmatchingcontacts"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/v1/pipeline": {
       "get": {
         "tags": [
@@ -10848,6 +10895,38 @@
           "suspended"
         ],
         "title": "ListingStatus"
+      },
+      "MatchingContact": {
+        "properties": {
+          "person_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Person Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "interest": {
+            "$ref": "#/components/schemas/InterestOut"
+          },
+          "within_budget": {
+            "type": "boolean",
+            "title": "Within Budget"
+          },
+          "consent": {
+            "$ref": "#/components/schemas/ConsentSummary"
+          }
+        },
+        "type": "object",
+        "required": [
+          "person_id",
+          "name",
+          "interest",
+          "within_budget",
+          "consent"
+        ],
+        "title": "MatchingContact"
       },
       "MatchingProperty": {
         "properties": {

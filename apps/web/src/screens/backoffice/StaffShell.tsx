@@ -6,7 +6,16 @@ import {
   type BackofficeNavGroup,
   type BackofficeNavItem,
 } from '@casvitta/ui/backoffice';
-import { ClipboardList, FileText, House, LayoutGrid, Receipt, Settings, Users } from 'lucide-react';
+import {
+  ClipboardList,
+  FileText,
+  House,
+  LayoutGrid,
+  Receipt,
+  Settings,
+  ShieldCheck,
+  Users,
+} from 'lucide-react';
 import Link from 'next/link';
 import { useSelectedLayoutSegment } from 'next/navigation';
 import { useTranslations } from 'next-intl';
@@ -23,6 +32,7 @@ export const BO_PATHS = {
   overview: '/',
   creci: '/creci',
   captures: '/captacoes',
+  authorizations: '/autorizacoes',
   moderation: '/moderacao',
   accounts: '/contas',
   revenue: '/receita',
@@ -35,6 +45,7 @@ const ICONS: Record<BoModule, BackofficeNavItem['icon']> = {
   overview: House,
   creci: FileText,
   captures: Users,
+  authorizations: ShieldCheck,
   moderation: ClipboardList,
   accounts: LayoutGrid,
   revenue: Receipt,
@@ -44,6 +55,7 @@ const ICONS: Record<BoModule, BackofficeNavItem['icon']> = {
 const SEGMENT: Record<string, BoModule> = {
   creci: 'creci',
   captacoes: 'captures',
+  autorizacoes: 'authorizations',
   moderacao: 'moderation',
   contas: 'accounts',
   receita: 'revenue',
@@ -81,7 +93,7 @@ export function StaffShell({ children }: { children: ReactNode }) {
     {
       key: 'operation',
       label: t('groups.operation'),
-      items: [item('creci'), item('captures'), item('moderation')],
+      items: [item('creci'), item('captures'), item('authorizations'), item('moderation')],
     },
     { key: 'clients', label: t('groups.clients'), items: [item('accounts'), item('revenue')] },
     { key: 'system', label: t('groups.system'), items: [item('team')] },
