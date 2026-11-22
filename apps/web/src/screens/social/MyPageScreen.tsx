@@ -22,6 +22,7 @@ import { formatNumber } from '@/lib/format';
 
 import { CollectionsPanel } from './CollectionsEditor';
 import { CopyLink } from './CopyLink';
+import { DomainPanel } from './DomainPanel';
 import { QrBlock, ShareHowTo, ThemePicker } from './OnboardingScreen';
 
 const CHECKLIST = [
@@ -76,6 +77,7 @@ export function MyPageScreen() {
       <div className="grid gap-6 lg:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)]">
         <div className="flex flex-col gap-6">
           <AddressPanel page={data} />
+          <DomainPanel page={data} />
           <StatsPanel forms={data.forms} />
           <AppearancePanel page={data} />
           <CollectionsPanel />
@@ -122,7 +124,6 @@ function AddressPanel({ page }: { page: Page }) {
               : t('saveError')}
           </p>
         ) : null}
-        <p className="type-caption">{t('addressNote')}</p>
       </div>
     </Panel>
   );

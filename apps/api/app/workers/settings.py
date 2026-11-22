@@ -11,6 +11,7 @@ from __future__ import annotations
 
 from typing import Any, ClassVar
 
+from arq import cron
 from arq.connections import RedisSettings
 
 from app.core.logging import configure_logging, get_logger
@@ -52,6 +53,16 @@ async def itbi_refresh(ctx: dict[str, Any], city: str = "sao-paulo") -> dict[str
     return {k: v for k, v in result.report.items() if k != "excluded_by_tab"}
 
 
+async def check_custom_domains(ctx: dict[str, Any]) -> int:
+    """Daily DNS and certificate check of every connected custom domain (06h São Paulo)."""
+    from app.core.db import get_sessionmaker  # noqa: PLC0415 - worker-only imports
+    from app.domains.pages.domains import check_all  # noqa: PLC0415
+
+    integrations: Integrations = ctx["integrations"]
+    async with get_sessionmaker()() as session:
+        return await check_all(session, integrations.domains, get_settings(), integrations.email)
+
+
 async def startup(ctx: dict[str, Any]) -> None:
     settings = get_settings()
     configure_logging(settings.log_level, settings.log_json)
@@ -60,6 +71,7 @@ async def startup(ctx: dict[str, Any]) -> None:
 
 
 class WorkerSettings:
-    functions: ClassVar[list[Any]] = [ping, indexnow_submit, itbi_refresh]
+    functions: ClassVar[list[Any]] = [ping, indexnow_submit, itbi_refresh, check_custom_domains]
+    cron_jobs: ClassVar[list[Any]] = [cron(check_custom_domains, hour={9}, minute={0})]
     on_startup = startup
     redis_settings = RedisSettings.from_dsn(get_settings().redis_url)

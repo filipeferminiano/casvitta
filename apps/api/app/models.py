@@ -41,6 +41,7 @@ from app.domains.market_data.models import (
 )
 from app.domains.pages.models import (
     BrokerPage,
+    CustomDomain,
     PageCollection,
     PageCollectionItem,
     PageEvent,
@@ -64,6 +65,7 @@ __all__ = [
     "ContactInterest",
     "ContactNote",
     "Conversation",
+    "CustomDomain",
     "InterestAssignment",
     "InterestSignup",
     "InterestSignupConsent",

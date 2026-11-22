@@ -130,3 +130,11 @@ Compared in `docs/mockups/_impl/landing-pages/` (`pnpm screens:capture landing-p
 - **Signals built now:** visitor reports ("Denunciar esta página" in the public footer, no contact data asked) and published pages whose CRECI is not verified yet. "Depoimento suspeito" and "Link externo" need features that don't exist yet (testimonials, external links); the domains table comes with custom domains.
 - **Actions:** suspend (reason required, emailed to the broker, audited, closes open reports), lift a suspension (the page comes back "fora do ar" and the broker republishes), dismiss a report. "Pedir correção" is not built: there is no message channel to the broker yet other than email by hand.
 - **Permission:** the existing `listings.moderate` (Admin, Operações). Every role reads the queue. No new "Suporte Social" role yet; nothing on this screen opens Interessados.
+
+## Casvitta Social, SOC-1b (custom domains)
+
+- **From Automação** (catalog `custom_domain`), not "Social"; agencies' one-domain-with-paths (state 9) is not built yet.
+- **Certificates:** Google Certificate Manager with load balancer authorization was chosen (22/11/2026). The flow runs on a fake DNS/certificate adapter; the real adapter and the load balancer certificate map are not created yet and need the owner's OK.
+- **Records:** TXT `_casvitta.<host>` with a per-domain token, and CNAME `<host>` → `CUSTOM_DOMAIN_CNAME_TARGET` (paginas.casvitta.com.br). Short names ("_casvitta.www", "www") are shown as providers ask; bare domains are refused (use www).
+- **Errors during the 48 h wait** show as "Ainda não está certo" with the value found; after the wait, or once a domain was live, they become an error. A broken live domain falls back to the subdomain (never offline) and emails the broker; activation emails too. Daily check at 06h (arq cron).
+- **Canonical:** the page's address becomes the domain; `{slug}.casvitta.com.br` answers 308 with path and query kept; the QR code switches to the domain. Property pages on the domain are canonical to the domain for now (the prompt's portal-canonical option waits for the SEO decision). After a downgrade the domain stops serving and is kept.

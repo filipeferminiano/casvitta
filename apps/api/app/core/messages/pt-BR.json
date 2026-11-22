@@ -131,5 +131,19 @@
   "email.page_suspended.text": "Olá, {name}.\n\nA equipe da Casvitta suspendeu sua página {url}. Motivo:\n\n{reason}\n\nEnquanto estiver suspensa, a página não abre para visitantes. Seus imóveis, contatos e o histórico continuam guardados. Responda a este e-mail para conversar com a equipe e pedir a revisão.\n\nCasvitta",
   "page_already_suspended": "Esta página já está suspensa. Atualize a tela.",
   "page_not_suspended": "Esta página não está suspensa. Atualize a tela.",
-  "report_not_found": "Esta denúncia já foi tratada ou não existe mais. Atualize a fila."
+  "report_not_found": "Esta denúncia já foi tratada ou não existe mais. Atualize a fila.",
+  "domain_invalid": "Este endereço não parece um domínio. Escreva só o domínio, como www.seunome.com.br.",
+  "domain_reserved": "Este domínio não pode ser usado: ele é da Casvitta ou usa a marca Casvitta.",
+  "domain_apex": "Use o endereço com www (por exemplo, www.seunome.com.br). O domínio sem www não aceita o registro CNAME.",
+  "domain_already_connected": "Sua página já tem um domínio. Remova o atual antes de conectar outro.",
+  "domain_taken": "Este domínio já está conectado a outra página. Se ele é seu, fale com o suporte.",
+  "domain_not_found": "Sua página não tem domínio conectado. Atualize a tela.",
+  "domain_error.txt_missing": "o registro TXT de verificação não foi encontrado",
+  "domain_error.cname_missing": "o registro CNAME não foi encontrado",
+  "domain_error.cname_wrong": "o registro CNAME aponta para outro endereço",
+  "domain_error.cert_failed": "o certificado de segurança (HTTPS) não pôde ser emitido",
+  "email.domain_active.subject": "{domain} está no ar",
+  "email.domain_active.text": "Olá, {name}.\n\nSua página já abre em https://{domain}, com HTTPS. O endereço {subdomain} e os QR codes antigos continuam funcionando e levam para o domínio novo.\n\nBaixe o QR code novo em Minha página: {link}\n\nCasvitta",
+  "email.domain_broken.subject": "{domain} parou de funcionar",
+  "email.domain_broken.text": "Olá, {name}.\n\nNa checagem de hoje, {problem} em {domain}. Para sua página não ficar fora do ar, ela voltou a abrir em {subdomain}.\n\nConfira os registros no seu provedor de domínio e clique em Verificar agora em Minha página: {link}\n\nCasvitta"
 }

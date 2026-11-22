@@ -85,6 +85,22 @@ export function useChangePageSlug() {
   );
 }
 
+export type PageDomain = NonNullable<Page['domain']>;
+
+export function useConnectDomain() {
+  return usePageMutation(async (hostname: string) =>
+    check(await api.POST('/v1/page/domain', { body: { hostname } })),
+  );
+}
+
+export function useCheckDomain() {
+  return usePageMutation(async () => check(await api.POST('/v1/page/domain/check')));
+}
+
+export function useDetachDomain() {
+  return usePageMutation(async () => check(await api.DELETE('/v1/page/domain')));
+}
+
 export function useUploadPagePhoto() {
   return usePageMutation(async (file: File) => {
     const form = new FormData();
@@ -179,11 +195,19 @@ export function useSavePageCollections() {
 type Search = Record<string, string | string[] | undefined>;
 
 /**
- * An earlier page address: answer with a permanent redirect to the current one, keeping the path
- * and the query (?origem=qr on printed QR codes keeps being counted as QR).
+ * The page lives elsewhere (an earlier address, or the subdomain of a page with an active custom
+ * domain): answer with a permanent redirect to `page.url`, keeping the path and the query
+ * (?origem=qr on printed QR codes keeps being counted as QR).
  */
-export function movedTo(page: PublicPage, requested: string, path: string, search: Search) {
-  if (page.slug === requested.toLowerCase()) return null;
+export function movedTo(
+  page: PublicPage,
+  requested: string,
+  host: string,
+  path: string,
+  search: Search,
+) {
+  const canonicalHost = new URL(page.url).host;
+  if (page.slug === requested.toLowerCase() && canonicalHost === host.toLowerCase()) return null;
   const query = new URLSearchParams();
   for (const [key, value] of Object.entries(search)) {
     for (const v of Array.isArray(value) ? value : value === undefined ? [] : [value]) {

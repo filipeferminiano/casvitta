@@ -18,12 +18,23 @@ describe('broker page helpers', () => {
 
 describe('movedTo', () => {
   const page = { slug: 'mariana-campinas', url: 'https://mariana-campinas.casvitta.com.br' };
+  const host = 'mariana-campinas.casvitta.com.br';
   it('keeps path and query when an old address is used', () => {
     expect(
-      movedTo(page as PublicPage, 'marianaalves', '/cv-204', { origem: 'qr', utm_source: ['ig'] }),
+      movedTo(page as PublicPage, 'marianaalves', 'marianaalves.casvitta.com.br', '/cv-204', {
+        origem: 'qr',
+        utm_source: ['ig'],
+      }),
     ).toBe('https://mariana-campinas.casvitta.com.br/cv-204?origem=qr&utm_source=ig');
   });
   it('does nothing on the current address', () => {
-    expect(movedTo(page as PublicPage, 'Mariana-Campinas', '', {})).toBeNull();
+    expect(movedTo(page as PublicPage, 'Mariana-Campinas', host, '', {})).toBeNull();
+  });
+  it('sends the subdomain to the active custom domain, and serves the domain itself', () => {
+    const withDomain = { ...page, url: 'https://www.marianaimoveis.com.br' } as PublicPage;
+    expect(movedTo(withDomain, 'mariana-campinas', host, '/x', {})).toBe(
+      'https://www.marianaimoveis.com.br/x',
+    );
+    expect(movedTo(withDomain, 'mariana-campinas', 'www.marianaimoveis.com.br', '', {})).toBeNull();
   });
 });

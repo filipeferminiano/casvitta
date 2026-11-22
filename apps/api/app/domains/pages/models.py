@@ -10,7 +10,7 @@ import uuid
 from datetime import date, datetime
 from enum import StrEnum
 
-from sqlalchemy import Date, DateTime, ForeignKey, Integer, String, UniqueConstraint
+from sqlalchemy import Date, DateTime, ForeignKey, Index, Integer, String, UniqueConstraint, text
 from sqlalchemy.orm import Mapped, mapped_column
 
 from app.core.db import Base
@@ -186,3 +186,46 @@ class PageReport(UUIDPrimaryKey, Timestamps, WorkspaceScoped, Base):
     )
     reviewed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
     review_note: Mapped[str | None] = mapped_column(String(500))
+
+
+class DomainStatus(StrEnum):
+    PENDING = "pending"  # waiting for the DNS records (up to custom_domain_dns_wait_hours)
+    PROVISIONING = "provisioning"  # DNS right; HTTPS certificate being issued
+    ACTIVE = "active"  # serves the page; {slug}.casvitta.com.br redirects here
+    ERROR = "error"  # something specific is wrong (error_code, found_value); page on subdomain
+    DETACHED = "detached"  # removed by the broker; the page is back on the subdomain
+
+
+class CustomDomain(UUIDPrimaryKey, Timestamps, WorkspaceScoped, Base):
+    """www.example.com.br pointing at a broker page (plans with custom_domain)."""
+
+    __tablename__ = "custom_domains"
+    __table_args__ = (
+        # One live domain per hostname and per page; detached rows stay as history.
+        Index(
+            "uq_custom_domains_hostname_live",
+            "hostname",
+            unique=True,
+            postgresql_where=text("status <> 'detached'"),
+        ),
+        Index(
+            "uq_custom_domains_page_live",
+            "page_id",
+            unique=True,
+            postgresql_where=text("status <> 'detached'"),
+        ),
+    )
+
+    page_id: Mapped[uuid.UUID] = mapped_column(
+        ForeignKey("broker_pages.id", ondelete="CASCADE"), index=True
+    )
+    hostname: Mapped[str] = mapped_column(String(253))
+    verification_token: Mapped[str] = mapped_column(String(64))
+    status: Mapped[DomainStatus] = mapped_column(
+        str_enum(DomainStatus), default=DomainStatus.PENDING, server_default="pending"
+    )
+    error_code: Mapped[str | None] = mapped_column(String(40))
+    found_value: Mapped[str | None] = mapped_column(String(300))
+    last_checked_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    activated_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    detached_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))

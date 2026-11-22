@@ -11,6 +11,7 @@ from pydantic import BaseModel
 from app.api.v1.deps import get_settings_dep
 from app.core.errors import AppError
 from app.core.settings import Settings
+from app.integrations.domains.fake import FakeDomains
 from app.integrations.messaging.fake import FakeEmail
 from app.integrations.registry import Integrations, get_integrations
 from app.integrations.storage.fake import FakeStorage
@@ -57,3 +58,25 @@ async def fake_storage_object(
         raise AppError("not_found", status_code=404)
     data, content_type = stored
     return Response(data, media_type=content_type, headers={"Cache-Control": "no-store"})
+
+
+class DevDnsIn(BaseModel):
+    hostname: str
+    txt: list[str] = []
+    cname: str | None = None
+
+
+@router.post("/dns", status_code=204)
+async def set_dns(
+    data: DevDnsIn,
+    settings: Annotated[Settings, Depends(get_settings_dep)],
+    integrations: Annotated[Integrations, Depends(get_integrations)],
+) -> Response:
+    """Simulated DNS for custom domains (fake adapter, outbox enabled, never production)."""
+    domains = integrations.domains
+    if not settings.dev_outbox_enabled or settings.app_env == "production":
+        raise AppError("not_found", status_code=404)
+    if not isinstance(domains, FakeDomains):
+        raise AppError("not_found", status_code=404)
+    domains.set_dns(data.hostname, txt=data.txt, cname=data.cname)
+    return Response(status_code=204)

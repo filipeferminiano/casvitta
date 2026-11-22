@@ -2067,6 +2067,41 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/page/domain": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Connect Domain */
+        post: operations["connectPageDomain"];
+        /** Detach Domain */
+        delete: operations["detachPageDomain"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/page/domain/check": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Check Domain */
+        post: operations["checkPageDomain"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/page/stats": {
         parameters: {
             query?: never;
@@ -2163,6 +2198,26 @@ export interface paths {
         put?: never;
         /** Report Page */
         post: operations["reportPage"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/public/domains/{hostname}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Resolve Domain
+         * @description For the web proxy: which page a custom hostname serves (404 when none is active).
+         */
+        get: operations["resolvePageDomain"];
+        put?: never;
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -3454,6 +3509,59 @@ export interface components {
          * @enum {string}
          */
         Direction: "inbound" | "outbound";
+        /** DomainIn */
+        DomainIn: {
+            /** Hostname */
+            hostname: string;
+        };
+        /** DomainOut */
+        DomainOut: {
+            /** Hostname */
+            hostname: string;
+            /** Zone */
+            zone: string;
+            status: components["schemas"]["DomainStatus"];
+            /** Txt Name */
+            txt_name: string;
+            /** Txt Host */
+            txt_host: string;
+            /** Txt Value */
+            txt_value: string;
+            /** Cname Name */
+            cname_name: string;
+            /** Cname Host */
+            cname_host: string;
+            /** Cname Target */
+            cname_target: string;
+            /** Error Code */
+            error_code: string | null;
+            /** Found Value */
+            found_value: string | null;
+            /** Last Checked At */
+            last_checked_at: string | null;
+            /** Activated At */
+            activated_at: string | null;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /**
+             * Waiting Until
+             * Format: date-time
+             */
+            waiting_until: string;
+        };
+        /** DomainResolveOut */
+        DomainResolveOut: {
+            /** Slug */
+            slug: string;
+        };
+        /**
+         * DomainStatus
+         * @enum {string}
+         */
+        DomainStatus: "pending" | "provisioning" | "active" | "error" | "detached";
         /** EmailLinkIn */
         EmailLinkIn: {
             /** Email */
@@ -4302,6 +4410,11 @@ export interface components {
             slug: string;
             /** Url */
             url: string;
+            /** Subdomain Url */
+            subdomain_url: string;
+            domain: components["schemas"]["DomainOut"] | null;
+            /** Domains Available */
+            domains_available: boolean;
             /** Old Slugs */
             old_slugs: string[];
             theme: components["schemas"]["PageTheme"];
@@ -9827,6 +9940,79 @@ export interface operations {
             };
         };
     };
+    connectPageDomain: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["DomainIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PageOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    detachPageDomain: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PageOut"];
+                };
+            };
+        };
+    };
+    checkPageDomain: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PageOut"];
+                };
+            };
+        };
+    };
     getMyPageStats: {
         parameters: {
             query?: {
@@ -10010,6 +10196,37 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    resolvePageDomain: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                hostname: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DomainResolveOut"];
+                };
             };
             /** @description Validation Error */
             422: {

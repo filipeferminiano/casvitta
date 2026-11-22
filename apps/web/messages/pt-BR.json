@@ -5068,6 +5068,69 @@
       "sentTitle": "Recebemos sua denúncia",
       "sentText": "A equipe da Casvitta vai analisar esta página. Obrigado por avisar.",
       "back": "Voltar à página"
+    },
+    "domain": {
+      "title": "Domínio próprio",
+      "offer": "Use um endereço seu, como www.seunome.com.br, no lugar de seunome.casvitta.com.br. Disponível a partir do plano Automação.",
+      "seePlans": "Ver planos em Configurações",
+      "yourDomain": "Seu domínio",
+      "yourDomainHelp": "Use o endereço com www. Você precisa ter o domínio registrado, por exemplo no Registro.br.",
+      "notSold": "A Casvitta não vende domínios. Você registra no provedor que preferir e paga a ele diretamente.",
+      "continue": "Continuar",
+      "saving": "Salvando…",
+      "error": "Não conseguimos concluir agora. Tente de novo em alguns segundos.",
+      "status": {
+        "pending": "Verificando",
+        "provisioning": "Ativando o HTTPS",
+        "active": "Ativo",
+        "error": "Com problema",
+        "detached": "Desconectado"
+      },
+      "pendingNote": "Sua página continua no ar em {subdomain} enquanto isso.",
+      "progress": "Andamento da verificação",
+      "steps": {
+        "txt": "Registro TXT encontrado",
+        "cname": "CNAME apontando para a Casvitta",
+        "cert": "Certificado de segurança (cadeado HTTPS)"
+      },
+      "problemTitle": "Encontramos um problema",
+      "problems": {
+        "txt_missing": "Não encontramos o registro TXT de verificação. Crie o TXT abaixo no provedor e verifique de novo.",
+        "cname_missing": "Não encontramos o registro CNAME de {host}. Crie o CNAME abaixo no provedor e verifique de novo.",
+        "cname_wrong": "O CNAME de {host} aponta para {found}, não para {target}. Edite o registro no provedor e verifique de novo.",
+        "cert_failed": "O certificado de segurança não pôde ser emitido. Confira se o CNAME continua apontando para a Casvitta e verifique de novo; se continuar, fale com o suporte."
+      },
+      "fellBack": "Sua página voltou a abrir em {subdomain} até você corrigir. Ninguém perde o acesso.",
+      "stillOnSubdomain": "Sua página continua no ar em {subdomain}.",
+      "active": {
+        "https": "HTTPS ativo · renovação automática",
+        "redirect": "{subdomain} leva para o seu domínio",
+        "qr": "QR codes antigos continuam funcionando"
+      },
+      "downloadQr": "Baixar QR code com o novo endereço",
+      "showRecords": "Ver instruções de DNS",
+      "hideRecords": "Esconder instruções de DNS",
+      "recordsTitle": "Adicione 2 registros no seu provedor",
+      "recordsIntro": "No painel onde você registrou {zone}, procure “DNS” e crie:",
+      "cname": "CNAME",
+      "txt": "TXT",
+      "name": "Nome:",
+      "valueLabel": "Copiar o valor do {label}",
+      "copy": "Copiar",
+      "copied": "Copiado",
+      "apexNote": "Endereço sem www ({zone})? Configure no provedor para redirecionar para o www.",
+      "registroBr": "Ajuda do Registro.br sobre DNS",
+      "checkNow": "Já configurei, verificar",
+      "checkAgain": "Verificar de novo",
+      "checking": "Verificando…",
+      "checkedAt": "Última verificação: {date} às {time}",
+      "waitNote": "Mudanças de DNS podem levar até 48 horas. Verificamos todo dia às 06h e avisamos por e-mail quando o domínio entrar no ar.",
+      "detach": "Desconectar domínio",
+      "detachTitle": "Desconectar {domain}?",
+      "detachText": "Sua página volta a abrir só em {subdomain}. Os links com o seu domínio param de funcionar até você conectar de novo.",
+      "detachConfirm": "Desconectar",
+      "cancel": "Cancelar",
+      "notYetTitle": "Ainda não está certo"
     }
   }
 }

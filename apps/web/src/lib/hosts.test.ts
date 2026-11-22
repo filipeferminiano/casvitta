@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { resolveSite, routeRequest } from './hosts.ts';
+import { isCustomDomainCandidate, resolveSite, routeRequest } from './hosts.ts';
 
 const ROOT = 'casvitta.com.br';
 
@@ -86,5 +86,25 @@ describe('routeRequest', () => {
     expect(routeRequest({ kind: 'marketplace' }, '/bo/equipe', ROOT)).toEqual({
       action: 'not-found',
     });
+  });
+});
+
+describe('isCustomDomainCandidate', () => {
+  it('looks up only hosts that are not ours, previews or IPs', () => {
+    const root = 'casvitta.com.br';
+    expect(isCustomDomainCandidate('www.marianaimoveis.com.br', root)).toBe(true);
+    expect(isCustomDomainCandidate('WWW.Mariana.com.br.', root)).toBe(true);
+    for (const host of [
+      'casvitta.com.br',
+      'www.casvitta.com.br',
+      'mariana.casvitta.com.br',
+      'casvitta-web-abc.a.run.app',
+      '10.0.0.1:8080',
+      'localhost:3000',
+      'mariana.localhost:3000',
+    ]) {
+      expect(isCustomDomainCandidate(host, root)).toBe(false);
+    }
+    expect(isCustomDomainCandidate('www.mariana.test:3000', 'localhost:3000')).toBe(true);
   });
 });

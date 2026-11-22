@@ -1,15 +1,25 @@
 import { NextResponse, type NextRequest } from 'next/server';
 
-import { resolveSite, routeRequest } from '@/lib/hosts';
+import { customDomainSlug } from '@/lib/custom-domains';
+import { isCustomDomainCandidate, resolveSite, routeRequest, type Site } from '@/lib/hosts';
 import { isLive } from '@/lib/live';
 
 const ROOT_DOMAIN = process.env.ROOT_DOMAIN ?? 'localhost:3000';
 const APP_SUBDOMAIN = process.env.APP_SUBDOMAIN ?? 'app';
 
 /** Routes each host to its route group (see src/lib/hosts.ts). */
-export function proxy(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const host = request.headers.get('x-forwarded-host') ?? request.headers.get('host') ?? '';
-  const site = resolveSite(host, ROOT_DOMAIN, APP_SUBDOMAIN);
+  let site: Site = resolveSite(host, ROOT_DOMAIN, APP_SUBDOMAIN);
+  // A broker's own domain serves their page (active domains only; see lib/custom-domains).
+  if (
+    site.kind === 'marketplace' &&
+    isLive('social') &&
+    isCustomDomainCandidate(host, ROOT_DOMAIN)
+  ) {
+    const slug = await customDomainSlug(host);
+    if (slug) site = { kind: 'landing', brokerSlug: slug };
+  }
   const decision = routeRequest(site, request.nextUrl.pathname, ROOT_DOMAIN, APP_SUBDOMAIN);
 
   // Broker OS needs a session: signed-out visitors go to sign in on the marketplace host.

@@ -6,6 +6,7 @@ import uuid
 from typing import Annotated, Literal
 
 from fastapi import APIRouter, Depends, File, Query, Request, Response, UploadFile, status
+from pydantic import BaseModel, Field
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.api.v1.deps import (
@@ -21,7 +22,7 @@ from app.core.errors import AppError
 from app.core.rate_limit import RateLimiter
 from app.core.security import AccessClaims
 from app.core.settings import Settings
-from app.domains.pages import collections, inquiries, service
+from app.domains.pages import collections, domains, inquiries, service
 from app.domains.pages.collections import PageCollectionsIn, PageCollectionsOut
 from app.domains.pages.inquiries import PageInquiryAccepted, PageInquiryIn
 from app.domains.pages.schemas import (
@@ -38,6 +39,7 @@ from app.integrations.registry import Integrations, get_integrations
 
 router = APIRouter(prefix="/page", tags=["pages"])
 public_router = APIRouter(prefix="/public/pages", tags=["public"])
+public_domains_router = APIRouter(prefix="/public/domains", tags=["public"])
 
 ClaimsDep = Annotated[AccessClaims, Depends(get_claims)]
 TenantSession = Annotated[AsyncSession, Depends(get_tenant_session)]
@@ -148,6 +150,54 @@ async def change_slug(
     return out
 
 
+class DomainIn(BaseModel):
+    hostname: str = Field(min_length=3, max_length=300)
+
+
+@router.post("/domain", response_model=PageOut, operation_id="connectPageDomain")
+async def connect_domain(
+    data: DomainIn, claims: ClaimsDep, session: TenantSession, settings: SettingsDep
+) -> PageOut:
+    page, profile = await service.get_or_create(session, claims.user_id)
+    await domains.connect(session, page, data.hostname, settings)
+    out = await service.to_out(session, page, profile, settings)
+    await session.commit()
+    return out
+
+
+@router.post("/domain/check", response_model=PageOut, operation_id="checkPageDomain")
+async def check_domain(
+    claims: ClaimsDep,
+    session: TenantSession,
+    settings: SettingsDep,
+    integrations: Annotated[Integrations, Depends(get_integrations)],
+) -> PageOut:
+    page, profile = await service.get_or_create(session, claims.user_id)
+    domain = await domains.live_for_page(session, page)
+    if domain is None:
+        raise AppError("domain_not_found", status_code=404)
+    await domains.check(
+        session, domain, integrations.domains, settings, email_port=integrations.email
+    )
+    out = await service.to_out(session, page, profile, settings)
+    await session.commit()
+    return out
+
+
+@router.delete("/domain", response_model=PageOut, operation_id="detachPageDomain")
+async def detach_domain(
+    claims: ClaimsDep,
+    session: TenantSession,
+    settings: SettingsDep,
+    integrations: Annotated[Integrations, Depends(get_integrations)],
+) -> PageOut:
+    page, profile = await service.get_or_create(session, claims.user_id)
+    await domains.detach(session, page, integrations.domains)
+    out = await service.to_out(session, page, profile, settings)
+    await session.commit()
+    return out
+
+
 @router.get("/stats", response_model=PageStatsOut, operation_id="getMyPageStats")
 async def page_stats(
     claims: ClaimsDep,
@@ -172,9 +222,10 @@ async def page_qr(
     session: TenantSession,
     settings: SettingsDep,
 ) -> Response:
-    _, profile = await service.get_or_create(session, claims.user_id)
+    page, profile = await service.get_or_create(session, claims.user_id)
+    url = await service.canonical_url(session, page, profile, settings)
     await session.commit()
-    content = service.qr_code(service.page_url(settings, profile.slug), kind)
+    content = service.qr_code(url, kind)
     filename = f"qr-{profile.slug}.{kind}"
     return Response(
         content,
@@ -266,3 +317,20 @@ async def report_page(  # noqa: PLR0917 - FastAPI dependencies
     await service.report(session, slug, data, settings)
     await session.commit()
     return Response(status_code=status.HTTP_204_NO_CONTENT)
+
+
+class DomainResolveOut(BaseModel):
+    slug: str
+
+
+@public_domains_router.get(
+    "/{hostname}", response_model=DomainResolveOut, operation_id="resolvePageDomain"
+)
+async def resolve_domain(
+    hostname: str, session: Annotated[AsyncSession, Depends(get_session)]
+) -> DomainResolveOut:
+    """For the web proxy: which page a custom hostname serves (404 when none is active)."""
+    slug = await domains.resolve(session, hostname)
+    if slug is None:
+        raise AppError("not_found", status_code=404)
+    return DomainResolveOut(slug=slug)

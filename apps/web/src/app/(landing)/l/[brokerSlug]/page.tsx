@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { notFound, permanentRedirect } from 'next/navigation';
 import { getTranslations } from 'next-intl/server';
 
-import { getPublicPage, movedTo } from '@/lib/data/page';
+import { getPublicPage, movedTo, requestHost } from '@/lib/data/page-server';
 import { getBrokerPage } from '@/lib/data/marketplace';
 import { isLive } from '@/lib/live';
 import { BrokerLanding } from '@/screens/landing/LandingPages';
@@ -43,7 +43,7 @@ export default async function BrokerLandingPage({ params, searchParams }: Props)
   if (isLive('social')) {
     const page = await getPublicPage(brokerSlug);
     if (!page) notFound();
-    const moved = movedTo(page, brokerSlug, '', await searchParams);
+    const moved = movedTo(page, brokerSlug, await requestHost(), '', await searchParams);
     if (moved) permanentRedirect(moved);
     const jsonLd = {
       '@context': 'https://schema.org',

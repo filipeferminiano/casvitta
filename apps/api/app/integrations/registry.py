@@ -14,6 +14,8 @@ from app.core.settings import Settings
 from app.integrations.ads.fake import FakeAdPlatform
 from app.integrations.ads.port import AdPlatform, AdPlatformPort
 from app.integrations.base import IntegrationNotConfigured
+from app.integrations.domains.fake import FakeDomains
+from app.integrations.domains.port import DomainsPort
 from app.integrations.llm.fake import FakeLLM
 from app.integrations.llm.port import LLMPort
 from app.integrations.llm.service import LLMService
@@ -42,6 +44,7 @@ class Integrations:
     email: EmailPort
     sms: SmsPort
     search_index: SearchIndexPort
+    domains: DomainsPort
     is_fake: bool
 
     def llm_service(self, model: str) -> LLMService:
@@ -59,6 +62,7 @@ def fake_integrations() -> Integrations:
         email=FakeEmail(),
         sms=FakeSms(),
         search_index=FakeSearchIndex(),
+        domains=FakeDomains(),
         is_fake=True,
     )
 

@@ -7,6 +7,7 @@ from pydantic import BaseModel, Field, field_validator
 
 from app.domains.accounts.schemas import CreciStatus
 from app.domains.interest.schemas import normalize_br_phone
+from app.domains.pages.domains import DomainOut
 from app.domains.pages.models import (
     PageEventKind,
     PageSource,
@@ -35,7 +36,11 @@ class PageChecklist(BaseModel):
 
 class PageOut(BaseModel):
     slug: str
+    # Where the page lives now: the active custom domain, else the subdomain.
     url: str
+    subdomain_url: str
+    domain: DomainOut | None  # the connected custom domain, in any state but detached
+    domains_available: bool  # plan has custom_domain
     # Earlier addresses that still lead here (oldest first).
     old_slugs: list[str]
     theme: PageTheme

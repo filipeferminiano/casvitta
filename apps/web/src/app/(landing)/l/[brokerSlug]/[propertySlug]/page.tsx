@@ -3,7 +3,7 @@ import { notFound, permanentRedirect } from 'next/navigation';
 import { getTranslations } from 'next-intl/server';
 
 import { getListingBySlug } from '@/lib/data/marketplace';
-import { getPublicPage, movedTo } from '@/lib/data/page';
+import { getPublicPage, movedTo, requestHost } from '@/lib/data/page-server';
 import { isLive } from '@/lib/live';
 import { LiveListingScreen } from '@/screens/marketplace/LiveListingScreen';
 import { PropertyLanding } from '@/screens/landing/LandingPages';
@@ -54,7 +54,13 @@ export default async function PropertyLandingPage({ params, searchParams }: Prop
     const found = await loadLive(brokerSlug, propertySlug);
     if (!found) notFound();
     const { page, listing } = found;
-    const moved = movedTo(page, brokerSlug, `/${propertySlug}`, await searchParams);
+    const moved = movedTo(
+      page,
+      brokerSlug,
+      await requestHost(),
+      `/${propertySlug}`,
+      await searchParams,
+    );
     if (moved) permanentRedirect(moved);
     const tKinds = await getTranslations('crm.properties.kinds');
     return (

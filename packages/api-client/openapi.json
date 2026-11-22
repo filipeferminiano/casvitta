@@ -6440,6 +6440,87 @@
         }
       }
     },
+    "/v1/page/domain": {
+      "post": {
+        "tags": [
+          "pages"
+        ],
+        "summary": "Connect Domain",
+        "operationId": "connectPageDomain",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DomainIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PageOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "pages"
+        ],
+        "summary": "Detach Domain",
+        "operationId": "detachPageDomain",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PageOut"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/page/domain/check": {
+      "post": {
+        "tags": [
+          "pages"
+        ],
+        "summary": "Check Domain",
+        "operationId": "checkPageDomain",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PageOut"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/v1/page/stats": {
       "get": {
         "tags": [
@@ -6698,6 +6779,49 @@
         "responses": {
           "204": {
             "description": "Successful Response"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/public/domains/{hostname}": {
+      "get": {
+        "tags": [
+          "public"
+        ],
+        "summary": "Resolve Domain",
+        "description": "For the web proxy: which page a custom hostname serves (404 when none is active).",
+        "operationId": "resolvePageDomain",
+        "parameters": [
+          {
+            "name": "hostname",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Hostname"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DomainResolveOut"
+                }
+              }
+            }
           },
           "422": {
             "description": "Validation Error",
@@ -10622,6 +10746,159 @@
         ],
         "title": "Direction"
       },
+      "DomainIn": {
+        "properties": {
+          "hostname": {
+            "type": "string",
+            "maxLength": 300,
+            "minLength": 3,
+            "title": "Hostname"
+          }
+        },
+        "type": "object",
+        "required": [
+          "hostname"
+        ],
+        "title": "DomainIn"
+      },
+      "DomainOut": {
+        "properties": {
+          "hostname": {
+            "type": "string",
+            "title": "Hostname"
+          },
+          "zone": {
+            "type": "string",
+            "title": "Zone"
+          },
+          "status": {
+            "$ref": "#/components/schemas/DomainStatus"
+          },
+          "txt_name": {
+            "type": "string",
+            "title": "Txt Name"
+          },
+          "txt_host": {
+            "type": "string",
+            "title": "Txt Host"
+          },
+          "txt_value": {
+            "type": "string",
+            "title": "Txt Value"
+          },
+          "cname_name": {
+            "type": "string",
+            "title": "Cname Name"
+          },
+          "cname_host": {
+            "type": "string",
+            "title": "Cname Host"
+          },
+          "cname_target": {
+            "type": "string",
+            "title": "Cname Target"
+          },
+          "error_code": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Error Code"
+          },
+          "found_value": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Found Value"
+          },
+          "last_checked_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Last Checked At"
+          },
+          "activated_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Activated At"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          },
+          "waiting_until": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Waiting Until"
+          }
+        },
+        "type": "object",
+        "required": [
+          "hostname",
+          "zone",
+          "status",
+          "txt_name",
+          "txt_host",
+          "txt_value",
+          "cname_name",
+          "cname_host",
+          "cname_target",
+          "error_code",
+          "found_value",
+          "last_checked_at",
+          "activated_at",
+          "created_at",
+          "waiting_until"
+        ],
+        "title": "DomainOut"
+      },
+      "DomainResolveOut": {
+        "properties": {
+          "slug": {
+            "type": "string",
+            "title": "Slug"
+          }
+        },
+        "type": "object",
+        "required": [
+          "slug"
+        ],
+        "title": "DomainResolveOut"
+      },
+      "DomainStatus": {
+        "type": "string",
+        "enum": [
+          "pending",
+          "provisioning",
+          "active",
+          "error",
+          "detached"
+        ],
+        "title": "DomainStatus"
+      },
       "EmailLinkIn": {
         "properties": {
           "email": {
@@ -13236,6 +13513,24 @@
             "type": "string",
             "title": "Url"
           },
+          "subdomain_url": {
+            "type": "string",
+            "title": "Subdomain Url"
+          },
+          "domain": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/DomainOut"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "domains_available": {
+            "type": "boolean",
+            "title": "Domains Available"
+          },
           "old_slugs": {
             "items": {
               "type": "string"
@@ -13395,6 +13690,9 @@
         "required": [
           "slug",
           "url",
+          "subdomain_url",
+          "domain",
+          "domains_available",
           "old_slugs",
           "theme",
           "works_as",

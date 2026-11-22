@@ -29,7 +29,7 @@ from app.core.time import today_local, utcnow
 from app.domains.accounts.models import BrokerProfile, Workspace
 from app.domains.accounts.service import SLUG_FORMAT, creci_status, is_reserved_slug
 from app.domains.listings.models import Channel, Listing, ListingStatus
-from app.domains.pages import collections
+from app.domains.pages import collections, domains
 from app.domains.pages.models import (
     BrokerPage,
     PageEvent,
@@ -73,6 +73,14 @@ def page_url(settings: Settings, slug: str) -> str:
     parts = urlsplit(settings.site_url)
     host = parts.netloc.removeprefix("www.")
     return f"{parts.scheme}://{slug}.{host}"
+
+
+async def canonical_url(
+    session: AsyncSession, page: BrokerPage, profile: BrokerProfile, settings: Settings
+) -> str:
+    """Where the page lives now: its active custom domain, else {slug}.casvitta.com.br."""
+    hostname = await domains.serving_hostname(session, page)
+    return domains.domain_url(settings, hostname) if hostname else page_url(settings, profile.slug)
 
 
 def creci_line(profile: BrokerProfile) -> str | None:
@@ -160,9 +168,13 @@ async def to_out(
     session: AsyncSession, page: BrokerPage, profile: BrokerProfile, settings: Settings
 ) -> PageOut:
     viewed = await session.scalar(select(PageEvent.id).where(PageEvent.page_id == page.id).limit(1))
+    domain = await domains.live_for_page(session, page)
     return PageOut(
         slug=profile.slug,
-        url=page_url(settings, profile.slug),
+        url=await canonical_url(session, page, profile, settings),
+        subdomain_url=page_url(settings, profile.slug),
+        domain=domains.to_out(domain, settings) if domain else None,
+        domains_available=await plan_has(session, page.workspace_id, Feature.CUSTOM_DOMAIN),
         old_slugs=await old_addresses(session, profile),
         theme=page.theme,
         works_as=page.works_as,
@@ -285,12 +297,13 @@ async def public_page(session: AsyncSession, slug: str, settings: Settings) -> P
     with cross_tenant(session):
         branded = await _plan_branded(session, page.workspace_id)
         forms = await plan_has(session, page.workspace_id, Feature.TRACKED_FORMS)
+        public_url = await canonical_url(session, page, profile, settings)
         selections, instagram = await collections.public(
             session, page, {listing.code for listing in listings}
         )
     return PublicPageOut(
         slug=profile.slug,
-        url=page_url(settings, profile.slug),
+        url=public_url,
         theme=page.theme,
         display_name=profile.display_name,
         works_as=page.works_as,

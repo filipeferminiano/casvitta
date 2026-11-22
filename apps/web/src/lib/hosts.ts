@@ -100,3 +100,17 @@ export function routeRequest(
     }
   }
 }
+
+const IPV4 = /^\d{1,3}(?:\.\d{1,3}){3}$/;
+
+/**
+ * A host that may be a broker's custom domain (www.marianaimoveis.com.br): not ours, not a
+ * preview or IP. Only these are looked up (GET /v1/public/domains/{host}).
+ */
+export function isCustomDomainCandidate(host: string, rootDomain: string): boolean {
+  const hostname = host.trim().toLowerCase().replace(/\.$/, '').split(':')[0] ?? '';
+  const root = rootDomain.trim().toLowerCase().split(':')[0] ?? '';
+  if (!hostname.includes('.') || IPV4.test(hostname) || hostname.startsWith('[')) return false;
+  if (hostname === root || hostname.endsWith(`.${root}`)) return false;
+  return !hostname.endsWith('.run.app') && !hostname.endsWith('.localhost');
+}

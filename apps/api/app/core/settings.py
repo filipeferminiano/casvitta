@@ -135,6 +135,9 @@ class Settings(BaseSettings):
     # Public page events (views, WhatsApp clicks): requests per IP per minute.
     page_events_rate_limit_per_minute: int = 60
     page_inquiries_rate_limit_per_hour: int = 10
+    # Custom domains: brokers point a CNAME here; DNS errors show after this many hours.
+    custom_domain_cname_target: str = "paginas.casvitta.com.br"
+    custom_domain_dns_wait_hours: int = 48
     # Public interest form: requests per IP and kind per minute.
     interest_rate_limit_per_minute: int = 5
 
