@@ -578,3 +578,59 @@ export async function openAuthorizationDocument(id: string): Promise<void> {
   const url = URL.createObjectURL(await response.blob());
   window.open(url, '_blank', 'noopener');
 }
+
+// ------------------------------------------------------------------ Páginas e domínios (Social)
+
+export type StaffPagesTab = 'review' | 'published' | 'suspended';
+export type StaffPageRow = components['schemas']['PageRow'];
+export type StaffPageDetail = components['schemas']['PageDetailOut'];
+
+export function useStaffPages(tab: StaffPagesTab) {
+  return useQuery({
+    queryKey: [ROOT, 'pages', tab],
+    queryFn: async () =>
+      unwrap(await staffApi.GET('/v1/staff/pages', { params: { query: { tab } } })),
+  });
+}
+
+export function useStaffPage(id: string | null) {
+  return useQuery({
+    queryKey: [ROOT, 'pages', 'detail', id],
+    enabled: id !== null,
+    queryFn: async () =>
+      unwrap(
+        await staffApi.GET('/v1/staff/pages/{page_id}', {
+          params: { path: { page_id: id as string } },
+        }),
+      ),
+  });
+}
+
+export type PageAction =
+  | { kind: 'suspend' | 'reactivate'; pageId: string; reason: string }
+  | { kind: 'dismiss'; reportId: string; reason: string };
+
+/** Suspend (emailed to the broker), lift a suspension or dismiss a report. Reason required. */
+export function usePageAction() {
+  const client = useQueryClient();
+  return useMutation({
+    mutationFn: async (a: PageAction) => {
+      const body = { reason: a.reason };
+      if (a.kind === 'dismiss') {
+        return unwrap(
+          await staffApi.POST('/v1/staff/page-reports/{report_id}/dismiss', {
+            params: { path: { report_id: a.reportId } },
+            body,
+          }),
+        );
+      }
+      const path = { params: { path: { page_id: a.pageId } }, body };
+      return unwrap(
+        a.kind === 'suspend'
+          ? await staffApi.POST('/v1/staff/pages/{page_id}/suspend', path)
+          : await staffApi.POST('/v1/staff/pages/{page_id}/reactivate', path),
+      );
+    },
+    onSettled: () => invalidateAll(client),
+  });
+}

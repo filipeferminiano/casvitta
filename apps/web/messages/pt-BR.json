@@ -2608,7 +2608,8 @@
       "groups": {
         "operation": "Operação",
         "clients": "Clientes",
-        "system": "Sistema"
+        "system": "Sistema",
+        "social": "Casvitta Social"
       },
       "items": {
         "overview": "Visão geral",
@@ -2618,7 +2619,8 @@
         "accounts": "Corretores e imobiliárias",
         "revenue": "Receita e assinaturas",
         "team": "Equipe e auditoria",
-        "authorizations": "Autorizações de proprietário"
+        "authorizations": "Autorizações de proprietário",
+        "pages": "Páginas e domínios"
       },
       "countLabel": "{count} na fila",
       "environment": {
@@ -3376,6 +3378,97 @@
       "error": "Não conseguimos salvar. Atualize a página e tente de novo.",
       "checklistTitle": "O que conferir",
       "checklist": "Nome do proprietário igual ao documento · tipo de negócio (venda ou aluguel) · assinatura e datas · imóvel descrito igual ao cadastro."
+    },
+    "pages": {
+      "title": "Páginas e domínios",
+      "description": "Páginas públicas dos corretores: denúncias de visitantes e páginas publicadas que esperam a conferência do CRECI.",
+      "subject": "as páginas",
+      "tabs": {
+        "review": "Para revisar",
+        "published": "Publicadas",
+        "suspended": "Suspensas",
+        "reports": "Denúncias abertas"
+      },
+      "empty": {
+        "review": "Nada para revisar agora.",
+        "published": "Nenhuma página publicada.",
+        "suspended": "Nenhuma página suspensa."
+      },
+      "columns": {
+        "signal": "Tipo",
+        "page": "Página",
+        "detail": "Sinal",
+        "at": "Entrou"
+      },
+      "signals": {
+        "report": "Denúncia",
+        "creciShort": "CRECI não conferido",
+        "creci_unverified": "Página publicada; imóveis ocultos até conferir o CRECI"
+      },
+      "reasons": {
+        "impersonation": "Usa nome, marca ou fotos de outra pessoa",
+        "false_info": "Informação falsa",
+        "scam": "Possível golpe",
+        "inappropriate": "Conteúdo impróprio",
+        "other": "Outro motivo"
+      },
+      "status": {
+        "draft": "Rascunho",
+        "published": "Publicada",
+        "unpublished": "Fora do ar (pelo corretor)",
+        "suspended": "Suspensa"
+      },
+      "reportStatus": {
+        "open": "aberta",
+        "dismissed": "descartada",
+        "actioned": "página suspensa"
+      },
+      "plans": {
+        "free": "Grátis",
+        "essential": "Essencial",
+        "automation": "Automação",
+        "pro": "Pro",
+        "agency": "Imobiliária",
+        "corretor": "Corretor (antigo)",
+        "essencial": "Essencial (antigo)",
+        "profissional": "Profissional (antigo)"
+      },
+      "detailTitle": "Detalhes",
+      "pickOne": "Escolha uma página na lista para ver os detalhes e agir.",
+      "fields": {
+        "broker": "Corretor",
+        "creci": "CRECI",
+        "plan": "Plano",
+        "status": "Situação",
+        "published": "Publicada em",
+        "properties": "Imóveis visíveis",
+        "visits": "Visitas nas últimas 24 h"
+      },
+      "creciOk": "Conferido",
+      "creciPending": "Em análise",
+      "propertiesHidden": "{n} (ocultos até conferir o CRECI)",
+      "reportsTitle": "Denúncias",
+      "dismiss": "Descartar denúncia",
+      "dismissTitle": "Descartar denúncia",
+      "suspend": "Suspender página",
+      "suspendTitle": "Suspender {slug}",
+      "reactivate": "Tirar a suspensão",
+      "reactivateTitle": "Tirar a suspensão de {slug}",
+      "dialog": {
+        "suspend": "A página sai do ar na hora e o corretor recebe o motivo por e-mail. Só a equipe tira a suspensão. Imóveis e contatos não são apagados.",
+        "reactivate": "A página volta como “fora do ar”; o corretor publica de novo quando quiser.",
+        "dismiss": "A denúncia sai da fila. A página continua como está."
+      },
+      "confirm": {
+        "suspend": "Suspender página",
+        "reactivate": "Tirar a suspensão",
+        "dismiss": "Descartar denúncia"
+      },
+      "reason": "Motivo (vai para a auditoria; na suspensão, também para o corretor)",
+      "needReason": "Escreva o motivo com pelo menos 5 caracteres.",
+      "cancel": "Cancelar",
+      "error": "Não conseguimos concluir. Atualize a tela e tente de novo.",
+      "privacy": "Os interessados que essa página recebeu são do corretor. A equipe não abre esses dados sem pedido de suporte registrado."
     }
   },
   "audience": {
@@ -4632,7 +4725,8 @@
       "finderAction": "Encontre um imóvel para mim",
       "instagramTitle": "Vi no Instagram",
       "openPost": "Ver o post",
-      "selectionsTitle": "Seleções"
+      "selectionsTitle": "Seleções",
+      "report": "Denunciar esta página"
     },
     "property": {
       "title": "Falar sobre este imóvel",
@@ -4956,6 +5050,24 @@
       "unsaved": "Alterações não salvas.",
       "saveError": "Não conseguimos salvar. Tente de novo.",
       "onlyLive": "Imóveis que saírem da página somem das seleções e dos posts sozinhos; nada é apagado."
+    },
+    "report": {
+      "title": "Denunciar esta página",
+      "reasonLabel": "O que está errado?",
+      "reasons": {
+        "impersonation": "Usa nome, marca ou fotos de outra pessoa ou imobiliária",
+        "false_info": "Tem informação falsa sobre imóveis ou CRECI",
+        "scam": "Parece golpe (pede depósito, sinal ou dados bancários)",
+        "inappropriate": "Tem conteúdo impróprio",
+        "other": "Outro motivo"
+      },
+      "details": "Conte o que viu",
+      "needReason": "Escolha o que está errado.",
+      "send": "Enviar denúncia",
+      "note": "A equipe da Casvitta analisa cada denúncia. Não pedimos seus dados.",
+      "sentTitle": "Recebemos sua denúncia",
+      "sentText": "A equipe da Casvitta vai analisar esta página. Obrigado por avisar.",
+      "back": "Voltar à página"
     }
   }
 }

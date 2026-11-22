@@ -126,5 +126,10 @@
   "page_slug_reserved": "Este endereço é reservado pela Casvitta. Escolha outro.",
   "page_slug_taken": "Este endereço já é de outra página. Tente uma variação, como acrescentar a cidade.",
   "page_slug_same": "Este já é o endereço da sua página.",
-  "page_slug_too_many_changes": "Você já mudou o endereço 5 vezes. Fale com o suporte para mudar de novo."
+  "page_slug_too_many_changes": "Você já mudou o endereço 5 vezes. Fale com o suporte para mudar de novo.",
+  "email.page_suspended.subject": "Sua página na Casvitta foi suspensa",
+  "email.page_suspended.text": "Olá, {name}.\n\nA equipe da Casvitta suspendeu sua página {url}. Motivo:\n\n{reason}\n\nEnquanto estiver suspensa, a página não abre para visitantes. Seus imóveis, contatos e o histórico continuam guardados. Responda a este e-mail para conversar com a equipe e pedir a revisão.\n\nCasvitta",
+  "page_already_suspended": "Esta página já está suspensa. Atualize a tela.",
+  "page_not_suspended": "Esta página não está suspensa. Atualize a tela.",
+  "report_not_found": "Esta denúncia já foi tratada ou não existe mais. Atualize a fila."
 }

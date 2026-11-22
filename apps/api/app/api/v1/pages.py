@@ -27,6 +27,7 @@ from app.domains.pages.inquiries import PageInquiryAccepted, PageInquiryIn
 from app.domains.pages.schemas import (
     PageEventIn,
     PageOut,
+    PageReportIn,
     PageStatsOut,
     PageUpdate,
     PublicPageOut,
@@ -245,3 +246,23 @@ async def submit_inquiry(  # noqa: PLR0917 - FastAPI dependencies
     )
     await session.commit()
     return out
+
+
+@public_router.post(
+    "/{slug}/reports", status_code=status.HTTP_204_NO_CONTENT, operation_id="reportPage"
+)
+async def report_page(  # noqa: PLR0917 - FastAPI dependencies
+    slug: str,
+    data: PageReportIn,
+    request: Request,
+    session: Annotated[AsyncSession, Depends(get_session)],
+    settings: SettingsDep,
+    limiter: Annotated[RateLimiter, Depends(get_rate_limiter)],
+) -> Response:
+    client = client_key(request)
+    limit = settings.page_inquiries_rate_limit_per_hour
+    if not limiter.hit(f"page-reports:{client}", limit, 3600):
+        raise AppError("rate_limited", status_code=429)
+    await service.report(session, slug, data, settings)
+    await session.commit()
+    return Response(status_code=status.HTTP_204_NO_CONTENT)

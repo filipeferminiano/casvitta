@@ -193,3 +193,19 @@ export function movedTo(page: PublicPage, requested: string, path: string, searc
   const qs = query.toString();
   return `${page.url}${path}${qs ? `?${qs}` : ''}`;
 }
+
+export type PageReportReason = S['ReportReason'];
+
+/** "Denunciar esta página": goes to the Casvitta staff queue (no contact data asked). */
+export async function reportPage(
+  slug: string,
+  reason: PageReportReason,
+  details: string,
+): Promise<void> {
+  check(
+    await api.POST('/v1/public/pages/{slug}/reports', {
+      params: { path: { slug } },
+      body: { reason, details: details.trim() || null },
+    }),
+  );
+}

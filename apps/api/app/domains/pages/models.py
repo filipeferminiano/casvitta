@@ -155,3 +155,34 @@ class PageSlugRedirect(UUIDPrimaryKey, Timestamps, WorkspaceScoped, Base):
     broker_profile_id: Mapped[uuid.UUID] = mapped_column(
         ForeignKey("broker_profiles.id", ondelete="CASCADE"), index=True
     )
+
+
+class ReportReason(StrEnum):
+    IMPERSONATION = "impersonation"  # uses someone else's name, brand or photos
+    FALSE_INFO = "false_info"  # property or CRECI information that is not true
+    SCAM = "scam"  # asks for payment or deposit, suspicious contact
+    INAPPROPRIATE = "inappropriate"
+    OTHER = "other"
+
+
+class ReportStatus(StrEnum):
+    OPEN = "open"
+    DISMISSED = "dismissed"
+    ACTIONED = "actioned"  # the page was suspended
+
+
+class PageReport(UUIDPrimaryKey, Timestamps, WorkspaceScoped, Base):
+    """ "Denunciar esta página" from the public footer. No visitor contact data is asked."""
+
+    __tablename__ = "page_reports"
+
+    page_id: Mapped[uuid.UUID] = mapped_column(
+        ForeignKey("broker_pages.id", ondelete="CASCADE"), index=True
+    )
+    reason: Mapped[ReportReason] = mapped_column(str_enum(ReportReason))
+    details: Mapped[str | None] = mapped_column(String(500))
+    status: Mapped[ReportStatus] = mapped_column(
+        str_enum(ReportStatus), default=ReportStatus.OPEN, server_default="open"
+    )
+    reviewed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    review_note: Mapped[str | None] = mapped_column(String(500))

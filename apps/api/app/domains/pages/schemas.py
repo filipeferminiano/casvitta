@@ -7,7 +7,14 @@ from pydantic import BaseModel, Field, field_validator
 
 from app.domains.accounts.schemas import CreciStatus
 from app.domains.interest.schemas import normalize_br_phone
-from app.domains.pages.models import PageEventKind, PageSource, PageStatus, PageTheme, WorksAs
+from app.domains.pages.models import (
+    PageEventKind,
+    PageSource,
+    PageStatus,
+    PageTheme,
+    ReportReason,
+    WorksAs,
+)
 from app.domains.properties.schemas import PublicListingOut
 
 PageBlocker = Literal[
@@ -153,3 +160,14 @@ class SlugChangeIn(BaseModel):
     @classmethod
     def _lower(cls, value: str) -> str:
         return value.strip().lower()
+
+
+class PageReportIn(BaseModel):
+    reason: ReportReason
+    details: str | None = Field(default=None, max_length=500)
+
+    @field_validator("details")
+    @classmethod
+    def _clean(cls, value: str | None) -> str | None:
+        cleaned = " ".join(value.split()) if value else ""
+        return cleaned or None

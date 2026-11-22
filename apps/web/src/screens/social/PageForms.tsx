@@ -7,9 +7,11 @@ import { useTranslations } from 'next-intl';
 import { useState, type FormEvent, type ReactNode } from 'react';
 
 import {
+  reportPage,
   sourceFromSearch,
   submitPageInquiry,
   type PageInquiry,
+  type PageReportReason,
   type PropertyKind,
 } from '@/lib/data/page';
 
@@ -575,6 +577,75 @@ export function OwnerForm({ page, onClose }: { page: StorefrontData; onClose: ()
           return failure;
         }}
       />
+    </Flow>
+  );
+}
+
+const REPORT_REASONS: PageReportReason[] = [
+  'impersonation',
+  'false_info',
+  'scam',
+  'inappropriate',
+  'other',
+];
+
+/** "Denunciar esta página": reviewed by the Casvitta team; the page stays up meanwhile. */
+export function ReportForm({ page, onClose }: { page: StorefrontData; onClose: () => void }) {
+  const t = useTranslations('social.report');
+  const tForms = useTranslations('social.forms');
+  const [reason, setReason] = useState<PageReportReason | null>(null);
+  const [details, setDetails] = useState('');
+  const [state, setState] = useState<'idle' | 'sending' | 'sent'>('idle');
+  const [error, setError] = useState<string | null>(null);
+
+  if (state === 'sent') {
+    return <Done title={t('sentTitle')} text={t('sentText')} action={t('back')} onDone={onClose} />;
+  }
+  const submit = async (e: FormEvent) => {
+    e.preventDefault();
+    if (!reason) return setError(t('needReason'));
+    setState('sending');
+    setError(null);
+    try {
+      await reportPage(page.slug, reason, details);
+      setState('sent');
+    } catch {
+      setError(tForms('error'));
+      setState('idle');
+    }
+  };
+  return (
+    <Flow title={t('title')} onBack={onClose} backLabel={tForms('backToPage')}>
+      <form onSubmit={submit} noValidate className="flex flex-col gap-3">
+        <fieldset className="flex flex-col gap-2">
+          <legend className="mb-1.5 type-body-s font-medium">{t('reasonLabel')}</legend>
+          {REPORT_REASONS.map((r) => (
+            <Option key={r} pressed={reason === r} onClick={() => setReason(r)}>
+              {t(`reasons.${r}`)}
+            </Option>
+          ))}
+        </fieldset>
+        <Textarea
+          label={`${t('details')} ${tForms('optional')}`}
+          maxLength={500}
+          value={details}
+          onChange={(e) => setDetails(e.target.value)}
+        />
+        {error ? (
+          <p role="alert" className="type-body-s text-danger">
+            {error}
+          </p>
+        ) : null}
+        <Button
+          type="submit"
+          className="h-12"
+          loading={state === 'sending'}
+          loadingLabel={tForms('sending')}
+        >
+          {t('send')}
+        </Button>
+        <p className="type-caption">{t('note')}</p>
+      </form>
     </Flow>
   );
 }

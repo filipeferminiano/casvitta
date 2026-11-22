@@ -7,7 +7,7 @@ import { useEffect, useState } from 'react';
 
 import { sendPageEvent, sourceFromSearch, whatsappHref, type PageTheme } from '@/lib/data/page';
 
-import { Finder, OwnerForm } from './PageForms';
+import { Finder, OwnerForm, ReportForm } from './PageForms';
 
 export type StorefrontProperty = {
   code: string;
@@ -47,7 +47,7 @@ export type StorefrontData = {
 };
 
 type Tab = 'sale' | 'rent' | 'owner';
-type Mode = 'page' | 'finder' | 'owner';
+type Mode = 'page' | 'finder' | 'owner' | 'report';
 
 const currentSource = () => sourceFromSearch(new URLSearchParams(window.location.search));
 
@@ -143,6 +143,8 @@ export function Storefront({ page, preview = false }: { page: StorefrontData; pr
           />
         ) : mode === 'owner' ? (
           <OwnerForm page={page} onClose={() => setMode('page')} />
+        ) : mode === 'report' ? (
+          <ReportForm page={page} onClose={() => setMode('page')} />
         ) : null}
 
         {mode !== 'page' ? null : page.whatsapp_e164 ? (
@@ -241,6 +243,15 @@ export function Storefront({ page, preview = false }: { page: StorefrontData; pr
               {t('createYours')}
             </a>
           ) : null}
+          {preview ? null : (
+            <button
+              type="button"
+              onClick={() => open('report')}
+              className="hit-area-44 type-caption text-fg-muted underline underline-offset-4 focus-visible:outline-2 focus-visible:outline-focus"
+            >
+              {t('report')}
+            </button>
+          )}
         </footer>
       </div>
     </div>

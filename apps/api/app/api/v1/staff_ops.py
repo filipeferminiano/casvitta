@@ -29,6 +29,9 @@ from app.domains.backoffice import (
     revenue,
     service,
 )
+from app.domains.backoffice import (
+    pages as page_ops,
+)
 from app.domains.backoffice.schemas import OverviewOut, SearchOut
 from app.domains.interest.models import InterestKind
 from app.domains.staff.audit import Actor
@@ -483,3 +486,80 @@ async def authorization_document(
         media_type=media,
         headers={"Cache-Control": "no-store", "Content-Disposition": "inline"},
     )
+
+
+# ------------------------------------------------------------------ Páginas e domínios (Social)
+
+ModeratePages = Annotated[Actor, Depends(require_permission(Permission.MODERATE_LISTINGS))]
+
+
+@router.get("/pages", response_model=page_ops.PagesQueueOut, operation_id="listStaffPages")
+async def pages_queue(
+    actor: ActorDep, session: SessionDep, settings: SettingsDep, tab: page_ops.Tab = "review"
+) -> page_ops.PagesQueueOut:
+    result = await page_ops.queue(session, actor, tab, settings)
+    await session.commit()
+    return result
+
+
+@router.get("/pages/{page_id}", response_model=page_ops.PageDetailOut, operation_id="getStaffPage")
+async def page_detail(
+    page_id: uuid.UUID, actor: ActorDep, session: SessionDep, settings: SettingsDep
+) -> page_ops.PageDetailOut:
+    result = await page_ops.detail(session, actor, page_id, settings)
+    await session.commit()
+    return result
+
+
+@router.post(
+    "/pages/{page_id}/suspend",
+    response_model=page_ops.PageDetailOut,
+    operation_id="suspendStaffPage",
+)
+async def suspend_page(  # noqa: PLR0917
+    page_id: uuid.UUID,
+    payload: page_ops.ReasonIn,
+    actor: ModeratePages,
+    session: SessionDep,
+    settings: SettingsDep,
+    integrations: IntegrationsDep,
+) -> page_ops.PageDetailOut:
+    result = await page_ops.suspend(
+        session, actor, page_id, payload.reason, email_port=integrations.email, settings=settings
+    )
+    await session.commit()
+    return result
+
+
+@router.post(
+    "/pages/{page_id}/reactivate",
+    response_model=page_ops.PageDetailOut,
+    operation_id="reactivateStaffPage",
+)
+async def reactivate_page(
+    page_id: uuid.UUID,
+    payload: page_ops.ReasonIn,
+    actor: ModeratePages,
+    session: SessionDep,
+    settings: SettingsDep,
+) -> page_ops.PageDetailOut:
+    result = await page_ops.reactivate(session, actor, page_id, payload.reason, settings)
+    await session.commit()
+    return result
+
+
+@router.post(
+    "/page-reports/{report_id}/dismiss",
+    response_model=page_ops.PageDetailOut,
+    operation_id="dismissPageReport",
+)
+async def dismiss_page_report(
+    report_id: uuid.UUID,
+    payload: page_ops.ReasonIn,
+    actor: ModeratePages,
+    session: SessionDep,
+    settings: SettingsDep,
+) -> page_ops.PageDetailOut:
+    result = await page_ops.dismiss_report(session, actor, report_id, payload.reason, settings)
+    await session.commit()
+    return result

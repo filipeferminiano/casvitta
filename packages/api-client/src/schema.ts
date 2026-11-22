@@ -1152,6 +1152,91 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/staff/pages": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Pages Queue */
+        get: operations["listStaffPages"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/staff/pages/{page_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Page Detail */
+        get: operations["getStaffPage"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/staff/pages/{page_id}/suspend": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Suspend Page */
+        post: operations["suspendStaffPage"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/staff/pages/{page_id}/reactivate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Reactivate Page */
+        post: operations["reactivateStaffPage"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/staff/page-reports/{report_id}/dismiss": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Dismiss Page Report */
+        post: operations["dismissPageReport"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/public/capture-assignments/accept": {
         parameters: {
             query?: never;
@@ -2061,6 +2146,23 @@ export interface paths {
         put?: never;
         /** Submit Inquiry */
         post: operations["submitPageInquiry"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/public/pages/{slug}/reports": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Report Page */
+        post: operations["reportPage"];
         delete?: never;
         options?: never;
         head?: never;
@@ -4109,6 +4211,16 @@ export interface components {
             /** Instagram */
             instagram: components["schemas"]["InstagramPostOut"][];
         };
+        /** PageDetailOut */
+        PageDetailOut: {
+            page: components["schemas"]["PageRow"];
+            /** Visible Properties */
+            visible_properties: number;
+            /** Visits 24H */
+            visits_24h: number;
+            /** Reports */
+            reports: components["schemas"]["ReportOut"][];
+        };
         /** PageEventIn */
         PageEventIn: {
             kind: components["schemas"]["PageEventKind"];
@@ -4234,6 +4346,45 @@ export interface components {
             /** Forms */
             forms: boolean;
         };
+        /** PageReportIn */
+        PageReportIn: {
+            reason: components["schemas"]["ReportReason"];
+            /** Details */
+            details?: string | null;
+        };
+        /** PageRow */
+        PageRow: {
+            /**
+             * Page Id
+             * Format: uuid
+             */
+            page_id: string;
+            /** Slug */
+            slug: string;
+            /** Url */
+            url: string;
+            /** Display Name */
+            display_name: string;
+            plan: components["schemas"]["Plan"];
+            status: components["schemas"]["PageStatus"];
+            /** Creci Verified */
+            creci_verified: boolean;
+            /** Published At */
+            published_at: string | null;
+            /** Open Reports */
+            open_reports: number;
+            /** Signal */
+            signal: ("report" | "creci_unverified") | null;
+            signal_reason: components["schemas"]["ReportReason"] | null;
+            /** Signal Text */
+            signal_text: string | null;
+            /** Signal At */
+            signal_at: string | null;
+            /** Suspended Reason */
+            suspended_reason: string | null;
+            /** Is Demo */
+            is_demo: boolean;
+        };
         /**
          * PageSource
          * @enum {string}
@@ -4290,6 +4441,15 @@ export interface components {
             onboarding_done?: boolean | null;
             /** Onboarding Dismissed */
             onboarding_dismissed?: boolean | null;
+        };
+        /** PagesQueueOut */
+        PagesQueueOut: {
+            /** Counts */
+            counts: {
+                [key: string]: number;
+            };
+            /** Items */
+            items: components["schemas"]["PageRow"][];
         };
         /**
          * Permission
@@ -4914,6 +5074,37 @@ export interface components {
             /** Idempotency Key */
             idempotency_key: string;
         };
+        /** ReportOut */
+        ReportOut: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            reason: components["schemas"]["ReportReason"];
+            /** Details */
+            details: string | null;
+            status: components["schemas"]["ReportStatus"];
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /** Reviewed At */
+            reviewed_at: string | null;
+            /** Review Note */
+            review_note: string | null;
+        };
+        /**
+         * ReportReason
+         * @enum {string}
+         */
+        ReportReason: "impersonation" | "false_info" | "scam" | "inappropriate" | "other";
+        /**
+         * ReportStatus
+         * @enum {string}
+         */
+        ReportStatus: "open" | "dismissed" | "actioned";
         /** RevealIn */
         RevealIn: {
             /**
@@ -7790,6 +7981,183 @@ export interface operations {
             };
         };
     };
+    listStaffPages: {
+        parameters: {
+            query?: {
+                tab?: "review" | "published" | "suspended";
+            };
+            header?: {
+                "x-admin-token"?: string | null;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PagesQueueOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    getStaffPage: {
+        parameters: {
+            query?: never;
+            header?: {
+                "x-admin-token"?: string | null;
+            };
+            path: {
+                page_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PageDetailOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    suspendStaffPage: {
+        parameters: {
+            query?: never;
+            header?: {
+                "x-admin-token"?: string | null;
+            };
+            path: {
+                page_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ReasonIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PageDetailOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    reactivateStaffPage: {
+        parameters: {
+            query?: never;
+            header?: {
+                "x-admin-token"?: string | null;
+            };
+            path: {
+                page_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ReasonIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PageDetailOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    dismissPageReport: {
+        parameters: {
+            query?: never;
+            header?: {
+                "x-admin-token"?: string | null;
+            };
+            path: {
+                report_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ReasonIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PageDetailOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     acceptCapture: {
         parameters: {
             query?: never;
@@ -9609,6 +9977,39 @@ export interface operations {
                 content: {
                     "application/json": components["schemas"]["PageInquiryAccepted"];
                 };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    reportPage: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                slug: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PageReportIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
             /** @description Validation Error */
             422: {

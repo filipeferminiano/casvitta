@@ -34,6 +34,7 @@ from app.domains.pages.models import (
     BrokerPage,
     PageEvent,
     PageEventKind,
+    PageReport,
     PageSlugRedirect,
     PageSource,
     PageStatus,
@@ -43,6 +44,7 @@ from app.domains.pages.schemas import (
     PageChecklist,
     PageEventIn,
     PageOut,
+    PageReportIn,
     PageStatsOut,
     PageUpdate,
     PublicPageOut,
@@ -470,3 +472,21 @@ async def old_addresses(session: AsyncSession, profile: BrokerProfile) -> list[s
             )
         ).all()
     )
+
+
+async def report(session: AsyncSession, slug: str, data: PageReportIn, settings: Settings) -> None:
+    """A visitor's report from the footer. It goes to the staff queue; the page stays up."""
+    found = await live_page(session, slug, settings)
+    if found is None:
+        raise PageNotFound
+    page, _ = found
+    bind_workspace(session, page.workspace_id)
+    session.add(
+        PageReport(
+            workspace_id=page.workspace_id,
+            page_id=page.id,
+            reason=data.reason,
+            details=data.details,
+        )
+    )
+    await session.flush()

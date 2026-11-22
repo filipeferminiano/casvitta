@@ -45,6 +45,7 @@ from app.domains.pages.models import (
     PageCollectionItem,
     PageEvent,
     PageInstagramPost,
+    PageReport,
     PageSlugRedirect,
 )
 from app.domains.properties.models import OwnerAuthorization, Property, PropertyMedia
@@ -91,6 +92,7 @@ __all__ = [
     "PageCollectionItem",
     "PageEvent",
     "PageInstagramPost",
+    "PageReport",
     "PageSlugRedirect",
     "Person",
     "PipelineStage",

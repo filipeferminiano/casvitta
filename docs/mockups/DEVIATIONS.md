@@ -124,3 +124,9 @@ Compared in `docs/mockups/_impl/landing-pages/` (`pnpm screens:capture landing-p
 - **Endereço lives in Minha página** (panel "Endereço da página"), not a separate tab. Check first, then confirm.
 - **Old addresses never expire and stay with the broker**, so printed QR codes and old links can't be taken over by someone else. The web answers an old address with a 308 to the new one, keeping the path and the query (`?origem=qr` is still counted). Limit: 5 old addresses per broker; going back to one of them is always allowed. Changes take up to 60 s to reach the public page (page cache).
 - **Reserved:** platform words (app, admin, suporte, oficial, backoffice, contato, planos, …) and anything containing "casvitta". Signup slugs follow the same rules and skip addresses held by redirects.
+
+## Casvitta Social, SOC-1b (backoffice Páginas e domínios)
+
+- **Signals built now:** visitor reports ("Denunciar esta página" in the public footer, no contact data asked) and published pages whose CRECI is not verified yet. "Depoimento suspeito" and "Link externo" need features that don't exist yet (testimonials, external links); the domains table comes with custom domains.
+- **Actions:** suspend (reason required, emailed to the broker, audited, closes open reports), lift a suspension (the page comes back "fora do ar" and the broker republishes), dismiss a report. "Pedir correção" is not built: there is no message channel to the broker yet other than email by hand.
+- **Permission:** the existing `listings.moderate` (Admin, Operações). Every role reads the queue. No new "Suporte Social" role yet; nothing on this screen opens Interessados.
