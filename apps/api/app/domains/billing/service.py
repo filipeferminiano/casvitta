@@ -34,7 +34,7 @@ from app.domains.properties.models import Property, PropertyStatus
 from app.domains.staff.audit import Actor, record
 
 # Active property = published or draft (catalog definition).
-ACTIVE_STATUSES = (PropertyStatus.ACTIVE, PropertyStatus.DRAFT)
+ACTIVE_STATUSES = (PropertyStatus.ACTIVE, PropertyStatus.DRAFT)  # same as properties.service
 
 
 class ChangeRequestNotFound(AppError):

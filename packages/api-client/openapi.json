@@ -3355,7 +3355,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/NoteIn"
+                "$ref": "#/components/schemas/app__domains__backoffice__accounts__NoteIn"
               }
             }
           }
@@ -3882,7 +3882,7 @@
             "in": "path",
             "required": true,
             "schema": {
-              "$ref": "#/components/schemas/Channel"
+              "$ref": "#/components/schemas/app__domains__listings__models__Channel"
             }
           }
         ],
@@ -3931,7 +3931,7 @@
             "in": "path",
             "required": true,
             "schema": {
-              "$ref": "#/components/schemas/Channel"
+              "$ref": "#/components/schemas/app__domains__listings__models__Channel"
             }
           }
         ],
@@ -3973,7 +3973,7 @@
             "in": "query",
             "required": false,
             "schema": {
-              "$ref": "#/components/schemas/Channel",
+              "$ref": "#/components/schemas/app__domains__listings__models__Channel",
               "default": "marketplace"
             }
           },
@@ -4379,6 +4379,1181 @@
           }
         }
       }
+    },
+    "/v1/home": {
+      "get": {
+        "tags": [
+          "crm"
+        ],
+        "summary": "Get Home",
+        "operationId": "getHome",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HomeOut"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/contacts": {
+      "get": {
+        "tags": [
+          "crm"
+        ],
+        "summary": "List Contacts",
+        "operationId": "listContacts",
+        "parameters": [
+          {
+            "name": "view",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "enum": [
+                "all",
+                "buyers",
+                "tenants",
+                "owners",
+                "no_reply_14d"
+              ],
+              "type": "string",
+              "default": "all",
+              "title": "View"
+            }
+          },
+          {
+            "name": "q",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "maxLength": 120
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Q"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ContactListOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "crm"
+        ],
+        "summary": "Create Contact",
+        "operationId": "createContact",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ContactIn"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Contact360"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/contacts/export": {
+      "get": {
+        "tags": [
+          "crm"
+        ],
+        "summary": "Export Contacts",
+        "operationId": "exportContacts",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/contacts/{person_id}": {
+      "get": {
+        "tags": [
+          "crm"
+        ],
+        "summary": "Get Contact",
+        "operationId": "getContact",
+        "parameters": [
+          {
+            "name": "person_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Person Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Contact360"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "crm"
+        ],
+        "summary": "Update Contact",
+        "operationId": "updateContact",
+        "parameters": [
+          {
+            "name": "person_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Person Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ContactPatch"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Contact360"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/contacts/{person_id}/interests": {
+      "post": {
+        "tags": [
+          "crm"
+        ],
+        "summary": "Add Interest",
+        "operationId": "addContactInterest",
+        "parameters": [
+          {
+            "name": "person_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Person Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/InterestIn"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/contacts/{person_id}/notes": {
+      "post": {
+        "tags": [
+          "crm"
+        ],
+        "summary": "Add Note",
+        "operationId": "addContactNote",
+        "parameters": [
+          {
+            "name": "person_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Person Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/app__domains__contacts__schemas__NoteIn"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/contacts/{person_id}/tasks": {
+      "post": {
+        "tags": [
+          "crm"
+        ],
+        "summary": "Add Task",
+        "operationId": "addContactTask",
+        "parameters": [
+          {
+            "name": "person_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Person Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TaskIn"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/tasks/{task_id}/done": {
+      "post": {
+        "tags": [
+          "crm"
+        ],
+        "summary": "Complete Task",
+        "operationId": "completeTask",
+        "parameters": [
+          {
+            "name": "task_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Task Id"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/contacts/{person_id}/consents": {
+      "post": {
+        "tags": [
+          "crm"
+        ],
+        "summary": "Set Consent",
+        "operationId": "setContactConsent",
+        "parameters": [
+          {
+            "name": "person_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Person Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/app__domains__contacts__schemas__ConsentIn"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/pipeline": {
+      "get": {
+        "tags": [
+          "crm"
+        ],
+        "summary": "Get Pipeline",
+        "operationId": "getPipeline",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/BoardColumn"
+                  },
+                  "type": "array",
+                  "title": "Response Getpipeline"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/pipeline/stages": {
+      "put": {
+        "tags": [
+          "crm"
+        ],
+        "summary": "Update Stages",
+        "operationId": "updatePipelineStages",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StagesUpdate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/StageOut"
+                  },
+                  "type": "array",
+                  "title": "Response Updatepipelinestages"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/leads/{lead_id}/move": {
+      "post": {
+        "tags": [
+          "crm"
+        ],
+        "summary": "Move Lead",
+        "operationId": "moveLead",
+        "parameters": [
+          {
+            "name": "lead_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Lead Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MoveIn"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/leads/{lead_id}/automations": {
+      "post": {
+        "tags": [
+          "crm"
+        ],
+        "summary": "Set Lead Automations",
+        "operationId": "setLeadAutomations",
+        "parameters": [
+          {
+            "name": "lead_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Lead Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AutomationsIn"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/conversations": {
+      "get": {
+        "tags": [
+          "crm"
+        ],
+        "summary": "List Conversations",
+        "operationId": "listConversations",
+        "parameters": [
+          {
+            "name": "needs_you",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": false,
+              "title": "Needs You"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/InboxItem"
+                  },
+                  "title": "Response Listconversations"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/conversations/{conversation_id}": {
+      "get": {
+        "tags": [
+          "crm"
+        ],
+        "summary": "Get Conversation",
+        "operationId": "getConversation",
+        "parameters": [
+          {
+            "name": "conversation_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Conversation Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ThreadOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/conversations/{conversation_id}/messages": {
+      "post": {
+        "tags": [
+          "crm"
+        ],
+        "summary": "Reply",
+        "operationId": "replyConversation",
+        "parameters": [
+          {
+            "name": "conversation_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Conversation Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReplyIn"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MessageOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/conversations/{conversation_id}/take-over": {
+      "post": {
+        "tags": [
+          "crm"
+        ],
+        "summary": "Take Over",
+        "operationId": "takeOverConversation",
+        "parameters": [
+          {
+            "name": "conversation_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Conversation Id"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/calendar/settings": {
+      "get": {
+        "tags": [
+          "crm"
+        ],
+        "summary": "Get Calendar Settings",
+        "operationId": "getCalendarSettings",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SettingsOut"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "crm"
+        ],
+        "summary": "Update Calendar Settings",
+        "operationId": "updateCalendarSettings",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SettingsIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SettingsOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/calendar/week": {
+      "get": {
+        "tags": [
+          "crm"
+        ],
+        "summary": "Get Week",
+        "operationId": "getCalendarWeek",
+        "parameters": [
+          {
+            "name": "start",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "title": "Start"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WeekOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/calendar/slots": {
+      "get": {
+        "tags": [
+          "crm"
+        ],
+        "summary": "Get Slots",
+        "operationId": "getFreeSlots",
+        "parameters": [
+          {
+            "name": "property_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Property Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Slot"
+                  },
+                  "title": "Response Getfreeslots"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/calendar/visits": {
+      "post": {
+        "tags": [
+          "crm"
+        ],
+        "summary": "Book Visit",
+        "operationId": "bookVisit",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BookIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VisitOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/calendar/visits/{visit_id}/status": {
+      "post": {
+        "tags": [
+          "crm"
+        ],
+        "summary": "Set Visit Status",
+        "operationId": "setVisitStatus",
+        "parameters": [
+          {
+            "name": "visit_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Visit Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VisitStatusIn"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/calendar/blocks": {
+      "post": {
+        "tags": [
+          "crm"
+        ],
+        "summary": "Add Block",
+        "operationId": "addCalendarBlock",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BlockIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/public/listings/{slug}": {
+      "get": {
+        "tags": [
+          "public"
+        ],
+        "summary": "Get Public Listing",
+        "operationId": "getPublicListing",
+        "parameters": [
+          {
+            "name": "slug",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Slug"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PublicListingOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/public/listings/{slug}/contact": {
+      "post": {
+        "tags": [
+          "public"
+        ],
+        "summary": "Contact About Listing",
+        "operationId": "contactAboutListing",
+        "parameters": [
+          {
+            "name": "slug",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Slug"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PublicContactIn"
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PublicContactAccepted"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -4492,7 +5667,7 @@
           },
           "timeline": {
             "items": {
-              "$ref": "#/components/schemas/TimelineItem"
+              "$ref": "#/components/schemas/app__domains__backoffice__accounts__TimelineItem"
             },
             "type": "array",
             "title": "Timeline"
@@ -5029,7 +6204,7 @@
             "title": "Email"
           },
           "consents": {
-            "$ref": "#/components/schemas/ConsentIn"
+            "$ref": "#/components/schemas/app__domains__interest__schemas__ConsentIn"
           },
           "utm": {
             "$ref": "#/components/schemas/Utm"
@@ -5103,7 +6278,7 @@
             "title": "Email"
           },
           "consents": {
-            "$ref": "#/components/schemas/ConsentIn"
+            "$ref": "#/components/schemas/app__domains__interest__schemas__ConsentIn"
           },
           "utm": {
             "$ref": "#/components/schemas/Utm"
@@ -5150,6 +6325,15 @@
           "criteria"
         ],
         "title": "AgencySignup"
+      },
+      "AiMode": {
+        "type": "string",
+        "enum": [
+          "active",
+          "paused",
+          "handed_off"
+        ],
+        "title": "AiMode"
       },
       "AlertGroup": {
         "properties": {
@@ -5218,6 +6402,17 @@
           "cancelled"
         ],
         "title": "AlertStatus"
+      },
+      "AppointmentStatus": {
+        "type": "string",
+        "enum": [
+          "proposed",
+          "confirmed",
+          "done",
+          "cancelled",
+          "no_show"
+        ],
+        "title": "AppointmentStatus"
       },
       "AreaBand": {
         "properties": {
@@ -5384,7 +6579,7 @@
             "title": "Email"
           },
           "consents": {
-            "$ref": "#/components/schemas/ConsentIn"
+            "$ref": "#/components/schemas/app__domains__interest__schemas__ConsentIn"
           },
           "utm": {
             "$ref": "#/components/schemas/Utm"
@@ -5552,6 +6747,17 @@
         ],
         "title": "AuditPage"
       },
+      "Author": {
+        "type": "string",
+        "enum": [
+          "contact",
+          "broker",
+          "automation",
+          "agent",
+          "system"
+        ],
+        "title": "Author"
+      },
       "AuthorizationEvidence": {
         "type": "string",
         "enum": [
@@ -5622,6 +6828,77 @@
         ],
         "title": "AuthorizationOut"
       },
+      "AutomationsIn": {
+        "properties": {
+          "paused": {
+            "type": "boolean",
+            "title": "Paused"
+          }
+        },
+        "type": "object",
+        "required": [
+          "paused"
+        ],
+        "title": "AutomationsIn"
+      },
+      "BlockIn": {
+        "properties": {
+          "starts_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Starts At"
+          },
+          "ends_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Ends At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "starts_at",
+          "ends_at"
+        ],
+        "title": "BlockIn"
+      },
+      "BlockOut": {
+        "properties": {
+          "starts_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Starts At"
+          },
+          "ends_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Ends At"
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "source": {
+            "$ref": "#/components/schemas/BlockSource"
+          }
+        },
+        "type": "object",
+        "required": [
+          "starts_at",
+          "ends_at",
+          "id",
+          "source"
+        ],
+        "title": "BlockOut"
+      },
+      "BlockSource": {
+        "type": "string",
+        "enum": [
+          "manual",
+          "google"
+        ],
+        "title": "BlockSource"
+      },
       "Blocker": {
         "type": "string",
         "enum": [
@@ -5631,9 +6908,82 @@
           "authorization_missing",
           "authorization_wrong_kind",
           "authorization_expired",
-          "publishing_paused"
+          "publishing_paused",
+          "fewer_photos"
         ],
         "title": "Blocker"
+      },
+      "BoardCard": {
+        "properties": {
+          "lead_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Lead Id"
+          },
+          "person_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Person Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "property_code": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Property Code"
+          },
+          "source": {
+            "type": "string",
+            "title": "Source"
+          },
+          "automations_paused": {
+            "type": "boolean",
+            "title": "Automations Paused"
+          },
+          "is_demo": {
+            "type": "boolean",
+            "title": "Is Demo"
+          }
+        },
+        "type": "object",
+        "required": [
+          "lead_id",
+          "person_id",
+          "name",
+          "property_code",
+          "source",
+          "automations_paused",
+          "is_demo"
+        ],
+        "title": "BoardCard"
+      },
+      "BoardColumn": {
+        "properties": {
+          "stage": {
+            "$ref": "#/components/schemas/StageOut"
+          },
+          "cards": {
+            "items": {
+              "$ref": "#/components/schemas/BoardCard"
+            },
+            "type": "array",
+            "title": "Cards"
+          }
+        },
+        "type": "object",
+        "required": [
+          "stage",
+          "cards"
+        ],
+        "title": "BoardColumn"
       },
       "Body_addOwnerAuthorization": {
         "properties": {
@@ -5674,6 +7024,51 @@
           "photo"
         ],
         "title": "Body_addPropertyPhoto"
+      },
+      "BookIn": {
+        "properties": {
+          "person_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Person Id"
+          },
+          "property_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Property Id"
+          },
+          "starts_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Starts At"
+          },
+          "booked_by": {
+            "$ref": "#/components/schemas/BookedBy",
+            "default": "broker"
+          }
+        },
+        "type": "object",
+        "required": [
+          "person_id",
+          "starts_at"
+        ],
+        "title": "BookIn"
+      },
+      "BookedBy": {
+        "type": "string",
+        "enum": [
+          "broker",
+          "contact",
+          "agent"
+        ],
+        "title": "BookedBy"
       },
       "BrokerCandidate": {
         "properties": {
@@ -6541,17 +7936,6 @@
         ],
         "title": "ChangeStatus"
       },
-      "Channel": {
-        "type": "string",
-        "enum": [
-          "marketplace",
-          "bio_page",
-          "landing",
-          "meta",
-          "google"
-        ],
-        "title": "Channel"
-      },
       "CheckResult": {
         "properties": {
           "key": {
@@ -6681,24 +8065,618 @@
         ],
         "title": "ComparableGroupOut"
       },
-      "ConsentIn": {
+      "ConsentPurpose": {
+        "type": "string",
+        "enum": [
+          "contact_about_properties",
+          "marketing"
+        ],
+        "title": "ConsentPurpose"
+      },
+      "ConsentState": {
         "properties": {
-          "contact_about_properties": {
-            "type": "boolean",
-            "title": "Contact About Properties"
+          "channel": {
+            "$ref": "#/components/schemas/app__domains__contacts__models__Channel"
           },
-          "marketing": {
-            "type": "boolean",
-            "title": "Marketing",
-            "default": false
+          "purpose": {
+            "$ref": "#/components/schemas/ConsentPurpose"
+          },
+          "status": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ConsentStatus"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "occurred_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Occurred At"
+          },
+          "proof_source": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ProofSource"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "proof_location": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Proof Location"
           }
         },
-        "additionalProperties": false,
         "type": "object",
         "required": [
-          "contact_about_properties"
+          "channel",
+          "purpose",
+          "status",
+          "occurred_at",
+          "proof_source",
+          "proof_location"
         ],
-        "title": "ConsentIn"
+        "title": "ConsentState"
+      },
+      "ConsentStatus": {
+        "type": "string",
+        "enum": [
+          "granted",
+          "revoked"
+        ],
+        "title": "ConsentStatus"
+      },
+      "ConsentSummary": {
+        "properties": {
+          "whatsapp": {
+            "type": "string",
+            "enum": [
+              "granted",
+              "none",
+              "revoked"
+            ],
+            "title": "Whatsapp"
+          },
+          "instagram": {
+            "type": "string",
+            "enum": [
+              "granted",
+              "none",
+              "revoked"
+            ],
+            "title": "Instagram"
+          },
+          "email": {
+            "type": "string",
+            "enum": [
+              "granted",
+              "none",
+              "revoked"
+            ],
+            "title": "Email"
+          }
+        },
+        "type": "object",
+        "required": [
+          "whatsapp",
+          "instagram",
+          "email"
+        ],
+        "title": "ConsentSummary",
+        "description": "Per channel, for the list: granted / none / revoked (asked to leave)."
+      },
+      "Contact360": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "phone_e164": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Phone E164"
+          },
+          "email": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Email"
+          },
+          "instagram_handle": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Instagram Handle"
+          },
+          "kind": {
+            "$ref": "#/components/schemas/ContactKind"
+          },
+          "source": {
+            "$ref": "#/components/schemas/ContactSource"
+          },
+          "source_detail": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source Detail"
+          },
+          "responsible_user_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Responsible User Id"
+          },
+          "is_demo": {
+            "type": "boolean",
+            "title": "Is Demo"
+          },
+          "interests": {
+            "items": {
+              "$ref": "#/components/schemas/InterestOut"
+            },
+            "type": "array",
+            "title": "Interests"
+          },
+          "consents": {
+            "items": {
+              "$ref": "#/components/schemas/ConsentState"
+            },
+            "type": "array",
+            "title": "Consents"
+          },
+          "leads": {
+            "items": {
+              "$ref": "#/components/schemas/LeadSummary"
+            },
+            "type": "array",
+            "title": "Leads"
+          },
+          "tasks": {
+            "items": {
+              "$ref": "#/components/schemas/TaskOut"
+            },
+            "type": "array",
+            "title": "Tasks"
+          },
+          "timeline": {
+            "items": {
+              "$ref": "#/components/schemas/app__domains__contacts__schemas__TimelineItem"
+            },
+            "type": "array",
+            "title": "Timeline"
+          },
+          "matching_properties": {
+            "items": {
+              "$ref": "#/components/schemas/MatchingProperty"
+            },
+            "type": "array",
+            "title": "Matching Properties"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "phone_e164",
+          "email",
+          "instagram_handle",
+          "kind",
+          "source",
+          "source_detail",
+          "responsible_user_id",
+          "is_demo",
+          "interests",
+          "consents",
+          "leads",
+          "tasks",
+          "timeline",
+          "matching_properties"
+        ],
+        "title": "Contact360"
+      },
+      "ContactIn": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 160,
+            "minLength": 1,
+            "title": "Name"
+          },
+          "phone": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Phone"
+          },
+          "email": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 254
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Email"
+          },
+          "instagram_handle": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 60
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Instagram Handle"
+          },
+          "kind": {
+            "$ref": "#/components/schemas/ContactKind",
+            "default": "unknown"
+          },
+          "source": {
+            "$ref": "#/components/schemas/ContactSource",
+            "default": "manual"
+          },
+          "source_detail": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 160
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source Detail"
+          },
+          "utm_source": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 120
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Utm Source"
+          },
+          "utm_medium": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 120
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Utm Medium"
+          },
+          "utm_campaign": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 120
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Utm Campaign"
+          },
+          "property_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Property Id"
+          },
+          "interest": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/InterestIn"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "consents": {
+            "items": {
+              "$ref": "#/components/schemas/app__domains__contacts__schemas__ConsentIn"
+            },
+            "type": "array",
+            "maxItems": 6,
+            "title": "Consents"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name"
+        ],
+        "title": "ContactIn"
+      },
+      "ContactKind": {
+        "type": "string",
+        "enum": [
+          "buyer",
+          "tenant",
+          "owner",
+          "unknown"
+        ],
+        "title": "ContactKind"
+      },
+      "ContactListOut": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/ContactRow"
+            },
+            "type": "array",
+            "title": "Items"
+          },
+          "counts": {
+            "additionalProperties": {
+              "type": "integer"
+            },
+            "type": "object",
+            "title": "Counts"
+          }
+        },
+        "type": "object",
+        "required": [
+          "items",
+          "counts"
+        ],
+        "title": "ContactListOut"
+      },
+      "ContactPatch": {
+        "properties": {
+          "name": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 160,
+                "minLength": 1
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name"
+          },
+          "phone": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Phone"
+          },
+          "email": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 254
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Email"
+          },
+          "instagram_handle": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 60
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Instagram Handle"
+          },
+          "kind": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ContactKind"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "responsible_user_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Responsible User Id"
+          }
+        },
+        "type": "object",
+        "title": "ContactPatch"
+      },
+      "ContactRow": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "kind": {
+            "$ref": "#/components/schemas/ContactKind"
+          },
+          "source": {
+            "$ref": "#/components/schemas/ContactSource"
+          },
+          "source_detail": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source Detail"
+          },
+          "interest": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/InterestOut"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "stage": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/StageRef"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "consent": {
+            "$ref": "#/components/schemas/ConsentSummary"
+          },
+          "last_interaction_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Last Interaction At"
+          },
+          "is_demo": {
+            "type": "boolean",
+            "title": "Is Demo"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "kind",
+          "source",
+          "source_detail",
+          "interest",
+          "stage",
+          "consent",
+          "last_interaction_at",
+          "is_demo"
+        ],
+        "title": "ContactRow"
+      },
+      "ContactSource": {
+        "type": "string",
+        "enum": [
+          "broker_page",
+          "listing_page",
+          "finder",
+          "owner_form",
+          "instagram",
+          "whatsapp",
+          "qr_sign",
+          "import",
+          "manual"
+        ],
+        "title": "ContactSource"
+      },
+      "ConversationChannel": {
+        "type": "string",
+        "enum": [
+          "whatsapp",
+          "instagram",
+          "facebook",
+          "page"
+        ],
+        "title": "ConversationChannel"
       },
       "CreciApproveIn": {
         "properties": {
@@ -7056,7 +9034,7 @@
             "title": "Email"
           },
           "consents": {
-            "$ref": "#/components/schemas/ConsentIn"
+            "$ref": "#/components/schemas/app__domains__interest__schemas__ConsentIn"
           },
           "utm": {
             "$ref": "#/components/schemas/Utm"
@@ -7103,6 +9081,14 @@
           "criteria"
         ],
         "title": "DeveloperSignup"
+      },
+      "Direction": {
+        "type": "string",
+        "enum": [
+          "inbound",
+          "outbound"
+        ],
+        "title": "Direction"
       },
       "EmailLinkIn": {
         "properties": {
@@ -7473,6 +9459,131 @@
         ],
         "title": "HealthOut"
       },
+      "HomeOut": {
+        "properties": {
+          "steps": {
+            "items": {
+              "$ref": "#/components/schemas/Step"
+            },
+            "type": "array",
+            "title": "Steps"
+          },
+          "next_step": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "creci",
+                  "first_property",
+                  "first_publication",
+                  "profile",
+                  "first_contact",
+                  "first_reply"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Next Step"
+          },
+          "today": {
+            "$ref": "#/components/schemas/TodayOut"
+          }
+        },
+        "type": "object",
+        "required": [
+          "steps",
+          "next_step",
+          "today"
+        ],
+        "title": "HomeOut"
+      },
+      "InboxItem": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "person_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Person Id"
+          },
+          "person_name": {
+            "type": "string",
+            "title": "Person Name"
+          },
+          "channel": {
+            "$ref": "#/components/schemas/ConversationChannel"
+          },
+          "ai_mode": {
+            "$ref": "#/components/schemas/AiMode"
+          },
+          "handoff_reason": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Handoff Reason"
+          },
+          "last_message": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Last Message"
+          },
+          "last_message_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Last Message At"
+          },
+          "unread_count": {
+            "type": "integer",
+            "title": "Unread Count"
+          },
+          "window_open": {
+            "type": "boolean",
+            "title": "Window Open"
+          },
+          "is_demo": {
+            "type": "boolean",
+            "title": "Is Demo"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "person_id",
+          "person_name",
+          "channel",
+          "ai_mode",
+          "handoff_reason",
+          "last_message",
+          "last_message_at",
+          "unread_count",
+          "window_open",
+          "is_demo"
+        ],
+        "title": "InboxItem"
+      },
       "InstitutionalFront": {
         "type": "string",
         "enum": [
@@ -7495,6 +9606,100 @@
         ],
         "title": "InstitutionalType"
       },
+      "InterestIn": {
+        "properties": {
+          "purpose": {
+            "$ref": "#/components/schemas/Purpose"
+          },
+          "neighborhoods": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "maxItems": 20,
+            "title": "Neighborhoods"
+          },
+          "city": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 120
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "City"
+          },
+          "property_kinds": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "maxItems": 10,
+            "title": "Property Kinds"
+          },
+          "min_price_cents": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Min Price Cents"
+          },
+          "max_price_cents": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Max Price Cents"
+          },
+          "min_bedrooms": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 20.0,
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Min Bedrooms"
+          },
+          "min_parking": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 20.0,
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Min Parking"
+          },
+          "source": {
+            "$ref": "#/components/schemas/InterestSource",
+            "default": "broker"
+          }
+        },
+        "type": "object",
+        "required": [
+          "purpose"
+        ],
+        "title": "InterestIn"
+      },
       "InterestKind": {
         "type": "string",
         "enum": [
@@ -7508,6 +9713,106 @@
           "agency_demo"
         ],
         "title": "InterestKind"
+      },
+      "InterestOut": {
+        "properties": {
+          "purpose": {
+            "$ref": "#/components/schemas/Purpose"
+          },
+          "neighborhoods": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "maxItems": 20,
+            "title": "Neighborhoods"
+          },
+          "city": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 120
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "City"
+          },
+          "property_kinds": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "maxItems": 10,
+            "title": "Property Kinds"
+          },
+          "min_price_cents": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Min Price Cents"
+          },
+          "max_price_cents": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Max Price Cents"
+          },
+          "min_bedrooms": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 20.0,
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Min Bedrooms"
+          },
+          "min_parking": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 20.0,
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Min Parking"
+          },
+          "source": {
+            "$ref": "#/components/schemas/InterestSource",
+            "default": "broker"
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          }
+        },
+        "type": "object",
+        "required": [
+          "purpose",
+          "id"
+        ],
+        "title": "InterestOut"
       },
       "InterestSignupAccepted": {
         "properties": {
@@ -7651,6 +9956,15 @@
         ],
         "title": "InterestSignupOut"
       },
+      "InterestSource": {
+        "type": "string",
+        "enum": [
+          "form",
+          "conversation",
+          "broker"
+        ],
+        "title": "InterestSource"
+      },
       "InterestStatus": {
         "type": "string",
         "enum": [
@@ -7728,7 +10042,7 @@
             "title": "Email"
           },
           "consents": {
-            "$ref": "#/components/schemas/ConsentIn"
+            "$ref": "#/components/schemas/app__domains__interest__schemas__ConsentIn"
           },
           "utm": {
             "$ref": "#/components/schemas/Utm"
@@ -7920,10 +10234,45 @@
         ],
         "title": "ItbiRulesOut"
       },
+      "LeadSummary": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "stage": {
+            "$ref": "#/components/schemas/StageRef"
+          },
+          "property_code": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Property Code"
+          },
+          "automations_paused": {
+            "type": "boolean",
+            "title": "Automations Paused"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "stage",
+          "property_code",
+          "automations_paused"
+        ],
+        "title": "LeadSummary"
+      },
       "ListingOut": {
         "properties": {
           "channel": {
-            "$ref": "#/components/schemas/Channel"
+            "$ref": "#/components/schemas/app__domains__listings__models__Channel"
           },
           "status": {
             "$ref": "#/components/schemas/ListingStatus"
@@ -7982,6 +10331,40 @@
           "suspended"
         ],
         "title": "ListingStatus"
+      },
+      "MatchingProperty": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "code": {
+            "type": "string",
+            "title": "Code"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "price_cents": {
+            "type": "integer",
+            "title": "Price Cents"
+          },
+          "within_budget": {
+            "type": "boolean",
+            "title": "Within Budget"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "code",
+          "title",
+          "price_cents",
+          "within_budget"
+        ],
+        "title": "MatchingProperty"
       },
       "MeOut": {
         "properties": {
@@ -8049,6 +10432,55 @@
           "is_cover"
         ],
         "title": "MediaOut"
+      },
+      "MessageOut": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "direction": {
+            "$ref": "#/components/schemas/Direction"
+          },
+          "author": {
+            "$ref": "#/components/schemas/Author"
+          },
+          "body": {
+            "type": "string",
+            "title": "Body"
+          },
+          "status": {
+            "$ref": "#/components/schemas/MessageStatus"
+          },
+          "sent_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Sent At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "direction",
+          "author",
+          "body",
+          "status",
+          "sent_at"
+        ],
+        "title": "MessageOut"
+      },
+      "MessageStatus": {
+        "type": "string",
+        "enum": [
+          "received",
+          "queued",
+          "sent",
+          "delivered",
+          "read",
+          "failed"
+        ],
+        "title": "MessageStatus"
       },
       "Meter": {
         "type": "string",
@@ -8172,6 +10604,32 @@
           "median_price_m2_cents"
         ],
         "title": "MonthlyPoint"
+      },
+      "MoveIn": {
+        "properties": {
+          "stage_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Stage Id"
+          },
+          "lost_reason": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 300
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Lost Reason"
+          }
+        },
+        "type": "object",
+        "required": [
+          "stage_id"
+        ],
+        "title": "MoveIn"
       },
       "NeighborIncome": {
         "properties": {
@@ -8374,21 +10832,6 @@
         ],
         "title": "Note"
       },
-      "NoteIn": {
-        "properties": {
-          "body": {
-            "type": "string",
-            "maxLength": 2000,
-            "minLength": 2,
-            "title": "Body"
-          }
-        },
-        "type": "object",
-        "required": [
-          "body"
-        ],
-        "title": "NoteIn"
-      },
       "OverviewOut": {
         "properties": {
           "tiles": {
@@ -8574,7 +11017,7 @@
             "title": "Email"
           },
           "consents": {
-            "$ref": "#/components/schemas/ConsentIn"
+            "$ref": "#/components/schemas/app__domains__interest__schemas__ConsentIn"
           },
           "utm": {
             "$ref": "#/components/schemas/Utm"
@@ -8692,7 +11135,7 @@
             "title": "Email"
           },
           "consents": {
-            "$ref": "#/components/schemas/ConsentIn"
+            "$ref": "#/components/schemas/app__domains__interest__schemas__ConsentIn"
           },
           "utm": {
             "$ref": "#/components/schemas/Utm"
@@ -9013,6 +11456,16 @@
         "title": "PriceComparison",
         "description": "R$/m² (IPTU) over all history; each side only when it passes the price group."
       },
+      "ProofSource": {
+        "type": "string",
+        "enum": [
+          "form",
+          "conversation",
+          "broker",
+          "opt_out"
+        ],
+        "title": "ProofSource"
+      },
       "PropertyAlertAccepted": {
         "properties": {
           "status": {
@@ -9099,7 +11552,7 @@
             "title": "Email"
           },
           "consents": {
-            "$ref": "#/components/schemas/ConsentIn"
+            "$ref": "#/components/schemas/app__domains__interest__schemas__ConsentIn"
           },
           "utm": {
             "$ref": "#/components/schemas/Utm"
@@ -9993,6 +12446,121 @@
         ],
         "title": "PublicBroker"
       },
+      "PublicContactAccepted": {
+        "properties": {
+          "status": {
+            "type": "string",
+            "title": "Status",
+            "default": "received"
+          }
+        },
+        "type": "object",
+        "title": "PublicContactAccepted"
+      },
+      "PublicContactIn": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 160,
+            "minLength": 2,
+            "title": "Name"
+          },
+          "phone": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Phone"
+          },
+          "email": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 254
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Email"
+          },
+          "message": {
+            "type": "string",
+            "maxLength": 2000,
+            "minLength": 1,
+            "title": "Message"
+          },
+          "consent_whatsapp": {
+            "type": "boolean",
+            "title": "Consent Whatsapp",
+            "default": false
+          },
+          "consent_email": {
+            "type": "boolean",
+            "title": "Consent Email",
+            "default": false
+          },
+          "consent_text": {
+            "type": "string",
+            "maxLength": 2000,
+            "minLength": 10,
+            "title": "Consent Text"
+          },
+          "page_url": {
+            "type": "string",
+            "maxLength": 300,
+            "title": "Page Url"
+          },
+          "utm_source": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 120
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Utm Source"
+          },
+          "utm_medium": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 120
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Utm Medium"
+          },
+          "utm_campaign": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 120
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Utm Campaign"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name",
+          "message",
+          "consent_text",
+          "page_url"
+        ],
+        "title": "PublicContactIn"
+      },
       "PublicListingOut": {
         "properties": {
           "code": {
@@ -10384,6 +12952,16 @@
         "title": "PublicStats",
         "description": "``priced`` false: the group is below MARKET_MIN_PRICE_GROUP, only the count is public."
       },
+      "Purpose": {
+        "type": "string",
+        "enum": [
+          "buy",
+          "rent",
+          "sell",
+          "let"
+        ],
+        "title": "Purpose"
+      },
       "ReadinessOut": {
         "properties": {
           "status": {
@@ -10515,7 +13093,7 @@
             "title": "Email"
           },
           "consents": {
-            "$ref": "#/components/schemas/ConsentIn"
+            "$ref": "#/components/schemas/app__domains__interest__schemas__ConsentIn"
           },
           "utm": {
             "$ref": "#/components/schemas/Utm"
@@ -10562,6 +13140,28 @@
           "criteria"
         ],
         "title": "RentalAdminSignup"
+      },
+      "ReplyIn": {
+        "properties": {
+          "body": {
+            "type": "string",
+            "maxLength": 4096,
+            "minLength": 1,
+            "title": "Body"
+          },
+          "idempotency_key": {
+            "type": "string",
+            "maxLength": 120,
+            "minLength": 8,
+            "title": "Idempotency Key"
+          }
+        },
+        "type": "object",
+        "required": [
+          "body",
+          "idempotency_key"
+        ],
+        "title": "ReplyIn"
       },
       "RevealIn": {
         "properties": {
@@ -10774,6 +13374,131 @@
         ],
         "title": "SearchOut"
       },
+      "SettingsIn": {
+        "properties": {
+          "visit_minutes": {
+            "type": "integer",
+            "maximum": 240.0,
+            "minimum": 15.0,
+            "title": "Visit Minutes"
+          },
+          "buffer_minutes": {
+            "type": "integer",
+            "maximum": 180.0,
+            "minimum": 0.0,
+            "title": "Buffer Minutes"
+          },
+          "other_neighborhood_buffer_minutes": {
+            "type": "integer",
+            "maximum": 180.0,
+            "minimum": 0.0,
+            "title": "Other Neighborhood Buffer Minutes"
+          },
+          "lead_time_minutes": {
+            "type": "integer",
+            "maximum": 10080.0,
+            "minimum": 0.0,
+            "title": "Lead Time Minutes"
+          },
+          "days_ahead": {
+            "type": "integer",
+            "maximum": 60.0,
+            "minimum": 1.0,
+            "title": "Days Ahead"
+          },
+          "weekly_hours": {
+            "additionalProperties": {
+              "items": {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              "type": "array"
+            },
+            "type": "object",
+            "title": "Weekly Hours"
+          },
+          "neighborhoods_by_day": {
+            "additionalProperties": {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "type": "object",
+            "title": "Neighborhoods By Day"
+          }
+        },
+        "type": "object",
+        "required": [
+          "visit_minutes",
+          "buffer_minutes",
+          "other_neighborhood_buffer_minutes",
+          "lead_time_minutes",
+          "days_ahead",
+          "weekly_hours"
+        ],
+        "title": "SettingsIn"
+      },
+      "SettingsOut": {
+        "properties": {
+          "visit_minutes": {
+            "type": "integer",
+            "title": "Visit Minutes"
+          },
+          "buffer_minutes": {
+            "type": "integer",
+            "title": "Buffer Minutes"
+          },
+          "other_neighborhood_buffer_minutes": {
+            "type": "integer",
+            "title": "Other Neighborhood Buffer Minutes"
+          },
+          "lead_time_minutes": {
+            "type": "integer",
+            "title": "Lead Time Minutes"
+          },
+          "days_ahead": {
+            "type": "integer",
+            "title": "Days Ahead"
+          },
+          "weekly_hours": {
+            "additionalProperties": {
+              "items": {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              "type": "array"
+            },
+            "type": "object",
+            "title": "Weekly Hours"
+          },
+          "neighborhoods_by_day": {
+            "additionalProperties": {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "type": "object",
+            "title": "Neighborhoods By Day"
+          }
+        },
+        "type": "object",
+        "required": [
+          "visit_minutes",
+          "buffer_minutes",
+          "other_neighborhood_buffer_minutes",
+          "lead_time_minutes",
+          "days_ahead",
+          "weekly_hours",
+          "neighborhoods_by_day"
+        ],
+        "title": "SettingsOut"
+      },
       "SignedIn": {
         "properties": {
           "intent": {
@@ -10913,6 +13638,26 @@
           "last_modified"
         ],
         "title": "SitemapEntry"
+      },
+      "Slot": {
+        "properties": {
+          "starts_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Starts At"
+          },
+          "ends_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Ends At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "starts_at",
+          "ends_at"
+        ],
+        "title": "Slot"
       },
       "SourceInfo": {
         "properties": {
@@ -11290,6 +14035,179 @@
         "type": "object",
         "title": "StaffUpdateIn"
       },
+      "StageKind": {
+        "type": "string",
+        "enum": [
+          "open",
+          "won",
+          "lost"
+        ],
+        "title": "StageKind"
+      },
+      "StageOut": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "key": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Key"
+          },
+          "name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name"
+          },
+          "position": {
+            "type": "integer",
+            "title": "Position"
+          },
+          "kind": {
+            "$ref": "#/components/schemas/StageKind"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "key",
+          "name",
+          "position",
+          "kind"
+        ],
+        "title": "StageOut"
+      },
+      "StageRef": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "key": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Key"
+          },
+          "name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "key",
+          "name"
+        ],
+        "title": "StageRef"
+      },
+      "StageUpdateItem": {
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Id"
+          },
+          "name": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 60
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name"
+          },
+          "kind": {
+            "$ref": "#/components/schemas/StageKind",
+            "default": "open"
+          }
+        },
+        "type": "object",
+        "title": "StageUpdateItem"
+      },
+      "StagesUpdate": {
+        "properties": {
+          "stages": {
+            "items": {
+              "$ref": "#/components/schemas/StageUpdateItem"
+            },
+            "type": "array",
+            "maxItems": 12,
+            "minItems": 2,
+            "title": "Stages"
+          }
+        },
+        "type": "object",
+        "required": [
+          "stages"
+        ],
+        "title": "StagesUpdate",
+        "description": "Full ordered list. Existing ids keep their leads; missing ids are archived (if empty)."
+      },
+      "Step": {
+        "properties": {
+          "key": {
+            "type": "string",
+            "enum": [
+              "creci",
+              "first_property",
+              "first_publication",
+              "profile",
+              "first_contact",
+              "first_reply"
+            ],
+            "title": "Key"
+          },
+          "done": {
+            "type": "boolean",
+            "title": "Done"
+          }
+        },
+        "type": "object",
+        "required": [
+          "key",
+          "done"
+        ],
+        "title": "Step"
+      },
       "StreetPage": {
         "properties": {
           "kind": {
@@ -11406,6 +14324,78 @@
         ],
         "title": "SyncStatus"
       },
+      "TaskIn": {
+        "properties": {
+          "title": {
+            "type": "string",
+            "maxLength": 200,
+            "minLength": 1,
+            "title": "Title"
+          },
+          "due_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Due At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "title"
+        ],
+        "title": "TaskIn"
+      },
+      "TaskOut": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "due_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Due At"
+          },
+          "done_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Done At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "title",
+          "due_at",
+          "done_at"
+        ],
+        "title": "TaskOut"
+      },
       "TeamMember": {
         "properties": {
           "name": {
@@ -11469,47 +14459,53 @@
         ],
         "title": "TeamSize"
       },
-      "TimelineItem": {
+      "ThreadOut": {
         "properties": {
-          "occurred_at": {
-            "type": "string",
-            "format": "date-time",
-            "title": "Occurred At"
+          "conversation": {
+            "$ref": "#/components/schemas/InboxItem"
           },
-          "actor_name": {
-            "type": "string",
-            "title": "Actor Name"
-          },
-          "action": {
-            "type": "string",
-            "title": "Action"
-          },
-          "details": {
-            "additionalProperties": true,
-            "type": "object",
-            "title": "Details"
-          },
-          "reason": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Reason"
+          "messages": {
+            "items": {
+              "$ref": "#/components/schemas/MessageOut"
+            },
+            "type": "array",
+            "title": "Messages"
           }
         },
         "type": "object",
         "required": [
-          "occurred_at",
-          "actor_name",
-          "action",
-          "details",
-          "reason"
+          "conversation",
+          "messages"
         ],
-        "title": "TimelineItem"
+        "title": "ThreadOut"
+      },
+      "TodayOut": {
+        "properties": {
+          "handed_off": {
+            "type": "integer",
+            "title": "Handed Off"
+          },
+          "unread": {
+            "type": "integer",
+            "title": "Unread"
+          },
+          "visits_today": {
+            "type": "integer",
+            "title": "Visits Today"
+          },
+          "tasks_due": {
+            "type": "integer",
+            "title": "Tasks Due"
+          }
+        },
+        "type": "object",
+        "required": [
+          "handed_off",
+          "unread",
+          "visits_today",
+          "tasks_due"
+        ],
+        "title": "TodayOut"
       },
       "TokenIn": {
         "properties": {
@@ -11922,6 +14918,137 @@
         ],
         "title": "ViewAsOut"
       },
+      "VisitOut": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "person_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Person Id"
+          },
+          "person_name": {
+            "type": "string",
+            "title": "Person Name"
+          },
+          "property_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Property Id"
+          },
+          "property_code": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Property Code"
+          },
+          "starts_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Starts At"
+          },
+          "ends_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Ends At"
+          },
+          "status": {
+            "$ref": "#/components/schemas/AppointmentStatus"
+          },
+          "booked_by": {
+            "$ref": "#/components/schemas/BookedBy"
+          },
+          "is_demo": {
+            "type": "boolean",
+            "title": "Is Demo"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "person_id",
+          "person_name",
+          "property_id",
+          "property_code",
+          "starts_at",
+          "ends_at",
+          "status",
+          "booked_by",
+          "is_demo"
+        ],
+        "title": "VisitOut"
+      },
+      "VisitStatusIn": {
+        "properties": {
+          "status": {
+            "$ref": "#/components/schemas/AppointmentStatus"
+          },
+          "reason": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 300
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reason"
+          }
+        },
+        "type": "object",
+        "required": [
+          "status"
+        ],
+        "title": "VisitStatusIn"
+      },
+      "WeekOut": {
+        "properties": {
+          "visits": {
+            "items": {
+              "$ref": "#/components/schemas/VisitOut"
+            },
+            "type": "array",
+            "title": "Visits"
+          },
+          "blocks": {
+            "items": {
+              "$ref": "#/components/schemas/BlockOut"
+            },
+            "type": "array",
+            "title": "Blocks"
+          },
+          "free": {
+            "items": {
+              "$ref": "#/components/schemas/Slot"
+            },
+            "type": "array",
+            "title": "Free"
+          }
+        },
+        "type": "object",
+        "required": [
+          "visits",
+          "blocks",
+          "free"
+        ],
+        "title": "WeekOut"
+      },
       "WorkspaceKind": {
         "type": "string",
         "enum": [
@@ -12001,6 +15128,63 @@
         ],
         "title": "YearCount",
         "description": "Sales in a calendar year: a count, never prices or dates."
+      },
+      "app__domains__backoffice__accounts__NoteIn": {
+        "properties": {
+          "body": {
+            "type": "string",
+            "maxLength": 2000,
+            "minLength": 2,
+            "title": "Body"
+          }
+        },
+        "type": "object",
+        "required": [
+          "body"
+        ],
+        "title": "NoteIn"
+      },
+      "app__domains__backoffice__accounts__TimelineItem": {
+        "properties": {
+          "occurred_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Occurred At"
+          },
+          "actor_name": {
+            "type": "string",
+            "title": "Actor Name"
+          },
+          "action": {
+            "type": "string",
+            "title": "Action"
+          },
+          "details": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Details"
+          },
+          "reason": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reason"
+          }
+        },
+        "type": "object",
+        "required": [
+          "occurred_at",
+          "actor_name",
+          "action",
+          "details",
+          "reason"
+        ],
+        "title": "TimelineItem"
       },
       "app__domains__backoffice__moderation__QueueItem": {
         "properties": {
@@ -12085,6 +15269,164 @@
         "title": "QueueItem",
         "description": "A line of \"Precisa de você\": a queue that waits for someone, with a link target."
       },
+      "app__domains__contacts__models__Channel": {
+        "type": "string",
+        "enum": [
+          "whatsapp",
+          "instagram",
+          "email"
+        ],
+        "title": "Channel"
+      },
+      "app__domains__contacts__schemas__ConsentIn": {
+        "properties": {
+          "channel": {
+            "$ref": "#/components/schemas/app__domains__contacts__models__Channel"
+          },
+          "purpose": {
+            "$ref": "#/components/schemas/ConsentPurpose"
+          },
+          "granted": {
+            "type": "boolean",
+            "title": "Granted"
+          },
+          "proof_source": {
+            "$ref": "#/components/schemas/ProofSource"
+          },
+          "proof_location": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 300
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Proof Location"
+          },
+          "proof_text": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 2000
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Proof Text"
+          }
+        },
+        "type": "object",
+        "required": [
+          "channel",
+          "purpose",
+          "granted",
+          "proof_source"
+        ],
+        "title": "ConsentIn",
+        "description": "A consent the person gave. Never pre-checked: the client sends it only when ticked."
+      },
+      "app__domains__contacts__schemas__NoteIn": {
+        "properties": {
+          "body": {
+            "type": "string",
+            "maxLength": 4000,
+            "minLength": 1,
+            "title": "Body"
+          }
+        },
+        "type": "object",
+        "required": [
+          "body"
+        ],
+        "title": "NoteIn"
+      },
+      "app__domains__contacts__schemas__TimelineItem": {
+        "properties": {
+          "at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "At"
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "message",
+              "event",
+              "note",
+              "visit"
+            ],
+            "title": "Kind"
+          },
+          "channel": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Channel"
+          },
+          "author": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Author"
+          },
+          "text": {
+            "type": "string",
+            "title": "Text"
+          },
+          "ref": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ref"
+          }
+        },
+        "type": "object",
+        "required": [
+          "at",
+          "kind",
+          "channel",
+          "author",
+          "text"
+        ],
+        "title": "TimelineItem"
+      },
+      "app__domains__interest__schemas__ConsentIn": {
+        "properties": {
+          "contact_about_properties": {
+            "type": "boolean",
+            "title": "Contact About Properties"
+          },
+          "marketing": {
+            "type": "boolean",
+            "title": "Marketing",
+            "default": false
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "contact_about_properties"
+        ],
+        "title": "ConsentIn"
+      },
       "app__domains__interest__schemas__PropertyKind": {
         "type": "string",
         "enum": [
@@ -12094,6 +15436,17 @@
           "commercial"
         ],
         "title": "PropertyKind"
+      },
+      "app__domains__listings__models__Channel": {
+        "type": "string",
+        "enum": [
+          "marketplace",
+          "bio_page",
+          "landing",
+          "meta",
+          "google"
+        ],
+        "title": "Channel"
       },
       "app__domains__properties__models__PropertyKind": {
         "type": "string",

@@ -75,5 +75,22 @@
   "plan_not_sellable": "Este plano não está mais à venda. Escolha um dos planos da página de preços.",
   "plan_already_active": "Você já está neste plano.",
   "add_on_not_available": "Este pacote extra não está disponível no seu plano. Veja os pacotes em Plano, uso e canais.",
-  "plan_change_requires_request": "A mudança para um plano pago é feita pela equipe da Casvitta. Peça a mudança em Plano, uso e canais; respondemos em até 1 dia útil."
+  "plan_change_requires_request": "A mudança para um plano pago é feita pela equipe da Casvitta. Peça a mudança em Plano, uso e canais; respondemos em até 1 dia útil.",
+  "contact_not_found": "Não encontramos este contato. Ele pode ter sido removido; volte para Contatos.",
+  "contacts_limit_reached": "Você chegou ao limite de contatos do seu plano. Peça a mudança de plano em Plano, uso e canais; nada é cobrado automaticamente.",
+  "properties_limit_reached": "Você chegou ao limite de imóveis ativos do seu plano. Pause, marque como vendido ou alugado algum imóvel, ou peça a mudança de plano em Plano, uso e canais.",
+  "publish_blocked.fewer_photos": "Adicione pelo menos 5 fotos do imóvel antes de publicar.",
+  "lead_not_found": "Não encontramos este atendimento no funil. Atualize a página.",
+  "stage_not_found": "Esta etapa do funil não existe mais. Atualize a página.",
+  "stage_name_required": "Dê um nome para a nova etapa.",
+  "stage_has_leads": "Esta etapa ainda tem contatos. Mova os contatos para outra etapa antes de removê-la.",
+  "stage_open_required": "O funil precisa de pelo menos uma etapa em andamento.",
+  "task_not_found": "Não encontramos esta tarefa. Atualize a página.",
+  "conversation_not_found": "Não encontramos esta conversa. Atualize a caixa de entrada.",
+  "reply_window_closed": "Já passaram 24 horas desde a última mensagem desta pessoa. Para falar com ela de novo, use um modelo de mensagem aprovado.",
+  "slot_taken": "Esse horário acabou de ser ocupado. Escolha outro horário livre.",
+  "visit_not_found": "Não encontramos esta visita. Atualize a agenda.",
+  "calendar_invalid_day": "Dia da semana inválido nas regras da agenda.",
+  "calendar_invalid_hours": "Confira os horários: o início precisa ser antes do fim, no formato 09:00.",
+  "feature_not_in_plan": "Este recurso não está no seu plano. Veja o que muda em Plano, uso e canais."
 }

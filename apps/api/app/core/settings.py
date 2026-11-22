@@ -124,6 +124,8 @@ class Settings(BaseSettings):
     # End-to-end tests only: GET /v1/dev/outbox shows the emails the fake adapter "sent", so a
     # browser test can open sign-in links. Refused in production.
     dev_outbox_enabled: bool = False
+    # Minimum photos before a property can be published (CRM mockup 04).
+    listing_min_photos: int = 5
     # Show is_demo listings on public pages. Local demos only; production refuses it (rule 7).
     public_listings_include_demo: bool = False
     # Public interest form: requests per IP and kind per minute.

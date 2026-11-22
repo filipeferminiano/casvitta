@@ -23,6 +23,10 @@ class Blocker(StrEnum):
     AUTHORIZATION_WRONG_KIND = "authorization_wrong_kind"
     AUTHORIZATION_EXPIRED = "authorization_expired"
     PUBLISHING_PAUSED = "publishing_paused"
+    FEWER_PHOTOS = "fewer_photos"  # CRM mockup 04: minimum photos (config)
+
+
+MIN_PHOTOS = 5
 
 
 @dataclass(frozen=True, slots=True)
@@ -65,7 +69,10 @@ def publish_blockers(
     today: date,
     *,
     workspace_paused: bool = False,
+    photos: int | None = None,
+    min_photos: int = MIN_PHOTOS,
 ) -> list[Blocker]:
+    """`photos` None = not checked (callers that only re-check rules 1 and 2 at read time)."""
     blockers: list[Blocker] = []
     if prop.status != PropertyStatus.ACTIVE:
         blockers.append(Blocker.PROPERTY_NOT_ACTIVE)
@@ -76,6 +83,8 @@ def publish_blockers(
     auth = authorization_blocker(prop, list(authorizations), today)
     if auth is not None:
         blockers.append(auth)
+    if photos is not None and photos < min_photos:
+        blockers.append(Blocker.FEWER_PHOTOS)
     if workspace_paused:
         blockers.append(Blocker.PUBLISHING_PAUSED)
     return blockers

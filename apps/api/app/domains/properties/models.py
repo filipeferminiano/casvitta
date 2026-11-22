@@ -54,10 +54,6 @@ class PropertyStatus(StrEnum):
     RENTED = "rented"
 
 
-# Count toward the plan's active-property limit (CLAUDE.md §1: sold, rented, paused excluded).
-COUNTS_TOWARD_LIMIT = frozenset({PropertyStatus.ACTIVE})
-
-
 class PropertySource(StrEnum):
     CASVITTA = "casvitta"  # created in Casvitta (Imóveis)
     MANUAL = "manual"  # typed in on the bio page by hand

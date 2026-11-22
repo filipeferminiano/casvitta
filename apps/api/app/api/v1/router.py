@@ -5,6 +5,7 @@ from app.api.v1 import (
     alerts,
     auth,
     billing,
+    crm,
     dev,
     health,
     interest,
@@ -33,4 +34,6 @@ api_router.include_router(properties.public_router)
 api_router.include_router(billing.public_router)
 api_router.include_router(billing.router)
 api_router.include_router(billing.staff_router)
+api_router.include_router(crm.router)
+api_router.include_router(crm.public_router)
 api_router.include_router(dev.router)

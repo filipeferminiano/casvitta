@@ -12,18 +12,23 @@ import uuid
 from collections.abc import Sequence
 from datetime import date
 
-from sqlalchemy import select
+from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.core.catalog import Meter, allows_more
 from app.core.errors import AppError
 from app.core.logging import get_logger
-from app.core.tenancy import cross_tenant
+from app.core.settings import get_settings
+from app.core.tenancy import cross_tenant, current_workspace
 from app.core.time import today_local, utcnow
 from app.domains.accounts.models import BrokerProfile, Membership, Role, Workspace
+from app.domains.activity.models import EventActor, KeyEventKind
+from app.domains.activity.service import emit
 from app.domains.listings.models import Channel, Listing, ListingStatus, UnpublishReason
 from app.domains.listings.rules import Blocker, BrokerFacts, publish_blockers, valid_authorization
 from app.domains.properties.models import (
     AuthorizationEvidence,
+    MediaKind,
     OwnerAuthorization,
     Property,
     PropertyMedia,
@@ -132,6 +137,17 @@ async def _workspace_paused(session: AsyncSession, workspace_id: uuid.UUID) -> b
     return workspace is not None and workspace.publishing_paused_at is not None
 
 
+async def _photo_count(session: AsyncSession, property_id: uuid.UUID) -> int:
+    return int(
+        await session.scalar(
+            select(func.count())
+            .select_from(PropertyMedia)
+            .where(PropertyMedia.property_id == property_id, PropertyMedia.kind == MediaKind.PHOTO)
+        )
+        or 0
+    )
+
+
 async def blockers_for(session: AsyncSession, prop: Property, today: date) -> list[Blocker]:
     return publish_blockers(
         prop,
@@ -139,6 +155,8 @@ async def blockers_for(session: AsyncSession, prop: Property, today: date) -> li
         await _authorizations(session, prop.id),
         today,
         workspace_paused=await _workspace_paused(session, prop.workspace_id),
+        photos=await _photo_count(session, prop.id),
+        min_photos=get_settings().listing_min_photos,
     )
 
 
@@ -211,7 +229,29 @@ async def to_out(session: AsyncSession, prop: Property, today: date | None = Non
     )
 
 
-async def create_property(session: AsyncSession, data: PropertyIn) -> Property:
+# Catalog definition: active property = published or draft (sold, rented, paused don't count).
+COUNTS_TOWARD_LIMIT = (PropertyStatus.ACTIVE, PropertyStatus.DRAFT)
+
+
+async def active_count(session: AsyncSession) -> int:
+    return int(
+        await session.scalar(
+            select(func.count())
+            .select_from(Property)
+            .where(Property.status.in_(COUNTS_TOWARD_LIMIT))
+        )
+        or 0
+    )
+
+
+async def create_property(
+    session: AsyncSession, data: PropertyIn, *, user_id: uuid.UUID | None = None
+) -> Property:
+    workspace = await session.get(Workspace, current_workspace(session))
+    if workspace is not None and not allows_more(
+        workspace.plan, Meter.ACTIVE_PROPERTIES, await active_count(session)
+    ):
+        raise AppError("properties_limit_reached", status_code=409)
     values = data.model_dump(exclude={"responsible_broker_id"})
     broker_id = data.responsible_broker_id
     if broker_id is not None and await session.get(BrokerProfile, broker_id) is None:
@@ -224,6 +264,14 @@ async def create_property(session: AsyncSession, data: PropertyIn) -> Property:
     session.add(prop)
     await session.flush()
     await session.refresh(prop)
+    emit(
+        session,
+        KeyEventKind.PROPERTY_CREATED,
+        EventActor.BROKER,
+        "property",
+        prop.id,
+        user_id=user_id,
+    )
     return prop
 
 
@@ -241,6 +289,15 @@ async def update_property(
     prop = await _load(session, property_id)
     changes = patch.model_dump(exclude_unset=True)
     status = changes.pop("status", None)
+    if changes:
+        emit(
+            session,
+            KeyEventKind.PROPERTY_EDITED,
+            EventActor.BROKER,
+            "property",
+            prop.id,
+            fields=sorted(changes),
+        )
     for field, value in changes.items():
         setattr(prop, field, value)
     if status is not None:
@@ -299,6 +356,14 @@ async def publish(
         raise AppError("listing_suspended", status_code=409)  # only staff lift a suspension
     if listing.status != ListingStatus.PUBLISHED:
         listing.status = ListingStatus.PUBLISHED
+        emit(
+            session,
+            KeyEventKind.PROPERTY_PUBLISHED,
+            EventActor.BROKER,
+            "property",
+            prop.id,
+            channel=channel.value,
+        )
         listing.published_at = utcnow()
         listing.unpublished_at = None
         listing.unpublish_reason = None
@@ -380,6 +445,7 @@ async def public_listings(
     city: str | None = None,
     neighborhood: str | None = None,
     street: str | None = None,
+    code_number: int | None = None,
     today: date | None = None,
     limit: int = 500,
 ) -> list[PublicListingOut]:
@@ -409,6 +475,8 @@ async def public_listings(
             query = query.where(Property.workspace_id == workspace_id)
         if transaction is not None:
             query = query.where(Property.transaction == transaction)
+        if code_number is not None:
+            query = query.where(Property.code_number == code_number)
         # Place filters compare URL slugs ("sao-paulo", "vila-mariana"); the street filter only
         # matches when the broker shows the street publicly.
         wanted = {"city": city, "neighborhood": neighborhood, "street": street}
@@ -476,3 +544,37 @@ async def public_listings(
                 )
             )
     return out
+
+
+_CODE_SUFFIX = re.compile(r"-cv-(\d+)$")
+
+
+def code_from_slug(slug: str) -> int | None:
+    match = _CODE_SUFFIX.search(slug)
+    return int(match.group(1)) if match else None
+
+
+async def public_listing_by_slug(
+    session: AsyncSession, slug: str, *, include_demo: bool = False, today: date | None = None
+) -> PublicListingOut | None:
+    """casvitta.com.br/imovel/{slug}: only when the listing passes the gate right now."""
+    code = code_from_slug(slug)
+    if code is None:
+        return None
+    found = await public_listings(
+        session, Channel.MARKETPLACE, include_demo=include_demo, code_number=code, today=today
+    )
+    return found[0] if found and found[0].slug == slug else None
+
+
+async def public_property_for_contact(
+    session: AsyncSession, slug: str, *, include_demo: bool = False
+) -> Property | None:
+    """The property behind a public listing, for the contact form (cross-tenant read)."""
+    listing = await public_listing_by_slug(session, slug, include_demo=include_demo)
+    if listing is None:
+        return None
+    with cross_tenant(session):
+        return await session.scalar(
+            select(Property).where(Property.code_number == code_from_slug(slug))
+        )

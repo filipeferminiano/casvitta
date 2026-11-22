@@ -19,7 +19,7 @@ from app.domains.accounts.models import AuditLog, BrokerProfile, Workspace
 from app.domains.listings.models import Channel, Listing, ListingStatus, UnpublishReason
 from app.domains.listings.rules import Blocker
 from app.domains.properties import service
-from app.domains.properties.models import Property, Transaction
+from app.domains.properties.models import Property, PropertyMedia, Transaction
 from app.domains.properties.schemas import AuthorizationIn, PropertyIn, PropertyPatch
 from app.integrations.registry import Integrations
 from tests.staff_helpers import add_broker, make_client
@@ -65,8 +65,17 @@ async def bound(make_session, broker: BrokerProfile) -> AsyncSession:  # type: i
     return s
 
 
+async def add_photos(s: AsyncSession, prop: Property, n: int = 5) -> None:
+    s.add_all(
+        PropertyMedia(property_id=prop.id, storage_key=f"k{i}", url=f"https://img/{i}", position=i)
+        for i in range(n)
+    )
+    await s.flush()
+
+
 async def ready_property(s: AsyncSession, broker: BrokerProfile, **overrides: Any) -> Property:
     prop = await service.create_property(s, property_in(**overrides))
+    await add_photos(s, prop)
     await service.update_property(s, prop.id, PropertyPatch(status="active"))
     await service.add_authorization(
         s, prop.id, authorization(kind=prop.transaction.value), broker.user_id
@@ -106,6 +115,7 @@ async def test_publish_requires_verified_creci_and_valid_authorization(make_sess
 
     s = await bound(make_session, ok)
     bare = await service.create_property(s, property_in())
+    await add_photos(s, bare)
     await service.update_property(s, bare.id, PropertyPatch(status="active"))
     try:
         await service.publish(s, bare.id, Channel.MARKETPLACE, TODAY)
@@ -135,7 +145,11 @@ async def test_draft_and_paused_workspace_block_publication(make_session) -> Non
     s = await bound(make_session, broker)
     prop = await service.create_property(s, property_in())
     await service.add_authorization(s, prop.id, authorization(), broker.user_id)
-    assert await service.blockers_for(s, prop, TODAY) == [Blocker.PROPERTY_NOT_ACTIVE]
+    assert await service.blockers_for(s, prop, TODAY) == [
+        Blocker.PROPERTY_NOT_ACTIVE,
+        Blocker.FEWER_PHOTOS,
+    ]
+    await add_photos(s, prop, 5)
     await service.update_property(s, prop.id, PropertyPatch(status="active"))
     workspace = await s.get(Workspace, broker.workspace_id)
     assert workspace is not None
@@ -264,7 +278,11 @@ async def test_api_is_confined_to_the_workspace(make_session, integrations: Inte
         )
         assert created.status_code == 201, created.text
         body = created.json()
-        assert body["blockers"] == ["property_not_active", "authorization_missing"]
+        assert body["blockers"] == [
+            "property_not_active",
+            "authorization_missing",
+            "fewer_photos",
+        ]
         pid = body["id"]
 
         assert (await api.get(f"/v1/properties/{pid}", headers=_cookie(bruno))).status_code == 404
@@ -292,18 +310,20 @@ async def test_api_is_confined_to_the_workspace(make_session, integrations: Inte
         )
         assert missing.status_code == 422
 
+        for i in range(5):
+            r = await api.post(
+                f"/v1/properties/{pid}/photos",
+                files={"photo": (f"f{i}.jpg", b"\xff\xd8\xff", "image/jpeg")},
+                headers=_cookie(ana),
+            )
+            assert r.status_code == 201
         published = await api.put(
             f"/v1/properties/{pid}/listings/marketplace", headers=_cookie(ana)
         )
         assert published.status_code == 200, published.text
         assert published.json()["listings"][0]["status"] == "published"
 
-        photo = await api.post(
-            f"/v1/properties/{pid}/photos",
-            files={"photo": ("sala.jpg", b"\xff\xd8\xff", "image/jpeg")},
-            headers=_cookie(ana),
-        )
-        assert photo.status_code == 201 and photo.json()["media"][0]["is_cover"] is True
+        assert published.json()["media"][0]["is_cover"] is True
         wrong = await api.post(
             f"/v1/properties/{pid}/photos",
             files={"photo": ("x.exe", b"MZ", "application/octet-stream")},
