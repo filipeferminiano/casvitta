@@ -3553,6 +3553,225 @@
         }
       }
     },
+    "/v1/staff/authorizations": {
+      "get": {
+        "tags": [
+          "staff"
+        ],
+        "summary": "Authorization Queue",
+        "operationId": "listAuthorizationQueue",
+        "parameters": [
+          {
+            "name": "x-admin-token",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Admin-Token"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AuthorizationItem"
+                  },
+                  "title": "Response Listauthorizationqueue"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/staff/authorizations/{authorization_id}/verify": {
+      "post": {
+        "tags": [
+          "staff"
+        ],
+        "summary": "Verify Authorization",
+        "operationId": "verifyAuthorization",
+        "parameters": [
+          {
+            "name": "authorization_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Authorization Id"
+            }
+          },
+          {
+            "name": "x-admin-token",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Admin-Token"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/staff/authorizations/{authorization_id}/reject": {
+      "post": {
+        "tags": [
+          "staff"
+        ],
+        "summary": "Reject Authorization",
+        "operationId": "rejectAuthorization",
+        "parameters": [
+          {
+            "name": "authorization_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Authorization Id"
+            }
+          },
+          {
+            "name": "x-admin-token",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Admin-Token"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RejectIn"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/staff/authorizations/{authorization_id}/document": {
+      "get": {
+        "tags": [
+          "staff"
+        ],
+        "summary": "Authorization Document",
+        "operationId": "getAuthorizationDocument",
+        "parameters": [
+          {
+            "name": "authorization_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Authorization Id"
+            }
+          },
+          {
+            "name": "x-admin-token",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Admin-Token"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/v1/public/capture-assignments/accept": {
       "post": {
         "tags": [
@@ -6766,6 +6985,108 @@
         ],
         "title": "AuthorizationEvidence"
       },
+      "AuthorizationItem": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "property_code": {
+            "type": "string",
+            "title": "Property Code"
+          },
+          "property_title": {
+            "type": "string",
+            "title": "Property Title"
+          },
+          "neighborhood": {
+            "type": "string",
+            "title": "Neighborhood"
+          },
+          "city": {
+            "type": "string",
+            "title": "City"
+          },
+          "transaction": {
+            "$ref": "#/components/schemas/Transaction"
+          },
+          "workspace_name": {
+            "type": "string",
+            "title": "Workspace Name"
+          },
+          "broker_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Broker Name"
+          },
+          "owner_name": {
+            "type": "string",
+            "title": "Owner Name"
+          },
+          "evidence": {
+            "$ref": "#/components/schemas/AuthorizationEvidence"
+          },
+          "has_document": {
+            "type": "boolean",
+            "title": "Has Document"
+          },
+          "exclusive": {
+            "type": "boolean",
+            "title": "Exclusive"
+          },
+          "signed_at": {
+            "type": "string",
+            "format": "date",
+            "title": "Signed At"
+          },
+          "expires_at": {
+            "type": "string",
+            "format": "date",
+            "title": "Expires At"
+          },
+          "submitted_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Submitted At"
+          },
+          "waiting_listings": {
+            "type": "integer",
+            "title": "Waiting Listings"
+          },
+          "is_demo": {
+            "type": "boolean",
+            "title": "Is Demo"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "property_code",
+          "property_title",
+          "neighborhood",
+          "city",
+          "transaction",
+          "workspace_name",
+          "broker_name",
+          "owner_name",
+          "evidence",
+          "has_document",
+          "exclusive",
+          "signed_at",
+          "expires_at",
+          "submitted_at",
+          "waiting_listings",
+          "is_demo"
+        ],
+        "title": "AuthorizationItem"
+      },
       "AuthorizationOut": {
         "properties": {
           "id": {
@@ -6812,6 +7133,20 @@
               }
             ],
             "title": "Revoked At"
+          },
+          "review_status": {
+            "$ref": "#/components/schemas/AuthorizationReview"
+          },
+          "review_reason": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Review Reason"
           }
         },
         "type": "object",
@@ -6824,9 +7159,20 @@
           "signed_at",
           "expires_at",
           "has_document",
-          "revoked_at"
+          "revoked_at",
+          "review_status",
+          "review_reason"
         ],
         "title": "AuthorizationOut"
+      },
+      "AuthorizationReview": {
+        "type": "string",
+        "enum": [
+          "pending",
+          "verified",
+          "rejected"
+        ],
+        "title": "AuthorizationReview"
       },
       "AutomationsIn": {
         "properties": {
@@ -6909,7 +7255,8 @@
           "authorization_wrong_kind",
           "authorization_expired",
           "publishing_paused",
-          "fewer_photos"
+          "fewer_photos",
+          "authorization_rejected"
         ],
         "title": "Blocker"
       },
@@ -10495,6 +10842,7 @@
         "type": "string",
         "enum": [
           "draft",
+          "pending_review",
           "published",
           "unpublished",
           "suspended"
@@ -12033,6 +12381,32 @@
             ],
             "title": "Bathrooms"
           },
+          "suites": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 50.0,
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Suites"
+          },
+          "floor": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 200.0,
+                "minimum": -5.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Floor"
+          },
           "parking": {
             "anyOf": [
               {
@@ -12264,6 +12638,28 @@
             ],
             "title": "Bathrooms"
           },
+          "suites": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Suites"
+          },
+          "floor": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Floor"
+          },
           "parking": {
             "anyOf": [
               {
@@ -12400,6 +12796,8 @@
           "area_m2",
           "bedrooms",
           "bathrooms",
+          "suites",
+          "floor",
           "parking",
           "features",
           "price_cents",
@@ -12491,6 +12889,32 @@
               }
             ],
             "title": "Bathrooms"
+          },
+          "suites": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 50.0,
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Suites"
+          },
+          "floor": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 200.0,
+                "minimum": -5.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Floor"
           },
           "parking": {
             "anyOf": [
@@ -12839,6 +13263,28 @@
             ],
             "title": "Bathrooms"
           },
+          "suites": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Suites"
+          },
+          "floor": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Floor"
+          },
           "parking": {
             "anyOf": [
               {
@@ -12921,6 +13367,8 @@
           "area_m2",
           "bedrooms",
           "bathrooms",
+          "suites",
+          "floor",
           "parking",
           "features",
           "price_cents",
@@ -13219,6 +13667,21 @@
           "path"
         ],
         "title": "Redirect"
+      },
+      "RejectIn": {
+        "properties": {
+          "reason": {
+            "type": "string",
+            "maxLength": 500,
+            "minLength": 5,
+            "title": "Reason"
+          }
+        },
+        "type": "object",
+        "required": [
+          "reason"
+        ],
+        "title": "RejectIn"
       },
       "RentalAdminCriteria": {
         "properties": {

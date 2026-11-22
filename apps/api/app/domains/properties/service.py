@@ -25,7 +25,13 @@ from app.domains.accounts.models import BrokerProfile, Membership, Role, Workspa
 from app.domains.activity.models import EventActor, KeyEventKind
 from app.domains.activity.service import emit
 from app.domains.listings.models import Channel, Listing, ListingStatus, UnpublishReason
-from app.domains.listings.rules import Blocker, BrokerFacts, publish_blockers, valid_authorization
+from app.domains.listings.rules import (
+    Blocker,
+    BrokerFacts,
+    publicly_verified,
+    publish_blockers,
+    valid_authorization,
+)
 from app.domains.properties.models import (
     AuthorizationEvidence,
     MediaKind,
@@ -50,6 +56,7 @@ from app.domains.staff.audit import Actor, record
 
 log = get_logger(__name__)
 
+LIVE_OR_WAITING = (ListingStatus.PUBLISHED, ListingStatus.PENDING_REVIEW)
 PUBLIC_CHANNELS = frozenset({Channel.MARKETPLACE, Channel.BIO_PAGE, Channel.LANDING})
 UNAVAILABLE = frozenset({PropertyStatus.SOLD, PropertyStatus.RENTED, PropertyStatus.PAUSED})
 
@@ -199,6 +206,8 @@ async def to_out(session: AsyncSession, prop: Property, today: date | None = Non
         area_m2=prop.area_m2,
         bedrooms=prop.bedrooms,
         bathrooms=prop.bathrooms,
+        suites=prop.suites,
+        floor=prop.floor,
         parking=prop.parking,
         features=list(prop.features),
         price_cents=prop.price_cents,
@@ -219,6 +228,8 @@ async def to_out(session: AsyncSession, prop: Property, today: date | None = Non
                 expires_at=current.expires_at,
                 has_document=current.document_key is not None,
                 revoked_at=current.revoked_at,
+                review_status=current.review_status,
+                review_reason=current.review_reason,
             )
             if current is not None
             else None
@@ -354,7 +365,14 @@ async def publish(
         session.add(listing)
     if listing.status == ListingStatus.SUSPENDED:
         raise AppError("listing_suspended", status_code=409)  # only staff lift a suspension
-    if listing.status != ListingStatus.PUBLISHED:
+    auths = await _authorizations(session, prop.id)
+    if not publicly_verified(prop, auths, today or today_local()):
+        # Every broker check passes; it goes live when staff check the authorization.
+        if listing.status != ListingStatus.PUBLISHED:
+            listing.status = ListingStatus.PENDING_REVIEW
+            listing.unpublished_at = None
+            listing.unpublish_reason = None
+    elif listing.status != ListingStatus.PUBLISHED:
         listing.status = ListingStatus.PUBLISHED
         emit(
             session,
@@ -376,7 +394,7 @@ async def unpublish(session: AsyncSession, property_id: uuid.UUID, channel: Chan
     listing = await session.scalar(
         select(Listing).where(Listing.property_id == prop.id, Listing.channel == channel)
     )
-    if listing is not None and listing.status == ListingStatus.PUBLISHED:
+    if listing is not None and listing.status in LIVE_OR_WAITING:
         _mark_unpublished(listing, UnpublishReason.BROKER)
     await session.flush()
 
@@ -393,7 +411,7 @@ async def _unpublish_all(
     rows = (
         await session.scalars(
             select(Listing).where(
-                Listing.property_id == property_id, Listing.status == ListingStatus.PUBLISHED
+                Listing.property_id == property_id, Listing.status.in_(LIVE_OR_WAITING)
             )
         )
     ).all()
@@ -411,7 +429,7 @@ async def expire_authorizations(session: AsyncSession, today: date | None = None
             await session.scalars(
                 select(Property)
                 .join(Listing, Listing.property_id == Property.id)
-                .where(Listing.status == ListingStatus.PUBLISHED)
+                .where(Listing.status.in_(LIVE_OR_WAITING))
                 .distinct()
             )
         ).all()
@@ -509,7 +527,7 @@ async def public_listings(
                 photos_by_property.setdefault(media.property_id, []).append(media.url)
         out: list[PublicListingOut] = []
         for prop, broker, listing in rows:
-            if valid_authorization(prop, auths_by_property.get(prop.id, []), today) is None:
+            if not publicly_verified(prop, auths_by_property.get(prop.id, []), today):
                 continue  # expired today; the daily job will unpublish it
             photos = photos_by_property.get(prop.id, [])
             out.append(
@@ -527,6 +545,8 @@ async def public_listings(
                     area_m2=prop.area_m2,
                     bedrooms=prop.bedrooms,
                     bathrooms=prop.bathrooms,
+                    suites=prop.suites,
+                    floor=prop.floor,
                     parking=prop.parking,
                     features=list(prop.features),
                     price_cents=prop.price_cents,

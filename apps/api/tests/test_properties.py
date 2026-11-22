@@ -16,13 +16,21 @@ from app.core.settings import Settings
 from app.core.tenancy import bind_workspace, cross_tenant
 from app.core.time import today_local, utcnow
 from app.domains.accounts.models import AuditLog, BrokerProfile, Workspace
+from app.domains.backoffice import authorizations
 from app.domains.listings.models import Channel, Listing, ListingStatus, UnpublishReason
 from app.domains.listings.rules import Blocker
 from app.domains.properties import service
-from app.domains.properties.models import Property, PropertyMedia, Transaction
+from app.domains.properties.models import (
+    AuthorizationReview,
+    Property,
+    PropertyMedia,
+    Transaction,
+)
 from app.domains.properties.schemas import AuthorizationIn, PropertyIn, PropertyPatch
+from app.domains.staff.audit import Actor
+from app.domains.staff.models import StaffRole
 from app.integrations.registry import Integrations
-from tests.staff_helpers import add_broker, make_client
+from tests.staff_helpers import add_broker, add_staff, make_client, sign_in, staff_settings
 
 SETTINGS = Settings(cookie_path_prefix="")
 TODAY = date(2026, 11, 21)
@@ -73,13 +81,17 @@ async def add_photos(s: AsyncSession, prop: Property, n: int = 5) -> None:
     await s.flush()
 
 
-async def ready_property(s: AsyncSession, broker: BrokerProfile, **overrides: Any) -> Property:
+async def ready_property(
+    s: AsyncSession, broker: BrokerProfile, *, verified: bool = True, **overrides: Any
+) -> Property:
     prop = await service.create_property(s, property_in(**overrides))
     await add_photos(s, prop)
     await service.update_property(s, prop.id, PropertyPatch(status="active"))
-    await service.add_authorization(
+    auth = await service.add_authorization(
         s, prop.id, authorization(kind=prop.transaction.value), broker.user_id
     )
+    if verified:
+        auth.review_status = AuthorizationReview.VERIFIED
     return prop
 
 
@@ -133,7 +145,11 @@ async def test_publish_requires_verified_creci_and_valid_authorization(make_sess
     assert await service.blockers_for(s, bare, TODAY) == [Blocker.AUTHORIZATION_EXPIRED]
 
     # Valid through its last day.
-    await service.add_authorization(s, bare.id, authorization(expires_at=TODAY), ok.user_id)
+    last = await service.add_authorization(s, bare.id, authorization(expires_at=TODAY), ok.user_id)
+    # Every broker check passes: it waits for the Casvitta check of the authorization.
+    listing = await service.publish(s, bare.id, Channel.MARKETPLACE, TODAY)
+    assert listing.status == ListingStatus.PENDING_REVIEW
+    last.review_status = AuthorizationReview.VERIFIED
     listing = await service.publish(s, bare.id, Channel.MARKETPLACE, TODAY)
     assert listing.status == ListingStatus.PUBLISHED and listing.published_at is not None
     await s.close()
@@ -264,7 +280,7 @@ def _cookie(broker: BrokerProfile) -> dict[str, str]:
     return {"cookie": f"cv_at={token}"}
 
 
-async def test_api_is_confined_to_the_workspace(make_session, integrations: Integrations) -> None:  # type: ignore[no-untyped-def]
+async def test_api_is_confined_to_the_workspace(make_session, integrations: Integrations) -> None:  # type: ignore[no-untyped-def]  # noqa: PLR0915
     async with make_session() as setup:
         ana = await add_broker(setup, "Ana Ribeiro", verified=True)
         bruno = await add_broker(setup, "Bruno Alves", verified=True)
@@ -321,7 +337,9 @@ async def test_api_is_confined_to_the_workspace(make_session, integrations: Inte
             f"/v1/properties/{pid}/listings/marketplace", headers=_cookie(ana)
         )
         assert published.status_code == 200, published.text
-        assert published.json()["listings"][0]["status"] == "published"
+        # Waits for the Casvitta check of the owner's authorization (BO6).
+        assert published.json()["listings"][0]["status"] == "pending_review"
+        assert (await api.get("/v1/public/listings")).json() == []
 
         assert published.json()["media"][0]["is_cover"] is True
         wrong = await api.post(
@@ -331,10 +349,60 @@ async def test_api_is_confined_to_the_workspace(make_session, integrations: Inte
         )
         assert wrong.status_code == 415
 
-        public = await api.get("/v1/public/listings")
-        codes = [item["code"] for item in public.json()]
-        assert body["code"] in codes
         assert (await api.get("/v1/public/listings?channel=meta")).status_code == 404
+
+    async with make_session() as setup:
+        await add_staff(setup, "ops@casvitta.com.br", StaffRole.OPERATIONS)
+        await add_staff(setup, "fin@casvitta.com.br", StaffRole.FINANCE)
+    staff_cfg = staff_settings()
+    async with make_client(make_session, integrations, staff_cfg) as fin:
+        await sign_in(fin, integrations, "fin@casvitta.com.br")
+        assert (await fin.get("/v1/staff/authorizations")).status_code == 403
+    async with make_client(make_session, integrations, staff_cfg) as ops:
+        await sign_in(ops, integrations, "ops@casvitta.com.br")
+        queue = (await ops.get("/v1/staff/authorizations")).json()
+        assert [q["property_code"] for q in queue] == [body["code"]]
+        assert queue[0]["waiting_listings"] == 1 and queue[0]["evidence"] == "attestation"
+        r = await ops.post(f"/v1/staff/authorizations/{queue[0]['id']}/verify")
+        assert r.status_code == 204
+        assert (await ops.get("/v1/staff/authorizations")).json() == []
+
+    async with make_client(make_session, integrations, SETTINGS) as api:
+        public = await api.get("/v1/public/listings")
+        assert [item["code"] for item in public.json()] == [body["code"]]
+        mine = (await api.get(f"/v1/properties/{pid}", headers=_cookie(ana))).json()
+        assert mine["listings"][0]["status"] == "published"
+        assert mine["authorization"]["review_status"] == "verified"
+    async with make_session() as check:
+        with cross_tenant(check):
+            entry = await check.scalar(
+                select(AuditLog).where(AuditLog.action == "authorization.verified")
+            )
+        assert entry is not None and entry.details["listings"] == 1
+
+
+async def test_rejected_authorization_keeps_the_listing_off(make_session) -> None:  # type: ignore[no-untyped-def]
+    async with make_session() as setup:
+        broker = await add_broker(setup, "Helena Prado", verified=True)
+        staff = await add_staff(setup, "ops2@casvitta.com.br", StaffRole.OPERATIONS)
+    s = await bound(make_session, broker)
+    prop = await ready_property(s, broker, verified=False)
+    listing = await service.publish(s, prop.id, Channel.MARKETPLACE, TODAY)
+    assert listing.status == ListingStatus.PENDING_REVIEW
+    await s.commit()
+    await s.close()
+
+    async with make_session() as staff_session:
+        queue = await authorizations.queue(staff_session)
+        actor = Actor.staff(staff.id, staff.name, frozenset(), None)
+        await authorizations.reject(staff_session, actor, queue[0].id, "Assinatura ilegível")
+        await staff_session.commit()
+
+    s = await bound(make_session, broker)
+    out = await service.to_out(s, await service.get_property(s, prop.id), TODAY)
+    assert out.listings[0].status == ListingStatus.UNPUBLISHED
+    assert Blocker.AUTHORIZATION_REJECTED in out.blockers
+    await s.close()
 
 
 async def test_authorization_dates_are_validated() -> None:

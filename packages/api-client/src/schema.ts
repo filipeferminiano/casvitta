@@ -1084,6 +1084,74 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/staff/authorizations": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Authorization Queue */
+        get: operations["listAuthorizationQueue"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/staff/authorizations/{authorization_id}/verify": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Verify Authorization */
+        post: operations["verifyAuthorization"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/staff/authorizations/{authorization_id}/reject": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Reject Authorization */
+        post: operations["rejectAuthorization"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/staff/authorizations/{authorization_id}/document": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Authorization Document */
+        get: operations["getAuthorizationDocument"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/public/capture-assignments/accept": {
         parameters: {
             query?: never;
@@ -2187,6 +2255,53 @@ export interface components {
          * @enum {string}
          */
         AuthorizationEvidence: "document" | "attestation";
+        /** AuthorizationItem */
+        AuthorizationItem: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Property Code */
+            property_code: string;
+            /** Property Title */
+            property_title: string;
+            /** Neighborhood */
+            neighborhood: string;
+            /** City */
+            city: string;
+            transaction: components["schemas"]["Transaction"];
+            /** Workspace Name */
+            workspace_name: string;
+            /** Broker Name */
+            broker_name: string | null;
+            /** Owner Name */
+            owner_name: string;
+            evidence: components["schemas"]["AuthorizationEvidence"];
+            /** Has Document */
+            has_document: boolean;
+            /** Exclusive */
+            exclusive: boolean;
+            /**
+             * Signed At
+             * Format: date
+             */
+            signed_at: string;
+            /**
+             * Expires At
+             * Format: date
+             */
+            expires_at: string;
+            /**
+             * Submitted At
+             * Format: date-time
+             */
+            submitted_at: string;
+            /** Waiting Listings */
+            waiting_listings: number;
+            /** Is Demo */
+            is_demo: boolean;
+        };
         /** AuthorizationOut */
         AuthorizationOut: {
             /**
@@ -2214,7 +2329,15 @@ export interface components {
             has_document: boolean;
             /** Revoked At */
             revoked_at: string | null;
+            review_status: components["schemas"]["AuthorizationReview"];
+            /** Review Reason */
+            review_reason: string | null;
         };
+        /**
+         * AuthorizationReview
+         * @enum {string}
+         */
+        AuthorizationReview: "pending" | "verified" | "rejected";
         /** AutomationsIn */
         AutomationsIn: {
             /** Paused */
@@ -2261,7 +2384,7 @@ export interface components {
          * Blocker
          * @enum {string}
          */
-        Blocker: "property_not_active" | "no_responsible_broker" | "creci_unverified" | "authorization_missing" | "authorization_wrong_kind" | "authorization_expired" | "publishing_paused" | "fewer_photos";
+        Blocker: "property_not_active" | "no_responsible_broker" | "creci_unverified" | "authorization_missing" | "authorization_wrong_kind" | "authorization_expired" | "publishing_paused" | "fewer_photos" | "authorization_rejected";
         /** BoardCard */
         BoardCard: {
             /**
@@ -3365,7 +3488,7 @@ export interface components {
          * ListingStatus
          * @enum {string}
          */
-        ListingStatus: "draft" | "published" | "unpublished" | "suspended";
+        ListingStatus: "draft" | "pending_review" | "published" | "unpublished" | "suspended";
         /** MatchingProperty */
         MatchingProperty: {
             /**
@@ -3847,6 +3970,10 @@ export interface components {
             bedrooms?: number | null;
             /** Bathrooms */
             bathrooms?: number | null;
+            /** Suites */
+            suites?: number | null;
+            /** Floor */
+            floor?: number | null;
             /** Parking */
             parking?: number | null;
             /** Features */
@@ -3908,6 +4035,10 @@ export interface components {
             bedrooms: number | null;
             /** Bathrooms */
             bathrooms: number | null;
+            /** Suites */
+            suites: number | null;
+            /** Floor */
+            floor: number | null;
             /** Parking */
             parking: number | null;
             /** Features */
@@ -3947,6 +4078,10 @@ export interface components {
             bedrooms?: number | null;
             /** Bathrooms */
             bathrooms?: number | null;
+            /** Suites */
+            suites?: number | null;
+            /** Floor */
+            floor?: number | null;
             /** Parking */
             parking?: number | null;
             /** Features */
@@ -4050,6 +4185,10 @@ export interface components {
             bedrooms: number | null;
             /** Bathrooms */
             bathrooms: number | null;
+            /** Suites */
+            suites: number | null;
+            /** Floor */
+            floor: number | null;
             /** Parking */
             parking: number | null;
             /** Features */
@@ -4159,6 +4298,11 @@ export interface components {
             kind: "redirect";
             /** Path */
             path: string;
+        };
+        /** RejectIn */
+        RejectIn: {
+            /** Reason */
+            reason: string;
         };
         /** RentalAdminCriteria */
         RentalAdminCriteria: {
@@ -6912,6 +7056,134 @@ export interface operations {
                 content: {
                     "application/json": components["schemas"]["RevenueOut"];
                 };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    listAuthorizationQueue: {
+        parameters: {
+            query?: never;
+            header?: {
+                "x-admin-token"?: string | null;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthorizationItem"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    verifyAuthorization: {
+        parameters: {
+            query?: never;
+            header?: {
+                "x-admin-token"?: string | null;
+            };
+            path: {
+                authorization_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    rejectAuthorization: {
+        parameters: {
+            query?: never;
+            header?: {
+                "x-admin-token"?: string | null;
+            };
+            path: {
+                authorization_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RejectIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    getAuthorizationDocument: {
+        parameters: {
+            query?: never;
+            header?: {
+                "x-admin-token"?: string | null;
+            };
+            path: {
+                authorization_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
             /** @description Validation Error */
             422: {

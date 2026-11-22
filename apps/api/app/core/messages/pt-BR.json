@@ -92,5 +92,7 @@
   "visit_not_found": "Não encontramos esta visita. Atualize a agenda.",
   "calendar_invalid_day": "Dia da semana inválido nas regras da agenda.",
   "calendar_invalid_hours": "Confira os horários: o início precisa ser antes do fim, no formato 09:00.",
-  "feature_not_in_plan": "Este recurso não está no seu plano. Veja o que muda em Plano, uso e canais."
+  "feature_not_in_plan": "Este recurso não está no seu plano. Veja o que muda em Plano, uso e canais.",
+  "authorization_not_found": "Esta autorização já foi conferida ou não existe mais. Atualize a fila.",
+  "publish_blocked.authorization_rejected": "A Casvitta não aceitou a autorização do proprietário. Veja o motivo no imóvel e envie uma autorização nova."
 }

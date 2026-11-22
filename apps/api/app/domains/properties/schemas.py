@@ -9,6 +9,7 @@ from app.domains.listings.models import Channel, ListingStatus, UnpublishReason
 from app.domains.listings.rules import Blocker
 from app.domains.properties.models import (
     AuthorizationEvidence,
+    AuthorizationReview,
     PropertyKind,
     PropertySource,
     PropertyStatus,
@@ -35,6 +36,8 @@ class PropertyIn(BaseModel):
     area_m2: int | None = Field(default=None, ge=1, le=100_000)
     bedrooms: int | None = Field(default=None, ge=0, le=50)
     bathrooms: int | None = Field(default=None, ge=0, le=50)
+    suites: int | None = Field(default=None, ge=0, le=50)
+    floor: int | None = Field(default=None, ge=-5, le=200)
     parking: int | None = Field(default=None, ge=0, le=50)
     features: list[str] = Field(default_factory=list, max_length=40)
     price_cents: Cents = Field(ge=0)
@@ -52,6 +55,8 @@ class PropertyPatch(BaseModel):
     area_m2: int | None = Field(default=None, ge=1, le=100_000)
     bedrooms: int | None = Field(default=None, ge=0, le=50)
     bathrooms: int | None = Field(default=None, ge=0, le=50)
+    suites: int | None = Field(default=None, ge=0, le=50)
+    floor: int | None = Field(default=None, ge=-5, le=200)
     parking: int | None = Field(default=None, ge=0, le=50)
     features: list[str] | None = Field(default=None, max_length=40)
     price_cents: Cents | None = Field(default=None, ge=0)
@@ -91,6 +96,8 @@ class AuthorizationOut(BaseModel):
     expires_at: date
     has_document: bool
     revoked_at: datetime | None
+    review_status: AuthorizationReview
+    review_reason: str | None
 
 
 class ListingOut(BaseModel):
@@ -133,6 +140,8 @@ class PropertyOut(BaseModel):
     area_m2: int | None
     bedrooms: int | None
     bathrooms: int | None
+    suites: int | None
+    floor: int | None
     parking: int | None
     features: list[str]
     price_cents: Cents
@@ -173,6 +182,8 @@ class PublicListingOut(BaseModel):
     area_m2: int | None
     bedrooms: int | None
     bathrooms: int | None
+    suites: int | None
+    floor: int | None
     parking: int | None
     features: list[str]
     price_cents: Cents

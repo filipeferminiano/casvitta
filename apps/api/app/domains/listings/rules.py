@@ -12,7 +12,12 @@ from dataclasses import dataclass
 from datetime import date, datetime
 from enum import StrEnum
 
-from app.domains.properties.models import OwnerAuthorization, Property, PropertyStatus
+from app.domains.properties.models import (
+    AuthorizationReview,
+    OwnerAuthorization,
+    Property,
+    PropertyStatus,
+)
 
 
 class Blocker(StrEnum):
@@ -24,6 +29,7 @@ class Blocker(StrEnum):
     AUTHORIZATION_EXPIRED = "authorization_expired"
     PUBLISHING_PAUSED = "publishing_paused"
     FEWER_PHOTOS = "fewer_photos"  # CRM mockup 04: minimum photos (config)
+    AUTHORIZATION_REJECTED = "authorization_rejected"
 
 
 MIN_PHOTOS = 5
@@ -43,6 +49,7 @@ def valid_authorization(
         for a in authorizations
         if a.property_id == prop.id
         and a.revoked_at is None
+        and a.review_status != AuthorizationReview.REJECTED
         and a.kind == prop.transaction
         and a.expires_at >= today
     ]
@@ -57,6 +64,13 @@ def authorization_blocker(
         return None
     if not mine:
         return Blocker.AUTHORIZATION_MISSING
+    if any(
+        a.review_status == AuthorizationReview.REJECTED
+        and a.kind == prop.transaction
+        and a.expires_at >= today
+        for a in mine
+    ):
+        return Blocker.AUTHORIZATION_REJECTED
     if not any(a.kind == prop.transaction for a in mine):
         return Blocker.AUTHORIZATION_WRONG_KIND
     return Blocker.AUTHORIZATION_EXPIRED
@@ -88,3 +102,11 @@ def publish_blockers(
     if workspace_paused:
         blockers.append(Blocker.PUBLISHING_PAUSED)
     return blockers
+
+
+def publicly_verified(
+    prop: Property, authorizations: Iterable[OwnerAuthorization], today: date
+) -> bool:
+    """Public pages need the valid authorization to be checked by staff too."""
+    auth = valid_authorization(prop, authorizations, today)
+    return auth is not None and auth.review_status == AuthorizationReview.VERIFIED

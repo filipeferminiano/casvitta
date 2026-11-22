@@ -23,6 +23,7 @@ class Channel(StrEnum):
 
 class ListingStatus(StrEnum):
     DRAFT = "draft"
+    PENDING_REVIEW = "pending_review"  # all broker checks pass; waiting for the staff check
     PUBLISHED = "published"
     UNPUBLISHED = "unpublished"
     SUSPENDED = "suspended"  # staff action (moderation)

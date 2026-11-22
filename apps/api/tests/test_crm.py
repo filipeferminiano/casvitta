@@ -36,7 +36,7 @@ from app.domains.conversations.models import AiMode, ConversationChannel
 from app.domains.leads import service as leads
 from app.domains.listings.models import Channel as ListingChannel
 from app.domains.properties import service as properties
-from app.domains.properties.models import PropertyMedia
+from app.domains.properties.models import AuthorizationReview, PropertyMedia
 from app.domains.properties.schemas import AuthorizationIn, PropertyIn, PropertyPatch
 from app.integrations.registry import Integrations
 from tests.staff_helpers import add_broker, make_client
@@ -288,7 +288,7 @@ async def test_listing_page_contact_lands_in_the_broker_crm(
     )
     await properties.update_property(s, prop.id, PropertyPatch(status="active"))
     today = today_local()
-    await properties.add_authorization(
+    auth = await properties.add_authorization(
         s,
         prop.id,
         AuthorizationIn(
@@ -301,6 +301,7 @@ async def test_listing_page_contact_lands_in_the_broker_crm(
         ),
         broker.user_id,
     )
+    auth.review_status = AuthorizationReview.VERIFIED  # checked by Casvitta (BO6)
     await properties.publish(s, prop.id, ListingChannel.MARKETPLACE)
     await s.commit()
     slug = properties.public_slug(prop)

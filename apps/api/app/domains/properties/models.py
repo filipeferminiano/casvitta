@@ -106,6 +106,8 @@ class Property(UUIDPrimaryKey, Timestamps, WorkspaceScoped, DemoFlag, Base):
     area_m2: Mapped[int | None] = mapped_column(Integer)
     bedrooms: Mapped[int | None] = mapped_column(Integer)
     bathrooms: Mapped[int | None] = mapped_column(Integer)
+    suites: Mapped[int | None] = mapped_column(Integer)
+    floor: Mapped[int | None] = mapped_column(Integer)
     parking: Mapped[int | None] = mapped_column(Integer)
     features: Mapped[list[str]] = mapped_column(
         ARRAY(String(80)), default=list, server_default="{}"
@@ -152,6 +154,12 @@ class AuthorizationEvidence(StrEnum):
     ATTESTATION = "attestation"  # broker declares, in the app, that they hold it (signed in-app)
 
 
+class AuthorizationReview(StrEnum):
+    PENDING = "pending"
+    VERIFIED = "verified"
+    REJECTED = "rejected"
+
+
 class OwnerAuthorization(UUIDPrimaryKey, Timestamps, WorkspaceScoped, Base):
     """Owner's sale/rental authorization (CLAUDE.md rule 2). No valid one, no publication."""
 
@@ -172,3 +180,14 @@ class OwnerAuthorization(UUIDPrimaryKey, Timestamps, WorkspaceScoped, Base):
     # Valid through this day (inclusive), São Paulo time.
     expires_at: Mapped[date] = mapped_column(Date)
     revoked_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    # Staff check before the listing goes public (CRM mockup 04, BO6): "conferida".
+    review_status: Mapped[AuthorizationReview] = mapped_column(
+        str_enum(AuthorizationReview),
+        default=lambda: AuthorizationReview.PENDING,
+        server_default="pending",
+    )
+    reviewed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    reviewed_by_staff_id: Mapped[uuid.UUID | None] = mapped_column(
+        ForeignKey("staff_users.id", ondelete="SET NULL")
+    )
+    review_reason: Mapped[str | None] = mapped_column(String(500))

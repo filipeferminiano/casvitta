@@ -6,7 +6,7 @@ import uuid
 from typing import Annotated, Literal
 
 from fastapi import APIRouter, Depends, Query, Request
-from fastapi.responses import PlainTextResponse
+from fastapi.responses import PlainTextResponse, Response
 from pydantic import BaseModel
 
 from app.api.v1.deps import client_key, get_rate_limiter
@@ -20,7 +20,15 @@ from app.api.v1.staff_deps import (
 from app.core.errors import AppError
 from app.core.rate_limit import RateLimited, RateLimiter
 from app.core.time import utcnow
-from app.domains.backoffice import accounts, captures, creci, moderation, revenue, service
+from app.domains.backoffice import (
+    accounts,
+    authorizations,
+    captures,
+    creci,
+    moderation,
+    revenue,
+    service,
+)
 from app.domains.backoffice.schemas import OverviewOut, SearchOut
 from app.domains.interest.models import InterestKind
 from app.domains.staff.audit import Actor
@@ -410,3 +418,68 @@ async def get_revenue(
 ) -> revenue.RevenueOut:
     """Lines from the offer catalog; amounts arrive with billing."""
     return revenue.revenue(settings)
+
+
+# ------------------------------------------------------------------ owner authorizations (BO6)
+
+AuthorizationsActor = Annotated[Actor, Depends(require_permission(Permission.MODERATE_LISTINGS))]
+
+
+@router.get(
+    "/authorizations",
+    response_model=list[authorizations.AuthorizationItem],
+    operation_id="listAuthorizationQueue",
+)
+async def authorization_queue(
+    _actor: AuthorizationsActor, session: SessionDep
+) -> list[authorizations.AuthorizationItem]:
+    return await authorizations.queue(session)
+
+
+@router.post(
+    "/authorizations/{authorization_id}/verify",
+    status_code=204,
+    operation_id="verifyAuthorization",
+)
+async def verify_authorization(
+    authorization_id: uuid.UUID, actor: AuthorizationsActor, session: SessionDep
+) -> None:
+    await authorizations.verify(session, actor, authorization_id)
+    await session.commit()
+
+
+@router.post(
+    "/authorizations/{authorization_id}/reject",
+    status_code=204,
+    operation_id="rejectAuthorization",
+)
+async def reject_authorization(
+    authorization_id: uuid.UUID,
+    data: authorizations.RejectIn,
+    actor: AuthorizationsActor,
+    session: SessionDep,
+) -> None:
+    await authorizations.reject(session, actor, authorization_id, data.reason)
+    await session.commit()
+
+
+@router.get(
+    "/authorizations/{authorization_id}/document",
+    operation_id="getAuthorizationDocument",
+    response_class=Response,
+)
+async def authorization_document(
+    authorization_id: uuid.UUID,
+    actor: AuthorizationsActor,
+    session: SessionDep,
+    integrations: IntegrationsDep,
+) -> Response:
+    key = await authorizations.document_key(session, actor, authorization_id)
+    await session.commit()
+    data = await integrations.storage.get(key)
+    media = "application/pdf" if key.endswith(".pdf") else f"image/{key.rsplit('.', 1)[-1]}"
+    return Response(
+        data,
+        media_type=media,
+        headers={"Cache-Control": "no-store", "Content-Disposition": "inline"},
+    )
