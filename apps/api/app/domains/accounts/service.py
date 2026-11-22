@@ -131,6 +131,8 @@ async def request_email_link(
                 text=translate("email.no_account.text", {"signup": _signup_url(settings)}),
             )
         )
+        if settings.app_env == "development":
+            log.info("dev_email_no_account", to=payload.email, signup=_signup_url(settings))
         return
 
     # An existing account always gets a sign-in link, even from the signup form.

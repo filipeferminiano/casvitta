@@ -321,7 +321,7 @@ async def test_listing_page_contact_lands_in_the_broker_crm(
     api: AsyncClient
     async with make_client(make_session, integrations, SETTINGS) as api:
         page = await api.get(f"/v1/public/listings/{slug}")
-        assert page.status_code == 200 and page.json()["broker"]["creci_number"] == "123.456"
+        assert page.status_code == 200 and page.json()["broker"]["creci_number"] == "123.456-F"
         assert (await api.get("/v1/public/listings/qualquer-cv-999999")).status_code == 404
         no_consent = await api.post(
             f"/v1/public/listings/{slug}/contact", json={**body, "consent_whatsapp": False}

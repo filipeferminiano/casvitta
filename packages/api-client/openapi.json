@@ -5820,6 +5820,324 @@
           }
         }
       }
+    },
+    "/v1/page": {
+      "get": {
+        "tags": [
+          "pages"
+        ],
+        "summary": "Get Page",
+        "operationId": "getMyPage",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PageOut"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "pages"
+        ],
+        "summary": "Update Page",
+        "operationId": "updateMyPage",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PageUpdate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PageOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/page/photo": {
+      "post": {
+        "tags": [
+          "pages"
+        ],
+        "summary": "Upload Photo",
+        "operationId": "uploadPagePhoto",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_uploadPagePhoto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PageOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/page/publish": {
+      "post": {
+        "tags": [
+          "pages"
+        ],
+        "summary": "Publish Page",
+        "operationId": "publishMyPage",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PageOut"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/page/unpublish": {
+      "post": {
+        "tags": [
+          "pages"
+        ],
+        "summary": "Unpublish Page",
+        "operationId": "unpublishMyPage",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PageOut"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/page/stats": {
+      "get": {
+        "tags": [
+          "pages"
+        ],
+        "summary": "Page Stats",
+        "operationId": "getMyPageStats",
+        "parameters": [
+          {
+            "name": "days",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 90,
+              "minimum": 1,
+              "default": 30,
+              "title": "Days"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PageStatsOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/page/qr.{kind}": {
+      "get": {
+        "tags": [
+          "pages"
+        ],
+        "summary": "Page Qr",
+        "operationId": "downloadMyPageQr",
+        "parameters": [
+          {
+            "name": "kind",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "enum": [
+                "png",
+                "pdf"
+              ],
+              "type": "string",
+              "title": "Kind"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "image/png": {},
+              "application/pdf": {}
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/public/pages/{slug}": {
+      "get": {
+        "tags": [
+          "public"
+        ],
+        "summary": "Public Page",
+        "operationId": "getPublicPage",
+        "parameters": [
+          {
+            "name": "slug",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Slug"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PublicPageOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/public/pages/{slug}/events": {
+      "post": {
+        "tags": [
+          "public"
+        ],
+        "summary": "Record Event",
+        "operationId": "recordPageEvent",
+        "parameters": [
+          {
+            "name": "slug",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Slug"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PageEventIn"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -7418,6 +7736,20 @@
           "photo"
         ],
         "title": "Body_addPropertyPhoto"
+      },
+      "Body_uploadPagePhoto": {
+        "properties": {
+          "photo": {
+            "type": "string",
+            "contentMediaType": "application/octet-stream",
+            "title": "Photo"
+          }
+        },
+        "type": "object",
+        "required": [
+          "photo"
+        ],
+        "title": "Body_uploadPagePhoto"
       },
       "BookIn": {
         "properties": {
@@ -11812,6 +12144,458 @@
         ],
         "title": "PackageOut"
       },
+      "PageChecklist": {
+        "properties": {
+          "profile_photo": {
+            "type": "boolean",
+            "title": "Profile Photo"
+          },
+          "bio": {
+            "type": "boolean",
+            "title": "Bio"
+          },
+          "creci_verified": {
+            "type": "boolean",
+            "title": "Creci Verified"
+          },
+          "has_properties": {
+            "type": "boolean",
+            "title": "Has Properties"
+          },
+          "published": {
+            "type": "boolean",
+            "title": "Published"
+          },
+          "link_used": {
+            "type": "boolean",
+            "title": "Link Used"
+          }
+        },
+        "type": "object",
+        "required": [
+          "profile_photo",
+          "bio",
+          "creci_verified",
+          "has_properties",
+          "published",
+          "link_used"
+        ],
+        "title": "PageChecklist",
+        "description": "Visão geral (mockup social/11): what is done towards a page that works."
+      },
+      "PageEventIn": {
+        "properties": {
+          "kind": {
+            "$ref": "#/components/schemas/PageEventKind"
+          },
+          "source": {
+            "$ref": "#/components/schemas/PageSource",
+            "default": "link"
+          },
+          "property_code": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 16,
+                "pattern": "^CV-\\d{1,10}$"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Property Code"
+          }
+        },
+        "type": "object",
+        "required": [
+          "kind"
+        ],
+        "title": "PageEventIn"
+      },
+      "PageEventKind": {
+        "type": "string",
+        "enum": [
+          "page_view",
+          "property_view",
+          "whatsapp_click"
+        ],
+        "title": "PageEventKind"
+      },
+      "PageOut": {
+        "properties": {
+          "slug": {
+            "type": "string",
+            "title": "Slug"
+          },
+          "url": {
+            "type": "string",
+            "title": "Url"
+          },
+          "theme": {
+            "$ref": "#/components/schemas/PageTheme"
+          },
+          "works_as": {
+            "$ref": "#/components/schemas/WorksAs"
+          },
+          "agency_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Agency Name"
+          },
+          "status": {
+            "$ref": "#/components/schemas/PageStatus"
+          },
+          "is_live": {
+            "type": "boolean",
+            "title": "Is Live"
+          },
+          "published_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Published At"
+          },
+          "suspended_reason": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Suspended Reason"
+          },
+          "onboarding_step": {
+            "type": "integer",
+            "title": "Onboarding Step"
+          },
+          "onboarding_done": {
+            "type": "boolean",
+            "title": "Onboarding Done"
+          },
+          "onboarding_dismissed": {
+            "type": "boolean",
+            "title": "Onboarding Dismissed"
+          },
+          "display_name": {
+            "type": "string",
+            "title": "Display Name"
+          },
+          "photo_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Photo Url"
+          },
+          "bio": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Bio"
+          },
+          "regions": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Regions"
+          },
+          "whatsapp_e164": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Whatsapp E164"
+          },
+          "creci": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Creci"
+          },
+          "creci_status": {
+            "type": "string",
+            "enum": [
+              "missing",
+              "pending",
+              "verified"
+            ],
+            "title": "Creci Status"
+          },
+          "blockers": {
+            "items": {
+              "type": "string",
+              "enum": [
+                "display_name_missing",
+                "whatsapp_missing",
+                "creci_missing",
+                "creci_unverified"
+              ]
+            },
+            "type": "array",
+            "title": "Blockers"
+          },
+          "checklist": {
+            "$ref": "#/components/schemas/PageChecklist"
+          },
+          "branded": {
+            "type": "boolean",
+            "title": "Branded"
+          }
+        },
+        "type": "object",
+        "required": [
+          "slug",
+          "url",
+          "theme",
+          "works_as",
+          "agency_name",
+          "status",
+          "is_live",
+          "published_at",
+          "suspended_reason",
+          "onboarding_step",
+          "onboarding_done",
+          "onboarding_dismissed",
+          "display_name",
+          "photo_url",
+          "bio",
+          "regions",
+          "whatsapp_e164",
+          "creci",
+          "creci_status",
+          "blockers",
+          "checklist",
+          "branded"
+        ],
+        "title": "PageOut"
+      },
+      "PageSource": {
+        "type": "string",
+        "enum": [
+          "link",
+          "qr",
+          "campaign",
+          "direct"
+        ],
+        "title": "PageSource"
+      },
+      "PageStatsOut": {
+        "properties": {
+          "days": {
+            "type": "integer",
+            "title": "Days"
+          },
+          "page_views": {
+            "type": "integer",
+            "title": "Page Views"
+          },
+          "property_views": {
+            "type": "integer",
+            "title": "Property Views"
+          },
+          "whatsapp_clicks": {
+            "type": "integer",
+            "title": "Whatsapp Clicks"
+          },
+          "by_source": {
+            "additionalProperties": {
+              "type": "integer"
+            },
+            "propertyNames": {
+              "$ref": "#/components/schemas/PageSource"
+            },
+            "type": "object",
+            "title": "By Source"
+          }
+        },
+        "type": "object",
+        "required": [
+          "days",
+          "page_views",
+          "property_views",
+          "whatsapp_clicks",
+          "by_source"
+        ],
+        "title": "PageStatsOut",
+        "description": "Resultados: last `days` days. A WhatsApp click is a click, not a message or a lead."
+      },
+      "PageStatus": {
+        "type": "string",
+        "enum": [
+          "draft",
+          "published",
+          "unpublished",
+          "suspended"
+        ],
+        "title": "PageStatus"
+      },
+      "PageTheme": {
+        "type": "string",
+        "enum": [
+          "cambui",
+          "planta",
+          "terracota"
+        ],
+        "title": "PageTheme",
+        "description": "Theme presets (packages/config pageThemes). Planta is the Casvitta product palette."
+      },
+      "PageUpdate": {
+        "properties": {
+          "theme": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/PageTheme"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "works_as": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/WorksAs"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "agency_name": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 120
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Agency Name"
+          },
+          "display_name": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 160,
+                "minLength": 2
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Display Name"
+          },
+          "bio": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 600
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Bio"
+          },
+          "regions": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array",
+                "maxItems": 12
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Regions"
+          },
+          "whatsapp": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Whatsapp"
+          },
+          "onboarding_step": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 9.0,
+                "minimum": 2.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Onboarding Step"
+          },
+          "onboarding_done": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Onboarding Done"
+          },
+          "onboarding_dismissed": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Onboarding Dismissed"
+          }
+        },
+        "type": "object",
+        "title": "PageUpdate"
+      },
       "Permission": {
         "type": "string",
         "enum": [
@@ -13459,6 +14243,124 @@
         ],
         "title": "PublicListingOut",
         "description": "What anyone can see. Neighborhood-level location only; no owner data."
+      },
+      "PublicPageOut": {
+        "properties": {
+          "slug": {
+            "type": "string",
+            "title": "Slug"
+          },
+          "theme": {
+            "$ref": "#/components/schemas/PageTheme"
+          },
+          "display_name": {
+            "type": "string",
+            "title": "Display Name"
+          },
+          "works_as": {
+            "$ref": "#/components/schemas/WorksAs"
+          },
+          "agency_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Agency Name"
+          },
+          "photo_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Photo Url"
+          },
+          "bio": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Bio"
+          },
+          "regions": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Regions"
+          },
+          "whatsapp_e164": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Whatsapp E164"
+          },
+          "creci": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Creci"
+          },
+          "creci_verified": {
+            "type": "boolean",
+            "title": "Creci Verified"
+          },
+          "branded": {
+            "type": "boolean",
+            "title": "Branded"
+          },
+          "is_demo": {
+            "type": "boolean",
+            "title": "Is Demo"
+          },
+          "properties": {
+            "items": {
+              "$ref": "#/components/schemas/PublicListingOut"
+            },
+            "type": "array",
+            "title": "Properties"
+          }
+        },
+        "type": "object",
+        "required": [
+          "slug",
+          "theme",
+          "display_name",
+          "works_as",
+          "agency_name",
+          "photo_url",
+          "bio",
+          "regions",
+          "whatsapp_e164",
+          "creci",
+          "creci_verified",
+          "branded",
+          "is_demo",
+          "properties"
+        ],
+        "title": "PublicPageOut",
+        "description": "What anyone sees on {slug}.casvitta.com.br. No email, no owner data."
       },
       "PublicStats": {
         "properties": {
@@ -15816,6 +16718,14 @@
           "free"
         ],
         "title": "WeekOut"
+      },
+      "WorksAs": {
+        "type": "string",
+        "enum": [
+          "broker",
+          "agency"
+        ],
+        "title": "WorksAs"
       },
       "WorkspaceKind": {
         "type": "string",

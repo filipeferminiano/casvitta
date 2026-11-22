@@ -94,5 +94,8 @@
   "calendar_invalid_hours": "Confira os horários: o início precisa ser antes do fim, no formato 09:00.",
   "feature_not_in_plan": "Este recurso não está no seu plano. Veja o que muda em Plano, uso e canais.",
   "authorization_not_found": "Esta autorização já foi conferida ou não existe mais. Atualize a fila.",
-  "publish_blocked.authorization_rejected": "A Casvitta não aceitou a autorização do proprietário. Veja o motivo no imóvel e envie uma autorização nova."
+  "publish_blocked.authorization_rejected": "A Casvitta não aceitou a autorização do proprietário. Veja o motivo no imóvel e envie uma autorização nova.",
+  "page_blocked": "Para publicar sua página, preencha o nome, o WhatsApp e o número do CRECI.",
+  "page_suspended": "Sua página foi suspensa pela equipe da Casvitta. Fale com o suporte para entender o motivo.",
+  "publishing_paused": "As publicações desta conta estão pausadas pela Casvitta. Fale com o suporte para entender o motivo."
 }

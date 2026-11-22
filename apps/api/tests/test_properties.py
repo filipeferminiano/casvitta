@@ -239,7 +239,7 @@ async def test_public_read_model_hides_private_fields_demo_and_unverified(make_s
         item = listings[0].model_dump()
         assert "street_number" not in item and "complement" not in item and "lat" not in item
         assert item["street"] is None  # street only when the broker allows it
-        assert item["broker"]["creci_number"] == "123.456"
+        assert item["broker"]["creci_number"] == "123.456-F"
         assert item["iptu_monthly_cents"] is None
         with_demo = await service.public_listings(
             public, Channel.MARKETPLACE, include_demo=True, today=TODAY

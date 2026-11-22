@@ -128,6 +128,12 @@ class Settings(BaseSettings):
     listing_min_photos: int = 5
     # Show is_demo listings on public pages. Local demos only; production refuses it (rule 7).
     public_listings_include_demo: bool = False
+    # Casvitta Social: the broker page goes live only with a verified CRECI (CLAUDE.md rule 1).
+    # False = the page is public as soon as the broker publishes it, with the CRECI they sent;
+    # properties still need the verified CRECI (PROMPT_SOCIAL_BUILD §2).
+    page_requires_verified_creci: bool = True
+    # Public page events (views, WhatsApp clicks): requests per IP per minute.
+    page_events_rate_limit_per_minute: int = 60
     # Public interest form: requests per IP and kind per minute.
     interest_rate_limit_per_minute: int = 5
 

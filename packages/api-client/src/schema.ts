@@ -1861,6 +1861,143 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/page": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Page */
+        get: operations["getMyPage"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Update Page */
+        patch: operations["updateMyPage"];
+        trace?: never;
+    };
+    "/v1/page/photo": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Upload Photo */
+        post: operations["uploadPagePhoto"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/page/publish": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Publish Page */
+        post: operations["publishMyPage"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/page/unpublish": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Unpublish Page */
+        post: operations["unpublishMyPage"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/page/stats": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Page Stats */
+        get: operations["getMyPageStats"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/page/qr.{kind}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Page Qr */
+        get: operations["downloadMyPageQr"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/public/pages/{slug}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Public Page */
+        get: operations["getPublicPage"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/public/pages/{slug}/events": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Record Event */
+        post: operations["recordPageEvent"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -2443,6 +2580,11 @@ export interface components {
         };
         /** Body_addPropertyPhoto */
         Body_addPropertyPhoto: {
+            /** Photo */
+            photo: string;
+        };
+        /** Body_uploadPagePhoto */
+        Body_uploadPagePhoto: {
             /** Photo */
             photo: string;
         };
@@ -3810,6 +3952,138 @@ export interface components {
             price_cents: number;
         };
         /**
+         * PageChecklist
+         * @description Visão geral (mockup social/11): what is done towards a page that works.
+         */
+        PageChecklist: {
+            /** Profile Photo */
+            profile_photo: boolean;
+            /** Bio */
+            bio: boolean;
+            /** Creci Verified */
+            creci_verified: boolean;
+            /** Has Properties */
+            has_properties: boolean;
+            /** Published */
+            published: boolean;
+            /** Link Used */
+            link_used: boolean;
+        };
+        /** PageEventIn */
+        PageEventIn: {
+            kind: components["schemas"]["PageEventKind"];
+            /** @default link */
+            source: components["schemas"]["PageSource"];
+            /** Property Code */
+            property_code?: string | null;
+        };
+        /**
+         * PageEventKind
+         * @enum {string}
+         */
+        PageEventKind: "page_view" | "property_view" | "whatsapp_click";
+        /** PageOut */
+        PageOut: {
+            /** Slug */
+            slug: string;
+            /** Url */
+            url: string;
+            theme: components["schemas"]["PageTheme"];
+            works_as: components["schemas"]["WorksAs"];
+            /** Agency Name */
+            agency_name: string | null;
+            status: components["schemas"]["PageStatus"];
+            /** Is Live */
+            is_live: boolean;
+            /** Published At */
+            published_at: string | null;
+            /** Suspended Reason */
+            suspended_reason: string | null;
+            /** Onboarding Step */
+            onboarding_step: number;
+            /** Onboarding Done */
+            onboarding_done: boolean;
+            /** Onboarding Dismissed */
+            onboarding_dismissed: boolean;
+            /** Display Name */
+            display_name: string;
+            /** Photo Url */
+            photo_url: string | null;
+            /** Bio */
+            bio: string | null;
+            /** Regions */
+            regions: string[];
+            /** Whatsapp E164 */
+            whatsapp_e164: string | null;
+            /** Creci */
+            creci: string | null;
+            /**
+             * Creci Status
+             * @enum {string}
+             */
+            creci_status: "missing" | "pending" | "verified";
+            /** Blockers */
+            blockers: ("display_name_missing" | "whatsapp_missing" | "creci_missing" | "creci_unverified")[];
+            checklist: components["schemas"]["PageChecklist"];
+            /** Branded */
+            branded: boolean;
+        };
+        /**
+         * PageSource
+         * @enum {string}
+         */
+        PageSource: "link" | "qr" | "campaign" | "direct";
+        /**
+         * PageStatsOut
+         * @description Resultados: last `days` days. A WhatsApp click is a click, not a message or a lead.
+         */
+        PageStatsOut: {
+            /** Days */
+            days: number;
+            /** Page Views */
+            page_views: number;
+            /** Property Views */
+            property_views: number;
+            /** Whatsapp Clicks */
+            whatsapp_clicks: number;
+            /** By Source */
+            by_source: {
+                [key: string]: number;
+            };
+        };
+        /**
+         * PageStatus
+         * @enum {string}
+         */
+        PageStatus: "draft" | "published" | "unpublished" | "suspended";
+        /**
+         * PageTheme
+         * @description Theme presets (packages/config pageThemes). Planta is the Casvitta product palette.
+         * @enum {string}
+         */
+        PageTheme: "cambui" | "planta" | "terracota";
+        /** PageUpdate */
+        PageUpdate: {
+            theme?: components["schemas"]["PageTheme"] | null;
+            works_as?: components["schemas"]["WorksAs"] | null;
+            /** Agency Name */
+            agency_name?: string | null;
+            /** Display Name */
+            display_name?: string | null;
+            /** Bio */
+            bio?: string | null;
+            /** Regions */
+            regions?: string[] | null;
+            /** Whatsapp */
+            whatsapp?: string | null;
+            /** Onboarding Step */
+            onboarding_step?: number | null;
+            /** Onboarding Done */
+            onboarding_done?: boolean | null;
+            /** Onboarding Dismissed */
+            onboarding_dismissed?: boolean | null;
+        };
+        /**
          * Permission
          * @enum {string}
          */
@@ -4235,6 +4509,38 @@ export interface components {
             broker: components["schemas"]["PublicBroker"];
             /** Published At */
             published_at: string | null;
+        };
+        /**
+         * PublicPageOut
+         * @description What anyone sees on {slug}.casvitta.com.br. No email, no owner data.
+         */
+        PublicPageOut: {
+            /** Slug */
+            slug: string;
+            theme: components["schemas"]["PageTheme"];
+            /** Display Name */
+            display_name: string;
+            works_as: components["schemas"]["WorksAs"];
+            /** Agency Name */
+            agency_name: string | null;
+            /** Photo Url */
+            photo_url: string | null;
+            /** Bio */
+            bio: string | null;
+            /** Regions */
+            regions: string[];
+            /** Whatsapp E164 */
+            whatsapp_e164: string | null;
+            /** Creci */
+            creci: string | null;
+            /** Creci Verified */
+            creci_verified: boolean;
+            /** Branded */
+            branded: boolean;
+            /** Is Demo */
+            is_demo: boolean;
+            /** Properties */
+            properties: components["schemas"]["PublicListingOut"][];
         };
         /**
          * PublicStats
@@ -5016,6 +5322,11 @@ export interface components {
             /** Free */
             free: components["schemas"]["Slot"][];
         };
+        /**
+         * WorksAs
+         * @enum {string}
+         */
+        WorksAs: "broker" | "agency";
         /**
          * WorkspaceKind
          * @enum {string}
@@ -8641,6 +8952,259 @@ export interface operations {
                 content: {
                     "application/json": components["schemas"]["PublicContactAccepted"];
                 };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    getMyPage: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PageOut"];
+                };
+            };
+        };
+    };
+    updateMyPage: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PageUpdate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PageOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    uploadPagePhoto: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "multipart/form-data": components["schemas"]["Body_uploadPagePhoto"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PageOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    publishMyPage: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PageOut"];
+                };
+            };
+        };
+    };
+    unpublishMyPage: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PageOut"];
+                };
+            };
+        };
+    };
+    getMyPageStats: {
+        parameters: {
+            query?: {
+                days?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PageStatsOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    downloadMyPageQr: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                kind: "png" | "pdf";
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "image/png": unknown;
+                    "application/pdf": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    getPublicPage: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                slug: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PublicPageOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    recordPageEvent: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                slug: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PageEventIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
             /** @description Validation Error */
             422: {

@@ -39,6 +39,7 @@ from app.domains.market_data.models import (
     MarketStats,
     MarketStreet,
 )
+from app.domains.pages.models import BrokerPage, PageEvent
 from app.domains.properties.models import OwnerAuthorization, Property, PropertyMedia
 from app.domains.staff.models import StaffLoginToken, StaffSession, StaffUser
 
@@ -47,6 +48,7 @@ __all__ = [
     "Appointment",
     "AuditLog",
     "AuthSession",
+    "BrokerPage",
     "BrokerProfile",
     "CalendarBlock",
     "CalendarSettings",
@@ -78,6 +80,7 @@ __all__ = [
     "Membership",
     "Message",
     "OwnerAuthorization",
+    "PageEvent",
     "Person",
     "PipelineStage",
     "PlanChangeRequest",

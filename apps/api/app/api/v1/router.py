@@ -11,6 +11,7 @@ from app.api.v1 import (
     interest,
     market,
     me,
+    pages,
     properties,
     staff,
     staff_ops,
@@ -36,4 +37,6 @@ api_router.include_router(billing.router)
 api_router.include_router(billing.staff_router)
 api_router.include_router(crm.router)
 api_router.include_router(crm.public_router)
+api_router.include_router(pages.router)
+api_router.include_router(pages.public_router)
 api_router.include_router(dev.router)

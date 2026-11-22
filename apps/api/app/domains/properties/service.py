@@ -21,7 +21,7 @@ from app.core.logging import get_logger
 from app.core.settings import get_settings
 from app.core.tenancy import cross_tenant, current_workspace
 from app.core.time import today_local, utcnow
-from app.domains.accounts.models import BrokerProfile, Membership, Role, Workspace
+from app.domains.accounts.models import BrokerProfile, CreciKind, Membership, Role, Workspace
 from app.domains.activity.models import EventActor, KeyEventKind
 from app.domains.activity.service import emit
 from app.domains.listings.models import Channel, Listing, ListingStatus, UnpublishReason
@@ -459,6 +459,7 @@ async def public_listings(
     *,
     include_demo: bool = False,
     workspace_id: uuid.UUID | None = None,
+    broker_profile_id: uuid.UUID | None = None,
     transaction: Transaction | None = None,
     city: str | None = None,
     neighborhood: str | None = None,
@@ -491,6 +492,8 @@ async def public_listings(
             query = query.where(Property.is_demo.is_(False))
         if workspace_id is not None:
             query = query.where(Property.workspace_id == workspace_id)
+        if broker_profile_id is not None:
+            query = query.where(Property.responsible_broker_id == broker_profile_id)
         if transaction is not None:
             query = query.where(Property.transaction == transaction)
         if code_number is not None:
@@ -557,13 +560,21 @@ async def public_listings(
                         display_name=broker.display_name,
                         slug=broker.slug,
                         creci_state=broker.creci_state or "",
-                        creci_number=broker.creci_number or "",
+                        creci_number=_creci_number(broker),
                         photo_url=broker.photo_url,
                     ),
                     published_at=listing.published_at,
                 )
             )
     return out
+
+
+def _creci_number(broker: BrokerProfile) -> str:
+    """ "000.000-F": the number with its kind, as shown everywhere."""
+    if not broker.creci_number:
+        return ""
+    kind = broker.creci_kind or CreciKind.INDIVIDUAL
+    return f"{broker.creci_number}-{kind.value}"
 
 
 _CODE_SUFFIX = re.compile(r"-cv-(\d+)$")
