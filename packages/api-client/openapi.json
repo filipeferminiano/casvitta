@@ -4747,6 +4747,7 @@
           "me"
         ],
         "summary": "Downgrade",
+        "description": "Back to Grátis: at the end of the paid period when paying through Stripe, else now.",
         "operationId": "downgradeToFree",
         "responses": {
           "200": {
@@ -4755,6 +4756,90 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/PlanUsageOut"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/me/plan/checkout": {
+      "post": {
+        "tags": [
+          "me"
+        ],
+        "summary": "Checkout",
+        "operationId": "startPlanCheckout",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CheckoutIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CheckoutOut"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/me/plan/resume": {
+      "post": {
+        "tags": [
+          "me"
+        ],
+        "summary": "Resume",
+        "description": "Undo \"voltar para o Grátis\" before the paid period ends.",
+        "operationId": "resumePlan",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlanUsageOut"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/me/plan/portal": {
+      "post": {
+        "tags": [
+          "me"
+        ],
+        "summary": "Billing Portal",
+        "operationId": "openBillingPortal",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PortalOut"
                 }
               }
             }
@@ -9417,6 +9502,50 @@
           "detail"
         ],
         "title": "CheckResult"
+      },
+      "CheckoutIn": {
+        "properties": {
+          "plan": {
+            "$ref": "#/components/schemas/Plan"
+          },
+          "source": {
+            "$ref": "#/components/schemas/ChangeSource",
+            "default": "plans_page"
+          }
+        },
+        "type": "object",
+        "required": [
+          "plan"
+        ],
+        "title": "CheckoutIn"
+      },
+      "CheckoutOut": {
+        "properties": {
+          "result": {
+            "type": "string",
+            "title": "Result"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Url"
+          },
+          "plan": {
+            "$ref": "#/components/schemas/Plan"
+          }
+        },
+        "type": "object",
+        "required": [
+          "result",
+          "plan"
+        ],
+        "title": "CheckoutOut"
       },
       "CityIndexPage": {
         "properties": {
@@ -14270,6 +14399,16 @@
                 "type": "null"
               }
             ]
+          },
+          "subscription": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/SubscriptionOut"
+              },
+              {
+                "type": "null"
+              }
+            ]
           }
         },
         "type": "object",
@@ -14281,6 +14420,19 @@
           "open_request"
         ],
         "title": "PlanUsageOut"
+      },
+      "PortalOut": {
+        "properties": {
+          "url": {
+            "type": "string",
+            "title": "Url"
+          }
+        },
+        "type": "object",
+        "required": [
+          "url"
+        ],
+        "title": "PortalOut"
       },
       "PortfolioSize": {
         "type": "string",
@@ -17648,6 +17800,67 @@
           "stats"
         ],
         "title": "StreetRow"
+      },
+      "SubscriptionOut": {
+        "properties": {
+          "plan": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Plan"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "status": {
+            "$ref": "#/components/schemas/SubscriptionStatus"
+          },
+          "current_period_end": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Current Period End"
+          },
+          "cancel_at_period_end": {
+            "type": "boolean",
+            "title": "Cancel At Period End"
+          },
+          "payment_failed": {
+            "type": "boolean",
+            "title": "Payment Failed"
+          }
+        },
+        "type": "object",
+        "required": [
+          "plan",
+          "status",
+          "current_period_end",
+          "cancel_at_period_end",
+          "payment_failed"
+        ],
+        "title": "SubscriptionOut"
+      },
+      "SubscriptionStatus": {
+        "type": "string",
+        "enum": [
+          "incomplete",
+          "incomplete_expired",
+          "active",
+          "past_due",
+          "unpaid",
+          "canceled",
+          "paused",
+          "trialing"
+        ],
+        "title": "SubscriptionStatus",
+        "description": "Mirrors the provider. `active` and `past_due` (Stripe still retrying) keep the plan;\n`unpaid`, `canceled` and `incomplete_expired` put the workspace back on Grátis."
       },
       "SyncStatus": {
         "type": "string",

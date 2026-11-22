@@ -145,5 +145,12 @@
   "email.domain_active.subject": "{domain} está no ar",
   "email.domain_active.text": "Olá, {name}.\n\nSua página já abre em https://{domain}, com HTTPS. O endereço {subdomain} e os QR codes antigos continuam funcionando e levam para o domínio novo.\n\nBaixe o QR code novo em Minha página: {link}\n\nCasvitta",
   "email.domain_broken.subject": "{domain} parou de funcionar",
-  "email.domain_broken.text": "Olá, {name}.\n\nNa checagem de hoje, {problem} em {domain}. Para sua página não ficar fora do ar, ela voltou a abrir em {subdomain}.\n\nConfira os registros no seu provedor de domínio e clique em Verificar agora em Minha página: {link}\n\nCasvitta"
+  "email.domain_broken.text": "Olá, {name}.\n\nNa checagem de hoje, {problem} em {domain}. Para sua página não ficar fora do ar, ela voltou a abrir em {subdomain}.\n\nConfira os registros no seu provedor de domínio e clique em Verificar agora em Minha página: {link}\n\nCasvitta",
+  "billing_disabled": "Pagamento pelo site ainda não está ligado. Peça a mudança de plano e a equipe Casvitta ativa para você.",
+  "payment_problem": "O último pagamento do seu plano não passou. Atualize o cartão em \"Gerenciar pagamento\" e tente de novo.",
+  "subscription_not_found": "Não encontramos uma assinatura ativa nesta conta.",
+  "billing_customer_not_found": "Esta conta ainda não tem pagamento cadastrado. Escolha um plano para começar.",
+  "email.payment_failed.subject": "Não conseguimos cobrar seu plano Casvitta",
+  "email.payment_failed.text": "Olá, {name}.\n\nO cartão cadastrado recusou a cobrança do seu plano. Seu plano continua ativo enquanto tentamos de novo nos próximos dias.\n\nPara não voltar ao plano Grátis, atualize o cartão em Plano e uso > Gerenciar pagamento:\n{link}\n\nSeus imóveis, contatos e páginas não são apagados.\n\nCasvitta",
+  "invalid_signature": "Assinatura do evento inválida."
 }

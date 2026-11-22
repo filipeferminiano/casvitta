@@ -1442,8 +1442,65 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** Downgrade */
+        /**
+         * Downgrade
+         * @description Back to Grátis: at the end of the paid period when paying through Stripe, else now.
+         */
         post: operations["downgradeToFree"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/me/plan/checkout": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Checkout */
+        post: operations["startPlanCheckout"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/me/plan/resume": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Resume
+         * @description Undo "voltar para o Grátis" before the paid period ends.
+         */
+        post: operations["resumePlan"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/me/plan/portal": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Billing Portal */
+        post: operations["openBillingPortal"];
         delete?: never;
         options?: never;
         head?: never;
@@ -3112,6 +3169,20 @@ export interface components {
                 [key: string]: string | number;
             };
         };
+        /** CheckoutIn */
+        CheckoutIn: {
+            plan: components["schemas"]["Plan"];
+            /** @default plans_page */
+            source: components["schemas"]["ChangeSource"];
+        };
+        /** CheckoutOut */
+        CheckoutOut: {
+            /** Result */
+            result: string;
+            /** Url */
+            url?: string | null;
+            plan: components["schemas"]["Plan"];
+        };
         /** CityIndexPage */
         CityIndexPage: {
             city: components["schemas"]["PlaceRef"];
@@ -4618,6 +4689,12 @@ export interface components {
             /** Meters */
             meters: components["schemas"]["MeterOut"][];
             open_request: components["schemas"]["ChangeRequestOut"] | null;
+            subscription?: components["schemas"]["SubscriptionOut"] | null;
+        };
+        /** PortalOut */
+        PortalOut: {
+            /** Url */
+            url: string;
         };
         /**
          * PortfolioSize
@@ -5640,6 +5717,24 @@ export interface components {
             place: components["schemas"]["PlaceRef"];
             stats: components["schemas"]["PublicStats"] | null;
         };
+        /** SubscriptionOut */
+        SubscriptionOut: {
+            plan: components["schemas"]["Plan"] | null;
+            status: components["schemas"]["SubscriptionStatus"];
+            /** Current Period End */
+            current_period_end: string | null;
+            /** Cancel At Period End */
+            cancel_at_period_end: boolean;
+            /** Payment Failed */
+            payment_failed: boolean;
+        };
+        /**
+         * SubscriptionStatus
+         * @description Mirrors the provider. `active` and `past_due` (Stripe still retrying) keep the plan;
+         *     `unpaid`, `canceled` and `incomplete_expired` put the workspace back on Grátis.
+         * @enum {string}
+         */
+        SubscriptionStatus: "incomplete" | "incomplete_expired" | "active" | "past_due" | "unpaid" | "canceled" | "paused" | "trialing";
         /**
          * SyncStatus
          * @enum {string}
@@ -8710,6 +8805,79 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["PlanUsageOut"];
+                };
+            };
+        };
+    };
+    startPlanCheckout: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CheckoutIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CheckoutOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    resumePlan: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PlanUsageOut"];
+                };
+            };
+        };
+    };
+    openBillingPortal: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PortalOut"];
                 };
             };
         };

@@ -17,6 +17,7 @@ from app.core.errors import AppError
 from app.core.tenancy import cross_tenant, current_workspace
 from app.core.time import utcnow
 from app.domains.accounts.models import Plan, Workspace
+from app.domains.billing import payments
 from app.domains.billing.models import (
     OPEN,
     ChangeKind,
@@ -96,6 +97,7 @@ async def usage(session: AsyncSession, *, billing_enabled: bool) -> PlanUsageOut
         billing_enabled=billing_enabled,
         meters=meters,
         open_request=_out(open_request) if open_request else None,
+        subscription=payments.subscription_out(await payments.live_subscription(session)),
     )
 
 

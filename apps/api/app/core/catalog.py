@@ -274,6 +274,29 @@ OWNER_PACKAGES: dict[int, int] = {30: 5_900, 90: 14_900}
 WARN_AT = 0.8  # warn at 80 %; at 100 % nothing is charged: automations pause, agents hand off
 
 
+# Paid plans a broker can subscribe to on their own (Stripe Checkout, monthly).
+CHECKOUT_PLANS: tuple[Plan, ...] = tuple(p for p in SELLABLE if p != Plan.FREE)
+
+
+def price_lookup_key(plan: Plan, period: str = "monthly") -> str:
+    """The Stripe price lookup key of a plan (`make stripe:sync` creates the prices)."""
+    return f"casvitta_plan_{plan.value}_{period}"
+
+
+def plan_from_lookup_key(lookup_key: str | None) -> Plan | None:
+    """'casvitta_plan_automation_monthly' -> Plan.AUTOMATION; unknown keys -> None."""
+    for plan in Plan:
+        for period in ("monthly", "annual"):
+            if lookup_key == price_lookup_key(plan, period):
+                return plan
+    return None
+
+
+def paid_price_cents() -> dict[str, int]:
+    """Monthly price per lookup key (fake payments adapter and the Stripe sync)."""
+    return {price_lookup_key(p): PLANS[p].monthly_cents for p in CHECKOUT_PLANS}
+
+
 def spec(plan: Plan) -> PlanSpec:
     return PLANS[plan]
 

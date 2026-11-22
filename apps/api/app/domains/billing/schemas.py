@@ -8,7 +8,7 @@ from pydantic import BaseModel, Field, model_validator
 
 from app.core.catalog import LimitState, Meter
 from app.domains.accounts.models import Plan
-from app.domains.billing.models import ChangeKind, ChangeSource, ChangeStatus
+from app.domains.billing.models import ChangeKind, ChangeSource, ChangeStatus, SubscriptionStatus
 
 
 class ChangeRequestIn(BaseModel):
@@ -46,6 +46,14 @@ class StaffChangeRequestOut(ChangeRequestOut):
     workspace_name: str
 
 
+class SubscriptionOut(BaseModel):
+    plan: Plan | None
+    status: SubscriptionStatus
+    current_period_end: datetime | None
+    cancel_at_period_end: bool
+    payment_failed: bool  # last renewal failed; Stripe is retrying
+
+
 class MeterOut(BaseModel):
     meter: Meter
     used: int | None  # None = not measured yet (the module does not exist yet)
@@ -59,6 +67,8 @@ class PlanUsageOut(BaseModel):
     billing_enabled: bool
     meters: list[MeterOut]
     open_request: ChangeRequestOut | None
+    # Paid through Stripe (None: Grátis, or a plan staff assigned).
+    subscription: SubscriptionOut | None = None
 
 
 class DeclineIn(BaseModel):

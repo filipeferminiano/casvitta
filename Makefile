@@ -58,6 +58,9 @@ api\:gen: ## Export OpenAPI schema and the plan catalog, regenerate the TS clien
 catalog\:gen: ## Export the plan catalog snapshot read by the web (packages/config/catalog.json)
 	$(UV) run python -m app.scripts.export_catalog ../../packages/config/catalog.json
 
+stripe\:sync: ## Create the Stripe products/prices of the paid plans from the catalog (test key; ARGS=--live)
+	$(UV) run python -m app.scripts.stripe_sync $(ARGS)
+
 db\:migrate:
 	$(UV) run alembic upgrade head
 

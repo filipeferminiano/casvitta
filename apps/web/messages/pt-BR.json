@@ -44,7 +44,8 @@
     "contacts": "Contatos",
     "pipeline": "Funil",
     "attendanceGroup": "Atendimento",
-    "myPage": "Minha página"
+    "myPage": "Minha página",
+    "plan": "Plano e uso"
   },
   "app": {
     "home": {
@@ -5131,6 +5132,65 @@
       "detachConfirm": "Desconectar",
       "cancel": "Cancelar",
       "notYetTitle": "Ainda não está certo"
+    }
+  },
+  "planUsage": {
+    "title": "Plano e uso",
+    "subtitle": "Seu plano, o que você já usou no mês e o pagamento.",
+    "loading": "Carregando seu plano…",
+    "loadError": "Não conseguimos carregar seu plano agora. Atualize a página em alguns instantes.",
+    "error": "Não deu certo agora. Tente de novo em alguns instantes.",
+    "cancel": "Cancelar",
+    "return": {
+      "confirming": "Recebemos seu pagamento e estamos confirmando com a Stripe. Isso leva poucos segundos.",
+      "ok": "Pagamento confirmado. Seu plano {plan} já está ativo.",
+      "cancelled": "Você voltou sem pagar. Nada foi cobrado."
+    },
+    "current": {
+      "title": "Plano atual",
+      "price": "{price}/mês",
+      "activePill": "Ativo",
+      "endingPill": "Termina no fim do período",
+      "paymentFailedPill": "Pagamento recusado",
+      "renews": "Renova em {date} no cartão cadastrado.",
+      "ending": "Seu plano vale até {date}. Depois disso a conta volta para o Grátis. Nada é apagado: imóveis, contatos e páginas continuam aqui.",
+      "paymentFailed": "O cartão recusou a última cobrança. Seu plano continua ativo enquanto tentamos de novo nos próximos dias. Atualize o cartão em \"Gerenciar pagamento\" para não voltar ao Grátis.",
+      "assigned": "Plano ativado pela equipe Casvitta.",
+      "free": "Você está no Grátis. Escolha um plano abaixo quando precisar de mais.",
+      "legacy": "Este é um plano anterior: continua valendo nesta conta, mas não é mais oferecido.",
+      "portal": "Gerenciar pagamento",
+      "resume": "Manter meu plano",
+      "downgrade": "Voltar para o Grátis"
+    },
+    "meters": {
+      "title": "Uso no mês",
+      "of": "{used} de {limit}",
+      "unlimited": "{used} · ilimitado",
+      "warning": "Você já usou 80% do limite.",
+      "reached": "Limite atingido. Nada é cobrado sem a sua autorização: mude de plano para continuar."
+    },
+    "plans": {
+      "title": "Planos",
+      "current": "Plano atual",
+      "subscribe": "Assinar {plan}",
+      "change": "Mudar para {plan}",
+      "request": "Pedir {plan}",
+      "requested": "Pedido enviado. A equipe Casvitta confirma em até 1 dia útil.",
+      "cancelRequest": "Cancelar pedido",
+      "noteCard": "Pagamento com cartão de crédito pela Stripe. A Casvitta não vê nem guarda os dados do cartão. Sem fidelidade: ao voltar para o Grátis, você usa o plano até o fim do período pago.",
+      "noteRequest": "A mudança para um plano pago é feita pela equipe da Casvitta. Até lá você continua no plano atual e nada é cobrado.",
+      "noteMedia": "Anúncios na Meta e no Google são cobrados por elas, direto na sua conta. Não entram no plano."
+    },
+    "confirmChange": {
+      "title": "Mudar para o {plan}?",
+      "description": "A mudança vale agora. A diferença entre os planos, proporcional aos dias que faltam no mês, é cobrada no seu cartão (ou vira crédito, se o novo plano for mais barato).",
+      "confirm": "Mudar para o {plan}"
+    },
+    "confirmDowngrade": {
+      "title": "Voltar para o Grátis?",
+      "withSubscription": "Você continua no plano atual até {date} e não é cobrado de novo. Depois disso valem os limites do Grátis. Nada é apagado.",
+      "now": "A conta passa a usar os limites do Grátis agora. Nada é apagado.",
+      "confirm": "Voltar para o Grátis"
     }
   }
 }

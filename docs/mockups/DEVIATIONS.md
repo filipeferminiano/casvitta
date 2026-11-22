@@ -138,3 +138,11 @@ Compared in `docs/mockups/_impl/landing-pages/` (`pnpm screens:capture landing-p
 - **Records:** TXT `_casvitta.<host>` with a per-domain token, and CNAME `<host>` → `CUSTOM_DOMAIN_CNAME_TARGET` (paginas.casvitta.com.br). Short names ("_casvitta.www", "www") are shown as providers ask; bare domains are refused (use www).
 - **Errors during the 48 h wait** show as "Ainda não está certo" with the value found; after the wait, or once a domain was live, they become an error. A broken live domain falls back to the subdomain (never offline) and emails the broker; activation emails too. Daily check at 06h (arq cron).
 - **Canonical:** the page's address becomes the domain; `{slug}.casvitta.com.br` answers 308 with path and query kept; the QR code switches to the domain. Property pages on the domain are canonical to the domain for now (the prompt's portal-canonical option waits for the SEO decision). After a downgrade the domain stops serving and is kept.
+
+## Billing, Stripe part 1 (plan subscriptions)
+
+- **Cards only** (decided 22/11/2026): Pix Automático is invite-only for Brazilian Stripe accounts; boleto would mean invoices sent instead of automatic charges. Checkout and the card/invoice screens are Stripe's own pages (pt-BR); the app has no card form.
+- **Plano e uso** at `/plano` (footer menu) follows the plan part of crm/17: current plan, usage meters, plan cards, "Gerenciar pagamento", "Voltar para o Grátis". Channels (Instagram, WhatsApp, e-mail) and the Meta message costs of that mockup are not here yet. "Histórico de cobranças" is the Stripe portal.
+- **Plan changes with a subscription are immediate and prorated** (the difference is charged or credited now); the old plan stays until the difference is paid. Back to Grátis is at the end of the paid period and can be undone until then.
+- **Failed renewal:** the plan stays while Stripe retries ("Pagamento recusado" + email); after the last retry the workspace goes back to Grátis. The backoffice mockup's "na 3ª falha, as publicações pausam" becomes "back to Grátis, whose limits apply"; nothing is deleted.
+- **With billing off** (`BILLING_ENABLED=false`, production today) the same screen sends a request to staff, as before.

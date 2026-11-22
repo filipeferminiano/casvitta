@@ -146,8 +146,13 @@ class Settings(BaseSettings):
     # Annual prices are in the catalog but stay hidden until the owner confirms them
     # (CLAUDE.md: never shown as a promotion or discount).
     show_annual_prices: bool = False
-    # No payment provider yet: plan changes are upgrade requests assigned by staff.
+    # False: plan changes are requests assigned by staff (audited). True: paid plans go through
+    # Stripe Checkout (cards only); staff can still assign plans.
     billing_enabled: bool = False
+    # Stripe (test keys outside production). Empty key = fake payments adapter.
+    stripe_secret_key: SecretStr | None = None
+    stripe_webhook_secret: SecretStr | None = None
+    stripe_api_version: str | None = None  # None = the account's default version
     min_daily_budget_cents: int = 2_000
     financing_illustrative_annual_rate_bps: int = 1_150
 
@@ -205,6 +210,10 @@ class Settings(BaseSettings):
             raise ValueError("DEV_OUTBOX_ENABLED is for end-to-end tests, never production")
         if self.app_env == "production" and self.public_listings_include_demo:
             raise ValueError("PUBLIC_LISTINGS_INCLUDE_DEMO never runs in production (rule 7)")
+        if self.stripe_secret_key and not self.stripe_webhook_secret:
+            raise ValueError("STRIPE_SECRET_KEY needs STRIPE_WEBHOOK_SECRET (webhook signatures)")
+        if self.app_env == "production" and self.billing_enabled and not self.stripe_secret_key:
+            raise ValueError("BILLING_ENABLED in production needs STRIPE_SECRET_KEY")
         return self
 
     @field_validator("database_url", "test_database_url", mode="before")

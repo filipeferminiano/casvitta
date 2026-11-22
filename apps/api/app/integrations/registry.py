@@ -10,6 +10,7 @@ from dataclasses import dataclass, replace
 
 from fastapi import Request
 
+from app.core.catalog import paid_price_cents
 from app.core.settings import Settings
 from app.integrations.ads.fake import FakeAdPlatform
 from app.integrations.ads.port import AdPlatform, AdPlatformPort
@@ -22,6 +23,9 @@ from app.integrations.llm.service import LLMService
 from app.integrations.messaging.fake import FakeEmail, FakeSms
 from app.integrations.messaging.port import EmailPort, SmsPort
 from app.integrations.messaging.resend import ResendEmail
+from app.integrations.payments.fake import FakePayments
+from app.integrations.payments.port import PaymentsPort
+from app.integrations.payments.stripe import StripePayments
 from app.integrations.search_index.fake import FakeSearchIndex
 from app.integrations.search_index.indexnow import IndexNow
 from app.integrations.search_index.port import SearchIndexPort
@@ -45,6 +49,7 @@ class Integrations:
     sms: SmsPort
     search_index: SearchIndexPort
     domains: DomainsPort
+    payments: PaymentsPort
     is_fake: bool
 
     def llm_service(self, model: str) -> LLMService:
@@ -63,13 +68,18 @@ def fake_integrations() -> Integrations:
         sms=FakeSms(),
         search_index=FakeSearchIndex(),
         domains=FakeDomains(),
+        payments=FakePayments(),
         is_fake=True,
     )
 
 
 def build_integrations(settings: Settings) -> Integrations:
     if settings.fake_integrations:
-        fakes = replace(fake_integrations(), search_index=build_search_index(settings))
+        fakes = replace(
+            fake_integrations(),
+            search_index=build_search_index(settings),
+            payments=build_payments(settings),
+        )
         # Per-integration opt-in: a real adapter replaces its fake as soon as it has credentials.
         if settings.email_api_key:
             return replace(
@@ -89,6 +99,20 @@ def build_search_index(settings: Settings) -> SearchIndexPort:
     if not settings.indexnow_key:
         raise IntegrationNotConfigured("INDEXNOW_ENABLED=true needs INDEXNOW_KEY.")
     return IndexNow(settings.indexnow_key)
+
+
+def build_payments(settings: Settings) -> PaymentsPort:
+    """Stripe as soon as it has a key (test keys outside production); otherwise the fake."""
+    if settings.stripe_secret_key and settings.stripe_webhook_secret:
+        return StripePayments(
+            settings.stripe_secret_key.get_secret_value(),
+            settings.stripe_webhook_secret.get_secret_value(),
+            api_version=settings.stripe_api_version,
+        )
+    return FakePayments(
+        checkout_base=f"{settings.app_url}/api/v1/dev/payments/checkout",
+        prices=paid_price_cents(),
+    )
 
 
 def get_integrations(request: Request) -> Integrations:

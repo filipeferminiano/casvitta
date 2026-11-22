@@ -2,6 +2,7 @@ import { isLive } from '@/lib/live';
 import {
   Building2,
   Columns3,
+  CreditCard,
   Globe,
   Inbox,
   UserRound,
@@ -32,7 +33,8 @@ export type NavLabelKey =
   | 'inbox'
   | 'contacts'
   | 'pipeline'
-  | 'myPage';
+  | 'myPage'
+  | 'plan';
 
 export type NavItem = {
   /** Route segment under app/(app)/app; also the visible path on app.casvitta.com.br. */
@@ -77,6 +79,9 @@ export const footerNav: NavItem[] = [
   // Public tools a broker opens or sends to clients (valuation, ITBI, financing, price per m²).
   { segment: 'ferramentas', labelKey: 'tools', icon: Calculator },
   { segment: 'modulos', labelKey: 'moduleStore', icon: LayoutGrid },
+  ...(isLive('accounts')
+    ? [{ segment: 'plano', labelKey: 'plan', icon: CreditCard } satisfies NavItem]
+    : []),
   { segment: 'configuracoes', labelKey: 'settings', icon: Settings },
 ];
 
